@@ -1,7 +1,11 @@
 import type { ServedCodeChallenge } from "@shared/content";
 
+import { startSandboxedRun } from "./sandboxRunner";
+
 /*
- * Runs a learner's own code in the browser, in a throwaway Web Worker built from a Blob URL.
+ * Runs a learner's own code in the browser, in a throwaway Web Worker inside the isolated runner
+ * frame (`./sandboxRunner`, `public/runner.html`). The app's own page never evaluates it: the
+ * production CSP has no `'unsafe-eval'`, and a Blob worker made here would inherit that policy.
  *
  * Two jobs:
  * - **Tests**: the named function against VISIBLE tests (topic challenges, and v4 JS/TS assessment
@@ -203,18 +207,6 @@ function describe(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-function spawn(): { worker: Worker; dispose: () => void } {
-  const url = URL.createObjectURL(new Blob([WORKER_SOURCE], { type: "text/javascript" }));
-  const worker = new Worker(url);
-  return {
-    worker,
-    dispose: () => {
-      worker.terminate();
-      URL.revokeObjectURL(url);
-    },
-  };
-}
-
 export interface BrowserTestSpec {
   functionName: string;
   tests: { args: unknown[]; expected: unknown; description?: string }[];
@@ -244,10 +236,11 @@ export async function runBrowserTests(code: string, spec: BrowserTestSpec, timeo
   }
 
   return new Promise<LocalRunOutcome>((resolve) => {
-    const { worker, dispose } = spawn();
     const received = new Map<number, TestResult>();
     const logs: string[] = [];
     let settled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let dispose = () => {};
 
     const finish = ({ compileError, timedOut = false }: { compileError?: string; timedOut?: boolean }) => {
       if (settled) return;
@@ -283,10 +276,8 @@ export async function runBrowserTests(code: string, spec: BrowserTestSpec, timeo
       });
     };
 
-    const timer = setTimeout(() => finish({ timedOut: true }), timeoutMs);
-
-    worker.onmessage = (event: MessageEvent<WorkerMessage>) => {
-      const msg = event.data;
+    const onMessage = (msg: WorkerMessage) => {
+      if (!msg || typeof msg !== "object") return;
       if (msg.type === "compile-error") finish({ compileError: msg.message });
       else if (msg.type === "log") {
         if (logs.length < 200) logs.push(msg.text);
@@ -302,12 +293,17 @@ export async function runBrowserTests(code: string, spec: BrowserTestSpec, timeo
       } else if (msg.type === "done") finish({});
     };
 
-    worker.onerror = (event) => {
-      event.preventDefault();
-      finish({ compileError: event.message || "The code couldn't be run." });
-    };
-
-    worker.postMessage({ mode: "tests", code: source, functionName: spec.functionName, testCases: spec.tests });
+    dispose = startSandboxedRun({
+      source: WORKER_SOURCE,
+      payload: { mode: "tests", code: source, functionName: spec.functionName, testCases: spec.tests },
+      // The clock starts once the runner frame is up, so a slow first load doesn't eat the budget.
+      onReady: () => {
+        timer = setTimeout(() => finish({ timedOut: true }), timeoutMs);
+      },
+      onMessage: (msg) => onMessage(msg as WorkerMessage),
+      onError: (message) => finish({ compileError: message }),
+    });
+    if (settled) dispose();
   });
 }
 
@@ -334,10 +330,11 @@ export async function runBrowserSnippet(
   }
 
   return new Promise<SnippetOutcome>((resolve) => {
-    const { worker, dispose } = spawn();
     const stdout: string[] = [];
     const stderr: string[] = [];
     let settled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let dispose = () => {};
 
     const finish = (timedOut: boolean) => {
       if (settled) return;
@@ -347,20 +344,26 @@ export async function runBrowserSnippet(
       if (timedOut) stderr.push(`Stopped after ${timeoutMs / 1000} seconds.`);
       resolve({ stdout: stdout.join("\n"), stderr: stderr.join("\n"), timedOut });
     };
-    const timer = setTimeout(() => finish(true), timeoutMs);
 
-    worker.onmessage = (event: MessageEvent<WorkerMessage>) => {
-      const msg = event.data;
-      if (msg.type === "log") {
-        const target = msg.stream === "stderr" ? stderr : stdout;
-        if (target.length < 500) target.push(msg.text);
-      } else if (msg.type === "done") finish(false);
-    };
-    worker.onerror = (event) => {
-      event.preventDefault();
-      stderr.push(event.message || "The code couldn't be run.");
-      finish(false);
-    };
-    worker.postMessage({ mode: "snippet", code: source });
+    dispose = startSandboxedRun({
+      source: WORKER_SOURCE,
+      payload: { mode: "snippet", code: source },
+      onReady: () => {
+        timer = setTimeout(() => finish(true), timeoutMs);
+      },
+      onMessage: (raw) => {
+        const msg = raw as WorkerMessage;
+        if (!msg || typeof msg !== "object") return;
+        if (msg.type === "log") {
+          const target = msg.stream === "stderr" ? stderr : stdout;
+          if (target.length < 500) target.push(msg.text);
+        } else if (msg.type === "done") finish(false);
+      },
+      onError: (message) => {
+        stderr.push(message);
+        finish(false);
+      },
+    });
+    if (settled) dispose();
   });
 }

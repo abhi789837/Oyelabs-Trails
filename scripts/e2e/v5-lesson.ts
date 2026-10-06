@@ -309,7 +309,8 @@ async function main(): Promise<void> {
     // -----------------------------------------------------------------------
     step("2. Read: takeaways, runnable block, Ask Oye with a citation");
     await poll("the Read step", WAIT, async () => ((await currentStep(page))?.includes("Read") ? true : null));
-    ok(await page.getByRole("region", { name: "Key takeaways" }).isVisible(), "key takeaways are shown first");
+    // The Read step's code loads on demand (P8 budget), so wait for it rather than checking at once.
+    ok(await page.getByRole("region", { name: "Key takeaways" }).waitFor({ timeout: WAIT }).then(() => true, () => false), "key takeaways are shown first");
     ok(await page.getByRole("progressbar", { name: /How much of this article/ }).isVisible(), "a reading progress bar is shown");
     ok(await page.getByText(/\d+ min read/).first().isVisible(), "the reading time is shown");
     await page.getByRole("button", { name: "Try it" }).first().click({ timeout: WAIT });

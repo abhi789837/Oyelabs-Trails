@@ -15,18 +15,29 @@ import {
   type LessonStateView,
   type LessonStepId,
   type StepFacts,
-} from "@shared/lesson";
+} from "@shared/lessonCore";
 
 import type { TopicVideos } from "@/features/videos/useTopicVideos";
 import { topicNeighbors } from "@/content";
-import { Button, Celebration, LessonStepHeader, SkeletonLayout, StatusLine, cn, duration, easing, v5Toast } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
+import { Button } from "@/v5/design/components/Button";
+import { LessonStepHeader, StatusLine } from "@/v5/design/components/Lesson";
+import { SkeletonLayout } from "@/v5/design/components/States";
+import { duration, easing } from "@/v5/design/motion";
 
-import { QuickCheckDialog, ReportProblemDialog, ShortcutsDialog } from "./LessonDialogs";
-import { ReadStep } from "./steps/ReadStep";
-import { CheckStep } from "./steps/CheckStep";
 import { WatchStep, type WatchControls } from "./steps/WatchStep";
+import { resumePoint } from "./lessonLinks";
+import { lessonToast } from "./toast";
 import { useLessonSave } from "./useLessonSave";
 
+// Only Watch (the usual first step) is in the lesson's first download; every other step, the
+// dialogs and Ask Oye load when they're first needed.
+const ReadStep = lazy(() => import("./steps/ReadStep").then((mod) => ({ default: mod.ReadStep })));
+const CheckStep = lazy(() => import("./steps/CheckStep").then((mod) => ({ default: mod.CheckStep })));
+const QuickCheckDialog = lazy(() => import("./LessonDialogs").then((mod) => ({ default: mod.QuickCheckDialog })));
+const ReportProblemDialog = lazy(() => import("./LessonDialogs").then((mod) => ({ default: mod.ReportProblemDialog })));
+const ShortcutsDialog = lazy(() => import("./LessonDialogs").then((mod) => ({ default: mod.ShortcutsDialog })));
+const Celebration = lazy(() => import("@/v5/design/components/Showcase").then((mod) => ({ default: mod.Celebration })));
 const CodeDo = lazy(() => import("./steps/CodeDo"));
 const TaskDo = lazy(() => import("./steps/TaskDo"));
 const TutorDock = lazy(() => import("./TutorDock"));
@@ -59,9 +70,9 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
   const [step, setStep] = useState<LessonStepId>(() =>
     urlStep && STEP_IDS.has(urlStep) && canOpenStep(urlStep, available, done) ? urlStep : canOpenStep(view.step, available, done) ? view.step : available[0],
   );
-  const urlT = Number(params.get("t"));
+  // `&video=` (note links) picks the video when a lesson has several; `&t=` the moment in it.
   const resume = useMemo(
-    () => ({ videoId: view.videoId, seconds: Number.isFinite(urlT) && params.get("t") !== null ? urlT : view.positionSec }),
+    () => resumePoint({ video: params.get("video"), t: params.get("t") }, { videoId: view.videoId, positionSec: view.positionSec }),
     // The starting point is read once.
     [],
   );
@@ -78,6 +89,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
   const advanceAfterQuick = useRef(false);
   const [focusPassage, setFocusPassage] = useState<string | null>(null);
   const [celebrate, setCelebrate] = useState(false);
+  const opened = useEverOpened({ quick: quickOpen, help: helpOpen, report: reportOpen, celebrate });
   const watchRef = useRef<WatchControls>(null);
   const codeRef = useRef<string | undefined>(undefined);
   const topRef = useRef<HTMLDivElement>(null);
@@ -86,7 +98,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
     setView(res.state);
     const xp = res.awarded.reduce((sum, a) => sum + a.xp, 0);
     if (res.justCompleted) setCelebrate(true);
-    else if (xp > 0) v5Toast.success(`+${xp} XP`, "Step done");
+    else if (xp > 0) lessonToast.success(`+${xp} XP`, "Step done");
   }, []);
   const { save } = useLessonSave(topic.id, onSaved);
 
@@ -101,6 +113,22 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
     checkPassed: view.facts.quizPassed,
   };
   const requirement = stepRequirement(step, facts);
+
+  // Fetch the other steps' code once the browser is idle, so Next doesn't wait on a download.
+  useEffect(() => {
+    const warm = () => {
+      void import("./steps/ReadStep");
+      if (isCode) void import("./steps/CodeDo");
+      else void import("./steps/TaskDo");
+      void import("./steps/CheckStep");
+    };
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(warm, { timeout: 4000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(warm, 1500);
+    return () => window.clearTimeout(id);
+  }, [isCode]);
 
   // When the current step's rule is met, tell the server (it checks again before any XP).
   const requested = useRef(new Set<string>());
@@ -120,12 +148,13 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
           const n = new URLSearchParams(p);
           n.set("step", next);
           n.delete("t");
+          n.delete("video");
           return n;
         },
         { replace: true },
       );
       void save({ step: next }, true);
-      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      const reduce = document.documentElement.dataset.motion === "reduce" || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
       topRef.current?.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
     },
     [save, setParams],
@@ -158,7 +187,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
   const onCite = (passageId: string) => {
     if (!available.includes("read")) return;
     if (!canOpenStep("read", available, done)) {
-      v5Toast.info("Finish the earlier step first", "Then the reading opens and you can see this part.");
+      lessonToast.info("Finish the earlier step first", "Then the reading opens and you can see this part.");
       return;
     }
     setFocusPassage(null);
@@ -244,7 +273,11 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
           />
         );
       case "read":
-        return <ReadStep topic={topic} done={done.read} onReadToEnd={() => setReadToEnd(true)} focusPassage={focusPassage} />;
+        return (
+          <Suspense fallback={<SkeletonLayout variant="article" label="Loading the reading" />}>
+            <ReadStep topic={topic} done={done.read} onReadToEnd={() => setReadToEnd(true)} focusPassage={focusPassage} />
+          </Suspense>
+        );
       case "do":
         return (
           <div className="flex flex-col gap-6">
@@ -294,7 +327,11 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
           </div>
         );
       case "check":
-        return <CheckStep topic={topic} questions={topic.quiz ?? []} videos={videos.data} onGoWatch={() => goTo("watch")} onGraded={onQuizGraded} />;
+        return (
+          <Suspense fallback={<SkeletonLayout variant="article" label="Loading the test" />}>
+            <CheckStep topic={topic} questions={topic.quiz ?? []} videos={videos.data} onGoWatch={() => goTo("watch")} onGraded={onQuizGraded} />
+          </Suspense>
+        );
     }
   };
 
@@ -370,25 +407,41 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
         </div>
       </m.div>
 
-      <QuickCheckDialog
-        open={quickOpen}
-        onOpenChange={setQuickOpen}
-        topicId={topic.id}
-        onClosed={() => {
-          if (advanceAfterQuick.current && nextStepId) {
-            advanceAfterQuick.current = false;
-            goTo(nextStepId);
-          }
-        }}
-      />
-      <ShortcutsDialog open={helpOpen} onOpenChange={setHelpOpen} />
-      <ReportProblemDialog open={reportOpen} onOpenChange={setReportOpen} topicId={topic.id} step={step} />
+      {/* Each dialog's chunk loads the first time it opens, and it stays mounted for its close animation. */}
+      <Suspense fallback={null}>
+        {opened.quick ? (
+          <QuickCheckDialog
+            open={quickOpen}
+            onOpenChange={setQuickOpen}
+            topicId={topic.id}
+            onClosed={() => {
+              if (advanceAfterQuick.current && nextStepId) {
+                advanceAfterQuick.current = false;
+                goTo(nextStepId);
+              }
+            }}
+          />
+        ) : null}
+        {opened.help ? <ShortcutsDialog open={helpOpen} onOpenChange={setHelpOpen} /> : null}
+        {opened.report ? <ReportProblemDialog open={reportOpen} onOpenChange={setReportOpen} topicId={topic.id} step={step} /> : null}
+      </Suspense>
       {tutorOpen ? (
         <Suspense fallback={null}>
           <TutorDock open={tutorOpen} onOpenChange={setTutorOpen} topicId={topic.id} step={step} getCode={() => codeRef.current} onCite={onCite} />
         </Suspense>
       ) : null}
-      <Celebration open={celebrate} onDone={() => setCelebrate(false)} title="Lesson finished" detail={nextTopic ? `Next up: ${nextTopic.title}` : "Nice work."} />
+      {opened.celebrate ? (
+        <Suspense fallback={null}>
+          <Celebration open={celebrate} onDone={() => setCelebrate(false)} title="Lesson finished" detail={nextTopic ? `Next up: ${nextTopic.title}` : "Nice work."} />
+        </Suspense>
+      ) : null}
     </div>
   );
+}
+
+/** Which of these have ever been true (a lazy dialog mounts on first open and then stays). */
+function useEverOpened<K extends string>(flags: Record<K, boolean>): Record<K, boolean> {
+  const seen = useRef({} as Record<K, boolean>);
+  for (const key of Object.keys(flags) as K[]) if (flags[key]) seen.current[key] = true;
+  return seen.current;
 }

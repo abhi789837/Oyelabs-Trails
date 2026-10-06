@@ -13,6 +13,7 @@ import { evaluateHandler } from "./assessment/evaluateJob";
 import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
 import { startDailyMaintenance } from "./maintenance/retention";
 import { startNightlyStreaks } from "./v5/streak/repo";
+import { startMotivationScheduler } from "./v5/notify/scheduler";
 import { bankFillHandler } from "./bank/fillJob";
 import { bankRevalidateHandler } from "./handbook/revalidate";
 import { personaliseHandler } from "./assessment/personalise/job";
@@ -142,6 +143,8 @@ async function main(): Promise<void> {
 
   // v5: weekly streaks and milestone XP, recomputed nightly (reads recompute too).
   const stopStreaks = startNightlyStreaks({ db, content, log: (m) => console.log(`[oyelearn] ${m}`) });
+  // v5: reminders, weekly recaps and the email outbox, hourly (P6).
+  const stopMotivation = startMotivationScheduler({ db, content, appUrl: env.publicOrigin, log: (m) => console.log(`[oyelearn] ${m}`) });
 
   // Snapshot retention and the nightly backup (brief §10.6, §15).
   const stopMaintenance = startDailyMaintenance({
@@ -159,6 +162,7 @@ async function main(): Promise<void> {
       clearInterval(courseWake);
       stopMaintenance();
       stopStreaks();
+      stopMotivation();
       await worker.stop();
       await app.close();
       // Checkpoint the WAL so the .db file is complete for a backup or a container restart.

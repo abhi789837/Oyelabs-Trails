@@ -1,11 +1,15 @@
 import { useId, useState } from "react";
 import { CheckCheck, RotateCcw } from "lucide-react";
 
-import { DO_MAX_ATTEMPTS } from "@shared/lesson";
+import { DO_MAX_ATTEMPTS } from "@shared/lessonCore";
 import { TASK_KIND_LABELS, gradeTask, type Task, type TaskResponse } from "@shared/tasks";
 
 import { hasTaskAnswer, TaskView } from "@/components/tasks/TaskView";
-import { Badge, Button, FeedbackPanel, SplitView, StatusLine } from "@/v5/design";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Button } from "@/v5/design/components/Button";
+import { FeedbackPanel, StatusLine } from "@/v5/design/components/Lesson";
+import { Badge } from "@/v5/design/components/Primitives";
+import { SplitView } from "@/v5/design/components/SplitView";
 
 import { LessonMarkdown } from "../LessonRich";
 
@@ -106,7 +110,10 @@ export default function TaskDo({ task, done, attempts: initialAttempts, traded, 
 
   const rightPane = (
     <div className="flex flex-col gap-4 p-4">
-      <TaskView key={round} task={task} value={value} onChange={setValue} readOnly={revealed} answer={revealed ? task : null} idPrefix={idPrefix} hidePrompt />
+      {/* Some task kinds use the older Radix tooltips, which need a provider (V5App has none). */}
+      <TooltipProvider delayDuration={150}>
+        <TaskView key={round} task={task} value={value} onChange={setValue} readOnly={revealed} answer={revealed ? task : null} idPrefix={idPrefix} hidePrompt />
+      </TooltipProvider>
       {task.kind === "roleplay" ? (
         <div>
           <Button variant="primary" onClick={onSelfDone} disabled={done}>

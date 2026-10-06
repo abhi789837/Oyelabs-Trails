@@ -11,6 +11,8 @@ import { csvName, downloadText, Page, PageHeader, plainMessage, useLoad, useSlow
 
 const SimpleBarChart = lazy(() => import("../parts/Charts").then((m) => ({ default: m.SimpleBarChart })));
 const SimpleLineChart = lazy(() => import("../parts/Charts").then((m) => ({ default: m.SimpleLineChart })));
+// Phase 6: the opt-in team board switch (super admins), next to the weekly email.
+const LeaderboardSetting = lazy(() => import("@/v5/motivation/LeaderboardSetting"));
 
 /** The summary rows that go above the day series in the CSV. */
 export function reportSummaryCsv(report: ReportsResponse): string {
@@ -126,6 +128,9 @@ export default function ReportsPage() {
               <Mail aria-hidden="true" />
               {emailOn ? "Weekly email: on" : "Email me this weekly"}
             </Button>
+            <Suspense fallback={null}>
+              <LeaderboardSetting />
+            </Suspense>
             <Button variant="primary" size="sm" onClick={exportCsv} disabled={!data}>
               <Download aria-hidden="true" />
               Download CSV

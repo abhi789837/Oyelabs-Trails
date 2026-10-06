@@ -14,7 +14,7 @@ import { registerAuthContext } from "./auth/guards";
 import type { ContentStore } from "./content/store";
 import type { Db } from "./db";
 import type { Env } from "./env";
-import { buildCsp } from "./lib/csp";
+import { buildCsp, buildRunnerCsp, RUNNER_PAGE_PATH } from "./lib/csp";
 import { HttpError } from "./lib/errors";
 import { registerAdminAiRoutes } from "./routes/admin/ai";
 import { registerAdminBuilderRoutes } from "./routes/admin/builder";
@@ -58,6 +58,9 @@ import { registerV5XpRoutes } from "./v5/xp/routes";
 import { registerV5ReviewRoutes } from "./v5/review/routes";
 import { registerV5MeRoutes } from "./v5/me/routes";
 import { registerV5LessonRoutes } from "./v5/lesson/register";
+import { registerV5MotivationRoutes } from "./v5/notify/routes";
+import { registerV5CertificateRoutes } from "./v5/certificates/routes";
+import { registerV5AssessmentRoutes } from "./v5/assessment/routes";
 import type { CodeSandbox } from "./sandbox";
 import { PistonClient } from "./sandbox/polyglot";
 
@@ -164,6 +167,17 @@ export async function buildApp({
     crossOriginResourcePolicy: { policy: "same-site" },
   });
 
+  // The isolated code runner gets its own, narrower policy (lib/csp.ts `buildRunnerCsp`): the one
+  // page where eval is allowed, with no network and an opaque origin. Replaces helmet's header.
+  const runnerCsp = buildRunnerCsp({ runnerHtmlPath: hasBuild ? path.join(env.clientDist, "runner.html") : undefined });
+  app.addHook("onSend", async (request, reply, payload) => {
+    if (request.url.split("?")[0] === RUNNER_PAGE_PATH) {
+      reply.header("content-security-policy", runnerCsp);
+      reply.header("cache-control", "no-cache");
+    }
+    return payload;
+  });
+
   await app.register(fastifyCookie, { secret: env.sessionSecret });
 
   // The defaults are sized for one proctoring JPEG. The v4.4 recording upload raises them for
@@ -220,6 +234,11 @@ export async function buildApp({
   await registerV5MeRoutes(app);
   // v5 Lesson (P3): /api/v5/lessons/*, notes, tutor, problems (+ /api/admin/v5/{problems,tutor-quality}).
   await registerV5LessonRoutes(app);
+  // v5 Motivation (P6): /api/v5/motivation, /api/v5/leaderboard, /api/admin/motivation/*.
+  await registerV5MotivationRoutes(app);
+  // v5 Assessment results + certificates (P5): /api/v5/assessment/results, /api/v5/certificates/*, /api/admin/v5/{certificates,assessment}.
+  await registerV5AssessmentRoutes(app);
+  await registerV5CertificateRoutes(app);
   // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);

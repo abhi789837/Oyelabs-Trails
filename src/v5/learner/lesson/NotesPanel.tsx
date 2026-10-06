@@ -1,13 +1,15 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Clock, Pencil, Trash2 } from "lucide-react";
 
-import { sortNotes, type LessonNote } from "@shared/lesson";
-import { formatClock } from "@shared/video";
+import { sortNotes, type LessonNote } from "@shared/lessonCore";
+import { formatClock } from "@shared/videoCore";
 
 import { ApiRequestError } from "@/api/client";
-import { Button, Kbd, Textarea, v5Toast } from "@/v5/design";
+import { Button } from "@/v5/design/components/Button";
+import { Textarea } from "@/v5/design/components/Field";
 
 import { lessonApi } from "./api";
+import { lessonToast } from "./toast";
 
 export interface NotesPanelHandle {
   /** Opens the box with the note pinned to this moment and moves focus into it. */
@@ -60,7 +62,7 @@ export const NotesPanel = forwardRef<NotesPanelHandle, { topicId: string; videoI
       setNotes((list) => sortNotes([...list, res.note]));
       setDraft("");
       setComposing(false);
-      v5Toast.success(at !== null ? `Note saved at ${formatClock(at)}` : "Note saved");
+      lessonToast.success(at !== null ? `Note saved at ${formatClock(at)}` : "Note saved");
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "We couldn't save that note. Try again.");
     } finally {
@@ -75,7 +77,7 @@ export const NotesPanel = forwardRef<NotesPanelHandle, { topicId: string; videoI
       setNotes((list) => list.map((n) => (n.id === res.note.id ? res.note : n)));
       setEditing(null);
     } catch {
-      v5Toast.error("We couldn't save that change. Try again.");
+      lessonToast.error("We couldn't save that change. Try again.");
     }
   };
 
@@ -85,7 +87,7 @@ export const NotesPanel = forwardRef<NotesPanelHandle, { topicId: string; videoI
       await lessonApi.deleteNote(note.id);
     } catch {
       setNotes((list) => sortNotes([...list, note]));
-      v5Toast.error("We couldn't delete that note. Try again.");
+      lessonToast.error("We couldn't delete that note. Try again.");
     }
   };
 
@@ -97,7 +99,7 @@ export const NotesPanel = forwardRef<NotesPanelHandle, { topicId: string; videoI
         </h2>
         {!composing ? (
           <span className="text-caption text-fg-2">
-            Press <Kbd>N</Kbd> to add one at this moment
+            Press <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-line-1 bg-surface-1 px-1 font-mono text-[0.6875rem] font-medium text-fg-2">N</kbd> to add one at this moment
           </span>
         ) : null}
       </div>

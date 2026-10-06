@@ -250,6 +250,8 @@ async function main(): Promise<void> {
     const learnerCtx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const page = await learnerCtx.newPage();
     await signIn(page, "vee.one", tempA, LEARNER_NEW);
+    // The P6 first-run welcome would cover Today; v5-motivation.ts tests it.
+    await sendJson(learnerCtx.request, "put", "/api/v5/motivation/prefs", { welcomeDone: true });
     const me = await getJson<{ ui?: { v5: boolean } }>(learnerCtx.request, "/api/auth/me");
     ok(me.ui?.v5 === false, "/api/auth/me says ui.v5 = false");
     await page.goto(`${BASE}/`, { waitUntil: "networkidle", timeout: WAIT });
@@ -296,7 +298,8 @@ async function main(): Promise<void> {
     await page.setViewportSize({ width: 1440, height: 900 });
 
     step("5. Use previous design");
-    await page.goto(`${BASE}/learn/me`, { waitUntil: "networkidle", timeout: WAIT });
+    // Since P4 the switch lives on Me → Settings.
+    await page.goto(`${BASE}/learn/me?tab=settings`, { waitUntil: "networkidle", timeout: WAIT });
     await page.getByRole("button", { name: "Use previous design" }).click({ timeout: WAIT });
     ok(await seesOldDashboard(page), "back on the old dashboard");
     const after = await getJson<{ ui?: { v5: boolean } }>(learnerCtx.request, "/api/auth/me");
@@ -313,6 +316,8 @@ async function main(): Promise<void> {
     const pageB = await ctxB.newPage();
     await signIn(pageB, "vee.two", tempB, LEARNER_NEW);
     await pageB.waitForURL((u) => u.pathname.startsWith("/learn"), { timeout: WAIT }).catch(() => undefined);
+    await sendJson(ctxB.request, "put", "/api/v5/motivation/prefs", { welcomeDone: true });
+    await pageB.reload({ waitUntil: "networkidle" });
     ok(new URL(pageB.url()).pathname.startsWith("/learn"), `new learner lands in v5 (${new URL(pageB.url()).pathname})`);
     const bottomNav = pageB.getByRole("navigation", { name: "Main" }).filter({ visible: true }).first();
     ok(await bottomNav.waitFor({ state: "visible", timeout: WAIT }).then(() => true, () => false), "v5 bottom nav visible at 390 px");
@@ -324,11 +329,11 @@ async function main(): Promise<void> {
     // Staff override: the superadmin's console in the browser.
     const staffPage = await adminCtx.newPage();
     await staffPage.goto(`${BASE}/admin`, { waitUntil: "networkidle", timeout: WAIT });
-    ok(await seesHeading(staffPage, "Inbox"), "superadmin gets the v5 admin inbox with the default on");
+    ok(await seesHeading(staffPage, "Needs your attention"), "superadmin gets the v5 admin inbox with the default on");
     await staffPage.goto(`${BASE}/admin?ui=old`, { waitUntil: "networkidle", timeout: WAIT });
-    ok(!(await seesHeading(staffPage, "Inbox")), "staff ?ui=old shows the old console");
+    ok(!(await seesHeading(staffPage, "Needs your attention")), "staff ?ui=old shows the old console");
     await staffPage.goto(`${BASE}/admin?ui=v5`, { waitUntil: "networkidle", timeout: WAIT });
-    ok(await seesHeading(staffPage, "Inbox"), "staff ?ui=v5 shows v5 again");
+    ok(await seesHeading(staffPage, "Needs your attention"), "staff ?ui=v5 shows v5 again");
     await sendJson(admin, "put", "/api/admin/settings/ui", { v5Default: "off" });
 
     step("7. /verify without signing in");

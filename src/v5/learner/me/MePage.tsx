@@ -1,4 +1,4 @@
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Award, Download, ExternalLink, NotebookPen, RotateCcw, Search, Trophy } from "lucide-react";
 import { m } from "motion/react";
 import { Link } from "react-router-dom";
@@ -19,6 +19,9 @@ import { linkedInAddUrl, searchNotes, type CertificateView, type MeProfile, type
 
 import { PageFrame, V5Screen, useApiData, useDelayed, type ApiData } from "./page";
 import { applyTheme } from "./settings";
+
+// Phase 6: the weekly goal (and team board opt-in), saved through /api/v5/motivation/prefs.
+const MotivationSettings = lazy(() => import("@/v5/motivation/MotivationSettings"));
 
 /**
  * `/learn/me`: what you can do now (skill levels, practical cases, certificates), your XP and
@@ -374,6 +377,10 @@ function SettingsTab({ settings }: { settings: ApiData<{ settings: Settings }> }
         ) : null}
         <Toggle label="Weekly email" hint="A short summary of your week, every Monday." checked={s.weeklyEmail} onChange={(v) => void save({ weeklyEmail: v })} />
       </Card>
+
+      <Suspense fallback={null}>
+        <MotivationSettings />
+      </Suspense>
 
       <Card className="flex flex-col gap-3">
         <CardHeader title="Design" className="mb-0" />

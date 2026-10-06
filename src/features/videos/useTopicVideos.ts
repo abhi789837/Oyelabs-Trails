@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import type { TopicVideosResponse, VideoPrefs } from "@shared/video";
-import { DEFAULT_VIDEO_PREFS } from "@shared/video";
+import type { TopicVideosResponse, VideoPrefs } from "@shared/videoCore";
+import { DEFAULT_VIDEO_PREFS } from "@shared/videoCore";
 
 import { videosApi } from "./api";
 

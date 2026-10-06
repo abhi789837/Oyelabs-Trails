@@ -15,7 +15,8 @@ import { V5MotionProvider } from "@/v5/design/V5MotionProvider";
 
 export function V5Screen({ children, reducedMotion }: { children: ReactNode; reducedMotion?: ReducedMotionPref | null }) {
   useV5Root(reducedMotion === undefined ? {} : { reducedMotion });
-  return <V5MotionProvider reducedMotion={reducedMotion ?? "system"}>{children}</V5MotionProvider>;
+  // No value (still loading, or a screen that doesn't pass one) inherits the app-wide preference (V5App).
+  return <V5MotionProvider reducedMotion={reducedMotion}>{children}</V5MotionProvider>;
 }
 
 export function PageFrame({ title, lead, actions, children, className, wide }: { title: ReactNode; lead?: ReactNode; actions?: ReactNode; children: ReactNode; className?: string; wide?: boolean }) {

@@ -2,7 +2,8 @@ import { Captions, Gauge, MessageCircle, StickyNote } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "../components/Button";
-import { Callout, Flashcard, HintLadder, ReadingView, SplitView, TutorPanel, type TutorMessage } from "../components/Learning";
+import { Callout, Flashcard, HintLadder, ReadingView, TutorPanel, type TutorMessage } from "../components/Learning";
+import { SplitView } from "../components/SplitView";
 import { FeedbackPanel, LessonStepHeader, PlaylistSidebar, VideoPlayerFrame, type PlaylistEntry } from "../components/Lesson";
 import { CertificatePreview } from "../components/Showcase";
 import type { LessonStep, Rating } from "../lesson";

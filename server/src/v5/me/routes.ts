@@ -23,6 +23,7 @@ import { refreshStreak } from "../streak/repo";
 import { xpTotals } from "../xp/repo";
 import { courseDetailFor, libraryFor } from "./library";
 import { skillLevels } from "./levels";
+import { syncCertificates } from "../certificates/repo";
 
 /**
  * v5 Me and Library (Phase 4):
@@ -113,6 +114,8 @@ export async function registerV5MeRoutes(app: FastifyInstance): Promise<void> {
       return { id: g.id, title: o?.title ?? g.outcome, statement: o?.statement ?? g.outcome, achievedAt: g.achievedAt };
     });
 
+    // P5: issue certificates for anything newly complete, so the list below is current.
+    syncCertificates(app.db, app.content, user);
     const certificates = app.db
       .select()
       .from(schema.certificates)

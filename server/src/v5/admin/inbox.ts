@@ -18,6 +18,7 @@ import type { ContentStore } from "../../content/store";
 import { schema, type Db } from "../../db";
 import type { Env } from "../../env";
 import { learnerSignals } from "./activity";
+import { emailSetupIssue } from "../email/setup";
 
 const DAY_MS = 86_400_000;
 /** Test warnings older than this have been dealt with one way or another. */
@@ -266,6 +267,11 @@ export function buildInbox(deps: InboxDeps, actor: { role: string }, now = Date.
   }
   if (env.isProduction && !env.sttBaseUrl) {
     setup("stt", "Spoken answers can't be marked on their own", "We'll ask you to listen to them instead.");
+  }
+  // Phase 6: emails (weekly recaps, reminders, this weekly report) are waiting on the mail settings.
+  const email = emailSetupIssue(db, now);
+  if (email && !isDismissed(dismissed, dismissKey("setup", "email"), now)) {
+    items.push({ id: "setup:email", group: "setup", title: email.title, detail: email.detail, at: null, href: "/admin/reports", action: { kind: "dismiss", label: "Got it", key: dismissKey("setup", "email") } });
   }
 
   const groups = groupInbox(items);

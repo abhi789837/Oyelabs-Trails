@@ -19,6 +19,12 @@ export default [
     gzip: true,
   },
   {
+    name: "v5 lesson player initial JS (/learn/lesson/:id)",
+    path: routeFiles(["V5App", "LessonPage"]).files,
+    limit: "200 KB",
+    gzip: true,
+  },
+  {
     name: "/design first load (sections lazy)",
     path: routeFiles(DESIGN_CHUNKS).files,
     limit: "230 KB",

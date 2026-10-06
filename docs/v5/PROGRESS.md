@@ -40,17 +40,17 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] 4.5 Gates + commit `feat(v5-p4)`
 
 ## Phase 5: Assessments, results, certificates
-- [ ] 5.1 Assessment UI (navigator, overall clock, autosave, runs, Speak/writing, calm proctoring) at 390 and 1440
-- [ ] 5.2 Results story, per-goal levels, reviewable questions, Request review, "Your plan is ready"
-- [ ] 5.3 Certificate redesign with verification URL/QR, PDF + share image
-- [ ] 5.4 Gates + commit `feat(v5-p5)`
+- [x] 5.1 Assessment UI (navigator, overall clock, autosave, runs, Speak/writing, calm proctoring) at 390 and 1440
+- [x] 5.2 Results story, per-goal levels, reviewable questions, Request review, "Your plan is ready"
+- [x] 5.3 Certificate redesign with verification URL/QR, PDF + share image
+- [x] 5.4 Gates + commit `feat(v5-p5)`
 
 ## Phase 6: Motivation
-- [ ] 6.1 XP rules (cases highest), weekly goal + streak + freezes, opt-in leaderboards (admin, off by default)
-- [ ] 6.2 Celebrations (≤2 s, skippable, reduced motion)
-- [ ] 6.3 Notifications: in-app, weekly email recap, optional reminder, quiet hours, ≤1/day
-- [ ] 6.4 First-run welcome (3 steps, skippable, revisit from Me)
-- [ ] 6.5 Gates + commit `feat(v5-p6)`
+- [x] 6.1 XP rules (cases highest), weekly goal + streak + freezes, opt-in leaderboards (admin, off by default)
+- [x] 6.2 Celebrations (≤2 s, skippable, reduced motion)
+- [x] 6.3 Notifications: in-app, weekly email recap, optional reminder, quiet hours, ≤1/day
+- [x] 6.4 First-run welcome (3 steps, skippable, revisit from Me)
+- [x] 6.5 Gates + commit `feat(v5-p6)`
 
 ## Phase 7: Admin
 - [x] 7.1 Shell + ⌘K + shortcuts
@@ -62,7 +62,7 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] 7.7 Gates + commit `feat(v5-p7)`
 
 ## Phase 8: Mobile, accessibility, polish
-- [ ] 8.0 Fix the browser code runner blocked by the production CSP (old topic "Run visible tests" and v4 snippet runs are broken live); lesson route over budget (291 KB gz) and the shared 54 KB vendor chunk
+- [x] 8.0 Fix the browser code runner blocked by the production CSP (old topic "Run visible tests" and v4 snippet runs are broken live); lesson route over budget (291 KB gz) and the shared 54 KB vendor chunk
 - [ ] 8.1 Mobile: learner screens, coding tabs + "send to my email", admin tablet/phone
 - [ ] 8.2 WCAG 2.2 AA + axe on every main route
 - [ ] 8.3 Skeletons, optimistic updates, error boundary, icons, installable PWA with offline Review
@@ -78,3 +78,4 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 
 ## Needs Abhishek
 - Lighthouse CI is configured (`npm run lhci`, `lighthouserc.cjs`) but needs a running server and a staff login (`LHCI_BASE_URL`, `LHCI_USERNAME`, `LHCI_PASSWORD`); it runs in Phase 9 locally.
+- Email (weekly recap, reminders, admin weekly report) needs SMTP on the server: `SMTP_URL` (or `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS`/`SMTP_SECURE`), `MAIL_FROM`, and `MAIL_DOMAIN` (usernames have no email). Without them emails are marked skipped, and nothing breaks.

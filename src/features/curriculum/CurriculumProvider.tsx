@@ -1,10 +1,9 @@
-import { useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/features/auth/AuthProvider";
-import { clearModuleCache, useCurriculumStore } from "@/store/curriculumStore";
-import { useProgressStore } from "@/store/progressStore";
+
+import { useCurriculumLoader } from "./useCurriculumLoader";
 
 /**
  * Loads the person's manifest and progress once they are signed in, and clears both when they are
@@ -15,26 +14,7 @@ import { useProgressStore } from "@/store/progressStore";
  * an empty curriculum first would flash "nothing assigned" on every load.
  */
 export function CurriculumProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
-  const status = useCurriculumStore((s) => s.status);
-  const error = useCurriculumStore((s) => s.error);
-  const loadCurriculum = useCurriculumStore((s) => s.load);
-  const resetCurriculum = useCurriculumStore((s) => s.reset);
-  const loadProgress = useProgressStore((s) => s.load);
-  const resetProgress = useProgressStore((s) => s.reset);
-
-  const userId = user?.id ?? null;
-
-  useEffect(() => {
-    if (!userId) {
-      resetCurriculum();
-      resetProgress();
-      clearModuleCache();
-      return;
-    }
-    void loadCurriculum();
-    void loadProgress();
-  }, [userId, loadCurriculum, loadProgress, resetCurriculum, resetProgress]);
+  const { status, error, retry } = useCurriculumLoader();
 
   if (status === "idle" || status === "loading") {
     return (
@@ -50,7 +30,7 @@ export function CurriculumProvider({ children }: { children: ReactNode }) {
       <div className="mx-auto max-w-md px-4 py-24 text-center">
         <h1 className="text-xl font-semibold">Your trail couldn't be loaded</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error}</p>
-        <Button className="mt-6" onClick={() => void loadCurriculum()}>
+        <Button className="mt-6" onClick={retry}>
           Try again
         </Button>
       </div>

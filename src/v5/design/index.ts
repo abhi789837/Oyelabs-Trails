@@ -12,7 +12,7 @@ import "./styles";
 
 export { cn } from "./cn";
 export { useV5Root, type V5RootOptions } from "./useV5Root";
-export { V5MotionProvider } from "./V5MotionProvider";
+export { V5MotionProvider, useMotionPref } from "./V5MotionProvider";
 export * from "./motion";
 export * from "./density";
 export { useIsMobile, useMediaQuery, usePrefersReducedMotion } from "./hooks";
@@ -28,7 +28,8 @@ export { Trail, Waypoint, type TrailProps, type WaypointProps } from "./componen
 export { ContourBackground, EmptyState, ErrorState, Skeleton, SkeletonLayout, type SkeletonVariant } from "./components/States";
 export { CommandPalette, Dialog, Sheet, V5Toaster, useCommandShortcut, v5Toast, type CommandGroup, type CommandItem } from "./components/Overlays";
 export { FeedbackPanel, LessonStepHeader, PlaylistSidebar, StatusLine, VideoPlayerFrame, type PlaylistEntry } from "./components/Lesson";
-export { Callout, Flashcard, HintLadder, ReadingView, SplitView, Takeaways, TutorPanel, type TutorMessage } from "./components/Learning";
+export { Callout, Flashcard, HintLadder, ReadingView, Takeaways, TutorPanel, type TutorMessage } from "./components/Learning";
+export { SplitView, type SplitViewProps } from "./components/SplitView";
 export { Celebration, CertificatePreview, Logo } from "./components/Showcase";
 export { AppShell, type AppShellProps, type LinkLike, type NavItem } from "./components/AppShell";
 

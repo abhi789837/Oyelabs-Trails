@@ -2,18 +2,23 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, CircleX, CloudUpload, Play, RotateCcw, Unlock } from "lucide-react";
 
 import type { CodeAttemptResult, ServedCodeChallenge, ServedTopic } from "@shared/content";
-import type { RunChecksResponse } from "@shared/lesson";
-import { SOLUTION_MIN_ATTEMPTS, codeHints, type LessonFacts, type SolutionResponse } from "@shared/lesson";
+import type { RunChecksResponse } from "@shared/lessonCore";
+import { SOLUTION_MIN_ATTEMPTS, codeHints, type LessonFacts, type SolutionResponse } from "@shared/lessonCore";
 import { ERROR_CODES } from "@shared/apiCodes";
 
 import { ApiRequestError } from "@/api/client";
-import { CodeBlock } from "@/components/content/RichText";
+import { CodeBlock } from "@/components/content/markdownCore";
 import { CodeEditor } from "@/components/challenge/CodeEditor";
 import { RequestReview } from "@/components/challenge/RequestReview";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { submitAttempt } from "@/features/challenge/api";
 import { useProgressStore } from "@/store/progressStore";
-import { Button, FeedbackPanel, HintLadder, SplitView, StatusLine, Tabs, TabsContent, TabsList, TabsTrigger, cn } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
+import { Button } from "@/v5/design/components/Button";
+import { HintLadder } from "@/v5/design/components/Learning";
+import { FeedbackPanel, StatusLine } from "@/v5/design/components/Lesson";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/v5/design/components/Primitives";
+import { SplitView } from "@/v5/design/components/SplitView";
 
 import { lessonApi } from "../api";
 import { LessonMarkdown } from "../LessonRich";

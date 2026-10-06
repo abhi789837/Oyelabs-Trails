@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { BookOpen, ThumbsDown, ThumbsUp } from "lucide-react";
 
-import type { LessonStepId, TutorMessageView, TutorStatus } from "@shared/lesson";
+import type { LessonStepId, TutorMessageView, TutorStatus } from "@shared/lessonCore";
 
 import { ApiRequestError } from "@/api/client";
-import { TutorPanel, cn, type TutorMessage } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
+import { TutorPanel, type TutorMessage } from "@/v5/design/components/Learning";
 
 import { lessonApi } from "./api";
 import { LessonMarkdown } from "./LessonRich";

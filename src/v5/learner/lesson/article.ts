@@ -1,6 +1,6 @@
-import { calloutOf, lessonPassages, matchGlossary, type CalloutKind } from "@shared/lesson";
+import { calloutOf, lessonPassages, matchGlossary, type CalloutKind } from "@shared/lessonCore";
 
-import { parseBlocks, splitInline } from "@/components/content/RichText";
+import { parseBlocks, splitInline } from "@/components/content/markdownCore";
 import { humaniseId, splitTermLinks } from "@/features/handbook/termLinks";
 
 /**

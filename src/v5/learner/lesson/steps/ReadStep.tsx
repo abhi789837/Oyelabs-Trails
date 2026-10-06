@@ -2,12 +2,15 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { BookCheck, ExternalLink } from "lucide-react";
 
 import type { ServedTopic } from "@shared/content";
-import { extractTakeaways, glossaryPhrases, readingMinutes, verifiedLabel } from "@shared/lesson";
+import { extractTakeaways, glossaryPhrases, readingMinutes, verifiedLabel } from "@shared/lessonCore";
 import type { SopBlock } from "@shared/sop";
 
 import { api } from "@/api/client";
 import { useGlossary } from "@/features/handbook/useGlossary";
-import { Badge, Button, Callout, ProgressBar, ReadingView } from "@/v5/design";
+import { Button } from "@/v5/design/components/Button";
+import { Callout, ReadingView } from "@/v5/design/components/Learning";
+import { Badge } from "@/v5/design/components/Primitives";
+import { ProgressBar } from "@/v5/design/components/Progress";
 
 import { buildArticle, passageDomId } from "../article";
 import { BlocksView, LessonMarkdown, LessonTopicContext } from "../LessonRich";
@@ -110,7 +113,7 @@ export function ReadStep({ topic, done, onReadToEnd, focusPassage }: ReadStepPro
     if (!focusPassage) return;
     const el = document.getElementById(passageDomId(focusPassage));
     if (!el) return;
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const reduce = document.documentElement.dataset.motion === "reduce" || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     el.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
     el.focus({ preventScroll: true });
   }, [focusPassage, sections]);

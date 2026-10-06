@@ -1,23 +1,49 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Compass } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
-import type { LessonStateView } from "@shared/lesson";
+import type { LessonStateView } from "@shared/lessonCore";
 
 import { findTopic } from "@/content";
 import { useTopicVideos } from "@/features/videos/useTopicVideos";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useModuleContent } from "@/hooks/useModuleContent";
 import { useProgressStore } from "@/store/progressStore";
-import { Button, EmptyState, ErrorState, SkeletonLayout, V5MotionProvider, useV5Root } from "@/v5/design";
+// Direct imports, not the `@/v5/design` barrel: the barrel pulls every design chunk (the split
+// view's resizable panels, the trail, the shell…) into the lesson's first download.
+import "@/v5/design/styles";
+import { V5MotionProvider } from "@/v5/design/V5MotionProvider";
+import { Button } from "@/v5/design/components/Button";
+import { EmptyState, ErrorState, SkeletonLayout } from "@/v5/design/components/States";
+import { useV5Root } from "@/v5/design/useV5Root";
 
 import { lessonApi } from "./api";
 import { LessonPlayer } from "./LessonPlayer";
 
-/** `/learn/lesson/:topicId?step=watch|read|do|check&t=<sec>`, the v5 lesson player (Phase 3). */
+const CourseLesson = lazy(() => import("./CourseLesson"));
+
+/**
+ * `/learn/lesson/:topicId?step=watch|read|do|check&t=<sec>&video=<id>`, the v5 lesson player
+ * (Phase 3). With `?course=<courseId>` the id is a library course lesson instead (CourseLesson).
+ */
 export default function LessonPage() {
   useV5Root();
-  const { topicId } = useParams();
+  const { topicId = "" } = useParams();
+  const [params] = useSearchParams();
+  const courseId = params.get("course");
+  if (courseId) {
+    return (
+      <V5MotionProvider>
+        <Suspense fallback={<div className="mx-auto max-w-3xl px-4 py-8"><SkeletonLayout variant="article" rows={6} label="Loading the lesson" /></div>}>
+          <CourseLesson key={courseId} courseId={courseId} topicId={topicId} />
+        </Suspense>
+      </V5MotionProvider>
+    );
+  }
+  return <CurriculumLesson topicId={topicId} />;
+}
+
+function CurriculumLesson({ topicId }: { topicId: string }) {
   const found = findTopic(topicId);
   useDocumentTitle(found?.topic.title ?? "Lesson");
 

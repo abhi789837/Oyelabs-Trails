@@ -174,20 +174,9 @@ export interface GlossaryTerm {
 // Course content links: [[term:change-request]] or [[term:change-request|CR]]
 // ---------------------------------------------------------------------------
 
-export const TERM_LINK_RE = /\[\[term:([a-z0-9-]+)(?:\|([^\]]+))?\]\]/g;
-
-export function termLinksIn(text: string): string[] {
-  return [...text.matchAll(TERM_LINK_RE)].map((m) => m[1]);
-}
-
-/** Plain text with links replaced by their label or the term name (for search, AI prompts, PDFs). */
-export function stripTermLinks(text: string, nameOf: (id: string) => string | undefined = () => undefined): string {
-  return text.replace(TERM_LINK_RE, (_all, id: string, label?: string) => label ?? nameOf(id) ?? id.replace(/-/g, " "));
-}
-
-export const LEGAL_NOTE = "Not legal advice: the signed contract always wins.";
-export const TYPICAL_NOTE = "Typical industry value — Oyelabs' own value may differ.";
-export const CONFIRM_MARKER = "[Oyelabs SOP – admin to confirm]";
+// Defined in the zod-free `./handbookText` (so the lesson player can use them without zod), and
+// re-exported here so every existing import keeps working.
+export { CONFIRM_MARKER, LEGAL_NOTE, TERM_LINK_RE, TYPICAL_NOTE, stripTermLinks, termLinksIn } from "./handbookText";
 
 // ---------------------------------------------------------------------------
 // API shapes

@@ -1,4 +1,4 @@
-import { CONFIRM_MARKER, TERM_LINK_RE } from "@shared/handbook";
+import { CONFIRM_MARKER, TERM_LINK_RE } from "@shared/handbookText";
 
 /** A run of inline text: either plain text or a `[[term:id|label]]` link. */
 export type TermSegment = { kind: "text"; text: string } | { kind: "term"; id: string; label?: string; raw: string };

@@ -1,15 +1,20 @@
 import { createContext, lazy, Suspense, useState, type ReactNode } from "react";
 import { Play } from "lucide-react";
 
-import { runnableKind } from "@shared/lesson";
+import { runnableKind } from "@shared/lessonCore";
 
-import { CodeBlock } from "@/components/content/RichText";
+import { CodeBlock } from "@/components/content/markdownCore";
 import { useGlossary } from "@/features/handbook/useGlossary";
-import { Button, Tooltip, cn } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
+import { Button } from "@/v5/design/components/Button";
+import { Tooltip } from "@/v5/design/components/Primitives";
 
-import { blockTree, type ArticleBlock, type Inline } from "./article";
+import { parsePracticeBlock } from "@/lib/practiceBlocks";
+
+import { blockTree, inlineTree, type ArticleBlock, type Inline } from "./article";
 
 const TryIt = lazy(() => import("./TryIt"));
+const PracticeBlockView = lazy(() => import("./PracticeBlock"));
 
 /** The lesson whose code "Try it" runs (the server checks the learner may open it). */
 export const LessonTopicContext = createContext<string | null>(null);
@@ -102,7 +107,18 @@ export function BlocksView({ blocks, className }: { blocks: ArticleBlock[]; clas
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       {blocks.map((b, i) => {
-        if (b.k === "code") return <RunnableCode key={i} code={b.code} lang={b.lang} />;
+        if (b.k === "code") {
+          // ```quiz / ```task blocks from the admin block editor: a quick check or a task.
+          const practice = parsePracticeBlock(b.lang, b.code);
+          if (practice) {
+            return (
+              <Suspense key={i} fallback={<div className="h-24 rounded-card border border-line-1 bg-surface-1" aria-hidden="true" />}>
+                <PracticeBlockView block={practice} />
+              </Suspense>
+            );
+          }
+          return <RunnableCode key={i} code={b.code} lang={b.lang} />;
+        }
         if (b.k === "ul" || b.k === "ol") {
           const items = b.items.map((item, j) => (
             <li key={j}>
@@ -132,4 +148,9 @@ export function BlocksView({ blocks, className }: { blocks: ArticleBlock[]; clas
 /** Content Markdown with no glossary matching: instructions, quiz prompts, explanations. */
 export function LessonMarkdown({ text, className }: { text: string; className?: string }) {
   return <BlocksView blocks={blockTree(text, [], new Set())} className={className} />;
+}
+
+/** One line of content Markdown (`code`, **bold**, *emphasis*), no glossary matching. */
+export function InlineMarkdown({ text }: { text: string }) {
+  return <InlineView nodes={inlineTree(text, [], new Set())} />;
 }

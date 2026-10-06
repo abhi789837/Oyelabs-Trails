@@ -8,8 +8,11 @@ import fs from "node:fs";
  *
  * - `'wasm-unsafe-eval'` — MediaPipe's face and object detectors are WebAssembly. Without it the
  *   proctor engine cannot start. It permits WASM compilation only, not `eval` of JavaScript.
- * - `worker-src blob:` — the code-challenge runner builds its Worker from a Blob URL, and
- *   MediaPipe spawns its own workers.
+ * - `worker-src blob:` — MediaPipe spawns its own workers.
+ * - `frame-src 'self'` — the isolated code runner (`/runner.html`, below). Production is https, where
+ *   `https:` already covers it; `'self'` keeps it working on a plain-http origin too.
+ * - There is deliberately **no `'unsafe-eval'`** here. Learner code runs only inside `/runner.html`,
+ *   which gets its own policy from `buildRunnerCsp`.
  * - `style-src 'unsafe-inline'` — React and Framer Motion set element `style` attributes, which
  *   this directive governs. There is no practical way to hash those.
  * - `frame-src https:` — reference previews frame arbitrary documentation sites, and the set
@@ -53,11 +56,39 @@ export function buildCsp({ indexHtmlPath }: CspOptions = {}): Record<string, str
     "connect-src": ["'self'"],
     "worker-src": ["'self'", "blob:"],
     "child-src": ["'self'", "blob:"],
-    "frame-src": ["https:"],
+    "frame-src": ["'self'", "https:"],
     "object-src": ["'none'"],
     "base-uri": ["'self'"],
     "form-action": ["'self'"],
     "frame-ancestors": ["'none'"],
     "upgrade-insecure-requests": [],
   };
+}
+
+/** The isolated code runner page (src/lib/sandboxRunner.ts, public/runner.html). */
+export const RUNNER_PAGE_PATH = "/runner.html";
+
+/**
+ * The runner page's own policy, sent instead of the app's (helmet's header is replaced for this one
+ * path). It is the only place `'unsafe-eval'` is allowed, and it is safe there because:
+ *
+ * - the page is only ever loaded in `<iframe sandbox="allow-scripts">` (no `allow-same-origin`), so
+ *   it runs with an opaque origin: no cookies, no same-origin API access, no access to the app page;
+ * - `default-src 'none'` leaves it no network at all (no fetch, XHR, WebSocket, images, imports), so
+ *   code run there can't send anything anywhere; `form-action 'none'`, `base-uri 'none'`;
+ * - its one inline script is allowed by hash, and its worker only from `blob:`;
+ * - `frame-ancestors 'self'`: no other site can frame it.
+ */
+export function buildRunnerCsp({ runnerHtmlPath }: { runnerHtmlPath?: string | undefined } = {}): string {
+  const directives: Record<string, string[]> = {
+    "default-src": ["'none'"],
+    "script-src": [...inlineScriptHashes(runnerHtmlPath), "'unsafe-eval'"],
+    "worker-src": ["blob:"],
+    "base-uri": ["'none'"],
+    "form-action": ["'none'"],
+    "frame-ancestors": ["'self'"],
+  };
+  return Object.entries(directives)
+    .map(([name, values]) => [name, ...values].join(" "))
+    .join("; ");
 }

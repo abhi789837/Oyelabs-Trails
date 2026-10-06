@@ -1,4 +1,5 @@
-import { Award, ChevronRight, Compass, Pin, Trophy, TrendingUp } from "lucide-react";
+import { Award, ChevronRight, Compass, Pin, Snowflake, Trophy, TrendingUp } from "lucide-react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { AnnouncementView, TodayGoal, TodayResponse, TodayStreak, TodayUpNextItem, TodayWeek, TodayWin } from "@shared/today";
@@ -10,6 +11,8 @@ import { EmptyState, ErrorState } from "@/v5/design/components/States";
 import { StreakFlame } from "@/v5/design/components/Stats";
 import { Trail } from "@/v5/design/components/Trail";
 import { cn } from "@/v5/design/cn";
+import { celebrate, openProgress } from "@/v5/motivation/celebrate";
+import { freezeNotice } from "@/v5/motivation/logic";
 
 import { hoursLabel, minutesLabel, shortDate, trailWindow, weekRange } from "./format";
 
@@ -39,15 +42,26 @@ export function GoalRing({ goal }: { goal: TodayGoal }) {
               ? `${minutesLabel(Math.max(0, goal.goalMinutes! - goal.loggedMinutes))} to go this week.`
               : `${Math.max(0, 3 - goal.steps)} more ${3 - goal.steps === 1 ? "step" : "steps"} this week.`}
         </p>
+        {/* Phase 6: the weekly goal is the learner's to set (the "Your progress" panel). */}
+        <Button variant="link" size="sm" className="mt-1" onClick={openProgress} data-testid="today-change-goal">
+          Change my goal
+        </Button>
       </div>
     </div>
   );
 }
 
-export function StreakBlock({ streak }: { streak: TodayStreak }) {
+export function StreakBlock({ streak, week }: { streak: TodayStreak; week?: string }) {
+  const frozen = week ? freezeNotice(streak.history, week) : null;
   return (
     <div>
       <p className="mb-2 font-display text-h4 font-semibold text-fg-1">Weekly streak</p>
+      {frozen ? (
+        <p className="mb-2 flex items-center gap-2 rounded-control bg-info-soft px-3 py-2 text-small font-medium text-info-fg" data-testid="today-freeze-used">
+          <Snowflake className="size-4 shrink-0" aria-hidden="true" />
+          {frozen}
+        </p>
+      ) : null}
       <StreakFlame current={streak.current} best={streak.best} freezesLeft={streak.freezesLeft} history={streak.history} />
       <p className="mt-2 text-caption text-fg-2">Meet your goal each week to keep it going. You get 1 freeze a month for a busy week.</p>
     </div>
@@ -92,7 +106,7 @@ export function WeekCard({ week, goal, streak }: { week: TodayWeek | null; goal:
         </div>
         <div className="flex flex-col gap-6 border-line-1 lg:border-l lg:pl-6">
           <GoalRing goal={goal} />
-          <StreakBlock streak={streak} />
+          <StreakBlock streak={streak} week={goal.week} />
         </div>
       </div>
     </Card>
@@ -238,6 +252,17 @@ export function RecentWins({ wins }: { wins: TodayWin[] }) {
 // ---------------------------------------------------------------------------
 
 export default function TodayDetails({ data }: { data: TodayResponse }) {
+  // Phase 6: reaching the weekly goal is the "weekly summit" moment, once per week.
+  const { met, week } = data.goal;
+  const streakWeeks = data.streak.current;
+  useEffect(() => {
+    if (!met) return;
+    celebrate("weekly_summit", {
+      ref: week,
+      once: `summit:${week}`,
+      detail: streakWeeks > 1 ? `Your streak is ${streakWeeks} weeks.` : "See you next week.",
+    });
+  }, [met, week, streakWeeks]);
   return (
     <>
       {data.hero ? null : (

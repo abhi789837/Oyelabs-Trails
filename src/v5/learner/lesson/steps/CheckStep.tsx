@@ -3,14 +3,16 @@ import { Check, Lock, RotateCcw, X } from "lucide-react";
 
 import type { QuizAttemptResult, QuizQuestionResult, ServedQuizQuestion, ServedTopic } from "@shared/content";
 import { QUIZ_PASS_THRESHOLD } from "@shared/contentConstants";
-import type { TopicVideosResponse } from "@shared/video";
+import type { TopicVideosResponse } from "@shared/videoCore";
 
 import { ApiRequestError } from "@/api/client";
 import { RequestReview } from "@/components/challenge/RequestReview";
 import { submitAttempt } from "@/features/challenge/api";
 import { seededOrder } from "@/lib/shuffle";
 import { useProgressStore } from "@/store/progressStore";
-import { Button, StatusLine, cn } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
+import { Button } from "@/v5/design/components/Button";
+import { StatusLine } from "@/v5/design/components/Lesson";
 
 import { LessonMarkdown } from "../LessonRich";
 

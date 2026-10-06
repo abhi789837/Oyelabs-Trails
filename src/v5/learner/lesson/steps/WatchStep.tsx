@@ -2,13 +2,16 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRe
 import { Captions, CaptionsOff, ExternalLink, NotebookPen, Play } from "lucide-react";
 
 import type { ServedTopic } from "@shared/content";
-import { formatClock, SAMPLE_INTERVAL_SEC, UNPLAYABLE_ERROR_CODES, type TopicVideoState, type VideoProgressRequest } from "@shared/video";
+import { formatClock, SAMPLE_INTERVAL_SEC, UNPLAYABLE_ERROR_CODES, type TopicVideoState } from "@shared/videoCore";
+import type { VideoProgressRequest } from "@shared/video";
 
 import { initialUpNext, nextIndexAfter, upNextReducer } from "@/components/trail/upNext";
 import { useYouTubePlayer, YT_STATE, type YTPlayer } from "@/components/trail/useYouTubePlayer";
 import { sendProgressOnExit, videosApi } from "@/features/videos/api";
 import type { TopicVideos } from "@/features/videos/useTopicVideos";
-import { Button, PlaylistSidebar, StatusLine, VideoPlayerFrame, cn, type PlaylistEntry } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
+import { Button } from "@/v5/design/components/Button";
+import { PlaylistSidebar, StatusLine, VideoPlayerFrame, type PlaylistEntry } from "@/v5/design/components/Lesson";
 
 import { NotesPanel, type NotesPanelHandle } from "../NotesPanel";
 

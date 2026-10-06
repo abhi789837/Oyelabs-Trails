@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Code runner</title>
+</head>
+<body>
+<!--
+  The isolated code runner (src/lib/sandboxRunner.ts). Loaded only inside
+  <iframe sandbox="allow-scripts">, so this document has an opaque origin. The server sends it with
+  its own CSP (server/src/lib/csp.ts buildRunnerCsp): this inline script is allowed by its hash,
+  eval is allowed for the learner's code, and nothing can be fetched. Keep this script free of any
+  external dependency, and keep its message shapes in step with sandboxRunner.ts.
+-->
+<script>
+(function () {
+  "use strict";
+  var CHANNEL = "oyelearn-runner";
+  var worker = null;
+  var url = null;
+  function send(message) {
+    message.channel = CHANNEL;
+    parent.postMessage(message, "*");
+  }
+  function stop() {
+    if (worker) { worker.terminate(); worker = null; }
+    if (url) { URL.revokeObjectURL(url); url = null; }
+  }
+  addEventListener("message", function (event) {
+    if (event.source !== parent) return;
+    var data = event.data;
+    if (!data || data.channel !== CHANNEL || data.type !== "run") return;
+    if (typeof data.id !== "string" || typeof data.source !== "string") return;
+    var id = data.id;
+    stop();
+    try {
+      url = URL.createObjectURL(new Blob([data.source], { type: "text/javascript" }));
+      worker = new Worker(url);
+    } catch (err) {
+      send({ type: "worker-error", id: id, message: String((err && err.message) || err) });
+      return;
+    }
+    worker.onmessage = function (e) { send({ type: "worker", id: id, msg: e.data }); };
+    worker.onerror = function (e) {
+      e.preventDefault();
+      send({ type: "worker-error", id: id, message: e.message || "The code couldn't be run." });
+    };
+    worker.postMessage(data.payload);
+  });
+  send({ type: "ready" });
+})();
+</script>
+</body>
+</html>

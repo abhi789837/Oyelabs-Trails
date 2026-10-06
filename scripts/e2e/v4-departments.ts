@@ -475,7 +475,15 @@ async function takeEngineering(page: Page, request: APIRequestContext, assessmen
       await editCode(page);
       await pressRun(page, 2);
       await pressRun(page, 1);
-      c.ok(await article(page).getByRole("button", { name: "Run and submit" }).isEnabled(), `Q${a + 1} still open after two runs (next run submits)`);
+      // The counter drops when a run starts; the button stays busy until the run (now in the
+      // isolated runner frame, v5 P8) finishes, so wait for it rather than checking at once.
+      const submit = article(page).getByRole("button", { name: "Run and submit" });
+      let open = false;
+      for (let i = 0; i < 60 && !open; i += 1) {
+        open = await submit.isEnabled().catch(() => false);
+        if (!open) await page.waitForTimeout(500);
+      }
+      c.ok(open, `Q${a + 1} still open after two runs (next run submits)`);
       await shot(page, "eng", "05-coding-two-runs");
     },
   });

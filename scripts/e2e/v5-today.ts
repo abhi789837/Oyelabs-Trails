@@ -210,6 +210,8 @@ async function main(): Promise<void> {
     await sendJson(lr, "post", "/api/auth/login", { username: "tara.today", password: created.temporaryPassword });
     await sendJson(lr, "post", "/api/auth/change-password", { currentPassword: created.temporaryPassword, newPassword: LEARNER_NEW });
     await sendJson(lr, "put", "/api/me/ui", { v5: true });
+    // The P6 first-run welcome would cover Today; v5-motivation.ts tests it.
+    await sendJson(lr, "put", "/api/v5/motivation/prefs", { welcomeDone: true });
     const week = await getJson<{ week: { items: { topicId: string | null; status: string }[] } | null }>(lr, "/api/me/week");
     ok(week.week && week.week.items.length > 0, `the learner has a week (${week.week?.items.length ?? 0} items)`);
 

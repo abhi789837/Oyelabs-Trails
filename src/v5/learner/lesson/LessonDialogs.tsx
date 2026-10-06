@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
 
-import { LESSON_SHORTCUTS, PROBLEM_MESSAGE_MAX, type LessonStepId, type QuickCheckQuestion, type QuickCheckResult } from "@shared/lesson";
+import { LESSON_SHORTCUTS, PROBLEM_MESSAGE_MAX, type LessonStepId, type QuickCheckQuestion, type QuickCheckResult } from "@shared/lessonCore";
 
 import { ApiRequestError } from "@/api/client";
-import { Button, Dialog, Field, Kbd, Textarea, cn, v5Toast } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
+import { Button } from "@/v5/design/components/Button";
+import { Field, Textarea } from "@/v5/design/components/Field";
+import { Dialog, v5Toast } from "@/v5/design/components/Overlays";
+import { Kbd } from "@/v5/design/components/Primitives";
 
 import { lessonApi } from "./api";
 import { LessonMarkdown } from "./LessonRich";

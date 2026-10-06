@@ -42,7 +42,11 @@ export function useToday() {
       if (document.visibilityState === "visible") void load(true);
     };
     document.addEventListener("visibilitychange", onVisible);
+    // Phase 6: the weekly goal changed in the "Your progress" panel (ProgressPanel's GOAL_CHANGED_EVENT).
+    const onGoal = () => void load(true);
+    window.addEventListener("oyelearn:goal-changed", onGoal);
     return () => {
+      window.removeEventListener("oyelearn:goal-changed", onGoal);
       document.removeEventListener("visibilitychange", onVisible);
       controller.current?.abort();
     };

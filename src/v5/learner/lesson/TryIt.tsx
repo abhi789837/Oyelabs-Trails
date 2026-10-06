@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 import { Play, RotateCcw } from "lucide-react";
 
-import { previewDocument } from "@shared/lesson";
+import { previewDocument } from "@shared/lessonCore";
 
 import { CodeEditor } from "@/components/challenge/CodeEditor";
 import { ApiRequestError } from "@/api/client";
 import { toRunnableJs, type SnippetOutcome } from "@/lib/codeRunner";
-import { Button } from "@/v5/design";
+import { Button } from "@/v5/design/components/Button";
 
 import { lessonApi } from "./api";
 import { LessonTopicContext } from "./LessonRich";

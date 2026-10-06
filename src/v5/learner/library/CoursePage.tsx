@@ -1,8 +1,13 @@
-import { ArrowLeft, Check, CircleDashed, Clock, Film, ShieldCheck, Text } from "lucide-react";
+import { useMemo } from "react";
+import { ArrowLeft, Check, CircleDashed, Clock, Eye, Film, ShieldCheck, Text } from "lucide-react";
 import { m } from "motion/react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
+
+import type { Course } from "@shared/courses";
+import { isStaffRole } from "@shared/uiFlag";
 
 import { ApiRequestError } from "@/api/client";
+import { useAuth } from "@/features/auth/AuthProvider";
 import { Button } from "@/v5/design/components/Button";
 import { Card } from "@/v5/design/components/Card";
 import { Badge } from "@/v5/design/components/Primitives";
@@ -12,6 +17,7 @@ import { transitions } from "@/v5/design/motion";
 import type { CourseDetail } from "@shared/me";
 
 import { PageFrame, V5Screen, formatMinutes, useApiData, useDelayed } from "../me/page";
+import { previewCourseDetail } from "./coursePreview";
 import { FormatChip, RecommendedBadge } from "./LibraryPage";
 import { LEVEL_LABELS } from "./libraryLogic";
 
@@ -30,7 +36,15 @@ export default function CoursePage() {
 
 function CourseScreen() {
   const { courseId = "" } = useParams();
-  const { data, error, loading, reload } = useApiData<{ course: CourseDetail }>(courseId ? `/api/v5/me/library/${encodeURIComponent(courseId)}` : null);
+  const [params] = useSearchParams();
+  const { user } = useAuth();
+  // "Preview as learner" from the admin editor: staff only, read from the admin copy, saves nothing.
+  const preview = params.get("preview") === "1" && Boolean(user && isStaffRole(user.role));
+  const learnerData = useApiData<{ course: CourseDetail }>(courseId && !preview ? `/api/v5/me/library/${encodeURIComponent(courseId)}` : null);
+  const adminData = useApiData<{ course: Course }>(courseId && preview ? `/api/admin/courses/${encodeURIComponent(courseId)}` : null);
+  const previewDetail = useMemo(() => (adminData.data ? { course: previewCourseDetail(adminData.data.course) } : null), [adminData.data]);
+  const { error, loading, reload } = preview ? adminData : learnerData;
+  const data = preview ? previewDetail : learnerData.data;
   const showSkeleton = useDelayed(loading && !data);
   const back = (
     <Link to="/learn/library" className="inline-flex min-h-6 items-center gap-1 rounded-sm text-small font-medium text-brand-fg hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
@@ -60,6 +74,15 @@ function CourseScreen() {
 
   return (
     <PageFrame title={c.title} lead={c.summary || undefined}>
+      {preview ? (
+        <div role="status" className="flex flex-wrap items-center gap-2 rounded-card border border-info/30 bg-info-soft px-4 py-2 text-small text-fg-1" data-testid="preview-banner">
+          <Eye className="size-4 shrink-0" aria-hidden="true" />
+          <span className="font-semibold">Preview.</span> This is what learners see. Nothing you do here is saved.
+          <Link to={`/admin/library/${encodeURIComponent(c.id)}/edit`} className="ml-auto font-medium text-brand-fg underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
+            Back to the editor
+          </Link>
+        </div>
+      ) : null}
       {back}
       <m.div className="grid gap-(--v5-gap) lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={transitions.calm}>
         <div className="flex min-w-0 flex-col gap-(--v5-gap) lg:gap-6">
