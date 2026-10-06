@@ -1,4 +1,4 @@
-import { ArrowUpRight, CalendarClock, CheckCircle2, CircleDot, Flag, LogIn, MessageSquare, Sparkles, Trophy, UserPlus } from "lucide-react";
+import { ArrowUpRight, CalendarClock, CheckCircle2, CircleDot, Flag, LogIn, MessageSquare, RotateCw, Sparkles, Trophy, UserPlus } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -8,7 +8,7 @@ import type { NextAction, NextActionTone } from "@shared/nextAction";
 import { adminApi } from "@/features/admin/api";
 import { builderApi } from "@/features/admin/builder/api";
 import { nextActionApi } from "@/features/admin/learner/nextAction";
-import { Avatar, Badge, Button, ProgressBar, Sheet, Skeleton, StatusLine, v5Toast } from "@/v5/design";
+import { Avatar, Badge, Button, ProgressBar, Sheet, Skeleton, StatusLine, useIsMobile, useMediaQuery, v5Toast } from "@/v5/design";
 
 import { v5AdminApi } from "../api";
 import { formatDate, plainMessage, useLoad } from "../parts/common";
@@ -42,13 +42,17 @@ function fullPageHref(id: string, action: NextAction): string {
  */
 export function PersonSheet({ person, onClose, onChanged }: { person: PersonRow | null; onClose: () => void; onChanged: () => void }) {
   const open = person !== null;
+  // Phone: the whole screen, as a modal (there's no list beside it to use). Tablet: a narrower
+  // panel over the list. From 1024 px: the usual width, and from 1280 px the list makes room for it.
+  const phone = useIsMobile();
+  const roomy = useMediaQuery("(min-width: 1024px)");
   return (
     <Sheet
       open={open}
       onOpenChange={(o) => !o && onClose()}
-      modal={false}
-      side="auto"
-      width="md"
+      modal={phone}
+      side="right"
+      width={roomy ? "md" : "sm"}
       title={person?.displayName ?? "Person"}
       description={person ? person.username : undefined}
       footer={
@@ -113,7 +117,11 @@ function PersonBody({ person, onChanged }: { person: PersonRow; onChanged: () =>
 
       {learner ? (
         next.data === null && next.loading ? (
-          <Skeleton className="h-14 w-full" />
+          <Skeleton className="h-14 w-full rounded-card" />
+        ) : next.error && !next.data ? (
+          <StatusLine tone="neutral" action={<RetryButton onClick={next.reload} />}>
+            {plainMessage(next.error, "We couldn't work out the next step.")}
+          </StatusLine>
         ) : action ? (
           <StatusLine
             tone={TONE[action.tone]}
@@ -156,9 +164,13 @@ function PersonBody({ person, onChanged }: { person: PersonRow; onChanged: () =>
               <p className="text-small text-fg-2">No plan yet. It's made after their test.</p>
             )
           ) : activity.error ? (
-            <p className="text-small text-fg-2">{plainMessage(activity.error)}</p>
+            <LoadFailed message={plainMessage(activity.error)} onRetry={activity.reload} />
           ) : (
-            <Skeleton className="h-16 w-full" />
+            <div className="flex flex-col gap-2" aria-hidden="true">
+              <Skeleton className="h-2 w-full rounded-full" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
           )}
           {activity.data?.plan.goals.length ? (
             <ul className="mt-3 flex flex-col gap-1 text-small">
@@ -191,10 +203,39 @@ function PersonBody({ person, onChanged }: { person: PersonRow; onChanged: () =>
               </li>
             ))}
           </ol>
-        ) : activity.error ? null : (
-          <Skeleton className="h-24 w-full" />
+        ) : activity.error ? (
+          learner ? null : <LoadFailed message={plainMessage(activity.error)} onRetry={activity.reload} />
+        ) : (
+          <ul className="flex flex-col gap-2.5" aria-hidden="true">
+            {[0, 1, 2, 3].map((i) => (
+              <li key={i} className="flex items-center gap-3">
+                <Skeleton className="size-4 rounded-full" />
+                <Skeleton className="h-4 flex-1" />
+                <Skeleton className="h-4 w-16" />
+              </li>
+            ))}
+          </ul>
         )}
+        {activity.data && activity.data.events.length === 0 ? <p className="text-small text-fg-2">Nothing yet. Their first lesson shows up here.</p> : null}
       </section>
+    </div>
+  );
+}
+
+function RetryButton({ onClick }: { onClick: () => void }) {
+  return (
+    <Button variant="secondary" size="sm" onClick={onClick}>
+      <RotateCw aria-hidden="true" />
+      Try again
+    </Button>
+  );
+}
+
+function LoadFailed({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <div role="alert" className="flex flex-wrap items-center gap-3 text-small text-fg-2">
+      <span className="min-w-0 flex-1">{message}</span>
+      <RetryButton onClick={onRetry} />
     </div>
   );
 }

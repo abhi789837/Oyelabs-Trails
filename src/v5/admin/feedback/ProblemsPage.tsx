@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 
 import { UNDO_MS } from "@shared/adminInbox";
 
-import { Badge, Button, Card, EmptyState, ErrorState, SkeletonLayout, v5Toast } from "@/v5/design";
+import { Badge, Button, Card, EmptyState, ErrorState, v5Toast } from "@/v5/design";
 
 import { v5AdminApi } from "../api";
 import { formatDateTime, isMissing, Page, PageHeader, plainMessage, Segmented, useLoad, useSlow } from "../parts/common";
 import { createDeferredQueue } from "../parts/deferred";
+import { CardListSkeleton } from "../parts/Skeletons";
+import { runUndoable } from "../parts/undoable";
 
 const STEP: Record<string, string> = { watch: "Watch", read: "Read", do: "Do", check: "Check" };
 
@@ -31,16 +33,19 @@ export default function ProblemsPage() {
       return n;
     });
 
-  const resolve = (id: string) => {
-    setHidden((h) => new Set(h).add(id));
-    queue.current.schedule(id, () => v5AdminApi.resolveProblem(id), (error) => {
-      unhide(id);
-      v5Toast.error("That didn't work", plainMessage(error));
+  // There's no "reopen" endpoint, so Undo is the wait before sending (parts/undoable.ts).
+  const resolve = (id: string) =>
+    runUndoable({
+      queue: queue.current,
+      id,
+      message: "Marked fixed.",
+      apply: () => setHidden((h) => new Set(h).add(id)),
+      rollback: () => unhide(id),
+      send: () => v5AdminApi.resolveProblem(id),
+      failTitle: "We couldn't mark it fixed",
+      toasts: v5Toast,
+      describe: plainMessage,
     });
-    v5Toast.undo("Marked fixed.", () => {
-      if (queue.current.cancel(id)) unhide(id);
-    });
-  };
 
   const items = (list.data?.problems ?? []).filter((p) => !hidden.has(p.id));
 
@@ -64,7 +69,7 @@ export default function ProblemsPage() {
           <ErrorState body={plainMessage(list.error)} onRetry={list.reload} />
         )
       ) : !list.data ? (
-        slow ? <SkeletonLayout variant="list" rows={4} label="Loading problem reports" /> : null
+        slow ? <CardListSkeleton rows={4} label="Loading problem reports" /> : null
       ) : items.length === 0 ? (
         <EmptyState icon={<CheckCircle2 />} title={status === "open" ? "No problems waiting" : "Nothing fixed yet"} body={status === "open" ? "When a learner reports one, it shows up here." : undefined} />
       ) : (

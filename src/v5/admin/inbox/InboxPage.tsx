@@ -4,11 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { agoLabel, isReversible, UNDO_MS, withoutItem, type InboxAction, type InboxGroup, type InboxGroupId, type InboxItem } from "@shared/adminInbox";
 
-import { Badge, Button, EmptyState, ErrorState, SkeletonLayout, v5Toast } from "@/v5/design";
+import { Badge, Button, EmptyState, ErrorState, v5Toast } from "@/v5/design";
 
 import { v5AdminApi } from "../api";
 import { Page, PageHeader, plainMessage, useLoad, useSlow } from "../parts/common";
 import { createDeferredQueue } from "../parts/deferred";
+import { InboxSkeleton } from "../parts/Skeletons";
+import { runUndoable } from "../parts/undoable";
 import { useAdminShell } from "../shell/AdminShell";
 
 const GROUP_ICON: Record<InboxGroupId, ReactNode> = {
@@ -116,24 +118,32 @@ export default function InboxPage() {
         navigate(action.href);
         return;
       }
-      hide(item.id);
       if (isReversible(action)) {
-        queue.current.schedule(item.id, () => send(action), (error) => {
-          unhide(item.id);
-          v5Toast.error("That didn't work", plainMessage(error));
-        });
-        v5Toast.undo(doneMessage(item, action), () => {
-          if (queue.current.cancel(item.id)) unhide(item.id);
+        // Leaves at once; sent when the Undo window closes. "Mark as checked" can still be taken
+        // back after that (undismiss); a reminder or a fix can't be unsent.
+        runUndoable({
+          queue: queue.current,
+          id: item.id,
+          message: doneMessage(item, action),
+          apply: () => hide(item.id),
+          rollback: () => unhide(item.id),
+          send: () => send(action),
+          reverse: action.kind === "dismiss" ? () => v5AdminApi.undismiss(action.key) : undefined,
+          failTitle: "That didn't work",
+          toasts: v5Toast,
+          describe: plainMessage,
         });
         return;
       }
+      // Decisions go out at once and leave the list straight away; a failure puts them back.
+      hide(item.id);
       setBusy(item.id);
       try {
         await send(action);
         v5Toast.success(doneMessage(item, action));
       } catch (error) {
         unhide(item.id);
-        v5Toast.error("That didn't work", plainMessage(error));
+        v5Toast.error("That didn't work", `${plainMessage(error)} It's back in the list.`);
       } finally {
         setBusy(null);
       }
@@ -156,7 +166,7 @@ export default function InboxPage() {
       {inbox.error && !inbox.data ? (
         <ErrorState body={plainMessage(inbox.error)} onRetry={inbox.reload} />
       ) : !inbox.data ? (
-        slow ? <SkeletonLayout variant="list" rows={6} label="Loading the inbox" /> : null
+        slow ? <InboxSkeleton /> : null
       ) : groups.length === 0 ? (
         <EmptyState className="motion-safe:animate-in motion-safe:fade-in" icon={<Inbox />} title="All caught up 🎉" body="Nothing needs you right now. New things appear here as they happen." />
       ) : (

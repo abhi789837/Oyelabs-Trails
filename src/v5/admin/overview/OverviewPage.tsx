@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 
 import { toCsv, type DepartmentRow, type OverviewTile, type OverviewTileId } from "@shared/reports";
 
-import { Button, Card, CardHeader, ErrorState, Skeleton, SkeletonLayout, StatTile } from "@/v5/design";
+import { Button, Card, CardHeader, ErrorState, Skeleton, StatTile } from "@/v5/design";
 
 import { v5AdminApi } from "../api";
 import { csvName, downloadText, Page, PageHeader, plainMessage, useLoad, useSlow } from "../parts/common";
+import { OverviewSkeleton } from "../parts/Skeletons";
 
 const SimpleBarChart = lazy(() => import("../parts/Charts").then((m) => ({ default: m.SimpleBarChart })));
 
@@ -56,7 +57,7 @@ export default function OverviewPage() {
       {overview.error && !data ? (
         <ErrorState body={plainMessage(overview.error)} onRetry={overview.reload} />
       ) : !data ? (
-        slow ? <SkeletonLayout variant="stat-row" label="Loading the overview" /> : null
+        slow ? <OverviewSkeleton /> : null
       ) : (
         <div className="flex flex-col gap-(--v5-gap)">
           <ul className="grid grid-cols-1 gap-(--v5-gap) sm:grid-cols-2 xl:grid-cols-4">

@@ -57,32 +57,38 @@ export default function Sitting({
         <div className="mx-auto flex max-w-2xl justify-center px-4 pt-8">
           <Logo className="h-8" />
         </div>
-        <PreFlight
-          assessmentId={assessment.id}
-          needsMicrophone={Boolean(assessment.hasSpeak)}
-          busy={starting}
-          error={startError}
-          onCancel={() => navigate("/learn")}
-          onReady={async (pose, mediaStream, permissions) => {
-            if (starting) return;
-            setCalibration(pose);
-            setStream(mediaStream);
-            setStarting(true);
-            setStartError(null);
-            try {
-              // Consent first, and awaited: `start` reads it back (docs/bugs/assessment-consent.md).
-              await assessmentApi.consent(assessment.id, permissions);
-              await assessmentApi.start(assessment.id, permissions);
-              setTaking(true);
-              onStarted();
-            } catch (err) {
-              // Stay on the pre-flight: the stream and calibration are still good, so a retry is one press.
-              setStartError(err instanceof ApiRequestError ? err.message : "The test couldn't start. Try again.");
-            } finally {
-              setStarting(false);
-            }
-          }}
-        />
+        <main>
+          <PreFlight
+            assessmentId={assessment.id}
+            needsMicrophone={Boolean(assessment.hasSpeak)}
+            busy={starting}
+            error={startError}
+            onCancel={() => navigate("/learn")}
+            onReady={async (pose, mediaStream, permissions) => {
+              if (starting) return;
+              setCalibration(pose);
+              setStream(mediaStream);
+              setStarting(true);
+              setStartError(null);
+              try {
+                // Consent first, and awaited: `start` reads it back (docs/bugs/assessment-consent.md).
+                await assessmentApi.consent(assessment.id, permissions);
+                await assessmentApi.start(assessment.id, permissions);
+                setTaking(true);
+                onStarted();
+              } catch (err) {
+                // Stay on the pre-flight: the stream and calibration are still good, so a retry is one press.
+                setStartError(
+                  err instanceof ApiRequestError
+                    ? err.message
+                    : "The test couldn't start. Try again.",
+                );
+              } finally {
+                setStarting(false);
+              }
+            }}
+          />
+        </main>
       </div>
     );
   }
@@ -91,7 +97,9 @@ export default function Sitting({
     <TestSheet
       assessment={assessment}
       proctor={proctor}
-      user={user ? { displayName: user.displayName, username: user.username } : null}
+      user={
+        user ? { displayName: user.displayName, username: user.username } : null
+      }
       onFinished={onFinished}
     />
   );

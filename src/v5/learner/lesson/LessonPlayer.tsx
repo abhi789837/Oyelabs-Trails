@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { m } from "motion/react";
-import { CheckCircle2, ChevronRight, Flag, Keyboard, Maximize2, MessageCircle, Minimize2 } from "lucide-react";
+import { CheckCircle2, ChevronRight, Flag, Keyboard, Maximize2, MessageCircle, Minimize2, RotateCw } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import type { CodeAttemptResult, QuizAttemptResult, ServedTopic } from "@shared/content";
@@ -14,6 +14,7 @@ import {
   type LessonStatePutResponse,
   type LessonStateView,
   type LessonStepId,
+  type StepDone,
   type StepFacts,
 } from "@shared/lessonCore";
 
@@ -23,6 +24,7 @@ import { cn } from "@/v5/design/cn";
 import { Button } from "@/v5/design/components/Button";
 import { LessonStepHeader, StatusLine } from "@/v5/design/components/Lesson";
 import { SkeletonLayout } from "@/v5/design/components/States";
+import { useIsMobile } from "@/v5/design/hooks";
 import { duration, easing } from "@/v5/design/motion";
 
 import { WatchStep, type WatchControls } from "./steps/WatchStep";
@@ -64,7 +66,12 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
   const [params, setParams] = useSearchParams();
   const [view, setView] = useState(initial);
   const available = view.available;
-  const done = view.stepDone;
+  // Phase 8: a step whose rule is met counts as done at once (Next opens), and rolls back if the
+  // server doesn't save or doesn't agree. The server still checks every claim before any XP.
+  const [optimistic, setOptimistic] = useState<Partial<StepDone>>({});
+  const [saveFailed, setSaveFailed] = useState<LessonStepId | null>(null);
+  const done = useMemo<StepDone>(() => ({ ...view.stepDone, ...optimistic }), [view.stepDone, optimistic]);
+  const mobile = useIsMobile();
 
   const urlStep = params.get("step") as LessonStepId | null;
   const [step, setStep] = useState<LessonStepId>(() =>
@@ -94,11 +101,14 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
   const codeRef = useRef<string | undefined>(undefined);
   const topRef = useRef<HTMLDivElement>(null);
 
+  // XP for a step shows next to Next (Phase 8), not as a toast: a bottom-corner toast sat on top of
+  // the Next button, and hovering it kept it there.
+  const [stepXp, setStepXp] = useState<{ step: LessonStepId; xp: number } | null>(null);
   const onSaved = useCallback((res: LessonStatePutResponse) => {
     setView(res.state);
     const xp = res.awarded.reduce((sum, a) => sum + a.xp, 0);
     if (res.justCompleted) setCelebrate(true);
-    else if (xp > 0) lessonToast.success(`+${xp} XP`, "Step done");
+    else if (xp > 0) setStepXp({ step: res.state.step, xp });
   }, []);
   const { save } = useLessonSave(topic.id, onSaved);
 
@@ -130,15 +140,37 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
     return () => window.clearTimeout(id);
   }, [isCode]);
 
-  // When the current step's rule is met, tell the server (it checks again before any XP).
+  // When the current step's rule is met, tell the server (it checks again before any XP). The step
+  // shows as done straight away; a failed save or a "no" from the server rolls it back.
   const requested = useRef(new Set<string>());
+  const lastKey = useRef<string | null>(null);
   useEffect(() => {
     if (!requirement.met || done[step]) return;
     const key = `${step}:${JSON.stringify(facts)}`;
     if (requested.current.has(key)) return;
     requested.current.add(key);
-    void save({ step, stepDone: { [step]: true }, ...(step === "do" && !isCode ? { doAttempts: task.attempts } : {}) }, true);
+    lastKey.current = key;
+    const target = step;
+    setOptimistic((o) => ({ ...o, [target]: true }));
+    setSaveFailed(null);
+    void save({ step, stepDone: { [step]: true }, ...(step === "do" && !isCode ? { doAttempts: task.attempts } : {}) }, true).then((res) => {
+      setOptimistic((o) => {
+        const next = { ...o };
+        delete next[target];
+        return next;
+      });
+      if (!res) {
+        setSaveFailed(target);
+        lessonToast.error("That step didn't save", "Check your connection, then press Try again.");
+      } else if (!res.state.stepDone[target]) {
+        lessonToast.info("We couldn't confirm this step yet", "Finish what the step asks for, then Next opens.");
+      }
+    });
   });
+  const retrySave = () => {
+    if (lastKey.current) requested.current.delete(lastKey.current);
+    setSaveFailed(null);
+  };
 
   const goTo = useCallback(
     (next: LessonStepId) => {
@@ -251,6 +283,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
     if (result.passed) setView((v) => ({ ...v, facts: { ...v.facts, quizPassed: true } }));
   };
 
+  const xpNote = stepXp && stepXp.step === step ? ` +${stepXp.xp} XP` : "";
   const secondsLeft = minutesLeft(topic.estMinutes, available, done) * 60;
   const isLast = nextStepId === null;
   const headerNext = isLast
@@ -338,37 +371,42 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
   return (
     <div
       ref={topRef}
-      className={cn("flex flex-col bg-surface-0 text-fg-1", focus ? "fixed inset-0 z-40 overflow-y-auto" : "min-h-full")}
+      // `[&_.bg-editor-gutter.border-b]`: the shared code block's language label is 11px; 12px in v5.
+      className={cn("flex flex-col bg-surface-0 text-fg-1 [&_.bg-editor-gutter.border-b]:text-caption", focus ? "fixed inset-0 z-40 overflow-y-auto" : "min-h-full")}
       data-testid="v5-lesson"
       data-focus-mode={focus ? "on" : "off"}
       {...(focus ? { role: "region", "aria-label": "Lesson in focus mode" } : {})}
     >
       <LessonStepHeader
+        className={cn("sticky z-20", focus ? "top-0" : "top-14")}
         title={topic.title}
         current={step}
         done={done}
         available={available}
         secondsLeft={secondsLeft}
         onStep={(s) => (canOpenStep(s, available, done) ? goTo(s) : undefined)}
-        onNext={headerNext.onNext}
+        // On a phone, Next lives in the bar at the bottom, where the thumb is.
+        onNext={mobile ? undefined : headerNext.onNext}
         nextDisabled={headerNext.disabled}
         nextLabel={headerNext.label}
         nextHint={headerNext.disabled ? requirement.hint : undefined}
       />
 
-      <div className="flex flex-wrap items-center gap-1 border-b border-line-1 bg-surface-1 px-4 py-1.5">
-        <Button size="sm" variant="ghost" onClick={() => setTutorOpen(true)} aria-haspopup="dialog">
+      <div className="flex flex-wrap items-center gap-1 border-b border-line-1 bg-surface-1 px-4 py-1.5 max-md:px-2 max-md:py-1">
+        <Button size="sm" variant="ghost" className="max-md:min-h-11" onClick={() => setTutorOpen(true)} aria-haspopup="dialog">
           <MessageCircle aria-hidden="true" /> Ask Oye
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => setFocus((f) => !f)} aria-pressed={focus}>
+        <Button size="sm" variant="ghost" className="max-md:min-h-11" onClick={() => setFocus((f) => !f)} aria-pressed={focus}>
           {focus ? <Minimize2 aria-hidden="true" /> : <Maximize2 aria-hidden="true" />}
-          {focus ? "Leave focus mode" : "Focus mode"}
+          {focus ? "Leave focus" : "Focus"}
+          <span className="sr-only md:not-sr-only"> mode</span>
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => setHelpOpen(true)}>
+        {/* Keyboard shortcuts mean nothing on a touch screen. */}
+        <Button size="sm" variant="ghost" className="max-md:hidden" onClick={() => setHelpOpen(true)}>
           <Keyboard aria-hidden="true" /> Shortcuts
         </Button>
-        <Button size="sm" variant="ghost" className="ml-auto" onClick={() => setReportOpen(true)}>
-          <Flag aria-hidden="true" /> Report a problem
+        <Button size="sm" variant="ghost" className="ml-auto max-md:min-h-11" onClick={() => setReportOpen(true)}>
+          <Flag aria-hidden="true" /> Report<span className="sr-only md:not-sr-only"> a problem</span>
         </Button>
       </div>
 
@@ -381,30 +419,73 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
       >
         {stepBody()}
 
-        <div className="mt-8 flex flex-col gap-3 border-t border-line-1 pt-4">
-          {isLast && complete ? (
-            <StatusLine
-              tone="success"
-              icon={<CheckCircle2 />}
-              action={
-                <Button variant="primary" asChild>
-                  <Link to={nextTopic ? `/learn/lesson/${encodeURIComponent(nextTopic.id)}` : "/learn/plan"}>
-                    {nextTopic ? "Next lesson" : "Back to my plan"} <ChevronRight aria-hidden="true" />
-                  </Link>
+        {mobile ? (
+          <div
+            data-testid="lesson-next-bar"
+            data-sticky-bar
+            className={cn(
+              "sticky z-20 -mx-4 mt-6 flex items-center gap-3 border-t border-line-1 bg-surface-1/95 px-4 py-2.5 backdrop-blur",
+              focus ? "bottom-0 pb-[calc(0.625rem+env(safe-area-inset-bottom))]" : "bottom-[calc(4rem+env(safe-area-inset-bottom))]",
+            )}
+          >
+            {saveFailed === step ? (
+              <>
+                <p role="alert" className="min-w-0 flex-1 text-small font-medium text-danger-fg">
+                  That step didn't save.
+                </p>
+                <Button variant="secondary" className="min-h-11 shrink-0" onClick={retrySave}>
+                  <RotateCw aria-hidden="true" /> Try again
                 </Button>
-              }
-            >
-              Lesson finished. {nextTopic ? `Up next: ${nextTopic.title}.` : "That's everything in this part of your plan."}
-            </StatusLine>
-          ) : !isLast ? (
-            <div className="flex flex-wrap items-center justify-end gap-3">
-              {!done[step] ? <span className="text-small text-fg-2">{requirement.hint}</span> : null}
-              <Button variant="primary" onClick={advance} disabled={!done[step]}>
-                Next <ChevronRight aria-hidden="true" />
-              </Button>
-            </div>
-          ) : null}
-        </div>
+              </>
+            ) : (
+              <p className="min-w-0 flex-1 text-caption text-fg-2" aria-live="polite">
+                {isLast && complete ? (nextTopic ? `Lesson finished. Up next: ${nextTopic.title}.` : "Lesson finished.") : !done[step] ? requirement.hint : `Step done.${xpNote}`}
+              </p>
+            )}
+            <Button variant="primary" className="min-h-11 shrink-0" onClick={headerNext.onNext} disabled={headerNext.disabled}>
+              {headerNext.label} <ChevronRight aria-hidden="true" />
+            </Button>
+          </div>
+        ) : (
+          <div className="mt-8 flex flex-col gap-3 border-t border-line-1 pt-4">
+            {saveFailed === step ? (
+              <StatusLine
+                tone="danger"
+                action={
+                  <Button variant="secondary" onClick={retrySave}>
+                    <RotateCw aria-hidden="true" /> Try again
+                  </Button>
+                }
+              >
+                That step didn't save. Check your connection, then try again.
+              </StatusLine>
+            ) : null}
+            {isLast && complete ? (
+              <StatusLine
+                tone="success"
+                icon={<CheckCircle2 />}
+                action={
+                  <Button variant="primary" asChild>
+                    <Link to={nextTopic ? `/learn/lesson/${encodeURIComponent(nextTopic.id)}` : "/learn/plan"}>
+                      {nextTopic ? "Next lesson" : "Back to my plan"} <ChevronRight aria-hidden="true" />
+                    </Link>
+                  </Button>
+                }
+              >
+                Lesson finished. {nextTopic ? `Up next: ${nextTopic.title}.` : "That's everything in this part of your plan."}
+              </StatusLine>
+            ) : !isLast ? (
+              <div className="flex flex-wrap items-center justify-end gap-3">
+                <span className="text-small text-fg-2" aria-live="polite">
+                  {!done[step] ? requirement.hint : xpNote ? `Step done.${xpNote}` : null}
+                </span>
+                <Button variant="primary" onClick={advance} disabled={!done[step]}>
+                  Next <ChevronRight aria-hidden="true" />
+                </Button>
+              </div>
+            ) : null}
+          </div>
+        )}
       </m.div>
 
       {/* Each dialog's chunk loads the first time it opens, and it stays mounted for its close animation. */}

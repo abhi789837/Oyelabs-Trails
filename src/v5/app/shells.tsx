@@ -6,7 +6,10 @@ import { Logo } from "@/components/layout/Logo";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { cn } from "@/lib/utils";
 
+import { SkipLink as V5SkipLink } from "@/v5/design/components/SkipLink";
+
 import { chooseDesign } from "./designFlag";
+import { RouteErrorBoundary } from "./RouteErrorBoundary";
 import { ScreenFallback } from "./RouteFallback";
 
 /**
@@ -62,14 +65,7 @@ const ADMIN_OLDER: { to: string; label: string; superadmin?: boolean }[] = [
 const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong";
 
 function SkipLink() {
-  return (
-    <a
-      href="#main"
-      className="sr-only z-50 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground focus:not-sr-only focus:fixed focus:left-3 focus:top-3"
-    >
-      Skip to content
-    </a>
-  );
+  return <V5SkipLink target="main" tone="shared" />;
 }
 
 function SideNavLink({ item }: { item: NavItem }) {
@@ -129,9 +125,11 @@ export function LearnerShell() {
           </ul>
         </nav>
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 pb-20 focus:outline-hidden md:pb-0">
-          <Suspense fallback={<ScreenFallback />}>
-            <Outlet />
-          </Suspense>
+          <RouteErrorBoundary>
+            <Suspense fallback={<ScreenFallback />}>
+              <Outlet />
+            </Suspense>
+          </RouteErrorBoundary>
         </main>
       </div>
       <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-30 border-t bg-background md:hidden">

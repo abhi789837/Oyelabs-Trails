@@ -10,12 +10,13 @@ import { Card } from "@/v5/design/components/Card";
 import { LaneChip } from "@/v5/design/components/LaneChip";
 import { Badge } from "@/v5/design/components/Primitives";
 import { ProgressBar } from "@/v5/design/components/Progress";
-import { EmptyState, ErrorState, SkeletonLayout } from "@/v5/design/components/States";
+import { EmptyState, ErrorState } from "@/v5/design/components/States";
 import { cn } from "@/v5/design/cn";
 import { transitions } from "@/v5/design/motion";
 import type { LearningPathView } from "@shared/builder";
 import { LANE_ORDER, formatRange, isWeekComplete, itemsInLane, type WeekItemView, type WeekResponse, type WeekView } from "@shared/weeklyPlan";
 
+import { PlanSkeleton } from "../skeletons";
 import { PageFrame, V5Screen, formatMinutes, useApiData, useDelayed } from "../me/page";
 import { WHY_LABELS, nextStep, readView, saveView, v5Href, weekStats, type PlanView } from "./planLogic";
 import { LaneLegend, OverviewTrail, WeekTrail } from "./PlanTrails";
@@ -76,7 +77,7 @@ function PlanScreen() {
       </PageFrame>
     );
   }
-  if (!week.data) return <PageFrame title="My plan">{showSkeleton ? <SkeletonLayout variant="card" label="Loading your plan" /> : null}</PageFrame>;
+  if (!week.data) return <PageFrame title="My plan">{showSkeleton ? <PlanSkeleton /> : null}</PageFrame>;
 
   const w = week.data.week;
   if (!w) {

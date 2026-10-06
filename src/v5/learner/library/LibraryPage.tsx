@@ -7,11 +7,12 @@ import { Button } from "@/v5/design/components/Button";
 import { Input } from "@/v5/design/components/Field";
 import { Badge } from "@/v5/design/components/Primitives";
 import { ProgressBar } from "@/v5/design/components/Progress";
-import { EmptyState, ErrorState, SkeletonLayout } from "@/v5/design/components/States";
+import { EmptyState, ErrorState } from "@/v5/design/components/States";
 import { cn } from "@/v5/design/cn";
 import { transitions } from "@/v5/design/motion";
 import type { LengthBucket, LibraryItem, LibraryLevel, LibraryResponse } from "@shared/me";
 
+import { LibrarySkeleton } from "../skeletons";
 import { PageFrame, V5Screen, formatMinutes, useApiData, useDelayed } from "../me/page";
 import { EMPTY_FILTERS, FORMAT_LABELS, LENGTH_LABELS, LEVEL_LABELS, activeFilterCount, searchLibrary, skillOptions, type LibraryFilters } from "./libraryLogic";
 
@@ -106,7 +107,7 @@ function LibraryScreen() {
       {error && !data ? (
         <ErrorState title="We couldn't load the library" onRetry={() => void reload()} retrying={loading} />
       ) : !data ? (
-        showSkeleton ? <SkeletonLayout variant="list" rows={6} label="Loading the library" /> : null
+        showSkeleton ? <LibrarySkeleton /> : null
       ) : items.length === 0 ? (
         <EmptyState icon={<BookOpen />} title="Your library is empty for now" body="Courses appear here once your admin sets up your plan or adds courses for your team." />
       ) : results.length === 0 ? (

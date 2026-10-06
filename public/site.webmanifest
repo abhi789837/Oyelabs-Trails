@@ -1,18 +1,26 @@
 {
+  "id": "/learn",
   "name": "Oyelearn",
   "short_name": "Oyelearn",
   "description": "The internal learning platform for the Oyelabs dev team.",
-  "start_url": "/",
+  "start_url": "/learn",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icon-maskable-512.png",
@@ -22,6 +30,5 @@
     }
   ],
   "theme_color": "#2067D3",
-  "background_color": "#FFFFFF",
-  "display": "standalone"
+  "background_color": "#FFFFFF"
 }

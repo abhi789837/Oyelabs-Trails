@@ -389,3 +389,181 @@ The previous session stopped after the Phase 5 code was in place but before this
 - **Code runner vs. production CSP**: learner code no longer runs in the app page. `src/lib/sandboxRunner.ts` + `public/runner.html` run it in a `sandbox="allow-scripts"` iframe (opaque origin), which spawns a Worker. Only `/runner.html` gets a CSP that allows eval (`buildRunnerCsp`, no network); the app CSP keeps no `'unsafe-eval'`. A run's clock starts when the frame is ready, and a frame that never loads fails after 10 s with a plain message. Unit tests: `sandboxRunner.test.ts` and `csp.test.ts`.
 - **Lesson budget**: Read, Do, Check, the dialogs and Ask Oye are lazy. Pure helpers were split from React files (`shared/lessonCore.ts`, `shared/videoCore.ts`, `shared/handbookText.ts`, `markdownCore.tsx`) so the lesson's first download doesn't pull them in. `/learn/lesson/:id` went from 291 KB to 187 KB gzipped and is now a size-limit budget (200 KB). To keep "Next" instant, the player preloads the other steps' code when the browser is idle.
 - **Resume fixes**: the older e2e scripts were stale after P4, P6 and P7. They now mark the welcome as seen (`v5-today`, `v5-foundation`), use Me → Settings for "Use previous design" and the heading "Needs your attention", and wait for lazy steps or for a run to finish (`v5-lesson`, `v4-departments`). No product behaviour changed for these.
+
+## Phase 8 — admin
+
+Admin agent (8.1 admin tablet/phone, admin part of 8.3). Files: `src/v5/admin/**`, `scripts/e2e/v5-mobile-admin.ts`. No server changes were needed.
+
+### What changed
+- **Own admin frame** (`shell/AdminFrame.tsx`, replaces `AppShell` in `AdminShell`). Design's `AppShell` has one 240 px sidebar from 768 px up, which left a 528 px page on a tablet (People table and sheet both cramped). Same landmarks, logo, search button and `SkipLink` as `AppShell`, plus:
+  - 768–1279 px: a 64 px **icon rail** (link text is the page name, sr-only, plus a tooltip; the inbox count is in the name, "Inbox, 4 waiting"). "Older pages" in the rail expands the menu and opens that list.
+  - 1280 px and up: the full sidebar.
+  - "Collapse menu" / "Expand menu" (with `aria-expanded`) overrides the automatic choice and is remembered on the device (`shell/navPref.ts`, localStorage `oyelearn.v5.admin.nav`, try/catch).
+  - Below 768 px: the bottom bar is Inbox, People, Onboard, Library and **Menu**. Menu opens an "All pages" sheet with Overview, Reports, More and Older pages, so nothing is reachable only through search. Following a link closes it.
+- **Older pages** (`shell/routes.ts` `isOlderPage`) render unchanged; on a phone they get a calm, closable "Best on a bigger screen" note (`parts/BiggerScreen.tsx`, `md:hidden`, closed per screen for the visit in sessionStorage). The course editor gets the same note with its own wording. No overflow wrapper around older pages: they already don't scroll sideways (checked at 390/768/1024), and an `overflow-x` box would break their sticky save bars.
+- **People:**
+  - The side sheet is `side="right"` everywhere. On a phone that makes it full width and full height, and it is modal there (no list beside it to use). Below 1024 px it is the narrower `sm` width. From 1280 px the page gets right padding while it's open, so the list sits beside it instead of under it.
+  - The sheet's status line, plan and activity have skeletons shaped like them, a "Try again" on each failed part, and an empty line for no activity.
+  - On a phone the shared table toolbar squeezed the search box to an icon. A local workaround gives the box its own row (an arbitrary `:has(> label[for=data-table-search])` variant on the table wrapper).
+- **Optimistic actions with Undo** (`parts/undoable.ts` `runUndoable`, unit-tested):
+  - The screen changes at once, and the request waits for the Undo window (`UNDO_MS`, 6 s).
+  - Undo in time cancels the request. Undo after it went out calls the **reverse endpoint** (after the in-flight request finishes), then rolls back. With no reverse, the toast says "That was already done, so it can't be undone here."
+  - A failed request rolls back, with a plain toast ending "Nothing changed." Anything still waiting is sent on leaving the page (`pagehide` and unmount).
+  - Where it's used:
+    - People bulk **Suspend** and **Archive**: rows change status at once (`withStatusOverrides`). The reverse is activate or restore, which puts each person back to the status they had before. Per-id refusals from `/api/admin/users/bulk` put back only those rows (`refusedIds`).
+    - People bulk **Send a reminder**: deferred, no reverse.
+    - Inbox **reversible** items: mark as checked (reverse = `undismiss`), remind, mark fixed.
+    - Problems **Mark fixed**: no reopen endpoint, so Undo is the delay only.
+    - Announcements **Remove**: was a bare `setTimeout` that wasn't sent on leave.
+  - Inbox **decisions** (send the test, give full marks, publish, fix) still go out at once and leave the list straight away. A failure puts them back with "…It's back in the list."
+  - Other optimistic changes: announcement **pin/unpin** (rolls back on error), and **remove a lesson** in the editor (`courseOps.withoutTopic`; put back on error). The editor's restore-based Undo now says so plainly when it fails.
+- **Skeletons per layout** (`parts/Skeletons.tsx`): Inbox (grouped rows with buttons), Overview (tiles plus a chart beside a table), Reports, Library (card grid), the editor (lesson list beside the toolbar and document), and card lists (Announcements, Problems). Still shown only after 300 ms (`useSlow`). Compact density unchanged.
+- **Reports chart axis fix:** y-axis labels were clipped ("0.225h" showed as "225h", money as "4$"). `parts/chartFormat.ts` `chartValue` gives "0.23h" and "$4", and the axis is 52 px wide.
+
+### Tests and results
+- Vitest: `src/v5/admin/phase8.test.ts` (nav width rule, older-page routes, status overrides and refusals, lesson removal, `runUndoable`: send after the window, Undo in the window, reverse after send, reverse waits for an in-flight request, too-late message, failure rollback, flush on leave; chart numbers). Full suite 2517 passed, 6 skipped. `tsc -b` and `eslint .` clean.
+- `scripts/e2e/v5-mobile-admin.ts` (port 8831, its own DATA_DIR, mock AI): **all checks pass.** It covers:
+  - 18 admin routes (11 v5 screens and 7 older pages) at 768 and 1024 light and 1440 dark: axe 0 serious/critical, no page-level sideways scroll, and all six main pages in the nav.
+  - Inbox, People and the People sheet at 390 light and dark (axe plus no sideways scroll), and every other route at 390 for no sideways scroll.
+  - The phone Menu sheet, checked with axe.
+  - "Give full marks" tapped on the phone: the item leaves in place and the server has the decision.
+  - A People search on the phone: the list narrows to a card, and the full-height sheet shows the status line and its button.
+  - Archive, then Undo: the row comes back, and the person is still active on the server after the window. Without Undo, the archive goes through.
+  - 61 axe checks in all.
+- `scripts/e2e/v5-admin.ts` still passes on the same snapshot (Give full marks 1 click, onboard + send 3).
+
+### Requests to other groups
+- **Design (P1 owner): `AppShell` rail option.** Add a `rail` mode (icon rail between 768 and 1279 px, a collapse toggle, a "Menu" item in the bottom bar for pages after the 4th). Then the admin can go back to `AppShell` and drop `AdminFrame`; `AdminFrame` is written as the reference.
+- **Design / shared kit: the `DataTableToolbar` search box on phones.** In `src/components/data-table/DataTableToolbar.tsx`, the search `div` (`min-w-0 flex-1`) is squeezed to about 0 px by the `ms-auto` button group below 640 px. Suggested fix: `basis-full sm:basis-auto` on that div. This would also fix the older UI's tables on phones, so it needs a sign-off under rule 1. Then remove the arbitrary-variant class on People's `V5DataTable`.
+- **E2E owners: theme in the older axe sweeps.** A signed-in `storageState` carries the app's saved theme (`oyelabs-ui`), which wins over Playwright's `colorScheme`. So `v5-admin.ts`'s "dark" axe passes actually ran in light (its 1440 dark screenshots are light). `v5-mobile-admin.ts` writes the theme with an init script and asserts `html.dark`, so admin dark mode is now genuinely covered. Other scripts that only set `colorScheme` should do the same.
+
+### Needs Abhishek
+- Nothing new.
+
+## Phase 8 — app-wide
+
+App-wide agent: accessibility across all routes, the error boundary and the installable PWA. Files: `src/v5/app/**`, `src/v5/design/**` (SkipLink, AppShell's skip link, tokens), `public/site.webmanifest`, `vite.config.ts`, `server/src/app.ts` (two headers), `src/v5/learner/review/{offline.ts,offline.test.ts}` plus the offline wiring in `ReviewPage.tsx`, and `scripts/e2e/v5-{a11y,pwa}.ts`. No packages were installed.
+
+### Error boundary (`src/v5/app/RouteErrorBoundary.tsx`, `chunkReload.ts`)
+- **Where:** the learner shell wraps its `Outlet`, so the shell stays when a screen crashes. Every admin child route is wrapped in V5App (`<B>`), so the boundary sits inside the admin frame's `Outlet` without editing `src/v5/admin/**`. The learner shell, the admin frame, `/assessment` and `/design` also get a full-page boundary for crashes in the frames themselves. `MotivationHost` and the lazy toaster sit in a `SilentBoundary`: they fail to nothing and never take the page down.
+- **Screen:** "Something went wrong on this page." with plain words ("It's not something you did. Your progress is saved."), "Try again" (resets the boundary and remounts the screen with a new key, so it fetches again) and "Go to Today" (learners) or "Go to the inbox" (staff). The raw message is behind "Show details". The heading takes focus. It calls `useV5Root()`, because the screen that crashed may have owned the v5 scope. Navigating resets it (`resetKey` = pathname; ordinary navigation does not remount).
+- **Stale chunks after a deploy:** a failed lazy import ("Failed to fetch dynamically imported module", the Safari and Firefox wordings, `Unable to preload CSS`, ChunkLoadError) reloads the page once. The guard is a timestamp in sessionStorage: at most one automatic reload per 30 s per tab, never offline, and never when storage is blocked. If it fails again, the screen says "We've just updated Oyelearn… Reload the page". Offline, it says Review works offline instead.
+- **Logging:** there is no client error log on the server (no endpoint, no `window.onerror`). Errors go to `console.error` with the route. **Request to the main session:** add a rate-limited `POST /api/client-errors` if we want them server-side; the boundary's `componentDidCatch` is the one place to call it.
+
+### Accessibility
+- **Skip link** (`src/v5/design/components/SkipLink.tsx`, in the barrel): moves focus, not only the scroll position, to `#target`, else the first `<main>`, else the first `<h1>`.
+  - Used by the learner shell (`tone="shared"`: colours both designs define, because old pages show inside it), the design `AppShell` (admin) and V5App's `/assessment` route. The assessment frames aren't in my files, and the pre-flight has no `<main>`, so there it lands on the h1. `/design` already had one.
+- **2.4.11 focus not obscured:** `[data-ui="v5"]:root` gets `scroll-padding-top: 4.5rem` (the sticky top bar is 3.5rem) and `scroll-padding-bottom: 5rem` plus the safe area below 768 px (the bottom nav), 1rem above. The e2e focuses every control on the phone Library and checks none is hidden under the top bar or the bottom nav.
+- **Reduced motion:** the Me setting was already read once in V5App (`motionPref.ts`, P4's request) and applied through the root `V5MotionProvider` and `<html data-motion>`. The e2e now checks it on Today, My plan and Review. Added: the OS `prefers-reduced-motion` also flattens CSS transitions and animations in v5, unless the learner chose "off" (`data-reduced-motion="off"`). Before, only Motion's JS animations followed the OS.
+- **Drag and drop:** `@dnd-kit/react` is installed but not used anywhere. Every drag that exists has a keyboard or button alternative: `RankTask` (arrows and Alt+↑/↓), the course editor (Move up / Move down, no drag), SplitView's separator (arrow keys).
+- **Targets, contrast, landmarks:** axe's `target-size` (2.5.8) and `color-contrast` are part of the wcag22aa run. Nothing on the main routes failed. No ARIA was added where it wasn't needed.
+
+### PWA
+- **Hand-written service worker, not vite-plugin-pwa.** The worker needs custom rules (an offline-only copy of `/api/auth/me`, wiping data on sign-out, a precache chosen from the chunk graph). Workbox would add a dependency and indirection without removing any of our own code.
+  - The build plugin in `vite.config.ts` (`oyelearnServiceWorker`, build only) fills `src/v5/app/pwa/sw.template.js` with the version and the list from `precache.ts` (pure, tested) and writes `dist/sw.js`. There is no worker in dev.
+- **Precache:** `index.html`; the entry, V5App and Review (plus MotivationHost/HostImpl and the toaster) with their static imports; all CSS; the woff2 fonts; the icons and the manifest. That is 121 files, about 1.8 MB. Monaco, the PDF code, charts and MediaPipe are left out. Other `/assets/*` files are cached on first use (cache-first; the names are content-hashed). That runtime cache is cleared when a new version activates.
+- **Never cached:**
+  - Every `/api` request goes straight to the network, except `GET /api/auth/me`. That one is network-first and answered from a copy **only when the network fails**, so the app can open offline instead of going to sign-in. The copy is dropped on a 401 or 403, and on `POST /api/auth/login` and `/api/auth/logout`.
+  - Navigations are network-first (fresh HTML and CSP online). Offline they get the cached `index.html`: the static shell, not authenticated HTML.
+  - `/runner.html` and `/sw.js` are never served from a cache.
+- **Offline Review** (`src/v5/learner/review/offline.ts`):
+  - The last fetched session payload is kept in IndexedDB `oyelearn-offline`, keyed by user id. When Review loads online with cards and nothing saved, it fetches one session in the background for later. A saved session is offered for 3 days, only to its own user, without the cards already rated.
+  - Offline ratings go to a per-user queue (a re-rating of the same card replaces the earlier one). They are sent in order on the `online` event, on the next Review visit, and every 15 s while any are waiting. A rating the server refuses is dropped; a network failure stops the run. The FSRS schedule is computed when the rating reaches the server (the rate API has no "reviewed at").
+  - "Offline" means `navigator.onLine` is false **or** the server can't be reached, because `onLine` stays true on a dead connection. The banner says "You're offline. Your ratings will sync when you're back."
+  - Signing out deletes the database (the worker sees `POST /api/auth/logout`), so unsynced ratings are lost if someone signs out while offline (accepted).
+- **Curriculum gate:** V5App now uses `V5CurriculumProvider` (the v5 one that already existed, without the old Button) instead of the old `CurriculumProvider`. It lets `/learn/review` through without the manifest: Review doesn't read it, and offline the manifest can't load.
+- **Updates:**
+  - The first install takes over at once: `skipWaiting` only when nothing is active, then `clients.claim`. On activate it keeps a copy of `/api/auth/me`, because the installing page asked before the worker was in control.
+  - An update waits. The page shows "A new version is ready." with Later and Reload (`UpdatePrompt.tsx`, using shell classes so it reads right on old pages too). Only Reload sends `SKIP_WAITING`, and the page reloads on `controllerchange` only after that click. Tabs check for an update hourly and when they become visible.
+- **Old UI:** only V5App registers the worker. If someone switches design, the worker stays but the old UI can't tell: the same network-first HTML, the same hashed files, and `/api` untouched. The e2e checks the old dashboard under the worker.
+- **Manifest** (`public/site.webmanifest`): id and start_url `/learn`, scope `/`, standalone, theme `#2067D3`, white background, 192 and 512 `any` icons and a 512 `maskable` one.
+- **Server** (`server/src/app.ts`): `/sw.js` gets `Cache-Control: no-cache` and `Service-Worker-Allowed: /`; the manifest gets `no-cache`. The CSP already had `worker-src 'self'`, so `csp.ts` is unchanged.
+- **Kill switch, if ever needed:** ship a `sw.js` that calls `self.registration.unregister()` and deletes the `oyelearn-*` caches. Browsers re-fetch `sw.js` on every navigation because it's no-cache.
+
+### Size (`npm run size`)
+`/learn` 162.5 KB (limit 200), lesson 189.4 KB (200), `/design` 220.6 KB (230), shared entry 93.2 KB (185). `/learn` was 193 KB before; the learner shell now uses `V5CurriculumProvider`, which does not pull in the old Button and Motion, and is the likely main reason.
+
+### Tests
+- **Vitest:**
+  - `src/v5/app/pwa/precache.test.ts`: the closure of static imports, what's precached, no /api, the version;
+  - `src/v5/app/chunkReload.test.ts`: message detection, once per 30 s, never offline;
+  - `src/v5/learner/review/offline.test.ts`: per-user keys, rated cards dropped, expiry, queue order, offline errors.
+- **`scripts/e2e/v5-pwa.ts`** (port 8833):
+  - the manifest's fields, the icons are real PNGs of the stated size, the headers;
+  - the worker controls `/learn/review` on the first visit; CDP `Page.getInstallabilityErrors` is empty; only `/api/auth/me` is in any cache;
+  - a changed `sw.js` shows the prompt, and nothing reloads until Reload;
+  - offline, reload `/learn/review` → banner → "Start review" → rate → queued, the server unchanged;
+  - back online → exactly one new `review_logs` row, the queue empty, the banner gone;
+  - the old dashboard loads under the worker; signing out deletes IndexedDB and the session cache.
+- **`scripts/e2e/v5-a11y.ts`** (port 8832):
+  - axe at 390 and 1440, light and dark, on Today, My plan, Library, a course, Review (and a session), Me (three tabs), a lesson (watch, read, do, check), `/assessment` (pre-flight), a certificate, `/verify/:id` (signed out), every v5 admin route, and `/design`;
+  - a keyboard smoke (the first Tab is "Skip to content", Enter moves focus to the content, the next Tab stays there) on the learner shell, a lesson, the assessment, the admin frame and `/design`;
+  - 2.4.11 on the phone Library, and the reduced-motion setting on three screens.
+
+### Found in other groups' files (not changed)
+- **`/assessment` pre-flight** (`src/v5/assessment/Sitting.tsx`, the `!taking` branch): no `<main>` landmark around the old `PreFlight`. axe `landmark-one-main` and `region` (moderate, best-practice, so outside the WCAG tag set). The skip link falls back to the h1. Fix: render the wrapper `div` as `<main id="assessment-main">`.
+
+## Phase 8 — learner
+
+Learner agent. Files: `src/v5/learner/**` (new: `skeletons.tsx`, `lesson/SendToLaptop.tsx`), `server/src/v5/lesson/{register.ts,sendToEmail.ts,sendToEmail.test.ts}`, `shared/sendToEmail.ts` (new), `scripts/e2e/v5-mobile-learner.ts` (new). Outside that: one line in `scripts/e2e/v5-learner-pages.ts` (a test race, see below). No packages, no `app.ts` edit.
+
+### Phones (390 px)
+- **Baseline audit first.** The new e2e measured every learner screen at 390 light and dark before any change. axe and sideways scroll were already clean. What it found: links under 24 px on Today ("See my plan", "Change my goal"), 11 px keyboard hints (`Kbd`) on Review and the notes panel, the shared code block's 11 px language label in lessons, and a lesson header that took three rows with Next at the top.
+- **Lesson player:**
+  - The step header is sticky (`top-14` under the shell header, `top-0` in focus mode) at every width.
+  - On a phone, Next leaves the header for a sticky bar at the bottom, above the bottom nav (`bottom: 4rem + safe area`; `bottom-0` in focus mode). The bar holds the step's hint and Next / Finish / Next lesson.
+  - The tool row is one line: "Ask Oye", "Focus", "Report" (the full names stay for screen readers). "Shortcuts" is hidden below 768 px, where there's no keyboard.
+  - The shared code block's language label is raised to 12 px with a scoped selector on the player root. `markdownCore.tsx` isn't touched, so the old UI is unchanged.
+- **Ask Oye** was already a bottom sheet (`Sheet side="auto"`). The e2e now checks it at 390.
+- **Review session:** Show answer and the four ratings sit in a sticky bar above the nav on phones, at 44 px. Key hints are hidden below `sm`.
+- **Targets:** Today's text links are `min-h-11` on phones. The notes panel's edit and delete buttons are 40 px on phones. The Me switches get a 44 px touch area through a `::before`, so they look the same.
+
+### Coding Do step on a phone
+- **Tabs:** below 768 px, CodeDo draws its own three tabs ("Coding practice": Task / Code / Checks) instead of the design `SplitView`'s two. Checks shows a pass count, for example "Checks (3/4)". Run and Check move you to the Checks tab. The console is a section under the checks, not a nested tab list. Desktop is unchanged.
+- **The Task tab opens with "Best on a bigger screen":** one short line and "Send to my email to continue on laptop".
+- **`POST /api/v5/lessons/:topicId/send-to-email`** `{ courseId?, code? }` is registered from `register.ts` inside the lesson routes. It always answers 200 `{ status, link, retryInMinutes? }`:
+  - `sent`: one `email_outbox` row (kind `learner.continue_on_laptop`), and then `drainOutbox` runs at once, in the background, so the email doesn't wait for the hourly tick. A failed send is recorded on the row by the sender.
+  - `already_sent`: there's a row for the same deep link in the last hour. Limit: 1 per topic per learner per hour. The outbox has no topic column, so the link inside the text is the key. A course lesson's link counts as a different lesson.
+  - `not_set_up`: no SMTP, or the username can't become an address (no `MAIL_DOMAIN`). Nothing is queued.
+  - Only coding lessons in the learner's plan (400 / 404 otherwise). `courseId` must be a plain id. Unknown fields are a 400, so the address can't be chosen by the client. Rate limit: 10 a minute.
+- **The email** (`shared/sendToEmail.ts`) has a button, the link written out, and the learner's code so far, escaped and capped at 20 000 characters. **Decision:** we include the code because drafts live in the phone's localStorage, so the laptop wouldn't have them.
+- **Copy:**
+  - Sent: "Sent. Open it on your laptop to keep going."
+  - Not set up: "Email isn't set up yet. Copy the link instead." with a "Copy the link" button that changes to "Link copied".
+  - Already sent: "We already sent this lesson… send it again in N minutes, or copy the link."
+  - Network failure: a plain line, plus the copy button with a link built on the client.
+  - If the clipboard is blocked, the link is shown so it can be copied by hand.
+- **Status `sent` means queued and handed to the sender**, not delivered. Delivery failures show in the admin email counts, like the other emails.
+
+### Loading, errors, optimistic updates
+- **Skeletons** (`src/v5/learner/skeletons.tsx`, built from the design `Skeleton`): My plan (summary card and trail), Library (the card grid), the course page (title, outcomes and syllabus, with an sr-only h1 while loading), Review (the three entry cards), Me progress (skill meters and cards) and Me settings. Today and the lesson already had layout skeletons. No new design variants were needed.
+- **Errors:** every learner screen already had an `ErrorState` with Try again. The e2e now checks both the skeleton and Try again on each screen: Today, My plan, Library, the course page, Review, Me and the lesson.
+- **Optimistic updates, each with rollback and a plain message:**
+  - **Review rating:** the next card shows at once (a queue of card ids, not an index). A rating that fails comes back to the front of the queue, face up, with "That rating didn't save" (inline and as a toast). Offline ratings go through the app-wide group's `rateOrQueue`, so offline still queues instead of rolling back. The done screen shows "Saving your last ratings…" until every rating has saved.
+  - **Step completion:** when a step's rule is met, it counts as done locally and Next opens. If the save fails, it rolls back and shows "That step didn't save" with Try again (in the bar on a phone). If the server doesn't confirm the step, it rolls back with an info toast. The server still re-checks every claim before any XP. `useLessonSave.save(…, true)` now resolves with the response, or null on failure.
+  - **Notes:** add and edit show at once. If saving fails, the note is removed and the text goes back into the box (add), or the edit box reopens (edit). Delete was already optimistic. Edit and delete are disabled on a note that is still saving.
+  - **Settings:** if a save fails, only the keys it changed are rolled back, so a second toggle made meanwhile survives. The theme is re-applied on rollback, and a toast says "That setting didn't save".
+- **Step XP shows inline**, next to Next ("Step done. +10 XP"), instead of a toast. **Found by v5-lesson.ts:** the bottom-right toast sat on top of the Next button at 1440. sonner pauses its timer on hover, so the toast never left and Next couldn't be clicked.
+
+### Tests
+- **Vitest:** `server/src/v5/lesson/sendToEmail.test.ts` (12 tests): it covers queued + link + code + escaping + drain called, the course link, the 1 an hour limit with minutes left, the limit being per lesson and per learner, not set up (no SMTP / no address), coding lessons in the plan only, a 401 signed out, and bad input. The route's environment, clock and drain can be swapped through `sendToEmailDeps`.
+- **`scripts/e2e/v5-mobile-learner.ts`** (port 8830, throwaway DATA_DIR, mock AI, SMTP pointed at a closed port, welcome marked done). It checks:
+  - the Do-step tabs, the hint, sent, already sent, and not set up (a stubbed answer) with copy to the clipboard;
+  - the sticky header, Next in the thumb zone above the nav, and the Ask Oye bottom sheet;
+  - an optimistic rating (the next card shows within about 60 ms while the request is held) and its rollback on a 500;
+  - the skeleton and Try again on 7 screens;
+  - a sweep of 16 views at 390 light, 390 dark and 1440 light: axe (WCAG 2.2 AA tags) with 0 serious or critical, no sideways scroll, and at 390 no target under 24 px, no text under 12 px, and the bottom nav never covering the end of the page.
+  - `E2E_ONLY=do,lesson,review,states,sweep` runs a part; `E2E_AUDIT=1` also notes targets between 24 and 44 px.
+- **Results on a private snapshot:** `v5-mobile-learner` (all 239 checks), `v5-lesson`, `v5-learner-pages` and `v5-today` all pass. `v5-pwa.ts` passes every offline Review check after the merge below; only its icon checks failed, on the app-wide group's in-progress `public/icon-*.png`. `npx tsc -b`, `npx eslint .` and `npm test` (175 files, 2517 tests) are green. `npm run size` on the snapshot: the lesson route is 190.7 KB (limit 200) and `/learn` is 162.5 KB.
+
+### Shared edits and test fixes
+- **`ReviewPage.tsx` was edited by two groups at once.** The app-wide group added offline Review (`offline.ts` plus wiring) while I rewrote `SessionRunner` for optimistic ratings. My first patch replaced their version of `SessionRunner`. It is now merged: `SessionRunner` takes their `userId` and rates through `rateOrQueue`, and their screen-level wiring is untouched. **App-wide group: please re-read `SessionRunner`** in case your version had UI beyond the queued message. Your `v5-pwa.ts` offline checks pass against it.
+- **`scripts/e2e/v5-learner-pages.ts`:** "a search with no match says so" used `isVisible({ timeout })`, which doesn't wait. The library search is deferred (`useDeferredValue`), so the check failed in 3 of 4 runs. It now uses `waitFor`. No product change.
+
+### Requests to other groups
+- **App group (`src/v5/app/shells.tsx`):** the learner bottom-nav labels render at 11 px (`text-[11px]`); please use `text-caption` (12 px). My audit leaves the shell out, since it's yours.
+- **App group:** a `--v5-bottom-nav-h` variable on the shell would let sticky bars sit exactly on the nav. Today they assume 4 rem plus the safe area, which works for both shells (56 and 64 px).
+- **Design group (optional):** a three-pane option for `SplitView` on phones, or a `mobileTabs` prop. CodeDo draws its own tabs for now.
+
+### Needs Abhishek
+- "Send to my email" goes out only with SMTP and `MAIL_DOMAIN` set (see Phase 6). Without them, learners get "Email isn't set up yet. Copy the link instead", which works on its own.

@@ -63,10 +63,10 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 
 ## Phase 8: Mobile, accessibility, polish
 - [x] 8.0 Fix the browser code runner blocked by the production CSP (old topic "Run visible tests" and v4 snippet runs are broken live); lesson route over budget (291 KB gz) and the shared 54 KB vendor chunk
-- [ ] 8.1 Mobile: learner screens, coding tabs + "send to my email", admin tablet/phone
-- [ ] 8.2 WCAG 2.2 AA + axe on every main route
-- [ ] 8.3 Skeletons, optimistic updates, error boundary, icons, installable PWA with offline Review
-- [ ] 8.4 Gates + commit `feat(v5-p8)`
+- [x] 8.1 Mobile: learner screens, coding tabs + "send to my email", admin tablet/phone
+- [x] 8.2 WCAG 2.2 AA + axe on every main route
+- [x] 8.3 Skeletons, optimistic updates, error boundary, icons, installable PWA with offline Review
+- [x] 8.4 Gates + commit `feat(v5-p8)`
 
 ## Phase 9: Quality gates, switch-on, report
 - [ ] 9.1 Playwright journeys (learner + admin), visual snapshots 390/768/1280/1440 light+dark, axe, Lighthouse CI, bundle limits

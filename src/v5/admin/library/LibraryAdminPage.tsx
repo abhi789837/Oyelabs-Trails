@@ -3,10 +3,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { coursesApi } from "@/features/admin/courses/api";
-import { Badge, Button, Card, Dialog, EmptyState, ErrorState, Field, Input, SkeletonLayout, StatusLine, v5Toast } from "@/v5/design";
+import { Badge, Button, Card, Dialog, EmptyState, ErrorState, Field, Input, StatusLine, v5Toast } from "@/v5/design";
 
 import { v5AdminApi, type LibraryCourse, type LibraryStatus } from "../api";
 import { formatDate, Page, PageHeader, plainMessage, Segmented, useLoad, useSlow } from "../parts/common";
+import { LibrarySkeleton } from "../parts/Skeletons";
 
 const STATUS: Record<LibraryStatus, { label: string; tone: "success" | "info" | "warning" | "neutral" | "outline" }> = {
   live: { label: "Live", tone: "success" },
@@ -117,7 +118,7 @@ export default function LibraryAdminPage() {
       {lib.error && !lib.data ? (
         <ErrorState body={plainMessage(lib.error)} onRetry={lib.reload} />
       ) : !lib.data ? (
-        slow ? <SkeletonLayout variant="card" label="Loading the library" /> : null
+        slow ? <LibrarySkeleton /> : null
       ) : courses.length === 0 ? (
         <EmptyState
           icon={<BookOpen />}

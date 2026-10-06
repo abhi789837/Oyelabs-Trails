@@ -1,9 +1,45 @@
+import fs from "node:fs";
+import path from "node:path";
 import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
+
+import { precacheList, precacheVersion, type BuiltChunk } from "./src/v5/app/pwa/precache";
+
+/**
+ * v5 Phase 8: writes dist/sw.js from src/v5/app/pwa/sw.template.js with this build's precache list
+ * and version (docs/v5/DECISIONS.md, "Phase 8 — app-wide"). Build only: no service worker in dev.
+ * Hand-written rather than vite-plugin-pwa: the worker needs custom rules (the offline-only
+ * /api/auth/me copy, wiping data on sign-out) and only a small precache list, so Workbox would add
+ * weight and indirection without removing any of our own code.
+ */
+function oyelearnServiceWorker(): Plugin {
+  return {
+    name: "oyelearn-service-worker",
+    apply: "build",
+    writeBundle(options, bundle) {
+      const outDir = options.dir ?? path.resolve("dist");
+      const chunks: BuiltChunk[] = [];
+      const assets: string[] = [];
+      for (const out of Object.values(bundle)) {
+        if (out.type === "chunk") chunks.push({ fileName: out.fileName, facadeModuleId: out.facadeModuleId, isEntry: out.isEntry, imports: out.imports });
+        else assets.push(out.fileName);
+      }
+      const urls = precacheList(chunks, assets);
+      const indexHtml = fs.readFileSync(path.join(outDir, "index.html"), "utf8");
+      const version = precacheVersion(urls, indexHtml);
+      const template = fs.readFileSync(fileURLToPath(new URL("./src/v5/app/pwa/sw.template.js", import.meta.url)), "utf8");
+      const sw = template
+        .replace('"__OYELEARN_SW_VERSION__"', JSON.stringify(version))
+        .replace("/* __OYELEARN_PRECACHE__ */ []", JSON.stringify(urls, null, 2));
+      if (sw === template) throw new Error("sw.template.js placeholders not found");
+      fs.writeFileSync(path.join(outDir, "sw.js"), sw);
+    },
+  };
+}
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), oyelearnServiceWorker()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

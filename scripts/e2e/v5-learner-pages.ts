@@ -273,7 +273,8 @@ async function libraryFlow(page: Page): Promise<void> {
   await page.locator('[data-testid="library-card"]').first().waitFor({ timeout: WAIT });
   const before = await page.locator('[data-testid="library-card"]').count();
   await page.getByLabel("Search the library").fill("zzzz-no-such-thing");
-  ok(await page.getByText("Nothing matches").isVisible({ timeout: WAIT }).catch(() => false), "a search with no match says so");
+  // waitFor, not isVisible: the search is deferred (useDeferredValue), and isVisible doesn't wait.
+  ok(await page.getByText("Nothing matches").first().waitFor({ timeout: WAIT }).then(() => true, () => false), "a search with no match says so");
   await page.getByLabel("Search the library").fill("javascript");
   await page.waitForTimeout(200);
   const found = await page.locator('[data-testid="library-card"]').count();

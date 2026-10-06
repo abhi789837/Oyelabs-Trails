@@ -1,5 +1,7 @@
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+import { chartValue } from "./chartFormat";
+
 /**
  * The admin charts. Recharts is only ever loaded through `lazy()` from this file, so it stays out
  * of every other route's download (docs/v5/PLAN.md rule 2). Colours are the v5 tokens, so light
@@ -25,11 +27,11 @@ export function SimpleBarChart({ data, unit = "", height = 220, title }: { data:
   return (
     <figure aria-label={title} className="m-0">
       <ResponsiveContainer width="100%" height={height}>
-        <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }} accessibilityLayer>
+        <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }} accessibilityLayer>
           <CartesianGrid vertical={false} stroke={GRID} />
           <XAxis dataKey="label" tickLine={false} axisLine={false} tick={AXIS} interval="preserveStartEnd" />
-          <YAxis tickLine={false} axisLine={false} tick={AXIS} allowDecimals={false} unit={unit} width={48} />
-          <Tooltip cursor={{ fill: "rgb(var(--v5-sunken))" }} contentStyle={TOOLTIP_STYLE} formatter={(v) => [`${String(v)}${unit}`, title]} />
+          <YAxis tickLine={false} axisLine={false} tick={AXIS} allowDecimals={false} tickFormatter={(v) => chartValue(v, unit)} width={52} />
+          <Tooltip cursor={{ fill: "rgb(var(--v5-sunken))" }} contentStyle={TOOLTIP_STYLE} formatter={(v) => [chartValue(v, unit), title]} />
           <Bar dataKey="value" fill="rgb(var(--v5-brand))" radius={[4, 4, 0, 0]} maxBarSize={36} />
         </BarChart>
       </ResponsiveContainer>
@@ -41,11 +43,11 @@ export function SimpleLineChart({ data, unit = "", height = 220, title }: { data
   return (
     <figure aria-label={title} className="m-0">
       <ResponsiveContainer width="100%" height={height}>
-        <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }} accessibilityLayer>
+        <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }} accessibilityLayer>
           <CartesianGrid vertical={false} stroke={GRID} />
           <XAxis dataKey="label" tickLine={false} axisLine={false} tick={AXIS} interval="preserveStartEnd" minTickGap={24} />
-          <YAxis tickLine={false} axisLine={false} tick={AXIS} unit={unit} width={48} />
-          <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v) => [`${String(v)}${unit}`, title]} />
+          <YAxis tickLine={false} axisLine={false} tick={AXIS} tickFormatter={(v) => chartValue(v, unit)} width={52} />
+          <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v) => [chartValue(v, unit), title]} />
           <Line type="monotone" dataKey="value" stroke="rgb(var(--v5-brand))" strokeWidth={2} dot={false} isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>

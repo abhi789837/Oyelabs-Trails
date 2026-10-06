@@ -261,6 +261,33 @@
   scroll-behavior: auto !important;
 }
 
+/* P8: the OS setting too, unless the learner chose "Show motion" (data-reduced-motion="off"). */
+@media (prefers-reduced-motion: reduce) {
+  [data-ui="v5"]:not([data-reduced-motion="off"]) *,
+  [data-ui="v5"]:not([data-reduced-motion="off"]) *::before,
+  [data-ui="v5"]:not([data-reduced-motion="off"]) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * P8, WCAG 2.4.11 (focus not obscured): the sticky top bar (3.5rem) and the phone bottom nav
+ * (4rem + the safe area) must never cover the focused element. Scrolling a focused element into
+ * view keeps clear of them. From 768 px there is no bottom nav.
+ */
+[data-ui="v5"]:root {
+  scroll-padding-top: 4.5rem;
+  scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 768px) {
+  [data-ui="v5"]:root {
+    scroll-padding-bottom: 1rem;
+  }
+}
+
 @keyframes v5-shimmer {
   0% {
     background-position: 100% 0;

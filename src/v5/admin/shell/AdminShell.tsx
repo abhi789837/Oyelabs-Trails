@@ -15,7 +15,7 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
-import { createContext, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import type { UserSummary } from "@shared/admin";
@@ -24,10 +24,14 @@ import { useAuth } from "@/features/auth/AuthProvider";
 import { adminApi } from "@/features/admin/api";
 import { chooseDesign } from "@/v5/app/designFlag";
 import { ScreenFallback } from "@/v5/app/RouteFallback";
-import { AppShell, Button, CommandPalette, Dialog, Kbd, Tooltip, V5MotionProvider, cn, useCommandShortcut, useV5Root, type CommandGroup, type LinkLike, type NavItem } from "@/v5/design";
+import { Button, CommandPalette, Dialog, Kbd, Tooltip, V5MotionProvider, useCommandShortcut, useV5Root, type CommandGroup } from "@/v5/design";
+
+import { BiggerScreenNote } from "../parts/BiggerScreen";
+import { AdminFrame, type FrameLink } from "./AdminFrame";
 
 import { ADMIN_SHORTCUTS, createKeySequence, isTypingTarget } from "./keys";
 import { filterPalette } from "./palette";
+import { isOlderPage } from "./routes";
 
 /**
  * The v5 admin frame (docs/v5/PLAN.md: admin routes). Compact density, a left nav, the ⌘K palette
@@ -47,21 +51,15 @@ export function useAdminShell(): ShellState {
   return useContext(ShellContext);
 }
 
-const RouterLink: LinkLike = ({ href, children, ...rest }) => (
-  <Link to={href} {...rest}>
-    {children}
-  </Link>
-);
-
 interface Page {
   href: string;
   label: string;
-  icon: NavItem["icon"];
+  icon: FrameLink["icon"];
   keywords?: string[];
   end?: boolean;
 }
 
-/** Main nav, in order. The first five are the phone's bottom bar. */
+/** Main nav, in order. The first four are the phone's bottom bar; the rest are under Menu. */
 const MAIN: Page[] = [
   { href: "/admin", label: "Inbox", icon: Inbox, end: true, keywords: ["attention", "home", "todo"] },
   { href: "/admin/people", label: "People", icon: Users, keywords: ["learners", "team"] },
@@ -201,31 +199,28 @@ export function AdminShell() {
     return out;
   }, [people, go, superadmin]);
 
-  const nav: NavItem[] = MAIN.map((p) => ({
+  const main: FrameLink[] = MAIN.map((p) => ({
     href: p.href,
     label: p.label,
     icon: p.icon,
     active: isActive(pathname, p),
     badge: p.href === "/admin" && inboxCount ? inboxCount : undefined,
   }));
+  const more: FrameLink[] = MORE.map((p) => ({ href: p.href, label: p.label, icon: p.icon, active: isActive(pathname, p) }));
+  const older = OLDER.filter((p) => !p.superadmin || superadmin).map((p) => ({ href: p.href, label: p.label, active: pathname === p.href }));
+  const olderPage = isOlderPage(pathname);
 
   const state = useMemo(() => ({ inboxCount, setInboxCount, openPalette: () => setPaletteOpen(true) }), [inboxCount]);
 
   return (
     <V5MotionProvider>
     <ShellContext.Provider value={state}>
-      <AppShell
-        nav={nav}
-        link={RouterLink}
-        homeHref="/admin"
-        onSearch={() => setPaletteOpen(true)}
-        topRight={<TopRight onHelp={() => setHelpOpen(true)} />}
-        sidebarExtra={<SidebarExtra pathname={pathname} superadmin={superadmin} />}
-      >
+      <AdminFrame main={main} more={more} older={older} onSearch={() => setPaletteOpen(true)} topRight={<TopRight onHelp={() => setHelpOpen(true)} />}>
+        {olderPage ? <BiggerScreenNote id="older-pages" className="mx-4 mt-4" /> : null}
         <Suspense fallback={<ScreenFallback />}>
           <Outlet />
         </Suspense>
-      </AppShell>
+      </AdminFrame>
       {/* Keyed on the people list so the best match is highlighted again when names arrive. */}
       <CommandPalette
         key={people ? "with-people" : "pages"}
@@ -292,60 +287,6 @@ function TopRight({ onHelp }: { onHelp: () => void }) {
           <Undo2 aria-hidden="true" />
         </Button>
       </Tooltip>
-    </div>
-  );
-}
-
-function SideLink({ href, active, children }: { href: string; active: boolean; children: ReactNode }) {
-  return (
-    <Link
-      to={href}
-      aria-current={active ? "page" : undefined}
-      className={cn(
-        "flex min-h-8 items-center gap-3 rounded-control px-3 text-small transition-colors duration-120",
-        active ? "bg-brand-soft text-brand-fg" : "text-fg-2 hover:bg-sunken hover:text-fg-1",
-      )}
-    >
-      {children}
-    </Link>
-  );
-}
-
-function SidebarExtra({ pathname, superadmin }: { pathname: string; superadmin: boolean }) {
-  const [olderOpen, setOlderOpen] = useState(() => OLDER.some((p) => pathname.startsWith(p.href)));
-  return (
-    <div className="mt-4 flex flex-col gap-0.5 border-t border-line-1 pt-3">
-      <p className="px-3 pb-1 text-caption font-medium text-fg-2">More</p>
-      <ul className="flex flex-col gap-0.5">
-        {MORE.map((p) => (
-          <li key={p.href}>
-            <SideLink href={p.href} active={isActive(pathname, p)}>
-              <p.icon className="size-4" aria-hidden="true" />
-              {p.label}
-            </SideLink>
-          </li>
-        ))}
-      </ul>
-      <button
-        type="button"
-        aria-expanded={olderOpen}
-        onClick={() => setOlderOpen((o) => !o)}
-        className="mt-3 flex min-h-8 items-center justify-between rounded-control px-3 text-left text-caption font-medium text-fg-2 hover:bg-sunken"
-      >
-        Older pages
-        <span aria-hidden="true">{olderOpen ? "−" : "+"}</span>
-      </button>
-      {olderOpen ? (
-        <ul className="flex flex-col gap-0.5">
-          {OLDER.filter((p) => !p.superadmin || superadmin).map((p) => (
-            <li key={p.href}>
-              <SideLink href={p.href} active={pathname === p.href}>
-                {p.label}
-              </SideLink>
-            </li>
-          ))}
-        </ul>
-      ) : null}
     </div>
   );
 }

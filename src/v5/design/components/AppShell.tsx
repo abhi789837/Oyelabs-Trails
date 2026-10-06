@@ -5,6 +5,7 @@ import { cn } from "../cn";
 
 import { Kbd } from "./Primitives";
 import { Logo } from "./Showcase";
+import { SkipLink } from "./SkipLink";
 
 export interface NavItem {
   href: string;
@@ -54,14 +55,7 @@ export function AppShell({ nav, sidebarExtra, topRight, onSearch, link: L = Anch
   const navLabel = preview ? undefined : "Main";
   return (
     <div className={cn("@container/shell relative flex min-h-dvh flex-col bg-surface-0 text-fg-1", className)}>
-      {preview ? null : (
-      <a
-        href="#v5-main"
-        className="sr-only z-50 rounded-control bg-brand px-3 py-2 text-on-brand focus:not-sr-only focus:absolute focus:left-3 focus:top-3"
-      >
-        Skip to content
-      </a>
-      )}
+      {preview ? null : <SkipLink target="v5-main" />}
       <Header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-line-1 bg-surface-1/90 px-4 backdrop-blur">
         <L href={homeHref} className="flex h-7 items-center rounded-control" aria-label="Oyelearn home">
           <Logo className="h-7" />

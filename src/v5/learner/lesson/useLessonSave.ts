@@ -25,16 +25,22 @@ export function useLessonSave(topicId: string, onSaved: (res: LessonStatePutResp
     }
     const body = pending.current;
     pending.current = {};
-    if (Object.keys(body).length === 0) return Promise.resolve();
+    if (Object.keys(body).length === 0) return Promise.resolve(null);
     return lessonApi
       .save(topicId, body)
-      .then((res) => onSavedRef.current(res))
-      .catch(() => undefined);
+      .then((res) => {
+        onSavedRef.current(res);
+        return res;
+      })
+      .catch(() => null);
   }, [topicId]);
 
-  /** Queue a change. `now` sends it straight away (with anything already queued). */
+  /**
+   * Queue a change. `now` sends it straight away (with anything already queued) and resolves with
+   * the server's answer, or null when it didn't save (so an optimistic step can roll back).
+   */
   const save = useCallback(
-    (patch: LessonStatePut, now = false) => {
+    (patch: LessonStatePut, now = false): Promise<LessonStatePutResponse | null> => {
       pending.current = {
         ...pending.current,
         ...patch,
@@ -42,7 +48,7 @@ export function useLessonSave(topicId: string, onSaved: (res: LessonStatePutResp
       };
       if (now) return flush();
       if (timer.current === null) timer.current = window.setTimeout(() => void flush(), POSITION_SAVE_MS);
-      return Promise.resolve();
+      return Promise.resolve(null);
     },
     [flush],
   );

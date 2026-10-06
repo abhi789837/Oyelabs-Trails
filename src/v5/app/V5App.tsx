@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, type ReactNode } from "react";
 
 import {
   Navigate,
@@ -9,13 +9,17 @@ import {
 } from "react-router-dom";
 
 import { RequireStaff, RequireSuperadmin } from "@/features/auth/guards";
-import { CurriculumProvider } from "@/features/curriculum/CurriculumProvider";
 
 import * as Old from "./legacyPages";
 import { useAppMotionPref } from "./motionPref";
 import { LazyToaster, OldDialogsOutlet, WithOldDialogs } from "./overlays";
+import { startServiceWorker } from "./pwa/register";
+import { UpdatePrompt } from "./pwa/UpdatePrompt";
+import { RouteErrorBoundary, SilentBoundary } from "./RouteErrorBoundary";
 import { RouteFallback } from "./RouteFallback";
 import { LearnerShell } from "./shells";
+import { V5CurriculumProvider as CurriculumProvider } from "./V5CurriculumProvider";
+import { SkipLink } from "@/v5/design/components/SkipLink";
 import { V5MotionProvider } from "@/v5/design/V5MotionProvider";
 import { MotivationHost } from "@/v5/motivation/MotivationHost";
 
@@ -99,18 +103,27 @@ function CourseRedirect() {
   );
 }
 
+/** A screen inside a frame we don't own (admin): the boundary sits inside the frame's Outlet, so the frame stays. */
+function B({ children }: { children: ReactNode }) {
+  return <RouteErrorBoundary>{children}</RouteErrorBoundary>;
+}
+
 export default function V5App() {
   // The learner's reduced-motion setting, for every screen (MotionConfig + <html data-motion>).
   const motionPref = useAppMotionPref();
+  // Offline Review and the install prompt (Phase 8). Production builds only.
+  useEffect(() => startServiceWorker(), []);
   return (
     <V5MotionProvider reducedMotion={motionPref}>
       <Routes>
         {/* Learner */}
         <Route
           element={
-            <CurriculumProvider>
-              <LearnerShell />
-            </CurriculumProvider>
+            <RouteErrorBoundary fullPage>
+              <CurriculumProvider>
+                <LearnerShell />
+              </CurriculumProvider>
+            </RouteErrorBoundary>
           }
         >
           <Route path="learn" element={<TodayPage />} />
@@ -178,13 +191,17 @@ export default function V5App() {
         <Route
           path="assessment"
           element={
-            <CurriculumProvider>
-              <WithOldDialogs fallback={<RouteFallback />}>
-                <Suspense fallback={<RouteFallback />}>
-                  <AssessmentPage />
-                </Suspense>
-              </WithOldDialogs>
-            </CurriculumProvider>
+            <RouteErrorBoundary fullPage>
+              {/* The assessment frame renders its own <main>; the link finds it. */}
+              <SkipLink target="assessment-main" />
+              <CurriculumProvider>
+                <WithOldDialogs fallback={<RouteFallback />}>
+                  <Suspense fallback={<RouteFallback />}>
+                    <AssessmentPage />
+                  </Suspense>
+                </WithOldDialogs>
+              </CurriculumProvider>
+            </RouteErrorBoundary>
           }
         />
 
@@ -193,70 +210,74 @@ export default function V5App() {
           path="admin"
           element={
             <RequireStaff>
-              <CurriculumProvider>
-                <WithOldDialogs fallback={<RouteFallback />}>
-                  <Suspense fallback={<RouteFallback />}>
-                    <AdminShell />
-                  </Suspense>
-                </WithOldDialogs>
-              </CurriculumProvider>
+              <RouteErrorBoundary fullPage>
+                <CurriculumProvider>
+                  <WithOldDialogs fallback={<RouteFallback />}>
+                    <Suspense fallback={<RouteFallback />}>
+                      <AdminShell />
+                    </Suspense>
+                  </WithOldDialogs>
+                </CurriculumProvider>
+              </RouteErrorBoundary>
             </RequireStaff>
           }
         >
-          <Route index element={<InboxPage />} />
-          <Route path="overview" element={<OverviewPage />} />
-          <Route path="people" element={<PeoplePage />} />
-          <Route path="library" element={<LibraryAdminPage />} />
-          <Route path="library/:courseId/edit" element={<CourseEditPage />} />
-          <Route path="reports" element={<ReportsPage />} />
-          <Route path="onboard" element={<OnboardPage />} />
-          <Route path="announcements" element={<AnnouncementsPage />} />
-          <Route path="problems" element={<ProblemsPage />} />
-          <Route path="tutor-answers" element={<TutorAnswersPage />} />
+          <Route index element={<B><InboxPage /></B>} />
+          <Route path="overview" element={<B><OverviewPage /></B>} />
+          <Route path="people" element={<B><PeoplePage /></B>} />
+          <Route path="library" element={<B><LibraryAdminPage /></B>} />
+          <Route path="library/:courseId/edit" element={<B><CourseEditPage /></B>} />
+          <Route path="reports" element={<B><ReportsPage /></B>} />
+          <Route path="onboard" element={<B><OnboardPage /></B>} />
+          <Route path="announcements" element={<B><AnnouncementsPage /></B>} />
+          <Route path="problems" element={<B><ProblemsPage /></B>} />
+          <Route path="tutor-answers" element={<B><TutorAnswersPage /></B>} />
 
           {/* Old admin pages, unchanged, inside the v5 shell until each is replaced. */}
-          <Route path="onboard/classic" element={<Old.OldAdminOnboardPage />} />
-          <Route path="people/:userId" element={<Old.OldAdminLearnerPage />} />
-          <Route path="departments" element={<Old.OldAdminDepartmentsPage />} />
+          <Route path="onboard/classic" element={<B><Old.OldAdminOnboardPage /></B>} />
+          <Route path="people/:userId" element={<B><Old.OldAdminLearnerPage /></B>} />
+          <Route path="departments" element={<B><Old.OldAdminDepartmentsPage /></B>} />
           <Route
             path="ai"
             element={
-              <RequireSuperadmin>
-                <Old.OldAdminAiPage />
-              </RequireSuperadmin>
+              <B>
+                <RequireSuperadmin>
+                  <Old.OldAdminAiPage />
+                </RequireSuperadmin>
+              </B>
             }
           />
-          <Route path="question-bank" element={<Old.OldAdminBankPage />} />
-          <Route path="ai-usage" element={<Old.OldAdminAiUsagePage />} />
-          <Route path="live" element={<Old.OldAdminLivePage />} />
-          <Route path="audit" element={<Old.OldAdminAuditPage />} />
-          <Route path="reviews" element={<Old.OldAdminReviewsPage />} />
-          <Route path="sop" element={<Old.OldAdminSopPage />} />
-          <Route path="handbook" element={<Old.OldAdminHandbookPage />} />
-          <Route path="integrity" element={<Old.OldAdminIntegrityFeedPage />} />
-          <Route path="curriculum" element={<Old.OldAdminCurriculumPage />} />
+          <Route path="question-bank" element={<B><Old.OldAdminBankPage /></B>} />
+          <Route path="ai-usage" element={<B><Old.OldAdminAiUsagePage /></B>} />
+          <Route path="live" element={<B><Old.OldAdminLivePage /></B>} />
+          <Route path="audit" element={<B><Old.OldAdminAuditPage /></B>} />
+          <Route path="reviews" element={<B><Old.OldAdminReviewsPage /></B>} />
+          <Route path="sop" element={<B><Old.OldAdminSopPage /></B>} />
+          <Route path="handbook" element={<B><Old.OldAdminHandbookPage /></B>} />
+          <Route path="integrity" element={<B><Old.OldAdminIntegrityFeedPage /></B>} />
+          <Route path="curriculum" element={<B><Old.OldAdminCurriculumPage /></B>} />
           <Route
             path="curriculum/test-items"
-            element={<Old.OldAdminTestItemsPage />}
+            element={<B><Old.OldAdminTestItemsPage /></B>}
           />
-          <Route path="skill-graph" element={<Old.OldAdminSkillGraphPage />} />
+          <Route path="skill-graph" element={<B><Old.OldAdminSkillGraphPage /></B>} />
           <Route
             path="skill-groups"
-            element={<Old.OldAdminSkillGroupsPage />}
+            element={<B><Old.OldAdminSkillGroupsPage /></B>}
           />
-          <Route path="courses" element={<Old.OldAdminCoursesPage />} />
+          <Route path="courses" element={<B><Old.OldAdminCoursesPage /></B>} />
           <Route
             path="courses/:courseId"
-            element={<Old.OldAdminCourseEditorPage />}
+            element={<B><Old.OldAdminCourseEditorPage /></B>}
           />
-          <Route path="generated" element={<Old.OldAdminGeneratedPage />} />
+          <Route path="generated" element={<B><Old.OldAdminGeneratedPage /></B>} />
           <Route
             path="assessments/:assessmentId"
-            element={<Old.OldAdminPoolPage />}
+            element={<B><Old.OldAdminPoolPage /></B>}
           />
           <Route
             path="assessments/:assessmentId/integrity"
-            element={<Old.OldAdminIntegrityPage />}
+            element={<B><Old.OldAdminIntegrityPage /></B>}
           />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>
@@ -266,19 +287,26 @@ export default function V5App() {
           path="design"
           element={
             <RequireStaff>
-              <WithOldDialogs fallback={<RouteFallback />}>
-                <Suspense fallback={<RouteFallback />}>
-                  <DesignPage />
-                </Suspense>
-              </WithOldDialogs>
+              <RouteErrorBoundary fullPage>
+                <WithOldDialogs fallback={<RouteFallback />}>
+                  <Suspense fallback={<RouteFallback />}>
+                    <DesignPage />
+                  </Suspense>
+                </WithOldDialogs>
+              </RouteErrorBoundary>
             </RequireStaff>
           }
         />
 
         <Route path="*" element={<Navigate to="/learn" replace />} />
       </Routes>
-      <MotivationHost />
-      <LazyToaster />
+      <SilentBoundary>
+        <MotivationHost />
+      </SilentBoundary>
+      <SilentBoundary>
+        <LazyToaster />
+      </SilentBoundary>
+      <UpdatePrompt />
     </V5MotionProvider>
   );
 }

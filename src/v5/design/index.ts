@@ -31,6 +31,7 @@ export { FeedbackPanel, LessonStepHeader, PlaylistSidebar, StatusLine, VideoPlay
 export { Callout, Flashcard, HintLadder, ReadingView, Takeaways, TutorPanel, type TutorMessage } from "./components/Learning";
 export { SplitView, type SplitViewProps } from "./components/SplitView";
 export { Celebration, CertificatePreview, Logo } from "./components/Showcase";
+export { SkipLink } from "./components/SkipLink";
 export { AppShell, type AppShellProps, type LinkLike, type NavItem } from "./components/AppShell";
 
 export type { TrailStop } from "./trail";

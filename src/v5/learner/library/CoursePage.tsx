@@ -12,10 +12,11 @@ import { Button } from "@/v5/design/components/Button";
 import { Card } from "@/v5/design/components/Card";
 import { Badge } from "@/v5/design/components/Primitives";
 import { ProgressBar } from "@/v5/design/components/Progress";
-import { EmptyState, ErrorState, SkeletonLayout } from "@/v5/design/components/States";
+import { EmptyState, ErrorState } from "@/v5/design/components/States";
 import { transitions } from "@/v5/design/motion";
 import type { CourseDetail } from "@shared/me";
 
+import { CourseSkeleton } from "../skeletons";
 import { PageFrame, V5Screen, formatMinutes, useApiData, useDelayed } from "../me/page";
 import { previewCourseDetail } from "./coursePreview";
 import { FormatChip, RecommendedBadge } from "./LibraryPage";
@@ -65,7 +66,14 @@ function CourseScreen() {
       </PageFrame>
     );
   }
-  if (!data) return <PageFrame title=" ">{showSkeleton ? <SkeletonLayout variant="article" rows={8} label="Loading the course" /> : null}</PageFrame>;
+  if (!data) {
+    return (
+      <PageFrame title={<span className="sr-only">Loading the course</span>}>
+        {back}
+        {showSkeleton ? <CourseSkeleton /> : null}
+      </PageFrame>
+    );
+  }
 
   const c = data.course;
   const started = c.doneCount > 0;

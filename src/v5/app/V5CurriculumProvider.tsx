@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { LoaderCircle } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 import { useCurriculumLoader } from "@/features/curriculum/useCurriculumLoader";
 
@@ -8,8 +9,17 @@ import { useCurriculumLoader } from "@/features/curriculum/useCurriculumLoader";
  * markup that doesn't import the old Button. That Button pulls the full Motion runtime, and this
  * provider is in /learn's first download (DECISIONS, Integration fixes).
  */
+/**
+ * Screens that don't read the curriculum and must open without it (P8: Review works offline, when
+ * the manifest can't be fetched). The loader still runs for them, so the next screen is ready.
+ */
+const NO_CURRICULUM_NEEDED = ["/learn/review"];
+
 export function V5CurriculumProvider({ children }: { children: ReactNode }) {
   const { status, error, retry } = useCurriculumLoader();
+  const { pathname } = useLocation();
+
+  if (NO_CURRICULUM_NEEDED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) return <>{children}</>;
 
   if (status === "idle" || status === "loading") {
     return (

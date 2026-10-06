@@ -1,21 +1,24 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Archive, BellRing, PauseCircle, UserPlus } from "lucide-react";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
-import { agoLabel } from "@shared/adminInbox";
+import { agoLabel, UNDO_MS } from "@shared/adminInbox";
+import type { UserStatus } from "@shared/enums";
 
 import { useTableQueryState, type BulkAction } from "@/components/data-table";
 import { adminApi } from "@/features/admin/api";
 import { useCatalog } from "@/features/admin/catalog/useCatalog";
 import { useAuth } from "@/features/auth/AuthProvider";
-import { Avatar, Badge, Button, ErrorState, ProgressBar, v5Toast } from "@/v5/design";
+import { Avatar, Badge, Button, ErrorState, ProgressBar, cn, v5Toast } from "@/v5/design";
 import { V5DataTable } from "@/v5/design/components/DataTable";
 
 import { v5AdminApi } from "../api";
 import { Page, PageHeader, plainMessage, useLoad } from "../parts/common";
+import { createDeferredQueue } from "../parts/deferred";
+import { runUndoable } from "../parts/undoable";
 import { PersonSheet } from "./PersonSheet";
-import { personFields, personViews, toRows, type PersonRow } from "./views";
+import { personFields, personViews, refusedIds, toRows, withStatusOverrides, type PersonRow } from "./views";
 
 function StatusCell({ row }: { row: PersonRow }) {
   if (row.status === "archived") return <Badge tone="neutral">Archived</Badge>;
@@ -38,7 +41,23 @@ export default function PeoplePage() {
   const users = useLoad((signal) => adminApi.listUsers(signal));
   const signals = useLoad((signal) => v5AdminApi.people(signal));
 
-  const rows = useMemo(() => (users.data ? toRows(users.data.users, signals.data?.people ?? {}) : null), [users.data, signals.data]);
+  // Suspend / archive show at once and are sent when the Undo window closes (parts/undoable.ts).
+  const [overrides, setOverrides] = useState<Record<string, UserStatus>>({});
+  const queue = useRef(createDeferredQueue(UNDO_MS));
+  useEffect(() => {
+    const q = queue.current;
+    const flush = () => void q.flush();
+    window.addEventListener("pagehide", flush);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      flush();
+    };
+  }, []);
+
+  const rows = useMemo(
+    () => (users.data ? withStatusOverrides(toRows(users.data.users, signals.data?.people ?? {}), overrides) : null),
+    [users.data, signals.data, overrides],
+  );
   const fields = useMemo(() => personFields(departmentOptions), [departmentOptions]);
   const views = useMemo(() => personViews(departmentOptions), [departmentOptions]);
 
@@ -120,53 +139,123 @@ export default function PeoplePage() {
     [departmentName],
   );
 
-  const bulkActions = useMemo<BulkAction<PersonRow>[]>(
-    () => [
+  const setUsers = users.setData;
+  /** Show `status` for `ids` now; `null` takes the override away again. */
+  const override = useCallback((ids: readonly string[], status: UserStatus | null) => {
+    setOverrides((cur) => {
+      const next = { ...cur };
+      for (const id of ids) {
+        if (status) next[id] = status;
+        else delete next[id];
+      }
+      return next;
+    });
+  }, []);
+  /** The server agreed: write the status into the loaded list and drop the override. */
+  const settle = useCallback(
+    (ids: readonly string[], status: UserStatus) => {
+      setUsers((cur) => (cur ? { ...cur, users: cur.users.map((u) => (ids.includes(u.id) ? { ...u, status } : u)) } : cur));
+      override(ids, null);
+    },
+    [setUsers, override],
+  );
+
+  const bulkActions = useMemo<BulkAction<PersonRow>[]>(() => {
+    let seq = 0;
+    const statusAction = (opts: { id: string; label: string; icon: ReactNode; to: UserStatus; send: "disable" | "archive"; back: "activate" | "restore"; done: (n: number) => string; fail: string }): BulkAction<PersonRow> => ({
+      id: opts.id,
+      label: opts.label,
+      icon: opts.icon,
+      run: (selected) => {
+        const ids = selected.filter((r) => r.status !== opts.to).map((r) => r.id);
+        if (!ids.length) {
+          v5Toast.info("They already are.");
+          return;
+        }
+        const before = new Map(selected.map((r) => [r.id, r.status]));
+        runUndoable({
+          queue: queue.current,
+          id: `${opts.id}-${(seq += 1)}`,
+          message: opts.done(ids.length),
+          apply: () => override(ids, opts.to),
+          rollback: () => override(ids, null),
+          send: async () => {
+            const { results } = await adminApi.bulkUsers({ ids, action: opts.send });
+            const refused = refusedIds(results);
+            settle(
+              ids.filter((id) => !refused.includes(id)),
+              opts.to,
+            );
+            override(refused, null);
+            if (refused.length) v5Toast.error(`${refused.length} of ${ids.length} didn't change`, results.find((r) => !r.ok)?.error ?? "We weren't allowed to change them.");
+          },
+          reverse: async () => {
+            await adminApi.bulkUsers({ ids, action: opts.back });
+            // Put each one back the way it was (suspended people stay suspended after an archive is undone).
+            for (const id of ids) settle([id], before.get(id) ?? "active");
+          },
+          failTitle: opts.fail,
+          toasts: v5Toast,
+          describe: plainMessage,
+        });
+      },
+    });
+    return [
       {
         id: "nudge",
         label: "Send a reminder",
         icon: <BellRing aria-hidden="true" />,
-        run: async (selected) => {
+        run: (selected) => {
           const learners = selected.filter((r) => r.role === "learner" && r.status === "active");
           if (!learners.length) {
             v5Toast.info("Reminders go to active learners only.");
             return;
           }
-          const { sent } = await v5AdminApi.nudge(learners.map((r) => r.id));
-          v5Toast.success(`Reminder sent to ${sent} ${sent === 1 ? "person" : "people"}.`);
+          const n = learners.length;
+          runUndoable({
+            queue: queue.current,
+            id: `nudge-${(seq += 1)}`,
+            message: `Reminder going to ${n} ${n === 1 ? "person" : "people"}.`,
+            apply: () => undefined,
+            rollback: () => undefined,
+            send: () => v5AdminApi.nudge(learners.map((r) => r.id)),
+            failTitle: "We couldn't send the reminder",
+            toasts: v5Toast,
+            describe: plainMessage,
+          });
         },
       },
-      {
+      statusAction({
         id: "suspend",
         label: "Suspend",
         icon: <PauseCircle aria-hidden="true" />,
-        run: async (selected) => {
-          const ids = selected.map((r) => r.id);
-          await adminApi.bulkUsers({ ids, action: "disable" });
-          reload();
-          v5Toast.undo(`Suspended ${ids.length}. They can't sign in.`, () => void adminApi.bulkUsers({ ids, action: "activate" }).then(reload));
-        },
-      },
-      {
+        to: "disabled",
+        send: "disable",
+        back: "activate",
+        done: (n) => `Suspended ${n}. They can't sign in.`,
+        fail: "We couldn't suspend them",
+      }),
+      statusAction({
         id: "archive",
         label: "Archive",
         icon: <Archive aria-hidden="true" />,
-        run: async (selected) => {
-          const ids = selected.map((r) => r.id);
-          await adminApi.bulkUsers({ ids, action: "archive" });
-          reload();
-          v5Toast.undo(`Archived ${ids.length}. Their records are kept.`, () => void adminApi.bulkUsers({ ids, action: "restore" }).then(reload));
-        },
-      },
-    ],
-    [reload],
-  );
+        to: "archived",
+        send: "archive",
+        back: "restore",
+        done: (n) => `Archived ${n}. Their records are kept.`,
+        fail: "We couldn't archive them",
+      }),
+    ];
+  }, [override, settle]);
+
+  // With someone open on a wide screen, the list makes room for the sheet instead of hiding under it.
+  const sheetOpen = person !== null;
 
   return (
-    <Page wide>
+    <Page wide className={cn(sheetOpen && "xl:pr-[29.5rem]")}>
       <PageHeader
         title="People"
-        description="Everyone with an account. Click a row to see where they are without leaving the list."
+        description="Everyone with an account. Open someone to see where they are without leaving the list."
         actions={
           <Button variant="primary" size="sm" asChild>
             <Link to="/admin/onboard">
@@ -179,7 +268,9 @@ export default function PeoplePage() {
       {users.error && !users.data ? (
         <ErrorState body={plainMessage(users.error)} onRetry={reload} />
       ) : (
+        // On a phone the shared toolbar squeezes the search box to nothing; give it its own row.
         <V5DataTable<PersonRow>
+          className="max-md:[&_div:has(>label[for=data-table-search])]:basis-full"
           data={rows ?? []}
           columns={columns}
           fields={fields}

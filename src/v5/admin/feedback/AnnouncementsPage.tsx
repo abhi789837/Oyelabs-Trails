@@ -1,15 +1,19 @@
 import { Megaphone, Pin, PinOff, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { UNDO_MS } from "@shared/adminInbox";
 import type { AdminAnnouncementView, AnnouncementInput } from "@shared/today";
 
 import { adminApi } from "@/features/admin/api";
 import { useCatalog } from "@/features/admin/catalog/useCatalog";
-import { Badge, Button, Card, Dialog, EmptyState, ErrorState, Field, Input, SkeletonLayout, Textarea, cn, v5Toast } from "@/v5/design";
+import { Badge, Button, Card, Dialog, EmptyState, ErrorState, Field, Input, Textarea, cn, v5Toast } from "@/v5/design";
 
 import { v5AdminApi } from "../api";
 import { formatDate, isMissing, Page, PageHeader, plainMessage, useLoad, useSlow } from "../parts/common";
+import { createDeferredQueue } from "../parts/deferred";
+import { CardListSkeleton } from "../parts/Skeletons";
+import { runUndoable } from "../parts/undoable";
 
 type AudienceKind = "all" | "departments" | "people";
 
@@ -53,6 +57,16 @@ export default function AnnouncementsPage() {
   const [problem, setProblem] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [hidden, setHidden] = useState<Set<string>>(new Set());
+  const queue = useRef(createDeferredQueue(UNDO_MS));
+  useEffect(() => {
+    const q = queue.current;
+    const flush = () => void q.flush();
+    window.addEventListener("pagehide", flush);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      flush();
+    };
+  }, []);
 
   useEffect(() => {
     if (params.get("new") === "1") setOpen(true);
@@ -83,37 +97,37 @@ export default function AnnouncementsPage() {
     }
   };
 
+  /** Pinned or unpinned on screen at once; put back if the server says no. */
+  const setPinned = (id: string, pinned: boolean) =>
+    list.setData((cur) => (cur ? { ...cur, announcements: cur.announcements.map((x) => (x.id === id ? { ...x, pinned } : x)) } : cur));
   const togglePin = async (a: AdminAnnouncementView) => {
+    setPinned(a.id, !a.pinned);
     try {
       await v5AdminApi.updateAnnouncement(a.id, { pinned: !a.pinned });
-      list.reload();
     } catch (error) {
-      v5Toast.error("That didn't work", plainMessage(error));
+      setPinned(a.id, a.pinned);
+      v5Toast.error(a.pinned ? "We couldn't unpin it" : "We couldn't pin it", plainMessage(error));
     }
   };
 
-  /** Removed at once from the list; deleted for real when the Undo window closes. */
-  const remove = (a: AdminAnnouncementView) => {
-    setHidden((h) => new Set(h).add(a.id));
-    const timer = setTimeout(() => {
-      void v5AdminApi.deleteAnnouncement(a.id).catch((error) => {
+  /** Removed at once from the list; deleted for real when the Undo window closes (or on leaving). */
+  const remove = (a: AdminAnnouncementView) =>
+    runUndoable({
+      queue: queue.current,
+      id: a.id,
+      message: "Announcement removed.",
+      apply: () => setHidden((h) => new Set(h).add(a.id)),
+      rollback: () =>
         setHidden((h) => {
           const n = new Set(h);
           n.delete(a.id);
           return n;
-        });
-        v5Toast.error("We couldn't remove it", plainMessage(error));
-      });
-    }, 6000);
-    v5Toast.undo("Announcement removed.", () => {
-      clearTimeout(timer);
-      setHidden((h) => {
-        const n = new Set(h);
-        n.delete(a.id);
-        return n;
-      });
+        }),
+      send: () => v5AdminApi.deleteAnnouncement(a.id),
+      failTitle: "We couldn't remove it",
+      toasts: v5Toast,
+      describe: plainMessage,
     });
-  };
 
   return (
     <Page>
@@ -134,7 +148,7 @@ export default function AnnouncementsPage() {
           <ErrorState body={plainMessage(list.error)} onRetry={list.reload} />
         )
       ) : !list.data ? (
-        slow ? <SkeletonLayout variant="list" rows={3} label="Loading announcements" /> : null
+        slow ? <CardListSkeleton rows={3} label="Loading announcements" /> : null
       ) : items.length === 0 ? (
         <EmptyState icon={<Megaphone />} title="No announcements" body="Write one to tell people about a new course, a deadline or a change." />
       ) : (

@@ -1,4 +1,5 @@
 import type { UserSummary } from "@shared/admin";
+import type { UserStatus } from "@shared/enums";
 import { EMPTY_TABLE_QUERY, type TableQuery } from "@shared/table";
 
 import type { BuiltInView, FieldOption, TableFieldDef } from "@/components/data-table";
@@ -89,4 +90,18 @@ export function personViews(departments: readonly FieldOption[]): BuiltInView[] 
       build: () => view({ filters: { combinator: "and", conditions: [{ field: "departmentId", operator: "eq", value: d.value }] }, sort: [{ field: "displayName", dir: "asc" }] }),
     })),
   ];
+}
+
+/**
+ * Rows with the statuses the admin just chose (suspend / archive) shown at once, before the
+ * server has them. An override is dropped by the page once the server's answer is in.
+ */
+export function withStatusOverrides(rows: readonly PersonRow[], overrides: Readonly<Record<string, UserStatus>>): PersonRow[] {
+  if (Object.keys(overrides).length === 0) return rows as PersonRow[];
+  return rows.map((r) => (overrides[r.id] && overrides[r.id] !== r.status ? { ...r, status: overrides[r.id]! } : r));
+}
+
+/** Ids a bulk call refused (yourself, the last super admin…), so only those go back. */
+export function refusedIds(results: readonly { id: string; ok: boolean }[]): string[] {
+  return results.filter((r) => !r.ok).map((r) => r.id);
 }

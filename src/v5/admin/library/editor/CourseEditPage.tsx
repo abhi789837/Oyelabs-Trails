@@ -10,7 +10,10 @@ import { coursesApi } from "@/features/admin/courses/api";
 import { Badge, Button, Card, Dialog, ErrorState, Input, Sheet, Skeleton, SkeletonLayout, Tooltip, cn, v5Toast } from "@/v5/design";
 
 import { v5AdminApi, type VersionMeta } from "../../api";
+import { BiggerScreenNote } from "../../parts/BiggerScreen";
 import { formatDateTime, Page, PageHeader, plainMessage, useLoad } from "../../parts/common";
+import { EditorSkeleton } from "../../parts/Skeletons";
+import { withoutTopic } from "./courseOps";
 import { docToLesson, EMPTY_QUIZ, EMPTY_TASK, lessonToDoc, type PMDoc } from "./blocks";
 import { QuizBlock, TaskBlock, VideoBlock } from "./nodes";
 import { lessonStarterKit } from "./schema";
@@ -76,6 +79,14 @@ export default function CourseEditPage() {
   };
 
   const removeLesson = async (t: CourseTopic) => {
+    // Gone from the list at once; put back if the server says no.
+    const prevCourse = course;
+    const prevTopic = topicId;
+    if (course) {
+      const next = withoutTopic(course, t.id);
+      setCourse(next);
+      if (topicId === t.id) setTopicId(firstTopic(next)?.id ?? null);
+    }
     try {
       const before = await v5AdminApi.snapshot(courseId, "Before removing a lesson");
       const r = await coursesApi.removeTopic(t.id);
@@ -84,13 +95,18 @@ export default function CourseEditPage() {
       await v5AdminApi.snapshot(courseId);
       setVersionsKey((k) => k + 1);
       v5Toast.undo(`Removed "${t.title}".`, () => {
-        void v5AdminApi.restore(courseId, before.version).then(() => {
-          reloadCourse();
-          setVersionsKey((k) => k + 1);
-        });
+        void v5AdminApi.restore(courseId, before.version).then(
+          () => {
+            reloadCourse();
+            setVersionsKey((k) => k + 1);
+          },
+          (error: unknown) => v5Toast.error("We couldn't bring it back", `${plainMessage(error)} It's still in Version history.`),
+        );
       });
     } catch (error) {
-      v5Toast.error("We couldn't remove that lesson", plainMessage(error));
+      setCourse(prevCourse);
+      setTopicId(prevTopic);
+      v5Toast.error("We couldn't remove that lesson", `${plainMessage(error)} It's back in the list.`);
     }
   };
 
@@ -125,13 +141,14 @@ export default function CourseEditPage() {
   if (!course) {
     return (
       <Page wide>
-        <SkeletonLayout variant="article" rows={8} label="Loading the course" />
+        <EditorSkeleton />
       </Page>
     );
   }
 
   return (
     <Page wide>
+      <BiggerScreenNote id="course-editor" className="mb-4" body="You can fix a typo here, but writing lessons is easier on a tablet or a computer." />
       <PageHeader
         title={course.title}
         description={course.published ? "Live: learners can see it." : "Draft: learners can't see it yet."}

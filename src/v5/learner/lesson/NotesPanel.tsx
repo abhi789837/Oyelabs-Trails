@@ -52,19 +52,29 @@ export const NotesPanel = forwardRef<NotesPanelHandle, { topicId: string; videoI
     },
   }));
 
+  // Optimistic (Phase 8): a new or edited note shows at once; if it doesn't save, it's taken back
+  // (the text returns to the box, so nothing typed is lost) with a plain message.
   const save = async () => {
     const body = draft.trim();
     if (!body) return;
+    const atSec = at;
+    const now = Date.now();
+    const temp: LessonNote = { id: `pending-${now}`, topicId, videoId: atSec !== null ? videoId : null, atSec, body, createdAt: now, updatedAt: now };
+    setNotes((list) => sortNotes([...list, temp]));
+    setDraft("");
+    setComposing(false);
     setSaving(true);
     setError(null);
     try {
-      const res = await lessonApi.addNote(topicId, { body, videoId: at !== null ? videoId : null, atSec: at });
-      setNotes((list) => sortNotes([...list, res.note]));
-      setDraft("");
-      setComposing(false);
-      lessonToast.success(at !== null ? `Note saved at ${formatClock(at)}` : "Note saved");
+      const res = await lessonApi.addNote(topicId, { body, videoId: temp.videoId, atSec });
+      setNotes((list) => sortNotes(list.map((n) => (n.id === temp.id ? res.note : n))));
+      lessonToast.success(atSec !== null ? `Note saved at ${formatClock(atSec)}` : "Note saved");
     } catch (err) {
-      setError(err instanceof ApiRequestError ? err.message : "We couldn't save that note. Try again.");
+      setNotes((list) => list.filter((n) => n.id !== temp.id));
+      setDraft((d) => d || body);
+      setAt(atSec);
+      setComposing(true);
+      setError(err instanceof ApiRequestError && err.status > 0 && err.status < 500 ? err.message : "We couldn't save that note. Your text is still here. Try again.");
     } finally {
       setSaving(false);
     }
@@ -72,12 +82,18 @@ export const NotesPanel = forwardRef<NotesPanelHandle, { topicId: string; videoI
 
   const saveEdit = async () => {
     if (!editing || !editing.body.trim()) return;
+    const before = notes.find((n) => n.id === editing.id);
+    if (!before) return;
+    const body = editing.body.trim();
+    setNotes((list) => list.map((n) => (n.id === before.id ? { ...n, body, updatedAt: Date.now() } : n)));
+    setEditing(null);
     try {
-      const res = await lessonApi.editNote(editing.id, editing.body.trim());
+      const res = await lessonApi.editNote(before.id, body);
       setNotes((list) => list.map((n) => (n.id === res.note.id ? res.note : n)));
-      setEditing(null);
     } catch {
-      lessonToast.error("We couldn't save that change. Try again.");
+      setNotes((list) => list.map((n) => (n.id === before.id ? before : n)));
+      setEditing({ id: before.id, body });
+      lessonToast.error("We couldn't save that change", "Your edit is still in the box. Try again.");
     }
   };
 
@@ -98,8 +114,8 @@ export const NotesPanel = forwardRef<NotesPanelHandle, { topicId: string; videoI
           My notes {notes.length ? <span className="font-normal text-fg-2">({notes.length})</span> : null}
         </h2>
         {!composing ? (
-          <span className="text-caption text-fg-2">
-            Press <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-line-1 bg-surface-1 px-1 font-mono text-[0.6875rem] font-medium text-fg-2">N</kbd> to add one at this moment
+          <span className="text-caption text-fg-2 max-md:hidden">
+            Press <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-line-1 bg-surface-1 px-1 font-mono text-caption font-medium text-fg-2">N</kbd> to add one at this moment
           </span>
         ) : null}
       </div>
@@ -158,7 +174,7 @@ export const NotesPanel = forwardRef<NotesPanelHandle, { topicId: string; videoI
                 <button
                   type="button"
                   onClick={() => onSeek(note)}
-                  className="inline-flex min-h-6 shrink-0 items-center gap-1 rounded-sm px-1 font-mono text-caption text-brand-fg hover:underline"
+                  className="inline-flex min-h-6 shrink-0 items-center gap-1 rounded-sm px-1 font-mono text-caption text-brand-fg hover:underline max-md:min-h-9"
                   aria-label={`Play from ${formatClock(note.atSec)}`}
                 >
                   <Clock className="size-3" aria-hidden="true" />
@@ -191,10 +207,10 @@ export const NotesPanel = forwardRef<NotesPanelHandle, { topicId: string; videoI
               )}
               {editing?.id !== note.id ? (
                 <span className="flex shrink-0">
-                  <Button size="icon" variant="ghost" className="size-7" aria-label="Edit this note" onClick={() => setEditing({ id: note.id, body: note.body })}>
+                  <Button size="icon" variant="ghost" className="size-7 max-md:size-10" aria-label="Edit this note" disabled={note.id.startsWith("pending-")} onClick={() => setEditing({ id: note.id, body: note.body })}>
                     <Pencil aria-hidden="true" />
                   </Button>
-                  <Button size="icon" variant="ghost" className="size-7" aria-label="Delete this note" onClick={() => void remove(note)}>
+                  <Button size="icon" variant="ghost" className="size-7 max-md:size-10" aria-label="Delete this note" disabled={note.id.startsWith("pending-")} onClick={() => void remove(note)}>
                     <Trash2 aria-hidden="true" />
                   </Button>
                 </span>

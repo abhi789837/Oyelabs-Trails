@@ -13,6 +13,7 @@ import type {
   TutorMessageView,
   TutorStatus,
 } from "@shared/lesson";
+import type { SendToEmailResponse } from "@shared/sendToEmail";
 
 import { api } from "@/api/client";
 
@@ -34,6 +35,8 @@ export const lessonApi = {
   report: (topicId: string, step: LessonStepId | null, message: string) => api.post<{ id: string }>(`${base(topicId)}/problems`, { step, message }),
   tutor: (topicId: string, signal?: AbortSignal) => api.get<TutorStatus>(`${base(topicId)}/tutor`, signal),
   ask: (topicId: string, body: { question: string; step: LessonStepId; code?: string }) => api.post<TutorAnswerResponse>(`${base(topicId)}/tutor`, body),
+  /** Phase 8: email the coding Do step (and the code so far) to finish on a laptop. */
+  sendToEmail: (topicId: string, body: { courseId?: string | null; code?: string }) => api.post<SendToEmailResponse>(`${base(topicId)}/send-to-email`, body),
   rate: (messageId: string, rating: -1 | 0 | 1) => api.post<{ message: TutorMessageView }>(`/api/v5/tutor/messages/${encodeURIComponent(messageId)}/rating`, { rating }),
 };
 

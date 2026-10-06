@@ -1,4 +1,4 @@
-import { lazy, Suspense, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Award, Download, ExternalLink, NotebookPen, RotateCcw, Search, Trophy } from "lucide-react";
 import { m } from "motion/react";
 import { Link } from "react-router-dom";
@@ -11,7 +11,7 @@ import { Button } from "@/v5/design/components/Button";
 import { Card, CardHeader } from "@/v5/design/components/Card";
 import { Input } from "@/v5/design/components/Field";
 import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from "@/v5/design/components/Primitives";
-import { EmptyState, ErrorState, SkeletonLayout } from "@/v5/design/components/States";
+import { EmptyState, ErrorState, Skeleton, SkeletonLayout } from "@/v5/design/components/States";
 import { SkillMeter, StreakFlame, XPCounter } from "@/v5/design/components/Stats";
 import { cn } from "@/v5/design/cn";
 import { transitions } from "@/v5/design/motion";
@@ -74,7 +74,7 @@ function MeScreen({ settings }: { settings: ApiData<{ settings: Settings }> }) {
           {profile.error && !p ? (
             <ErrorState title="We couldn't load your progress" onRetry={() => void profile.reload()} retrying={profile.loading} />
           ) : !p ? (
-            showSkeleton ? <SkeletonLayout variant="stat-row" label="Loading your progress" /> : null
+            showSkeleton ? <ProgressSkeleton /> : null
           ) : (
             <ProgressTab profile={p} />
           )}
@@ -252,7 +252,7 @@ function NotesTab() {
   const showSkeleton = useDelayed(loading && !data);
 
   if (error && !data) return <ErrorState title="We couldn't load your notes" onRetry={() => void reload()} retrying={loading} />;
-  if (!data) return showSkeleton ? <SkeletonLayout variant="list" label="Loading your notes" /> : null;
+  if (!data) return showSkeleton ? <SkeletonLayout variant="list" rows={4} label="Loading your notes" /> : null;
   if (data.notes.length === 0) {
     return <EmptyState icon={<NotebookPen />} title="No notes yet" body="Notes you write in a lesson land here, with a link back to the moment in the video." />;
   }
@@ -298,22 +298,42 @@ function SettingsTab({ settings }: { settings: ApiData<{ settings: Settings }> }
   const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [leaving, setLeaving] = useState(false);
+  // The latest settings, for saves that finish out of order (two quick toggles).
+  const latest = useRef(s);
+  latest.current = s;
+  const inFlight = useRef(0);
+  const showSkeleton = useDelayed(settings.loading && !s);
 
+  // Optimistic: the switch moves at once. If the save fails, only the keys this change touched go
+  // back (another change made meanwhile stays), and a plain toast says so.
   const save = async (change: Partial<Settings>) => {
-    if (!s) return;
-    const optimistic = { ...s, ...change };
-    settings.setData({ settings: optimistic });
+    const current = latest.current;
+    if (!current) return;
+    const previous = Object.fromEntries(Object.keys(change).map((k) => [k, current[k as keyof Settings]])) as Partial<Settings>;
+    const next = { ...current, ...change };
+    latest.current = next;
+    settings.setData({ settings: next });
     if (change.theme) applyTheme(change.theme);
     setStatus("Saving…");
     setError(null);
+    inFlight.current += 1;
     try {
       const res = await api.put<{ settings: Settings }>("/api/v5/me/settings", change);
-      settings.setData(res);
+      // Keep any change made while this one was on its way.
+      if (inFlight.current === 1) settings.setData(res);
       setStatus("Saved");
     } catch (e) {
-      settings.setData({ settings: s });
+      const base = latest.current ?? current;
+      const rolled = { ...base, ...previous };
+      latest.current = rolled;
+      settings.setData({ settings: rolled });
+      if (change.theme && previous.theme) applyTheme(previous.theme);
       setStatus("");
-      setError(e instanceof ApiRequestError ? e.message : "That change didn't save. Try again.");
+      const message = e instanceof ApiRequestError && e.status > 0 && e.status < 500 ? e.message : "That change didn't save. Check your connection and try again.";
+      setError(message);
+      void import("@/v5/design/components/Overlays").then(({ v5Toast }) => v5Toast.error("That setting didn't save", "We put it back. Try again in a moment.")).catch(() => undefined);
+    } finally {
+      inFlight.current -= 1;
     }
   };
 
@@ -324,7 +344,7 @@ function SettingsTab({ settings }: { settings: ApiData<{ settings: Settings }> }
   }, [status]);
 
   if (settings.error && !s) return <ErrorState title="We couldn't load your settings" onRetry={() => void settings.reload()} retrying={settings.loading} />;
-  if (!s) return null;
+  if (!s) return showSkeleton ? <SettingsSkeleton /> : null;
 
   return (
     <div className="flex flex-col gap-(--v5-gap)">
@@ -430,6 +450,8 @@ function Toggle({ label, hint, checked, onChange }: { label: string; hint?: stri
         onClick={() => onChange(!checked)}
         className={cn(
           "relative inline-flex h-7 w-12 shrink-0 items-center rounded-full border-2 transition-colors duration-120 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
+          // A 44 px touch area on phones without changing how the switch looks.
+          "before:absolute before:-inset-2 before:content-['']",
           checked ? "border-brand bg-brand" : "border-line-2 bg-sunken",
         )}
       >
@@ -484,6 +506,59 @@ function TimeField({ label, value, onSave }: { label: string; value: string; onS
         }}
         className="max-w-40"
       />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Loading shapes (Phase 8): the same layout as what replaces them
+// ---------------------------------------------------------------------------
+
+function ProgressSkeleton() {
+  return (
+    <div role="status" aria-label="Loading your progress" className="grid gap-(--v5-gap) lg:grid-cols-2">
+      <div className="rounded-card border border-line-1 bg-surface-1 p-(--v5-card-pad) lg:col-span-2">
+        <Skeleton className="h-5 w-32" />
+        <Skeleton className="mt-2 h-4 w-3/4" />
+        <div className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+          {Array.from({ length: 4 }, (_, i) => (
+            <div key={i}>
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="mt-2 h-2.5 w-full rounded-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+      {Array.from({ length: 4 }, (_, i) => (
+        <div key={i} className="rounded-card border border-line-1 bg-surface-1 p-(--v5-card-pad)">
+          <Skeleton className="h-5 w-28" />
+          <Skeleton className="mt-2 h-4 w-1/2" />
+          <Skeleton className="mt-4 h-20 w-full" />
+        </div>
+      ))}
+      <span className="sr-only">Loading your progress</span>
+    </div>
+  );
+}
+
+function SettingsSkeleton() {
+  return (
+    <div role="status" aria-label="Loading your settings" className="flex flex-col gap-(--v5-gap)">
+      {[3, 2, 3].map((rows, i) => (
+        <div key={i} className="flex flex-col gap-4 rounded-card border border-line-1 bg-surface-1 p-(--v5-card-pad)">
+          <Skeleton className="h-5 w-32" />
+          {Array.from({ length: rows }, (_, j) => (
+            <div key={j} className="flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <Skeleton className="h-4 w-36" />
+                <Skeleton className="mt-1.5 h-3.5 w-3/4" />
+              </div>
+              <Skeleton className="h-7 w-12 rounded-full" />
+            </div>
+          ))}
+        </div>
+      ))}
+      <span className="sr-only">Loading your settings</span>
     </div>
   );
 }

@@ -43,7 +43,7 @@ export function GoalRing({ goal }: { goal: TodayGoal }) {
               : `${Math.max(0, 3 - goal.steps)} more ${3 - goal.steps === 1 ? "step" : "steps"} this week.`}
         </p>
         {/* Phase 6: the weekly goal is the learner's to set (the "Your progress" panel). */}
-        <Button variant="link" size="sm" className="mt-1" onClick={openProgress} data-testid="today-change-goal">
+        <Button variant="link" size="sm" className="mt-1 min-h-11 px-0 md:min-h-8" onClick={openProgress} data-testid="today-change-goal">
           Change my goal
         </Button>
       </div>
@@ -77,7 +77,7 @@ export function WeekCard({ week, goal, streak }: { week: TodayWeek | null; goal:
         title="This week"
         description={week ? `Week ${week.weekNumber} · ${week.doneCount} of ${week.totalCount} done · ${weekRange(week.startDate, week.endDate)}` : "Your week shows here once your plan is ready."}
         action={
-          <Button asChild variant="link" size="sm">
+          <Button asChild variant="link" size="sm" className="min-h-11 md:min-h-8">
             <Link to="/learn/plan">See my plan</Link>
           </Button>
         }

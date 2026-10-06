@@ -171,8 +171,17 @@ export async function buildApp({
   // page where eval is allowed, with no network and an opaque origin. Replaces helmet's header.
   const runnerCsp = buildRunnerCsp({ runnerHtmlPath: hasBuild ? path.join(env.clientDist, "runner.html") : undefined });
   app.addHook("onSend", async (request, reply, payload) => {
-    if (request.url.split("?")[0] === RUNNER_PAGE_PATH) {
+    const pathname = request.url.split("?")[0];
+    if (pathname === RUNNER_PAGE_PATH) {
       reply.header("content-security-policy", runnerCsp);
+      reply.header("cache-control", "no-cache");
+    }
+    // v5 P8 PWA: the service worker and the manifest must always be revalidated, so a deploy's new
+    // worker is found on the next visit. The worker lives at the root, so its scope is the whole app.
+    if (pathname === "/sw.js") {
+      reply.header("cache-control", "no-cache");
+      reply.header("service-worker-allowed", "/");
+    } else if (pathname === "/site.webmanifest") {
       reply.header("cache-control", "no-cache");
     }
     return payload;

@@ -4,10 +4,11 @@ import { useLocation, useSearchParams } from "react-router-dom";
 
 import { isoDay, RANGE_PRESETS, REPORT_DAY_COLUMNS, reportDayRows, toCsv, type ReportsResponse } from "@shared/reports";
 
-import { Button, Card, CardHeader, ErrorState, Input, Skeleton, SkeletonLayout, StatTile, cn, v5Toast } from "@/v5/design";
+import { Button, Card, CardHeader, ErrorState, Input, Skeleton, StatTile, cn, v5Toast } from "@/v5/design";
 
 import { v5AdminApi } from "../api";
 import { csvName, downloadText, Page, PageHeader, plainMessage, useLoad, useSlow } from "../parts/common";
+import { ReportsSkeleton } from "../parts/Skeletons";
 
 const SimpleBarChart = lazy(() => import("../parts/Charts").then((m) => ({ default: m.SimpleBarChart })));
 const SimpleLineChart = lazy(() => import("../parts/Charts").then((m) => ({ default: m.SimpleLineChart })));
@@ -176,7 +177,7 @@ export default function ReportsPage() {
       {report.error && !data ? (
         <ErrorState body={plainMessage(report.error)} onRetry={report.reload} />
       ) : !data ? (
-        slow ? <SkeletonLayout variant="stat-row" label="Loading the report" /> : null
+        slow ? <ReportsSkeleton /> : null
       ) : (
         <div className="flex flex-col gap-(--v5-gap)" aria-busy={report.loading}>
           <ul className="grid grid-cols-1 gap-(--v5-gap) sm:grid-cols-2 xl:grid-cols-4">

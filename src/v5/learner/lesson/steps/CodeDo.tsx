@@ -19,9 +19,11 @@ import { HintLadder } from "@/v5/design/components/Learning";
 import { FeedbackPanel, StatusLine } from "@/v5/design/components/Lesson";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/v5/design/components/Primitives";
 import { SplitView } from "@/v5/design/components/SplitView";
+import { useIsMobile } from "@/v5/design/hooks";
 
 import { lessonApi } from "../api";
 import { LessonMarkdown } from "../LessonRich";
+import { SendToLaptop } from "../SendToLaptop";
 
 interface CheckRow {
   description: string;
@@ -62,7 +64,8 @@ export interface CodeDoProps {
 
 /**
  * The coding Do step: instructions and the hint ladder on the left, the editor, checks and console
- * on the right (tabs on a phone). **Run** tries the visible checks (in the server sandbox) and costs
+ * on the right. On a phone (Phase 8) it's three tabs instead, Task / Code / Checks, with a gentle
+ * "Best on a bigger screen" note and "Send to my email to continue on laptop" on the Task tab. **Run** tries the visible checks (in the server sandbox) and costs
  * nothing; **Check** runs every check on the server and counts as an attempt. Results are split
  * into "main checks" and "extra checks" (the v4.4 wording) with what was expected and what came back.
  */
@@ -83,6 +86,10 @@ export default function CodeDo({ topic, challenge, facts, onChecked, onSolutionT
   const [tab, setTab] = useState("checks");
   const [consoleOut, setConsoleOut] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
+  const mobile = useIsMobile();
+  const [phoneTab, setPhoneTab] = useState<"task" | "code" | "checks">("task");
+  const codeNow = useRef(code);
+  codeNow.current = code;
 
   useEffect(() => {
     writeDraft(draftKey, code === challenge.starterCode ? null : code);
@@ -125,6 +132,7 @@ export default function CodeDo({ topic, challenge, facts, onChecked, onSolutionT
       setConsoleOut(printed ? [printed.stdout, printed.stderr].filter(Boolean).join("\n") || "Nothing was printed." : null);
       setGraded(null);
       setTab("checks");
+      setPhoneTab("checks");
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "We couldn't run your code. Try again.");
     } finally {
@@ -141,6 +149,7 @@ export default function CodeDo({ topic, challenge, facts, onChecked, onSolutionT
       setGraded(result);
       setLocal(null);
       setTab("checks");
+      setPhoneTab("checks");
       applyAttempt(topic.id, result);
       onChecked(result);
       requestAnimationFrame(() => resultRef.current?.focus({ preventScroll: false }));
@@ -251,8 +260,8 @@ export default function CodeDo({ topic, challenge, facts, onChecked, onSolutionT
     </div>
   );
 
-  const right = (
-    <div className="flex flex-col gap-3 p-4">
+  const editor = (
+    <>
       {/* The editor's line numbers are decoration; raise them to AA contrast inside v5. */}
       <div className="[&_div[aria-hidden=true]]:text-editor-foreground/70">
         <CodeEditor value={code} onChange={setCode} fileName={`${challenge.functionName}.js`} describedBy="do-editor-help" />
@@ -260,16 +269,22 @@ export default function CodeDo({ topic, challenge, facts, onChecked, onSolutionT
       <p id="do-editor-help" className="text-caption text-fg-2">
         Tab adds two spaces. Press Esc, then Tab, to leave the editor. Your code is saved in this browser as you type.
       </p>
+    </>
+  );
+
+  const actions = (
+    <>
       <div className="flex flex-wrap items-center gap-2">
-        <Button onClick={() => void run()} loading={busy === "run"} disabled={busy !== null}>
+        <Button onClick={() => void run()} loading={busy === "run"} disabled={busy !== null} className="max-md:min-h-11 max-md:flex-1">
           <Play aria-hidden="true" /> Run
         </Button>
-        <Button variant="primary" onClick={() => void check()} loading={busy === "check"} disabled={busy !== null}>
+        <Button variant="primary" onClick={() => void check()} loading={busy === "check"} disabled={busy !== null} className="max-md:min-h-11 max-md:flex-1">
           <CloudUpload aria-hidden="true" /> Check
         </Button>
         <Button
           variant="ghost"
           disabled={busy !== null || code === challenge.starterCode}
+          className="max-md:min-h-11"
           onClick={() => {
             setCode(challenge.starterCode);
             setLocal(null);
@@ -281,42 +296,101 @@ export default function CodeDo({ topic, challenge, facts, onChecked, onSolutionT
       </div>
       <p className="text-caption text-fg-2">Run tries the checks you can see and costs nothing. Check runs every check and counts as a try.</p>
       {error ? <StatusLine tone="warning">{error}</StatusLine> : null}
+    </>
+  );
 
+  const feedback = verdict ? (
+    <>
+      <FeedbackPanel
+        verdict={verdict}
+        right={[
+          ...(main.length ? [`${main.filter((r) => r.passed).length} of ${main.length} main checks pass`] : []),
+          ...(extra.length ? [`${extra.filter((r) => r.passed).length} of ${extra.length} extra checks pass`] : []),
+        ]}
+        fix={[
+          ...(graded?.compileError || local?.compileError ? [`Your code didn't run: ${graded?.compileError ?? local?.compileError}`] : []),
+          ...(graded?.timedOut || local?.timedOut ? ["It took too long. Look for a loop that never ends."] : []),
+          ...rows.filter((r) => !r.passed).slice(0, 3).map((r) => (r.hidden ? `A hidden check failed: ${r.description}` : r.description)),
+        ]}
+        why={verdict === "pass" ? (graded ? "Every check passes. Nice work." : "The checks you can see pass. Press Check to run the rest.") : hints.nudge}
+        action={!graded?.passed && graded?.attemptId && !graded.compileError ? <RequestReview source="topic_item" refId={topic.id} attemptId={graded.attemptId} /> : undefined}
+      />
+      {graded?.notes?.length ? <StatusLine tone="info">Worth a look: {graded.notes.join(" ")}</StatusLine> : null}
+    </>
+  ) : null;
+
+  const checkList = (
+    <>
+      <CheckGroup title="Main checks" rows={main} />
+      <CheckGroup title="Extra checks" rows={extra} note="Edge cases: empty input, very large input and other unusual values." />
+    </>
+  );
+  const consoleLog = (
+    <pre role="log" aria-label="What your code printed" tabIndex={0} className="max-h-60 overflow-auto rounded-control bg-sunken p-3 font-mono text-small text-fg-1">
+      {consoleOut ?? "Press Run to see what your code prints for the first check."}
+    </pre>
+  );
+
+  if (mobile) {
+    const passing = rows.filter((r) => r.passed).length;
+    return (
+      <div className="flex flex-col gap-4" data-testid="code-do-phone">
+        <Tabs value={phoneTab} onValueChange={(v) => setPhoneTab(v as typeof phoneTab)}>
+          <TabsList aria-label="Coding practice" className="grid w-full grid-cols-3">
+            <TabsTrigger value="task" className="min-h-11">
+              Task
+            </TabsTrigger>
+            <TabsTrigger value="code" className="min-h-11">
+              Code
+            </TabsTrigger>
+            <TabsTrigger value="checks" className="min-h-11">
+              Checks{rows.length ? <span className="ml-1 tabular-nums">({passing}/{rows.length})</span> : null}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="task" className="flex flex-col gap-4">
+            <SendToLaptop topicId={topic.id} getCode={() => (codeNow.current === challenge.starterCode ? undefined : codeNow.current)} />
+            <div className="-mx-4">{left}</div>
+          </TabsContent>
+          <TabsContent value="code" className="flex flex-col gap-3">
+            {editor}
+            {actions}
+          </TabsContent>
+          <TabsContent value="checks" className="flex flex-col gap-3">
+            {actions}
+            {verdict ? (
+              <div ref={resultRef} tabIndex={-1} className="flex flex-col gap-3 outline-none">
+                {feedback}
+                {checkList}
+                <section aria-labelledby="do-console" className="mt-2">
+                  <h3 id="do-console" className="mb-2 text-small font-semibold text-fg-1">
+                    Console
+                  </h3>
+                  {consoleLog}
+                </section>
+              </div>
+            ) : (
+              <p className="rounded-card border border-dashed border-line-1 p-4 text-small text-fg-2">Press Run or Check to see how your code does. Your results show here.</p>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+    );
+  }
+
+  const right = (
+    <div className="flex flex-col gap-3 p-4">
+      {editor}
+      {actions}
       {verdict ? (
         <div ref={resultRef} tabIndex={-1} className="flex flex-col gap-3 outline-none">
-          <FeedbackPanel
-            verdict={verdict}
-            right={[
-              ...(main.length ? [`${main.filter((r) => r.passed).length} of ${main.length} main checks pass`] : []),
-              ...(extra.length ? [`${extra.filter((r) => r.passed).length} of ${extra.length} extra checks pass`] : []),
-            ]}
-            fix={[
-              ...(graded?.compileError || local?.compileError ? [`Your code didn't run: ${graded?.compileError ?? local?.compileError}`] : []),
-              ...(graded?.timedOut || local?.timedOut ? ["It took too long. Look for a loop that never ends."] : []),
-              ...rows.filter((r) => !r.passed).slice(0, 3).map((r) => (r.hidden ? `A hidden check failed: ${r.description}` : r.description)),
-            ]}
-            why={verdict === "pass" ? (graded ? "Every check passes. Nice work." : "The checks you can see pass. Press Check to run the rest.") : hints.nudge}
-            action={!graded?.passed && graded?.attemptId && !graded.compileError ? <RequestReview source="topic_item" refId={topic.id} attemptId={graded.attemptId} /> : undefined}
-          />
-          {graded?.notes?.length ? (
-            <StatusLine tone="info">
-              Worth a look: {graded.notes.join(" ")}
-            </StatusLine>
-          ) : null}
+          {feedback}
           <Tabs value={tab} onValueChange={setTab}>
             <TabsList>
               <TabsTrigger value="checks">Checks</TabsTrigger>
               <TabsTrigger value="console">Console</TabsTrigger>
             </TabsList>
-            <TabsContent value="checks">
-              <CheckGroup title="Main checks" rows={main} />
-              <CheckGroup title="Extra checks" rows={extra} note="Edge cases: empty input, very large input and other unusual values." />
-            </TabsContent>
-            <TabsContent value="console">
-              <pre role="log" tabIndex={0} className="max-h-60 overflow-auto rounded-control bg-sunken p-3 font-mono text-small text-fg-1">
-                {consoleOut ?? "Press Run to see what your code prints for the first check."}
-              </pre>
-            </TabsContent>
+            <TabsContent value="checks">{checkList}</TabsContent>
+            <TabsContent value="console">{consoleLog}</TabsContent>
           </Tabs>
         </div>
       ) : null}
