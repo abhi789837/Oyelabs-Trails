@@ -186,7 +186,8 @@ export interface PhraseCandidate {
   exact: boolean;
 }
 
-const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+// Keeps acronyms: "AI-driven development" stays "AI-driven", not "aI-driven" (read as "al-driven").
+const lowerFirst = (s: string) => (/^[A-Z]{2}/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1));
 const padded = (s: string) => ` ${s.toLowerCase().replace(/[^a-z0-9+#.]+/g, " ").trim()} `;
 
 /** The closest catalog items to a phrase: skill groups, skills (name, aliases, area) and cases. */

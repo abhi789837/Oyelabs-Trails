@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export { formatOf, lengthBucket, linkedInAddUrl, outcomeLine, searchNotes } from "./meCore";
+
 /**
  * v5 Me and Library (Phase 4): settings, notes, the profile page, and the library catalogue.
  * Settings live in `user_prefs.data` next to keys other features own (uiV5, autoplayNext, ...);
@@ -87,15 +89,6 @@ export function noteHref(topicId: string, videoId: string | null, atSec: number 
   return `${base}?${params.toString()}`;
 }
 
-/** Notes whose body or lesson title contains every word of the query (case-insensitive). */
-export function searchNotes<T extends { body: string; topicTitle: string }>(notes: readonly T[], query: string): T[] {
-  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
-  if (words.length === 0) return [...notes];
-  return notes.filter((n) => {
-    const hay = `${n.body} ${n.topicTitle}`.toLowerCase();
-    return words.every((w) => hay.includes(w));
-  });
-}
 
 // ---------------------------------------------------------------------------
 // Profile
@@ -135,23 +128,6 @@ export interface MeProfile {
   streak: { current: number; best: number; freezesLeft: number; history: { week: string; met: boolean; frozen: boolean }[] } | null;
 }
 
-/**
- * LinkedIn "Add to profile" link for a certification. LinkedIn's help page (a528030) says the
- * button is a static URL that opens the certification form; the query below pre-fills it.
- */
-export function linkedInAddUrl(cert: { title: string; issuedAt: number; id: string }, origin: string, organizationName = "Oyelabs"): string {
-  const d = new Date(cert.issuedAt);
-  const params = new URLSearchParams({
-    startTask: "CERTIFICATION_NAME",
-    name: cert.title,
-    organizationName,
-    issueYear: String(d.getUTCFullYear()),
-    issueMonth: String(d.getUTCMonth() + 1),
-    certUrl: `${origin}/verify/${encodeURIComponent(cert.id)}`,
-    certId: cert.id,
-  });
-  return `https://www.linkedin.com/profile/add?${params.toString()}`;
-}
 
 // ---------------------------------------------------------------------------
 // Library
@@ -254,36 +230,8 @@ export function recommendation(item: Pick<LibraryItem, "id" | "kind" | "skills" 
   return null;
 }
 
-export function lengthBucket(minutes: number): LengthBucket {
-  if (minutes < 90) return "short";
-  if (minutes <= 360) return "medium";
-  return "long";
-}
 
-/**
- * Video-heavy when at least 60% of lessons have a video and the reading is light; reading-heavy when
- * under 30% have one, or under 60% with long reading. Everything else is a mix.
- */
-export function formatOf(lessonsWithVideo: number, lessons: number, readingWords: number): LibraryFormat {
-  if (lessons === 0) return "reading";
-  const share = lessonsWithVideo / lessons;
-  const wordsPerLesson = readingWords / lessons;
-  if (share >= 0.6 && wordsPerLesson < 900) return "video";
-  if (share < 0.3 || (share < 0.6 && wordsPerLesson >= 1500)) return "reading";
-  return "mixed";
-}
 
-const VERBS = /^(build|write|use|set|deploy|create|design|explain|run|debug|test|handle|read|plan|ship|manage|configure|implement|understand|apply|choose|compare|model|measure|secure|scale|structure|work|lead|prepare|present|estimate|review|automate|optimi[sz]e|spot|avoid|fix|make|send|price|negotiate)\b/i;
-const LEVEL_VERB: Record<LibraryLevel, string> = { beginner: "Explain", intermediate: "Use", advanced: "Apply", expert: "Reason about" };
-
-/** Turns a lesson or section title into a "You'll be able to…" line. Titles that already start with a verb are kept. */
-export function outcomeLine(title: string, level: LibraryLevel | null): string {
-  const clean = title.replace(/\s+/g, " ").replace(/[.:]+$/, "").trim();
-  if (!clean) return "";
-  if (VERBS.test(clean)) return clean[0].toUpperCase() + clean.slice(1);
-  // Titles are kept as written (tech titles are full of proper nouns: "React Router", "Docker").
-  return `${LEVEL_VERB[level ?? "intermediate"]} ${clean}`;
-}
 
 export const moduleItemId = (trackId: string, moduleId: string) => `module:${trackId}:${moduleId}`;
 export function parseModuleItemId(id: string): { trackId: string; moduleId: string } | null {

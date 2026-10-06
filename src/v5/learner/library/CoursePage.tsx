@@ -56,8 +56,7 @@ function CourseScreen() {
   if (error && !data) {
     const missing = error instanceof ApiRequestError && error.status === 404;
     return (
-      <PageFrame title={missing ? "We couldn't find that course" : "Course"}>
-        {back}
+      <PageFrame title={missing ? "We couldn't find that course" : "Course"} back={back}>
         {missing ? (
           <EmptyState title="This course isn't in your library" body="It may have been removed, or it isn't shared with your team. The library has everything you can open." />
         ) : (
@@ -68,8 +67,7 @@ function CourseScreen() {
   }
   if (!data) {
     return (
-      <PageFrame title={<span className="sr-only">Loading the course</span>}>
-        {back}
+      <PageFrame title={<span className="sr-only">Loading the course</span>} back={back}>
         {showSkeleton ? <CourseSkeleton /> : null}
       </PageFrame>
     );
@@ -79,9 +77,11 @@ function CourseScreen() {
   const started = c.doneCount > 0;
   const finished = c.lessonCount > 0 && c.doneCount >= c.lessonCount;
   const lessons = c.syllabus.flatMap((s) => s.lessons);
+  // Principle 3 (small and finishable): once started, say how much is left, not only the total.
+  const minutesLeftIn = lessons.filter((l) => !l.done).reduce((sum, l) => sum + l.minutes, 0);
 
   return (
-    <PageFrame title={c.title} lead={c.summary || undefined}>
+    <PageFrame title={c.title} lead={c.summary || undefined} back={back}>
       {preview ? (
         <div role="status" className="flex flex-wrap items-center gap-2 rounded-card border border-info/30 bg-info-soft px-4 py-2 text-small text-fg-1" data-testid="preview-banner">
           <Eye className="size-4 shrink-0" aria-hidden="true" />
@@ -91,7 +91,6 @@ function CourseScreen() {
           </Link>
         </div>
       ) : null}
-      {back}
       <m.div className="grid gap-(--v5-gap) lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={transitions.calm}>
         <div className="flex min-w-0 flex-col gap-(--v5-gap) lg:gap-6">
           {c.outcomes.length ? (
@@ -184,6 +183,14 @@ function CourseScreen() {
                 <Clock className="size-3.5" aria-hidden="true" />
                 {formatMinutes(c.minutes)}
               </dd>
+              {started && !finished ? (
+                <>
+                  <dt className="text-fg-2">Left to do</dt>
+                  <dd className="font-medium" data-testid="course-time-left">
+                    {formatMinutes(minutesLeftIn)}
+                  </dd>
+                </>
+              ) : null}
               <dt className="text-fg-2">Level</dt>
               <dd className="font-medium">{c.level ? LEVEL_LABELS[c.level] : "Any"}</dd>
               <dt className="text-fg-2">Lessons</dt>

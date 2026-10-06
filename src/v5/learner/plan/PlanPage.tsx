@@ -14,12 +14,14 @@ import { EmptyState, ErrorState } from "@/v5/design/components/States";
 import { cn } from "@/v5/design/cn";
 import { transitions } from "@/v5/design/motion";
 import type { LearningPathView } from "@shared/builder";
-import { LANE_ORDER, formatRange, isWeekComplete, itemsInLane, type WeekItemView, type WeekResponse, type WeekView } from "@shared/weeklyPlan";
+import type { WeekItemView, WeekResponse, WeekView } from "@shared/weeklyPlan";
+import { LANE_ORDER, formatRange, isWeekComplete, itemsInLane } from "@shared/weeklyPlanCore";
 
 import { PlanSkeleton } from "../skeletons";
 import { PageFrame, V5Screen, formatMinutes, useApiData, useDelayed } from "../me/page";
 import { WHY_LABELS, nextStep, readView, saveView, v5Href, weekStats, type PlanView } from "./planLogic";
 import { LaneLegend, OverviewTrail, WeekTrail } from "./PlanTrails";
+import { plainTitle } from "@shared/plainTitle";
 
 /**
  * `/learn/plan`, My plan: this week as one continuous trail (or as lanes, with the list toggle),
@@ -37,6 +39,8 @@ export default function PlanPage() {
 function PlanScreen() {
   const week = useApiData<WeekResponse>("/api/me/week");
   const path = useApiData<{ path: LearningPathView | null }>("/api/me/path");
+  // The lesson Today's Continue resumes; the card and the trail point at it too (Phase 9.2).
+  const resume = useApiData<{ topicId: string; step: string | null } | null>("/api/v5/lessons/resume");
   const [view, setView] = useState<PlanView>(readView);
   const [selected, setSelected] = useState<string | null>(null);
   const [planning, setPlanning] = useState(false);
@@ -98,7 +102,9 @@ function PlanScreen() {
   }
 
   const stats = weekStats(w);
-  const next = nextStep(w);
+  const resumeTopicId = resume.data?.topicId ?? null;
+  const next = nextStep(w, resumeTopicId);
+  const resumed = Boolean(next && resumeTopicId && next.topicId === resumeTopicId);
   const selectedItem = w.items.find((i) => i.id === selected) ?? null;
 
   return (
@@ -127,7 +133,7 @@ function PlanScreen() {
             </Link>
           </div>
           <ProgressBar value={stats.pct} label={`This week: ${stats.pct}% done`} tone={stats.pct === 100 ? "success" : "brand"} />
-          {next ? <NextStep item={next} started={stats.done > 0} /> : null}
+          {next ? <NextStep item={next} started={resumed || stats.done > 0} step={resumed ? (resume.data?.step ?? null) : null} /> : null}
           {isWeekComplete(w.items) ? (
             <div className="flex flex-wrap items-center gap-3 rounded-control bg-success-soft p-3">
               <p className="flex-1 text-body text-fg-1">You've cleared the important part of this week. Want the next one now?</p>
@@ -179,7 +185,7 @@ function PlanScreen() {
             <Card>
               <LaneLegend week={w} />
               <div className="mt-3">
-                <WeekTrail week={w} selectedId={selected} onSelect={(item) => setSelected((cur) => (cur === item.id ? null : item.id))} />
+                <WeekTrail week={w} hereId={resumed ? next!.id : null} selectedId={selected} onSelect={(item) => setSelected((cur) => (cur === item.id ? null : item.id))} />
               </div>
               <div id="week-item-detail" aria-live="polite">
                 {selectedItem ? <ItemDetail item={selectedItem} onClose={() => setSelected(null)} /> : <p className="text-small text-fg-2">Pick a stop on the trail to see what it is and why it's here.</p>}
@@ -237,12 +243,12 @@ function WhyChip({ item }: { item: WeekItemView }) {
   );
 }
 
-function NextStep({ item, started }: { item: WeekItemView; started: boolean }) {
+function NextStep({ item, started, step }: { item: WeekItemView; started: boolean; step: string | null }) {
   return (
     <div className="flex flex-col gap-3 rounded-control border border-brand/30 bg-brand-soft p-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
         <p className="text-caption font-medium text-fg-2">{started ? "Pick up where you left off" : "Your first stop"}</p>
-        <p className="mt-0.5 font-display text-h4 font-semibold text-fg-1">{item.title}</p>
+        <p className="mt-0.5 font-display text-h4 font-semibold text-fg-1">{plainTitle(item.title)}</p>
         <div className="mt-1.5 flex flex-wrap items-center gap-2 text-small text-fg-2">
           <LaneChip lane={item.lane} size="sm" />
           <span>{formatMinutes(item.minutes)}</span>
@@ -251,7 +257,7 @@ function NextStep({ item, started }: { item: WeekItemView; started: boolean }) {
         {item.reason ? <p className="mt-2 max-w-prose text-small text-fg-2">{item.reason}</p> : null}
       </div>
       <Button asChild variant="primary" size="lg" className="shrink-0">
-        <Link to={v5Href(item)}>{started ? "Continue" : "Start"}</Link>
+        <Link to={step ? `${v5Href(item)}?step=${encodeURIComponent(step)}` : v5Href(item)}>{started ? "Continue" : "Start"}</Link>
       </Button>
     </div>
   );
@@ -263,7 +269,7 @@ function ItemDetail({ item, onClose }: { item: WeekItemView; onClose: () => void
     <div className="mt-2 flex flex-col gap-2 rounded-control border border-line-1 bg-surface-2 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="font-display text-h4 font-semibold">{item.title}</p>
+          <p className="font-display text-h4 font-semibold">{plainTitle(item.title)}</p>
           <p className="text-small text-fg-2">{item.context}</p>
         </div>
         <Button variant="ghost" size="sm" onClick={onClose}>
@@ -277,7 +283,7 @@ function ItemDetail({ item, onClose }: { item: WeekItemView; onClose: () => void
         {done ? <Badge tone="success">Done</Badge> : null}
       </div>
       {item.reason ? <p className="max-w-prose text-small text-fg-1">{item.reason}</p> : null}
-      {item.dependsOn.length ? <p className="text-small text-fg-2">Needs first: {item.dependsOn.map((d) => d.title).join(", ")}</p> : null}
+      {item.dependsOn.length ? <p className="text-small text-fg-2">Needs first: {item.dependsOn.map((d) => plainTitle(d.title)).join(", ")}</p> : null}
       <div>
         <Button asChild variant={done ? "secondary" : "primary"}>
           <Link to={v5Href(item)}>{done ? "Open it again" : "Start"}</Link>
@@ -310,7 +316,7 @@ function LanesList({ week }: { week: WeekView }) {
                       className="flex min-h-(--v5-row-h) flex-wrap items-center gap-x-3 gap-y-1 rounded-control border border-line-1 px-3 py-2 hover:bg-sunken focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                     >
                       <span className={cn("min-w-0 flex-1 text-body font-medium", done && "text-fg-2 line-through decoration-fg-3")}>
-                        {item.title}
+                        {plainTitle(item.title)}
                         {done ? <span className="sr-only"> (done)</span> : null}
                       </span>
                       <span className="text-caption text-fg-2">{WHY_LABELS[item.source]}</span>

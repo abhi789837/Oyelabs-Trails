@@ -23,5 +23,8 @@ export default defineConfig({
     pool: "threads",
     testTimeout: 20_000,
     hookTimeout: 30_000,
+    // Tests were written against the old design as the default; v5 Phase 9 made the new one the
+    // default (server/src/routes/ui.ts `uiV5Fallback`, which has its own test).
+    env: { UI_V5_DEFAULT: "off" },
   },
 });

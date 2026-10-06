@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, CircleX, CloudUpload, Play, RotateCcw, Unlock } from "lucide-react";
 
 import type { CodeAttemptResult, ServedCodeChallenge, ServedTopic } from "@shared/content";
@@ -24,6 +24,7 @@ import { useIsMobile } from "@/v5/design/hooks";
 import { lessonApi } from "../api";
 import { LessonMarkdown } from "../LessonRich";
 import { SendToLaptop } from "../SendToLaptop";
+import { joinTestDriver, splitTestDriver } from "./testDriver";
 
 interface CheckRow {
   description: string;
@@ -90,6 +91,9 @@ export default function CodeDo({ topic, challenge, facts, onChecked, onSolutionT
   const [phoneTab, setPhoneTab] = useState<"task" | "code" | "checks">("task");
   const codeNow = useRef(code);
   codeNow.current = code;
+  // The editor shows the learner's part; a test driver stays out of view but in `code` (D1).
+  const { own: ownCode, driver } = splitTestDriver(code);
+  const editOwn = useCallback((next: string) => setCode(joinTestDriver(next, driver)), [driver]);
 
   useEffect(() => {
     writeDraft(draftKey, code === challenge.starterCode ? null : code);
@@ -264,10 +268,11 @@ export default function CodeDo({ topic, challenge, facts, onChecked, onSolutionT
     <>
       {/* The editor's line numbers are decoration; raise them to AA contrast inside v5. */}
       <div className="[&_div[aria-hidden=true]]:text-editor-foreground/70">
-        <CodeEditor value={code} onChange={setCode} fileName={`${challenge.functionName}.js`} describedBy="do-editor-help" />
+        <CodeEditor value={ownCode} onChange={editOwn} fileName={`${challenge.functionName}.js`} describedBy="do-editor-help" />
       </div>
       <p id="do-editor-help" className="text-caption text-fg-2">
         Tab adds two spaces. Press Esc, then Tab, to leave the editor. Your code is saved in this browser as you type.
+        {driver ? " The test code that calls your function is added when you run it, so it isn't shown here." : ""}
       </p>
     </>
   );

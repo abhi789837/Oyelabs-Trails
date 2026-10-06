@@ -372,7 +372,9 @@ export function rulesIntents(cat: RulesCatalog, description: string): RulesInten
     if (bundle) {
       const type = namedTrack || (MOVE.test(p.clause) && !IMPROVE.test(p.clause)) ? "move_role" : "improve_area";
       if (type === "move_role") wantedTrackId ??= namedTrack;
-      const name = bundle.name.charAt(0).toLowerCase() + bundle.name.slice(1);
+      // Lower-case the first letter for the sentence, but keep acronyms: "AI-driven development",
+      // not "aI-driven" (which reads as "al-driven"). Phase 9.2.
+      const name = /^[A-Z]{2}/.test(bundle.name) ? bundle.name : bundle.name.charAt(0).toLowerCase() + bundle.name.slice(1);
       bundle.skillIds.forEach((id) => used.add(id));
       add({
         phrase: p.text,

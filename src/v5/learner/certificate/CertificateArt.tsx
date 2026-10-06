@@ -36,8 +36,9 @@ export function CertificateArt({ cert, qr, revoked, className }: { cert: Certifi
           <tspan fill={BRAND_BLUE}>Oye</tspan>
           <tspan fill={INK}>learn</tspan>
         </text>
-        <text x={W - 72} y={97} textAnchor="end" fontFamily="Sora, sans-serif" fontWeight={600} fontSize={15} fill={MUTED} letterSpacing={1.5}>
-          {layout.kindLabel.toUpperCase()}
+        <text x={W - 72} y={97} textAnchor="end" fontFamily="Sora, sans-serif" fontWeight={600} fontSize={17} fill={MUTED}>
+          {/* Sentence case, like every other label (UX review CT1). */}
+          {layout.kindLabel}
         </text>
 
         <text x={72} y={250} fontFamily="Sora, sans-serif" fontSize={20} fill={MUTED}>

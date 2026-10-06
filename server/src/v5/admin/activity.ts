@@ -105,7 +105,9 @@ export function learnerSignals(db: Db, now: number): LearnerSignal[] {
       userId: u.id,
       displayName: u.displayName,
       status: u.status,
-      departmentId: profiles.get(u.id) ?? null,
+      // The same default the People list uses (routes/admin/users.ts): a learner with no
+      // department set is in Engineering. Before, Overview counted them under "No department".
+      departmentId: profiles.get(u.id) ?? "engineering",
       createdAt: u.createdAt,
       lastActivityAt: last,
       planTopicCount: plan?.topicIds.length ?? 0,

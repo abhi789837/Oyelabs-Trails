@@ -74,7 +74,7 @@ export const LANE_META: Record<PlanLane, LaneMeta> = {
   },
   medium: {
     lane: "medium",
-    label: "Medium",
+    label: "Good to know",
     hint: "Worth doing this week if the time is there.",
     icon: Sparkle,
     cssVar: "--trailmark",
@@ -88,7 +88,7 @@ export const LANE_META: Record<PlanLane, LaneMeta> = {
   },
   low: {
     lane: "low",
-    label: "Low",
+    label: "Extra",
     hint: "Nice to have. Skip these without guilt.",
     icon: Flag,
     cssVar: "--basalt",

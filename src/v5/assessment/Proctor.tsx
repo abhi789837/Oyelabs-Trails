@@ -7,7 +7,7 @@ import type { HardWarning, ProctorController, SoftWarning } from "@/features/pro
 import { Button } from "@/v5/design/components/Button";
 import { cn } from "@/v5/design/cn";
 
-import { proctorWords, warningConsequence, warningsLine } from "./navigator";
+import { proctorWords, uniqueNotices, warningConsequence, warningsLine } from "./navigator";
 
 /**
  * Proctoring, the calm way. The same `useProctor` controller as the older design; only the words
@@ -102,14 +102,14 @@ export function CalmWarning({ warning, limit, needsFullscreen, onAcknowledge, on
 export function SoftNotices({ warnings, onDismiss }: { warnings: SoftWarning[]; onDismiss: (id: number) => void }) {
   return (
     <div aria-live="polite" className="pointer-events-none fixed inset-x-3 bottom-3 z-40 flex flex-col items-end gap-2 sm:inset-x-auto sm:bottom-5 sm:right-5">
-      {warnings.map((w) => (
-        <SoftNotice key={w.id} warning={w} onDismiss={onDismiss} />
+      {uniqueNotices(warnings).map(({ warning, ids }) => (
+        <SoftNotice key={warning.id} warning={warning} onDismiss={() => ids.forEach(onDismiss)} />
       ))}
     </div>
   );
 }
 
-function SoftNotice({ warning, onDismiss }: { warning: SoftWarning; onDismiss: (id: number) => void }) {
+function SoftNotice({ warning, onDismiss }: { warning: SoftWarning; onDismiss: () => void }) {
   useEffect(() => {
     playSoftChime();
   }, [warning.id]);
@@ -118,7 +118,7 @@ function SoftNotice({ warning, onDismiss }: { warning: SoftWarning; onDismiss: (
       <p className="min-w-0 flex-1">
         Just so you know: {warning.reason}. This doesn't count as a warning.
       </p>
-      <button type="button" onClick={() => onDismiss(warning.id)} className="grid size-6 shrink-0 place-items-center rounded-control text-fg-2 hover:bg-sunken hover:text-fg-1" aria-label="Close this note">
+      <button type="button" onClick={onDismiss} className="grid size-6 shrink-0 place-items-center rounded-control text-fg-2 hover:bg-sunken hover:text-fg-1" aria-label="Close this note">
         <X className="size-4" aria-hidden="true" />
       </button>
     </div>

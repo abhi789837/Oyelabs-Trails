@@ -47,6 +47,8 @@ export default function CourseEditPage() {
   const [topicId, setTopicId] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [versionsKey, setVersionsKey] = useState(0);
+  // The open lesson has unsaved changes: "Make it live" steps back to secondary while Save is the primary.
+  const [lessonDirty, setLessonDirty] = useState(false);
 
   useEffect(() => {
     if (!courseLoad.data) return;
@@ -164,7 +166,8 @@ export default function CourseEditPage() {
               <History aria-hidden="true" />
               Version history
             </Button>
-            <Button variant="secondary" size="sm" onClick={() => void togglePublished()}>
+            {/* On a saved draft, going live is the next step, so it's the primary (UX review Ed1). */}
+            <Button variant={!course.published && !lessonDirty ? "primary" : "secondary"} size="sm" onClick={() => void togglePublished()}>
               {course.published ? "Make it a draft" : "Make it live"}
             </Button>
           </>
@@ -212,6 +215,7 @@ export default function CourseEditPage() {
               key={topic.id}
               courseId={course.id}
               topic={topic}
+              onDirtyChange={setLessonDirty}
               onSaved={(next, version) => {
                 setCourse(next);
                 setVersionsKey((k) => k + 1);
@@ -298,7 +302,7 @@ function Toolbar({ editor }: { editor: Editor }) {
   );
 }
 
-function LessonEditor({ courseId, topic, onSaved }: { courseId: string; topic: CourseTopic; onSaved: (course: Course, version: number | null) => void }) {
+function LessonEditor({ courseId, topic, onSaved, onDirtyChange }: { courseId: string; topic: CourseTopic; onSaved: (course: Course, version: number | null) => void; onDirtyChange?: (dirty: boolean) => void }) {
   const [title, setTitle] = useState(topic.title);
   const [minutes, setMinutes] = useState(String(topic.estMinutes));
   const [links, setLinks] = useState<CourseLink[]>(topic.links);
@@ -343,6 +347,12 @@ function LessonEditor({ courseId, topic, onSaved }: { courseId: string; topic: C
       setSaving(false);
     }
   }, [editor, saving, minutes, title, topic.id, links, courseId, onSaved]);
+
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+  }, [dirty, onDirtyChange]);
+  // Unmounting (another lesson picked) leaves nothing unsaved behind in the header.
+  useEffect(() => () => onDirtyChange?.(false), [onDirtyChange]);
 
   // Ctrl/⌘+S saves.
   const saveRef = useRef(save);
@@ -394,7 +404,7 @@ function LessonEditor({ courseId, topic, onSaved }: { courseId: string; topic: C
             }}
           />
         </label>
-        <Button variant="primary" onClick={() => void save()} loading={saving} disabled={!dirty}>
+        <Button variant={dirty ? "primary" : "secondary"} onClick={() => void save()} loading={saving} disabled={!dirty}>
           <Save aria-hidden="true" />
           {dirty ? "Save" : "Saved"}
         </Button>

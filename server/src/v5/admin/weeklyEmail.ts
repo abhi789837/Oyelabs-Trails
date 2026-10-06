@@ -1,3 +1,4 @@
+import { emailConfigFromEnv } from "../email/sender";
 import { eq } from "drizzle-orm";
 
 import {
@@ -31,7 +32,8 @@ export function setWeeklyEmail(db: Db, on: boolean, actorId: string, at = Date.n
  * least weekly, and it is idempotent (the last-queued time is checked and written together). The
  * sender (Phase 6) delivers whatever is queued.
  */
-export function maybeQueueWeeklyReport(db: Db, content: ContentStore, now = Date.now()): boolean {
+export function maybeQueueWeeklyReport(db: Db, content: ContentStore, now = Date.now(), emailOn = emailConfigFromEnv().ok): boolean {
+  if (!emailOn) return false;
   const state = weeklyEmailState(db);
   if (!weeklyReportDue(state.on, state.lastQueuedAt, now)) return false;
   const toId = db.select().from(schema.appMeta).where(eq(schema.appMeta.key, WEEKLY_REPORT_TO_META_KEY)).get()?.value;

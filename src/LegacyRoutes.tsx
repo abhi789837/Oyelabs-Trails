@@ -1,3 +1,4 @@
+import "@/fonts/legacyFonts";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { MotionConfig } from "motion/react";
 import { OverlayProvider } from "@/components/overlays";

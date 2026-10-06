@@ -143,3 +143,17 @@ export function warningConsequence(count: number, limit: number, terminal: boole
   if (left === 1) return "One more of these ends the test.";
   return `${left} more of these end the test.`;
 }
+
+/**
+ * Soft notices, one per reason (UX review A4). The newest of each reason is shown; `ids` holds every
+ * notice it stands for, so closing it closes the copies too. Order follows the newest of each.
+ */
+export function uniqueNotices<T extends { id: number; reason: string }>(warnings: readonly T[]): { warning: T; ids: number[] }[] {
+  const byReason = new Map<string, { warning: T; ids: number[] }>();
+  for (const w of warnings) {
+    const prev = byReason.get(w.reason);
+    if (prev) byReason.delete(w.reason);
+    byReason.set(w.reason, { warning: w, ids: [...(prev?.ids ?? []), w.id] });
+  }
+  return [...byReason.values()];
+}

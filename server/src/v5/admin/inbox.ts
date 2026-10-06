@@ -136,7 +136,8 @@ export function buildInbox(deps: InboxDeps, actor: { role: string }, now = Date.
       id: `reviews:${r.id}`,
       group: "reviews",
       title: `${r.learnerName} asked us to check an answer again`,
-      detail: clip(`${r.where}: ${r.question}${r.learnerNote ? ` · "${r.learnerNote}"` : ""}`),
+      // Staff screens call it "the test" everywhere else ("Test sent", "Send the test").
+      detail: clip(`${r.where.replace(/^Assessment(?=:|$)/, "Test")}: ${r.question}${r.learnerNote ? ` · "${r.learnerNote}"` : ""}`),
       at: r.createdAt,
       userId: r.userId,
       href: "/admin/reviews",

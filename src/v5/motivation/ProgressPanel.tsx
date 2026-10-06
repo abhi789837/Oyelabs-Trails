@@ -17,7 +17,8 @@ export const GOAL_CHANGED_EVENT = "oyelearn:goal-changed";
 
 const errorText = (e: unknown) => (e instanceof ApiRequestError ? e.message : "That didn't save. Try again.");
 
-export function WeeklyGoalField({ prefs, onSaved }: { prefs: MotivationPrefs; onSaved: (prefs: MotivationPrefs) => void }) {
+/** `hideLabel`: the surrounding card's heading already says "Weekly goal", so the label is for screen readers only (UX review M2). */
+export function WeeklyGoalField({ prefs, onSaved, defaultMinutes = null, hideLabel = false }: { prefs: MotivationPrefs; onSaved: (prefs: MotivationPrefs) => void; defaultMinutes?: number | null; hideLabel?: boolean }) {
   const id = useId();
   const [status, setStatus] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +42,7 @@ export function WeeklyGoalField({ prefs, onSaved }: { prefs: MotivationPrefs; on
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-small font-medium text-fg-1">
+      <label htmlFor={id} className={hideLabel ? "sr-only" : "text-small font-medium text-fg-1"}>
         Weekly goal
       </label>
       <p id={`${id}-hint`} className="text-caption text-fg-2">
@@ -57,7 +58,7 @@ export function WeeklyGoalField({ prefs, onSaved }: { prefs: MotivationPrefs; on
       >
         {choices.map((h) => (
           <option key={h ?? "none"} value={h === null ? "" : String(h)}>
-            {goalLabel(h)}
+            {goalLabel(h, defaultMinutes)}
           </option>
         ))}
       </select>

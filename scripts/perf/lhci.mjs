@@ -8,8 +8,10 @@
  * The v5 routes need a session, so this signs in through POST /api/auth/login, takes the session
  * cookie and hands it to Lighthouse as an extra header. A **staff** account is needed for `?ui=v5`
  * (the override is staff-only) and for /design. The account must not be waiting on a password
- * change. Optional: LHCI_PATHS (comma list, default /learn, /learn/plan, /learn/library, /design),
- * LHCI_RUNS (default 3). Reports go to .lighthouseci/reports. Exits non-zero when a budget fails.
+ * change. Optional: LHCI_PATHS (comma list, default /learn, a lesson, /learn/review, /admin),
+ * LHCI_RUNS (default 3), LHCI_PRESET=desktop (default: the mobile profile). Reports go to
+ * .lighthouseci/reports. Exits non-zero when a budget fails. For a self-contained run on a private
+ * snapshot (its own server, seeded login, production-like gzip), use scripts/perf/lighthouse-v5.mjs.
  */
 import { spawnSync } from "node:child_process";
 

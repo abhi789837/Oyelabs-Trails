@@ -1,3 +1,4 @@
+import { emailConfigFromEnv } from "../email/sender";
 import { and, eq, gte, isNotNull, lt } from "drizzle-orm";
 
 import {
@@ -250,6 +251,6 @@ export function buildReport(db: Db, content: ContentStore, range: ReportRange): 
       failed: calls.filter((c) => !c.ok).length,
       perDay: bucketByDay(starts, calls.map((c) => ({ at: c.at, value: c.cost }))).map(dollarsFromMicros),
     },
-    weeklyEmail: weeklyEmailState(db),
+    weeklyEmail: { ...weeklyEmailState(db), available: emailConfigFromEnv().ok },
   };
 }

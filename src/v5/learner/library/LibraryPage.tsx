@@ -224,7 +224,7 @@ function CourseCard({ item }: { item: LibraryItem }) {
         </span>
         <FormatChip format={item.format} />
       </div>
-      {started && !finished ? <ProgressBar value={item.doneCount} max={item.lessonCount} label={`${item.title}: ${item.doneCount} of ${item.lessonCount} lessons done`} size="sm" /> : null}
+      {started && !finished ? <ProgressBar value={item.doneCount} max={item.lessonCount} label="Lessons done" showValue={`${item.doneCount} of ${item.lessonCount}`} size="sm" /> : null}
     </article>
   );
 }

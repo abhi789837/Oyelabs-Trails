@@ -387,6 +387,9 @@ async function sweep(browser: Browser, storage: string, targets: Target[], who: 
             continue;
           }
           await noSideways(page, label);
+          // The saved theme (oyelabs-ui) wins over colorScheme, so check the page really is in this theme.
+          const dark = await page.evaluate(() => document.documentElement.classList.contains("dark"));
+          ok(dark === (theme === "dark"), `${label}: the page is in ${theme} mode`);
           await axe(page, label);
           await shot(page, `${target.name}-${width}-${theme}`);
         }

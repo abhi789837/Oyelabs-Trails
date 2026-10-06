@@ -57,3 +57,16 @@ export function courseLessonNav<L extends { id: string }>(course: CourseShape<L>
     next: i < flat.length - 1 ? flat[i + 1].t : null,
   };
 }
+
+/**
+ * The lesson after this one in the learner's plan (Phase 9.2): the first later topic not done yet,
+ * else the first earlier one not done yet (a lesson finished out of order), else null. Null too
+ * when this topic isn't in the plan, so the caller can fall back to the course or track order.
+ */
+export function planNextTopicId(planIds: readonly string[], currentId: string, isDone: (id: string) => boolean): string | null | undefined {
+  const i = planIds.indexOf(currentId);
+  if (i < 0) return undefined;
+  const later = planIds.slice(i + 1).find((id) => !isDone(id));
+  if (later) return later;
+  return planIds.slice(0, i).find((id) => !isDone(id)) ?? null;
+}

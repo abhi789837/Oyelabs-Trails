@@ -1,4 +1,5 @@
-import { lengthBucket, type LengthBucket, type LibraryItem, type LibraryLevel } from "@shared/me";
+import type { LengthBucket, LibraryItem, LibraryLevel } from "@shared/me";
+import { lengthBucket } from "@shared/meCore";
 
 /**
  * Library search and filters, pure so they're tested on their own (libraryLogic.test.ts) and run

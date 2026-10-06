@@ -14,12 +14,24 @@ import { useCurriculumLoader } from "@/features/curriculum/useCurriculumLoader";
  * the manifest can't be fetched). The loader still runs for them, so the next screen is ready.
  */
 const NO_CURRICULUM_NEEDED = ["/learn/review"];
+/**
+ * Phase 9 performance: screens that don't read the manifest either, matched exactly (their
+ * neighbours may). Today and the admin inbox each have one query of their own, so they no longer
+ * wait for the manifest before their code renders (docs/v5/QUALITY.md, fix 1).
+ */
+const NO_CURRICULUM_NEEDED_EXACT = ["/learn", "/admin"];
+
+export function needsCurriculum(pathname: string): boolean {
+  const path = pathname.replace(/\/+$/, "") || "/";
+  if (NO_CURRICULUM_NEEDED_EXACT.includes(path)) return false;
+  return !NO_CURRICULUM_NEEDED.some((p) => path === p || path.startsWith(`${p}/`));
+}
 
 export function V5CurriculumProvider({ children }: { children: ReactNode }) {
   const { status, error, retry } = useCurriculumLoader();
   const { pathname } = useLocation();
 
-  if (NO_CURRICULUM_NEEDED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) return <>{children}</>;
+  if (!needsCurriculum(pathname)) return <>{children}</>;
 
   if (status === "idle" || status === "loading") {
     return (

@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import { LANE_META } from "@/features/plan/laneMeta";
 import { buttonVariants } from "@/v5/design/components/Button";
+import { whyChip } from "@shared/today";
 
 import { HERO_LANE, PRIMARY_LG, clockLabel, greeting, hoursLabel, minutesLabel, stepLine, trailWindow, weekRange } from "./format";
 
@@ -47,8 +48,11 @@ describe("Today format helpers", () => {
   });
 });
 
-test("the hero's lane labels match the design system's", () => {
-  for (const lane of ["do_now", "must_know", "medium", "low"] as const) expect(HERO_LANE[lane].label).toBe(LANE_META[lane].label);
+test("the hero's lane labels match the design system's and Up next's why chips (T5, P3)", () => {
+  for (const lane of ["do_now", "must_know", "medium", "low"] as const) {
+    expect(HERO_LANE[lane].label).toBe(LANE_META[lane].label);
+    expect(whyChip(lane, null)).toBe(LANE_META[lane].label);
+  }
 });
 
 test("the hero's Continue looks exactly like the primary large button", () => {

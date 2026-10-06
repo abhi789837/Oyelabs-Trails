@@ -226,7 +226,8 @@ export interface ReportsResponse {
   skills: { levelUps: number; learners: number; bySkill: { skill: string; count: number }[]; casesPassed: number };
   tests: { topic: { attempts: number; passed: number; passRate: number; averageScore: number }; placement: { finished: number; averageScore: number } };
   ai: { dollars: number; calls: number; failed: number; perDay: number[] };
-  weeklyEmail: { on: boolean; lastQueuedAt: number | null };
+  /** `available`: mail is set up on the server; without it the weekly email option is hidden. */
+  weeklyEmail: { on: boolean; lastQueuedAt: number | null; available: boolean };
 }
 
 // ---------------------------------------------------------------------------

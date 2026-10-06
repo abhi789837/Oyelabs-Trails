@@ -69,13 +69,12 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] 8.4 Gates + commit `feat(v5-p8)`
 
 ## Phase 9: Quality gates, switch-on, report
-- [ ] 9.1 Playwright journeys (learner + admin), visual snapshots 390/768/1280/1440 light+dark, axe, Lighthouse CI, bundle limits
-- [ ] 9.2 Heuristic review → `UX_REVIEW.md`; fix high/medium
-- [ ] 9.3 Click counts before/after
-- [ ] 9.4 `ui_v5` on by default; "Use previous design" for 2 weeks (logged)
+- [x] 9.1 Playwright journeys (learner + admin), visual snapshots 390/768/1280/1440 light+dark, axe, Lighthouse CI, bundle limits
+- [x] 9.2 Heuristic review → `UX_REVIEW.md`; fix high/medium
+- [x] 9.3 Click counts before/after
+- [x] 9.4 `ui_v5` on by default; "Use previous design" for 2 weeks (logged)
 - [ ] 9.5 Deploy + smoke (Abhishek runs it)
-- [ ] 9.6 RESULTS.md + chat summary; tag `v5.0.0`
+- [x] 9.6 RESULTS.md + chat summary; tag `v5.0.0`
 
 ## Needs Abhishek
 - Lighthouse CI is configured (`npm run lhci`, `lighthouserc.cjs`) but needs a running server and a staff login (`LHCI_BASE_URL`, `LHCI_USERNAME`, `LHCI_PASSWORD`); it runs in Phase 9 locally.
-- Email (weekly recap, reminders, admin weekly report) needs SMTP on the server: `SMTP_URL` (or `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS`/`SMTP_SECURE`), `MAIL_FROM`, and `MAIL_DOMAIN` (usernames have no email). Without them emails are marked skipped, and nothing breaks.

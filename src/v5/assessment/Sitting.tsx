@@ -61,6 +61,7 @@ export default function Sitting({
           <PreFlight
             assessmentId={assessment.id}
             needsMicrophone={Boolean(assessment.hasSpeak)}
+            noun="test"
             busy={starting}
             error={startError}
             onCancel={() => navigate("/learn")}

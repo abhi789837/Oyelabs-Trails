@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { formatIssueDate, type MyCertificate } from "@shared/certificates";
-import { linkedInAddUrl } from "@shared/me";
+import { linkedInAddUrl } from "@shared/meCore";
 
 import { ApiRequestError } from "@/api/client";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";

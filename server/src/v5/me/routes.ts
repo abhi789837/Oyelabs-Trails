@@ -1,3 +1,4 @@
+import { emailConfigFromEnv } from "../email/sender";
 import { and, desc, eq, gte, isNull } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
@@ -57,12 +58,13 @@ function xpByWeek(db: Db, userId: string, at: number): { week: string; xp: numbe
 }
 
 export async function registerV5MeRoutes(app: FastifyInstance): Promise<void> {
-  app.get("/api/v5/me/settings", async (request): Promise<{ settings: Settings }> => {
+  // `emailEnabled`: mail is set up on the server. Without it the email options are hidden.
+  app.get("/api/v5/me/settings", async (request): Promise<{ settings: Settings; emailEnabled: boolean }> => {
     const user = requireActiveUser(request);
-    return { settings: settingsFrom(readPrefs(app.db, user.id)) };
+    return { settings: settingsFrom(readPrefs(app.db, user.id)), emailEnabled: emailConfigFromEnv().ok };
   });
 
-  app.put("/api/v5/me/settings", async (request): Promise<{ settings: Settings }> => {
+  app.put("/api/v5/me/settings", async (request): Promise<{ settings: Settings; emailEnabled: boolean }> => {
     const user = requireActiveUser(request);
     const change = parseOrThrow(updateSettingsSchema, request.body ?? {}, "Some settings weren't valid. Check the times use the 18:30 style.");
     const data = mergeSettings(readPrefs(app.db, user.id), change);
@@ -72,7 +74,7 @@ export async function registerV5MeRoutes(app: FastifyInstance): Promise<void> {
       .values({ userId: user.id, data, updatedAt: at })
       .onConflictDoUpdate({ target: schema.userPrefs.userId, set: { data, updatedAt: at } })
       .run();
-    return { settings: settingsFrom(data) };
+    return { settings: settingsFrom(data), emailEnabled: emailConfigFromEnv().ok };
   });
 
   app.get("/api/v5/me/notes", async (request): Promise<{ notes: NoteView[] }> => {

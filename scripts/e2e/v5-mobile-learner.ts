@@ -400,7 +400,8 @@ async function codeDoFlow(browser: Browser, storage: string): Promise<void> {
     ok(await seen(page.getByText("Best on a bigger screen"), WAIT), 'the gentle "Best on a bigger screen" hint shows');
 
     const send = page.getByRole("button", { name: "Send to my email to continue on laptop" });
-    ok(await send.isVisible().catch(() => false), "the send-to-email button shows");
+    // The button waits for the settings answer (emailEnabled), so wait for it.
+    ok(await seen(send, WAIT), "the send-to-email button shows");
     const [response] = await Promise.all([page.waitForResponse((r) => r.url().includes("/send-to-email"), { timeout: WAIT }), send.click()]);
     const body = (await response.json().catch(() => ({}))) as { status?: string; link?: string };
     ok(body.status === "sent", `the server queues the email (${response.status()} ${body.status})`);
@@ -426,6 +427,18 @@ async function codeDoFlow(browser: Browser, storage: string): Promise<void> {
     const clip = await page.evaluate(() => navigator.clipboard.readText()).catch(() => "");
     ok(clip.endsWith(`/learn/lesson/${CODE_TOPIC}?step=do`), `the clipboard has the deep link (${clip})`);
     await page.unroute("**/send-to-email");
+
+    // No mail on the server at all: no email button, just "Copy the link" (settings stubbed).
+    await page.route("**/api/v5/me/settings", async (route) => {
+      const real = await route.fetch();
+      const json = (await real.json()) as Record<string, unknown>;
+      await route.fulfill({ response: real, json: { ...json, emailEnabled: false } });
+    });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.getByRole("tablist", { name: "Coding practice" }).waitFor({ timeout: WAIT });
+    ok(await seen(page.getByRole("button", { name: "Copy the link" }), WAIT), "without mail: Copy the link is offered straight away");
+    ok((await page.getByRole("button", { name: "Send to my email to continue on laptop" }).count()) === 0, "and there is no email button");
+    await page.unroute("**/api/v5/me/settings");
   } finally {
     await page.context().close();
   }

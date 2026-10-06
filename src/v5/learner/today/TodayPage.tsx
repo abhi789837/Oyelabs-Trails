@@ -1,5 +1,5 @@
 import { m } from "motion/react";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 
 import "@/v5/design/styles";
 import { ApiRequestError } from "@/api/client";
@@ -15,11 +15,11 @@ import { HeroCard } from "./Hero";
 /*
  * Budget (docs/v5/DECISIONS.md, Phase 2): only the header, the hero and the loading shapes are in
  * the first download. Everything under the hero, and the design system's state components, are one
- * lazy chunk requested the moment this module runs, in parallel with the data, so they are almost
- * always there when the data is.
+ * lazy chunk. Phase 9 performance: it's requested once the hero has painted (its ~25 small files
+ * used to compete with the hero's data and fonts on a slow phone connection); the skeleton holds its
+ * place until then.
  */
 const loadDetails = () => import("./TodayDetails");
-if (typeof window !== "undefined") void loadDetails().catch(() => undefined);
 const TodayDetails = lazy(loadDetails);
 const TodayError = lazy(() => loadDetails().then((mod) => ({ default: mod.TodayError })));
 
@@ -43,6 +43,7 @@ export default function TodayPage() {
 function TodayScreen() {
   const { data, error, loading, retry } = useToday();
   const showSkeleton = useDelayed(loading && !data);
+  const detailsReady = useAfterPaint(Boolean(data));
 
   return (
     <div className="min-h-full bg-surface-0 text-fg-1">
@@ -53,9 +54,9 @@ function TodayScreen() {
             <p className="mt-1 min-h-[1.5em] text-body text-fg-2">{data ? `${greeting(new Date().getHours())}${data.firstName ? `, ${data.firstName}` : ""}.` : ""}</p>
           </div>
           {data ? (
-            <p className="flex flex-col items-end" data-testid="today-xp">
-              <span className="font-display text-h3 font-semibold tabular-nums text-fg-1">{data.xp.total.toLocaleString("en-US")} XP</span>
-              <span className="text-caption text-fg-2">+{data.xp.thisWeek.toLocaleString("en-US")} this week</span>
+            // The all-time total is the top bar's (UX review T4); the header keeps only this week's gain.
+            <p className="text-small font-semibold tabular-nums text-fg-2" data-testid="today-xp">
+              +{data.xp.thisWeek.toLocaleString("en-US")} XP this week
             </p>
           ) : null}
         </header>
@@ -65,11 +66,17 @@ function TodayScreen() {
             <TodayError onRetry={retry} retrying={loading} details={error instanceof ApiRequestError ? `${error.status} ${error.code}` : undefined} />
           </Suspense>
         ) : data ? (
-          <m.div className="flex flex-col gap-(--v5-gap) lg:gap-6" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={transitions.calm}>
+          // The entrance moves but doesn't fade in: hidden-then-faded text counted as painted only at the
+          // end of the fade, 320 ms after it was there (Phase 9 performance).
+          <m.div className="flex flex-col gap-(--v5-gap) lg:gap-6" initial={{ y: 8 }} animate={{ y: 0 }} transition={transitions.calm}>
             {data.hero ? <HeroCard hero={data.hero} /> : null}
-            <Suspense fallback={<DetailsSkeleton />}>
-              <TodayDetails data={data} />
-            </Suspense>
+            {detailsReady ? (
+              <Suspense fallback={<DetailsSkeleton />}>
+                <TodayDetails data={data} />
+              </Suspense>
+            ) : (
+              <DetailsSkeleton />
+            )}
           </m.div>
         ) : showSkeleton ? (
           <TodaySkeleton />
@@ -77,6 +84,23 @@ function TodayScreen() {
       </div>
     </div>
   );
+}
+
+/** True from the frame after `on` first turned true (the hero has been painted by then); stays true. */
+function useAfterPaint(on: boolean): boolean {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (!on || ready) return;
+    let second = 0;
+    const first = window.requestAnimationFrame(() => {
+      second = window.requestAnimationFrame(() => setReady(true));
+    });
+    return () => {
+      window.cancelAnimationFrame(first);
+      window.cancelAnimationFrame(second);
+    };
+  }, [on, ready]);
+  return ready;
 }
 
 /** Shown only if the error component itself can't load (fully offline). Same words, fewer parts. */

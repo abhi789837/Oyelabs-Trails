@@ -15,10 +15,13 @@ import { EmptyState, ErrorState, Skeleton, SkeletonLayout } from "@/v5/design/co
 import { SkillMeter, StreakFlame, XPCounter } from "@/v5/design/components/Stats";
 import { cn } from "@/v5/design/cn";
 import { transitions } from "@/v5/design/motion";
-import { linkedInAddUrl, searchNotes, type CertificateView, type MeProfile, type NoteView, type Settings } from "@shared/me";
+import type { CertificateView, MeProfile, NoteView, Settings } from "@shared/me";
+import { linkedInAddUrl, searchNotes } from "@shared/meCore";
 
 import { PageFrame, V5Screen, useApiData, useDelayed, type ApiData } from "./page";
 import { applyTheme } from "./settings";
+import { plainTitle } from "@shared/plainTitle";
+import { weekOfLabel, weekStartLabel } from "@shared/weekLabel";
 
 // Phase 6: the weekly goal (and team board opt-in), saved through /api/v5/motivation/prefs.
 const MotivationSettings = lazy(() => import("@/v5/motivation/MotivationSettings"));
@@ -28,7 +31,7 @@ const MotivationSettings = lazy(() => import("@/v5/motivation/MotivationSettings
  * weekly streak, your notes from every lesson, and your settings.
  */
 export default function MePage() {
-  const settings = useApiData<{ settings: Settings }>("/api/v5/me/settings");
+  const settings = useApiData<{ settings: Settings; emailEnabled?: boolean }>("/api/v5/me/settings");
   return (
     <V5Screen reducedMotion={settings.data?.settings.reducedMotion}>
       <MeScreen settings={settings} />
@@ -44,7 +47,7 @@ function initialTab(): Tab {
   return TABS.includes(t as Tab) ? (t as Tab) : "progress";
 }
 
-function MeScreen({ settings }: { settings: ApiData<{ settings: Settings }> }) {
+function MeScreen({ settings }: { settings: ApiData<{ settings: Settings; emailEnabled?: boolean }> }) {
   const profile = useApiData<MeProfile>("/api/v5/me/profile");
   const [tab, setTab] = useState<Tab>(initialTab);
   const p = profile.data;
@@ -120,11 +123,11 @@ function ProgressTab({ profile }: { profile: MeProfile }) {
           {profile.xp.weeks.map((w) => (
             <li key={w.week} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
               <span className="sr-only">
-                {w.week}: {w.xp} XP
+                {weekOfLabel(w.week)}: {w.xp} XP
               </span>
               <span aria-hidden="true" className={cn("w-full rounded-t-sm", w.xp ? "bg-brand" : "bg-sunken")} style={{ height: `${Math.max(4, (w.xp / maxWeekXp) * 100)}%` }} />
-              <span aria-hidden="true" className="text-[0.625rem] text-fg-2">
-                {w.week.slice(-3)}
+              <span aria-hidden="true" className="whitespace-nowrap text-[0.625rem] text-fg-2">
+                {weekStartLabel(w.week)}
               </span>
             </li>
           ))}
@@ -276,7 +279,7 @@ function NotesTab() {
               className="flex flex-col gap-1 rounded-control border border-line-1 bg-surface-1 p-3 hover:bg-sunken focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               <span className="flex flex-wrap items-center gap-2 text-caption text-fg-2">
-                <span className="font-medium text-fg-1">{n.topicTitle}</span>
+                <span className="font-medium text-fg-1">{plainTitle(n.topicTitle)}</span>
                 {n.atSec != null ? <Badge tone="info">At {formatAt(n.atSec)}</Badge> : null}
                 <span>{new Date(n.updatedAt).toLocaleDateString(undefined, { day: "numeric", month: "short" })}</span>
               </span>
@@ -293,7 +296,7 @@ function NotesTab() {
 // Settings
 // ---------------------------------------------------------------------------
 
-function SettingsTab({ settings }: { settings: ApiData<{ settings: Settings }> }) {
+function SettingsTab({ settings }: { settings: ApiData<{ settings: Settings; emailEnabled?: boolean }> }) {
   const s = settings.data?.settings;
   const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -318,7 +321,7 @@ function SettingsTab({ settings }: { settings: ApiData<{ settings: Settings }> }
     setError(null);
     inFlight.current += 1;
     try {
-      const res = await api.put<{ settings: Settings }>("/api/v5/me/settings", change);
+      const res = await api.put<{ settings: Settings; emailEnabled?: boolean }>("/api/v5/me/settings", change);
       // Keep any change made while this one was on its way.
       if (inFlight.current === 1) settings.setData(res);
       setStatus("Saved");
@@ -395,7 +398,9 @@ function SettingsTab({ settings }: { settings: ApiData<{ settings: Settings }> }
             <TimeField label="Quiet until" value={s.quietHours.to} onSave={(v) => void save({ quietHours: { ...s.quietHours!, to: v } })} />
           </div>
         ) : null}
-        <Toggle label="Weekly email" hint="A short summary of your week, every Monday." checked={s.weeklyEmail} onChange={(v) => void save({ weeklyEmail: v })} />
+        {settings.data?.emailEnabled ? (
+          <Toggle label="Weekly email" hint="A short summary of your week, every Monday." checked={s.weeklyEmail} onChange={(v) => void save({ weeklyEmail: v })} />
+        ) : null}
       </Card>
 
       <Suspense fallback={null}>

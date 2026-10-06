@@ -3,7 +3,8 @@ import { Check, Clock, Lock, Mountain, Signpost } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { Link } from "react-router-dom";
 
-import { LANE_ORDER, fromIsoDate, type PlanLane, type WeekItemView, type WeekView } from "@shared/weeklyPlan";
+import type { PlanLane, WeekItemView, WeekView } from "@shared/weeklyPlan";
+import { LANE_ORDER, fromIsoDate } from "@shared/weeklyPlanCore";
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

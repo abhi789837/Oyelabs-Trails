@@ -40,7 +40,8 @@ export function personFields(departments: readonly FieldOption[]): TableFieldDef
   const relabelled = base.map((f) => (f.name === "assessmentStatus" ? { ...f, label: "Test" } : f));
   return [
     ...relabelled,
-    { name: "stuck", label: "Stuck", type: "boolean", quick: true, trueLabel: "Stuck", falseLabel: "Moving" },
+    // "Activity", not "Stuck": the label shouldn't repeat one of its own choices (UX review Pe1).
+    { name: "stuck", label: "Activity", type: "boolean", quick: true, trueLabel: "Stuck", falseLabel: "Moving" },
     { name: "testPending", label: "Test pending", type: "boolean", trueLabel: "Waiting", falseLabel: "Not waiting" },
     { name: "lastActivityAt", label: "Last learned", type: "date" },
   ];

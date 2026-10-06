@@ -1,4 +1,8 @@
 import { useEffect, useRef } from "react";
+// The editor's own font (below), declared here so it loads in either design: since Phase 9 the
+// old UI's fonts are no longer global (src/fonts/legacyFonts.ts).
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/500.css";
 
 import { editorScopeProps, registerCopySource } from "@/features/proctor/editorScope";
 import { useUiStore } from "@/store/uiStore";

@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { InboxResponse } from "../../../../shared/adminInbox";
 import type { Course } from "../../../../shared/courses";
@@ -166,15 +166,19 @@ describe("overview and reports", () => {
   });
 
   test("the weekly email is queued once a week into email_outbox", async () => {
+    // Only with mail set up: without it the weekly email option is hidden and nothing is queued.
+    vi.stubEnv("SMTP_URL", "smtp://localhost:1");
+    vi.stubEnv("MAIL_FROM", "Oyelearn <l@o.com>");
     const res = await ctx.app.inject({ method: "PUT", url: "/api/admin/v5/reports/weekly-email", ...as(admin), payload: { on: true } });
     expect(res.json()).toEqual({ on: true, queued: true });
-    expect(maybeQueueWeeklyReport(ctx.db, ctx.content)).toBe(false);
-    expect(maybeQueueWeeklyReport(ctx.db, ctx.content, Date.now() + 8 * DAY)).toBe(true);
+    expect(maybeQueueWeeklyReport(ctx.db, ctx.content, Date.now(), true)).toBe(false);
+    expect(maybeQueueWeeklyReport(ctx.db, ctx.content, Date.now() + 8 * DAY, true)).toBe(true);
     const mail = ctx.db.select().from(schema.emailOutbox).all();
     expect(mail).toHaveLength(2);
     expect(mail[0]).toMatchObject({ toUserId: admin.user.id, kind: "admin.weekly_report", status: "queued", subject: "Your weekly Oyelearn report" });
     await ctx.app.inject({ method: "PUT", url: "/api/admin/v5/reports/weekly-email", ...as(admin), payload: { on: false } });
-    expect(maybeQueueWeeklyReport(ctx.db, ctx.content, Date.now() + 30 * DAY)).toBe(false);
+    expect(maybeQueueWeeklyReport(ctx.db, ctx.content, Date.now() + 30 * DAY, true)).toBe(false);
+    vi.unstubAllEnvs();
   });
 });
 

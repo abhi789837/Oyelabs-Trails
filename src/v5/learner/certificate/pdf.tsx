@@ -70,7 +70,7 @@ function CertificateDocument({ cert, qr, revoked }: { cert: CertificateText; qr:
           <Text style={{ color: BRAND_BLUE }}>Oye</Text>
           <Text style={{ color: INK }}>learn</Text>
         </Text>
-        <Text style={{ position: "absolute", right: t(72), top: t(82), fontSize: t(15), fontWeight: 600, color: MUTED, letterSpacing: 1.2 }}>{layout.kindLabel.toUpperCase()}</Text>
+        <Text style={{ position: "absolute", right: t(72), top: t(82), fontSize: t(17), fontWeight: 600, color: MUTED }}>{layout.kindLabel}</Text>
 
         <Text style={{ position: "absolute", left: t(72), top: t(230), fontSize: t(20), color: MUTED }}>{layout.lead}</Text>
         <Text style={{ position: "absolute", left: t(72), top: t(262), fontSize: t(layout.nameSize), fontWeight: 600, color: INK }}>{cert.holderName}</Text>

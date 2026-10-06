@@ -24,7 +24,13 @@ import { useAuth } from "@/features/auth/AuthProvider";
 import { adminApi } from "@/features/admin/api";
 import { chooseDesign } from "@/v5/app/designFlag";
 import { ScreenFallback } from "@/v5/app/RouteFallback";
-import { Button, CommandPalette, Dialog, Kbd, Tooltip, V5MotionProvider, useCommandShortcut, useV5Root, type CommandGroup } from "@/v5/design";
+// Direct imports, not the `@/v5/design` barrel: the barrel loads every design module (Phase 9 performance).
+import { Button } from "@/v5/design/components/Button";
+import { CommandPalette, Dialog, useCommandShortcut, type CommandGroup } from "@/v5/design/components/Overlays";
+import { Kbd } from "@/v5/design/components/Primitives";
+import { Tooltip } from "@/v5/design/components/Tooltip";
+import { useV5Root } from "@/v5/design/useV5Root";
+import { V5MotionProvider } from "@/v5/design/V5MotionProvider";
 
 import { BiggerScreenNote } from "../parts/BiggerScreen";
 import { AdminFrame, type FrameLink } from "./AdminFrame";
@@ -277,6 +283,8 @@ function TopRight({ onHelp }: { onHelp: () => void }) {
         <Button
           variant="ghost"
           size="icon"
+          // Icon only on smaller screens; the words show from 1280 px (UX review I3). Same name either way.
+          className="xl:w-auto xl:gap-1.5 xl:px-3"
           aria-label="Use previous design"
           loading={busy}
           onClick={() => {
@@ -285,6 +293,9 @@ function TopRight({ onHelp }: { onHelp: () => void }) {
           }}
         >
           <Undo2 aria-hidden="true" />
+          <span className="hidden xl:inline" aria-hidden="true">
+            Use previous design
+          </span>
         </Button>
       </Tooltip>
     </div>

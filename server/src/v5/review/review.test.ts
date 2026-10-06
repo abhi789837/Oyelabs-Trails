@@ -111,6 +111,8 @@ describe("review routes", () => {
     const points = ctx.db.select().from(schema.reviewCards).where(eq(schema.reviewCards.source, "topic_point")).all();
     expect(points.length).toBeGreaterThan(0);
     expect(points.length).toBeLessThanOrEqual(3);
+    // Each key point asks with its own heading (the lesson's title for the summary), not a stock question (R2).
+    for (const p of points) expect((p.front as { prompt: string }).prompt).not.toMatch(/main idea/i);
 
     const session = (await get("/api/v5/review/session?kind=due")).json();
     const rated = await post(`/api/v5/review/cards/${session.cards[0].id}/rate`, { rating: 3, sessionId: session.id });

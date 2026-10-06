@@ -1,9 +1,10 @@
 import type { PartType, PathItemView } from "@shared/builder";
-import { LANE_ORDER, type PlanItemSource, type WeekItemView, type WeekView } from "@shared/weeklyPlan";
+import type { PlanItemSource, WeekItemView, WeekView } from "@shared/weeklyPlan";
+import { LANE_ORDER } from "@shared/weeklyPlanCore";
 
 /** Pure helpers for the v5 My plan screen. Tested in planLogic.test.ts. */
 
-/** Trail order: lane by lane (Do it now → Must know → Medium → Low), then the plan's own order. */
+/** Trail order: lane by lane (Do it now → Must know → Good to know → Extra), then the plan's own order. */
 export function planOrder(items: readonly WeekItemView[]): WeekItemView[] {
   return LANE_ORDER.flatMap((lane) => items.filter((item) => item.lane === lane).sort((a, b) => a.position - b.position));
 }
@@ -24,8 +25,13 @@ export const WHY_LABELS: Record<PlanItemSource, string> = {
 };
 
 /** The first unfinished item, highest lane first: "your next step". */
-export function nextStep(week: WeekView): WeekItemView | null {
-  return planOrder(week.items).find((item) => item.status !== "done") ?? null;
+/**
+ * The card's next step: the lesson the learner is part-way through when it's open this week (the
+ * same one Today's Continue resumes, Phase 9.2), else the first open stop in plan order.
+ */
+export function nextStep(week: WeekView, resumeTopicId: string | null = null): WeekItemView | null {
+  const open = planOrder(week.items).filter((item) => item.status !== "done");
+  return (resumeTopicId ? open.find((item) => item.topicId === resumeTopicId) : undefined) ?? open[0] ?? null;
 }
 
 export function weekStats(week: WeekView): { done: number; total: number; pct: number } {

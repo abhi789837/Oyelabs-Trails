@@ -12,7 +12,7 @@ import { listSkillPriorities, saveSetup } from "../setup/repo";
 import { activeLearner, adminSession, as, createTestApp, type Session, type TestContext } from "../test/harness";
 import { ensureOutcomeSeed, listOutcomes, OUTCOME_SEEDS } from "./outcomes";
 import { achieveGoal, createSuggestions, gapCandidates, listGoals, listSuggestions, migrateV43Goals, refreshSuggestions, saveGoals } from "./repo";
-import { rulesProfile } from "./rules";
+import { rulesIntents, rulesProfile } from "./rules";
 import { rulesCatalog } from "./suggest";
 
 const DESCRIPTION = "Frontend dev, 2 yrs React, weak on Git, we want him doing backend + AI-driven work";
@@ -172,6 +172,14 @@ describe("Suggest", () => {
     await setUp({ noAi: true });
     const s = rulesProfile(rulesCatalog(ctx.db, "pm"), "New joiner, starts Monday");
     expect(s.goals.length).toBeGreaterThan(0);
+  });
+
+  test("a skill group named with an acronym keeps it in the goal sentence (Phase 9.2)", async () => {
+    await setUp({ noAi: true });
+    const read = rulesIntents(rulesCatalog(ctx.db, "engineering"), "Frontend dev, 2 yrs React, we want her doing backend + AI-driven work");
+    const statements = read.intents.map((i) => i.statement);
+    expect(statements.some((t) => /AI-driven/.test(t))).toBe(true);
+    expect(statements.some((t) => /aI-|al-driven/.test(t))).toBe(false);
   });
 });
 

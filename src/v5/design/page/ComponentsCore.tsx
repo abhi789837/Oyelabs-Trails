@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Button } from "../components/Button";
 import { Card, CardHeader } from "../components/Card";
 import { Field, Input, Textarea } from "../components/Field";
-import { Avatar, Badge, Kbd, Tabs, TabsContent, TabsList, TabsTrigger, Tooltip } from "../components/Primitives";
+import { Avatar, Badge, Kbd, Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Primitives";
+import { Tooltip } from "../components/Tooltip";
 import { StatTile } from "../components/Stats";
 import { Demo, Preview } from "./scaffold";
 

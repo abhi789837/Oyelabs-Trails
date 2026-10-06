@@ -1,6 +1,8 @@
 import type { ApiError } from "@shared/api";
 import { ERROR_CODES, type ErrorCode } from "@shared/apiCodes";
 
+import { takePrefetched } from "./prefetch";
+
 /**
  * The one place the SPA talks to the server.
  *
@@ -44,18 +46,42 @@ function isApiError(value: unknown): value is ApiError {
   );
 }
 
+/** A prefetched response still honours the caller's abort signal. */
+function withAbort(response: Promise<Response>, signal?: AbortSignal): Promise<Response> {
+  if (!signal) return response;
+  if (signal.aborted) return Promise.reject(new DOMException("The operation was aborted.", "AbortError"));
+  return new Promise<Response>((resolve, reject) => {
+    const onAbort = () => reject(new DOMException("The operation was aborted.", "AbortError"));
+    signal.addEventListener("abort", onAbort, { once: true });
+    response.then(
+      (r) => {
+        signal.removeEventListener("abort", onAbort);
+        resolve(r);
+      },
+      (e: unknown) => {
+        signal.removeEventListener("abort", onAbort);
+        reject(e);
+      },
+    );
+  });
+}
+
 export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", body, signal } = options;
 
   let response: Response;
   try {
-    response = await fetch(path, {
-      method,
-      credentials: "same-origin",
-      headers: body === undefined ? undefined : { "content-type": "application/json" },
-      body: body === undefined ? undefined : JSON.stringify(body),
-      signal,
-    });
+    // v5: a GET the route started at app start (src/api/prefetch.ts). Empty for the old UI.
+    const prefetched = method === "GET" && body === undefined ? takePrefetched(path) : null;
+    response = prefetched
+      ? await withAbort(prefetched, signal)
+      : await fetch(path, {
+          method,
+          credentials: "same-origin",
+          headers: body === undefined ? undefined : { "content-type": "application/json" },
+          body: body === undefined ? undefined : JSON.stringify(body),
+          signal,
+        });
   } catch (error) {
     if (error instanceof DOMException && error.name === "AbortError") throw error;
     // A network failure is not something the caller can branch on by code, but it should still

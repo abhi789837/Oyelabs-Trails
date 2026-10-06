@@ -35,7 +35,7 @@ export default function MotivationSettings() {
         <p className="text-small text-fg-2">We couldn't load your goal. Reload the page to try again.</p>
       ) : summary ? (
         <>
-          <WeeklyGoalField prefs={summary.prefs} onSaved={setPrefs} />
+          <WeeklyGoalField prefs={summary.prefs} onSaved={setPrefs} defaultMinutes={summary.defaultGoalMinutes ?? null} hideLabel />
           {summary.leaderboards ? <TeamBoard prefs={summary.prefs} onSaved={setPrefs} /> : null}
         </>
       ) : (

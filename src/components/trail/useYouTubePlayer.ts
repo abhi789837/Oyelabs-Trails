@@ -96,6 +96,12 @@ export interface YouTubePlayerOptions extends PlayerHandlers {
   end?: number | null;
   /** Extra player parameters for the first video (v5: captions on by default). Read once, like `videoId`. */
   playerVars?: Record<string, string | number>;
+  /**
+   * v5 Phase 9: false holds the player back (a thumbnail facade shows instead), so the ~1 MB of
+   * player code loads only when someone presses Play. The first video and its options are read
+   * when it turns true. Default true: the player is created on mount, as before.
+   */
+  enabled?: boolean;
 }
 
 export interface YouTubePlayerHandle {
@@ -111,12 +117,17 @@ export function useYouTubePlayer(hostRef: RefObject<HTMLDivElement | null>, opti
   const [failed, setFailed] = useState(false);
   const handlers = useRef<PlayerHandlers>(options);
   handlers.current = options;
-  // Only the first video is used to construct the player.
-  const initial = useRef({ videoId: options.videoId, start: options.start, end: options.end, extra: options.playerVars });
+  // Only the first video is used to construct the player: the options as they are when it's created
+  // (on mount, or when `enabled` turns true).
+  const latest = useRef(options);
+  latest.current = options;
+  const enabled = options.enabled ?? true;
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host) return;
+    if (!host || !enabled) return;
+    // Read when the effect starts (on mount when always enabled, so the same as the first render).
+    const { videoId, start, end, playerVars: extra } = latest.current;
     let cancelled = false;
     const mount = document.createElement("div");
     mount.className = "h-full w-full";
@@ -125,7 +136,6 @@ export function useYouTubePlayer(hostRef: RefObject<HTMLDivElement | null>, opti
     loadApi()
       .then((YT) => {
         if (cancelled) return;
-        const { videoId, start, end, extra } = initial.current;
         const playerVars: Record<string, string | number> = {
           ...extra,
           enablejsapi: 1,
@@ -167,7 +177,7 @@ export function useYouTubePlayer(hostRef: RefObject<HTMLDivElement | null>, opti
       playerRef.current = null;
       host.replaceChildren();
     };
-  }, [hostRef]);
+  }, [hostRef, enabled]);
 
   return { playerRef, ready, failed };
 }

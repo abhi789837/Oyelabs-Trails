@@ -238,7 +238,7 @@ export default function HostImpl() {
                 <dd className="font-display text-h3 font-semibold tabular-nums text-fg-1">{summary.xp.thisWeek.toLocaleString("en-US")} XP</dd>
               </div>
             </dl>
-            <WeeklyGoalField prefs={summary.prefs} onSaved={setPrefs} />
+            <WeeklyGoalField prefs={summary.prefs} onSaved={setPrefs} defaultMinutes={summary.defaultGoalMinutes ?? null} />
             {summary.leaderboards ? <TeamBoard prefs={summary.prefs} onSaved={setPrefs} /> : null}
           </div>
         </Sheet>

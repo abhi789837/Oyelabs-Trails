@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
-import { Skeleton, cn } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
+import { Skeleton } from "@/v5/design/components/States";
 
 /**
  * Loading placeholders shaped like each admin screen, so nothing jumps when the data lands

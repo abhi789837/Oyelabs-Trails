@@ -63,6 +63,13 @@ describe("plan order and next step", () => {
     expect(weekStats(week(items))).toEqual({ done: 1, total: 4, pct: 25 });
     expect(nextStep(week([item({ status: "done" })]))).toBeNull();
   });
+
+  test("a lesson part-way through comes first, if it's open this week (Phase 9.2)", () => {
+    const withTopics = items.map((i) => ({ ...i, topicId: `t-${i.id}` }));
+    expect(nextStep(week(withTopics), "t-low")?.id).toBe("low");
+    expect(nextStep(week(withTopics), "t-now")?.id).toBe("must1");
+    expect(nextStep(week(withTopics), "elsewhere")?.id).toBe("must1");
+  });
 });
 
 describe("v5 links", () => {

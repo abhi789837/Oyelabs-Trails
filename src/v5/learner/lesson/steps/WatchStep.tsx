@@ -13,6 +13,8 @@ import { cn } from "@/v5/design/cn";
 import { Button } from "@/v5/design/components/Button";
 import { PlaylistSidebar, StatusLine, VideoPlayerFrame, type PlaylistEntry } from "@/v5/design/components/Lesson";
 
+import { posterUrl } from "@/v5/app/routePlan";
+
 import { NotesPanel, type NotesPanelHandle } from "../NotesPanel";
 
 export const SPEEDS = [0.75, 1, 1.25, 1.5, 1.75, 2] as const;
@@ -115,9 +117,30 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
   const lastPos = useRef(0);
   const lastWall = useRef(0);
 
+  /*
+   * Phase 9 performance: a facade. Until someone presses Play (or seeks from a chapter, a note or the
+   * transcript, or presses K), the lesson shows the video's thumbnail and a Play button instead of
+   * the YouTube player, whose ~1.3 MB of code used to load with every lesson. The player is then
+   * created at the chosen moment and starts playing. A link with `?t=` (a note's time) asks for a
+   * moment, so it creates the player straight away, as before.
+   */
+  const [activated, setActivated] = useState(() => {
+    try {
+      return new URLSearchParams(window.location.search).has("t");
+    } catch {
+      return false;
+    }
+  });
+  const pendingStart = useRef<number | null>(null);
+  const autoplayOnReady = useRef(false);
+  const activatedRef = useRef(activated);
+  activatedRef.current = activated;
+
   const first = items[current];
-  const startAt = resume.videoId === first.videoId && resume.seconds !== null ? Math.max(first.segment.start, resume.seconds) : first.resumeAt;
+  const resumeAt = resume.videoId === first.videoId && resume.seconds !== null ? Math.max(first.segment.start, resume.seconds) : first.resumeAt;
+  const startAt = pendingStart.current ?? resumeAt;
   const { playerRef, ready, failed } = useYouTubePlayer(hostRef, {
+    enabled: activated,
     videoId: first.videoId,
     start: startAt,
     end: first.segment.end,
@@ -127,6 +150,14 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
         (player as FullPlayer).setPlaybackRate?.(speedRef.current);
       } catch {
         // ignore
+      }
+      if (autoplayOnReady.current) {
+        autoplayOnReady.current = false;
+        try {
+          player.playVideo();
+        } catch {
+          // The browser may refuse; the player's own play button still works.
+        }
       }
     },
     onStateChange: (state, player) => {
@@ -225,6 +256,13 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
     };
   }, [flush]);
 
+  /** Creates the player (the facade's Play): at `at` seconds, or where this video would resume. */
+  const activate = useCallback((at?: number) => {
+    if (at !== undefined) pendingStart.current = Math.max(0, at);
+    autoplayOnReady.current = true;
+    setActivated(true);
+  }, []);
+
   const select = useCallback(
     (index: number, autoplay = true, at?: number) => {
       const entry = itemsRef.current[index];
@@ -235,18 +273,31 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
       dispatch({ type: "reset" });
       setErrorCode(null);
       setCurrent(index);
-      if (!player) return;
+      if (!player) {
+        // Still the facade: picking a video (or a chapter) starts it there.
+        if (!activatedRef.current) {
+          pendingStart.current = at ?? null;
+          if (autoplay) {
+            activate(at ?? entry.resumeAt);
+            onPositionRef.current(entry.videoId, at ?? entry.resumeAt);
+          }
+        }
+        return;
+      }
       const args = { videoId: entry.videoId, startSeconds: at ?? entry.resumeAt, ...(entry.segment.end ? { endSeconds: entry.segment.end } : {}) };
       if (autoplay) player.loadVideoById(args);
       else player.cueVideoById(args);
       onPositionRef.current(entry.videoId, args.startSeconds);
     },
-    [flush, playerRef],
+    [activate, flush, playerRef],
   );
 
+  // Before the player exists, "now" is where it would start (a note taken on the facade gets that time).
+  const startAtRef = useRef(startAt);
+  startAtRef.current = startAt;
   const currentTime = useCallback((): number => {
     try {
-      return playerRef.current?.getCurrentTime() ?? 0;
+      return playerRef.current?.getCurrentTime() ?? (activatedRef.current ? 0 : startAtRef.current);
     } catch {
       return 0;
     }
@@ -255,14 +306,21 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
   const seekTo = useCallback(
     (seconds: number) => {
       const player = playerRef.current;
-      if (!player) return;
+      if (!player) {
+        // On the facade, a seek (a chapter, a note, the transcript) creates the player there.
+        if (!activatedRef.current) {
+          activate(seconds);
+          setNow(seconds);
+        }
+        return;
+      }
       if (tracking.current) flush(false);
       player.seekTo(Math.max(0, seconds), true);
       lastPos.current = Math.max(0, seconds);
       lastWall.current = performance.now();
       setNow(seconds);
     },
-    [flush, playerRef],
+    [activate, flush, playerRef],
   );
 
   useImperativeHandle(
@@ -270,7 +328,10 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
     () => ({
       togglePlay: () => {
         const player = playerRef.current;
-        if (!player) return;
+        if (!player) {
+          if (!activatedRef.current) activate();
+          return;
+        }
         if (player.getPlayerState() === YT_STATE.PLAYING) player.pauseVideo();
         else player.playVideo();
       },
@@ -341,6 +402,7 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
   };
 
   const entry = items[current];
+  const resuming = startAt > entry.segment.start + 1;
   const youtubeUrl = `https://www.youtube.com/watch?v=${entry.videoId}${entry.segment.start ? `&t=${Math.floor(entry.segment.start)}s` : ""}`;
   const entries: PlaylistEntry[] = items.map((v) => ({
     id: v.key,
@@ -386,8 +448,8 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
         onClick={() => videos.setAutoplayNext(!videos.prefs.autoplayNext)}
         className="inline-flex min-h-8 items-center gap-2 rounded-control px-2 text-small text-fg-2 hover:text-fg-1"
       >
-        <span aria-hidden="true" className={cn("relative inline-block h-4 w-7 rounded-full transition-colors", videos.prefs.autoplayNext ? "bg-brand" : "bg-line-2")}>
-          <span className={cn("absolute top-0.5 size-3 rounded-full bg-white transition-transform", videos.prefs.autoplayNext ? "translate-x-3.5" : "translate-x-0.5")} />
+        <span aria-hidden="true" className={cn("relative inline-block h-4 w-7 shrink-0 rounded-full transition-colors", videos.prefs.autoplayNext ? "bg-brand" : "bg-line-2")}>
+          <span className={cn("absolute left-0 top-0.5 size-3 rounded-full bg-white transition-transform", videos.prefs.autoplayNext ? "translate-x-3.5" : "translate-x-0.5")} />
         </span>
         Play the next video
       </button>
@@ -402,11 +464,19 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
       <div className="flex min-w-0 flex-col gap-3">
         <div className="relative">
-          <VideoPlayerFrame title={entry.title} ready controls={controls}>
+          <VideoPlayerFrame
+            title={entry.title}
+            ready={activated}
+            poster={posterUrl(entry.videoId)}
+            onPlay={() => activate()}
+            playLabel={resuming ? `Play from ${formatClock(startAt)}, ${entry.title}` : `Play ${entry.title}`}
+            posterNote={resuming ? `Resume at ${formatClock(startAt)}` : null}
+            controls={controls}
+          >
             {failed ? (
               <iframe
                 key={entry.key}
-                src={`https://www.youtube.com/embed/${entry.videoId}?start=${Math.floor(entry.resumeAt)}&rel=0&cc_load_policy=${captions ? 1 : 0}&cc_lang_pref=en`}
+                src={`https://www.youtube.com/embed/${entry.videoId}?start=${Math.floor(startAt)}&rel=0&autoplay=1&cc_load_policy=${captions ? 1 : 0}&cc_lang_pref=en`}
                 title={entry.title}
                 className="absolute inset-0 size-full"
                 referrerPolicy="strict-origin-when-cross-origin"
@@ -417,7 +487,7 @@ const Player = forwardRef<WatchControls, WatchStepProps>(function Player({ topic
               <div ref={hostRef} className="absolute inset-0" title={entry.title} />
             )}
           </VideoPlayerFrame>
-          {!ready && !failed ? (
+          {activated && !ready && !failed ? (
             <div className="pointer-events-none absolute inset-x-0 top-0 grid aspect-video place-items-center text-small text-white/70">Loading the player…</div>
           ) : null}
           {overlayOpen && nextTitle ? (

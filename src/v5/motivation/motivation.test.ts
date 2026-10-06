@@ -90,5 +90,10 @@ describe("streak words", () => {
     expect(goalLabel(null)).toBe("No hours goal (3 steps a week)");
     expect(goalLabel(1)).toBe("1 hour a week");
     expect(goalLabel(4)).toBe("4 hours a week");
+    // Phase 9.2: with no goal of their own, the plan's pace is named, so it agrees with Today's ring.
+    expect(goalLabel(null, 900)).toBe("Your plan's pace (15 hours a week)");
+    expect(goalLabel(null, 90)).toBe("Your plan's pace (1.5 hours a week)");
+    expect(goalLabel(null, 0)).toBe("No hours goal (3 steps a week)");
+    expect(goalLabel(3, 900)).toBe("3 hours a week");
   });
 });

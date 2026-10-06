@@ -3,7 +3,8 @@ import { Check, ChevronDown, Clock, Pin } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { Link } from "react-router-dom";
 
-import { LANE_ORDER, itemsInLane, type PlanLane, type WeekItemView, type WeekView } from "@shared/weeklyPlan";
+import type { PlanLane, WeekItemView, WeekView } from "@shared/weeklyPlan";
+import { LANE_ORDER, itemsInLane } from "@shared/weeklyPlanCore";
 
 import { Button } from "@/components/ui/button";
 import { useIsNarrow } from "@/hooks/useMediaQuery";

@@ -10,6 +10,7 @@ import { parseOrThrow } from "../../lib/errors";
 import { unreadCount } from "../../lib/notify";
 import { emailConfigFromEnv, outboxCounts } from "../email/sender";
 import { leaderboardFor, leaderboardsOn, setLeaderboards } from "../leaderboard/repo";
+import { defaultGoalMinutesFor } from "../streak/repo";
 import { xpTotals } from "../xp/repo";
 import { applyPrefsPatch, motivationPrefsFrom, motivationPrefsPatchSchema, readPrefs } from "./prefs";
 import { motivationTick, type TickResult } from "./scheduler";
@@ -50,6 +51,7 @@ export async function registerV5MotivationRoutes(app: FastifyInstance): Promise<
       unread: unreadCount(app.db, user.id),
       prefs: motivationPrefsFrom(readPrefs(app.db, user.id)),
       leaderboards: leaderboardsOn(app.db),
+      defaultGoalMinutes: defaultGoalMinutesFor(app.db, user.id),
     };
   });
 

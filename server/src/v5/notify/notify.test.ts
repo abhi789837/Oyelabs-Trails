@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { localClock, RECAP_KIND, REMINDER_EMAIL_KIND, REMINDER_KIND, type LeaderboardResponse, type MotivationAdminSettings, type MotivationSummary } from "../../../../shared/motivation";
 import { schema } from "../../db";
@@ -22,6 +22,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
+  vi.unstubAllEnvs();
   await ctx.close();
 });
 
@@ -129,28 +130,28 @@ describe("reminders", () => {
   });
 
   test("at most one a day, enforced in code, with an email copy", () => {
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(17, 59))[0].decision).toEqual({ send: false, reason: "too_early" });
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 5))[0].decision).toEqual({ send: true });
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(19, 5))[0].decision).toEqual({ send: false, reason: "already_sent" });
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(20, 5))[0].decision).toEqual({ send: false, reason: "already_sent" });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(17, 59), true)[0].decision).toEqual({ send: false, reason: "too_early" });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 5), true)[0].decision).toEqual({ send: true });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(19, 5), true)[0].decision).toEqual({ send: false, reason: "already_sent" });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(20, 5), true)[0].decision).toEqual({ send: false, reason: "already_sent" });
     expect(reminders()).toHaveLength(1);
     expect(outbox(REMINDER_EMAIL_KIND)).toHaveLength(1);
     // The next day is a new day.
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 30, 7))[0].decision).toEqual({ send: true });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 30, 7), true)[0].decision).toEqual({ send: true });
     expect(reminders()).toHaveLength(2);
   });
 
   test("no reminder when they already learned today", () => {
     awardXp(ctx.db, learner.id, "step_completed", "t:read", { at: at(9) });
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 5))[0].decision).toEqual({ send: false, reason: "learned_today" });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 5), true)[0].decision).toEqual({ send: false, reason: "learned_today" });
     // Yesterday's learning doesn't count for today.
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 5, 7))[0].decision).toEqual({ send: true });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 5, 7), true)[0].decision).toEqual({ send: true });
   });
 
   test("quiet hours hold it back; it goes out once they end", () => {
     writePrefs(ctx.db, learner.id, { quietHours: { from: "17:30", to: "19:00" } });
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 5))[0].decision).toEqual({ send: false, reason: "quiet_hours" });
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(19, 5))[0].decision).toEqual({ send: true });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(18, 5), true)[0].decision).toEqual({ send: false, reason: "quiet_hours" });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", at(19, 5), true)[0].decision).toEqual({ send: true });
     expect(reminders()).toHaveLength(1);
   });
 
@@ -158,7 +159,7 @@ describe("reminders", () => {
     writePrefs(ctx.db, learner.id, { timeZone: "Asia/Kolkata" });
     const t = at(12, 35); // 18:05 in Kolkata
     expect(localClock(t, "Asia/Kolkata").minutes).toBe(18 * 60 + 5);
-    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", t)[0].decision).toEqual({ send: true });
+    expect(sendDueReminders(ctx.db, ctx.content, "https://x.test", t, true)[0].decision).toEqual({ send: true });
   });
 
   test("no time set, nothing sent", () => {
@@ -170,9 +171,9 @@ describe("reminders", () => {
 describe("weekly recaps", () => {
   test("queued once per learner per week, in the window, and not when turned off", () => {
     const monday = new Date(2026, 9, 12, 8, 30).getTime(); // Monday 12 Oct 2026, 08:30 local
-    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", nowMs: monday - 3600_000 })).toBe(0);
-    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", nowMs: monday })).toBe(1);
-    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", nowMs: monday + 3600_000 })).toBe(0);
+    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", emailOn: true, nowMs: monday - 3600_000 })).toBe(0);
+    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", emailOn: true, nowMs: monday })).toBe(1);
+    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", emailOn: true, nowMs: monday + 3600_000 })).toBe(0);
     const rows = outbox(RECAP_KIND);
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ toUserId: learner.id, toAddress: learner.username, status: "queued" });
@@ -180,12 +181,16 @@ describe("weekly recaps", () => {
     expect(rows[0].html).toContain("<!doctype html>");
 
     // A week later: again. With the weekly email off: not.
-    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", nowMs: monday + 7 * 86_400_000 })).toBe(1);
+    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", emailOn: true, nowMs: monday + 7 * 86_400_000 })).toBe(1);
     writePrefs(ctx.db, learner.id, { weeklyEmail: false });
-    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", nowMs: monday + 14 * 86_400_000 })).toBe(0);
+    expect(queueWeeklyRecaps(ctx.db, ctx.content, { appUrl: "https://x.test", emailOn: true, nowMs: monday + 14 * 86_400_000 })).toBe(0);
   });
 
   test("the admin 'run now' forces recaps outside the window", async () => {
+    // Recaps are only queued when mail is set up (without it there are no email features at all).
+    vi.stubEnv("SMTP_URL", "smtp://localhost:1");
+    vi.stubEnv("MAIL_FROM", "Oyelearn <l@o.com>");
+    vi.stubEnv("MAIL_DOMAIN", "oyelabs.com");
     const res = await req<{ recaps: number; email: { skipped: number } }>("POST", "/api/admin/motivation/run", admin, { recaps: true });
     expect(res.status).toBe(200);
     expect(res.body.recaps).toBe(1);

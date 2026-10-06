@@ -20,6 +20,7 @@ import { coursesFor, mayOpenCourse } from "../../courses/repo";
 import { schema, type Db } from "../../db";
 import { allowedTopicIdsFor } from "../../plans/repo";
 import { levelMap, skillLevels, skillNames } from "./levels";
+import { plainTitle } from "../../../../shared/plainTitle";
 
 type User = Parameters<typeof allowedTopicIdsFor>[1];
 
@@ -285,7 +286,7 @@ export function courseDetailFor(db: Db, content: ContentStore, user: User, id: s
         {
           id: mod.moduleId,
           title: item.title,
-          lessons: topics.map((t) => ({ id: t.id, title: t.title, minutes: t.estMinutes, done: done.has(t.id), href: lessonHref(t.id), hasVideo: hasVideo.get(t.id) ?? false })),
+          lessons: topics.map((t) => ({ id: t.id, title: plainTitle(t.title), minutes: t.estMinutes, done: done.has(t.id), href: lessonHref(t.id), hasVideo: hasVideo.get(t.id) ?? false })),
         },
       ],
       sourcesVerifiedAt: null,

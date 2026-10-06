@@ -77,8 +77,8 @@ export function weekRange(startDate: string, endDate: string): string {
 export const HERO_LANE: Record<PlanLane, { label: string; stripe: string; chip: string }> = {
   do_now: { label: "Do it now", stripe: "bg-lane-now", chip: "bg-lane-now-soft text-lane-now-fg" },
   must_know: { label: "Must know", stripe: "bg-lane-must", chip: "bg-lane-must-soft text-lane-must-fg" },
-  medium: { label: "Medium", stripe: "bg-lane-medium", chip: "bg-lane-medium-soft text-lane-medium-fg" },
-  low: { label: "Low", stripe: "bg-lane-low", chip: "bg-lane-low-soft text-lane-low-fg" },
+  medium: { label: "Good to know", stripe: "bg-lane-medium", chip: "bg-lane-medium-soft text-lane-medium-fg" },
+  low: { label: "Extra", stripe: "bg-lane-low", chip: "bg-lane-low-soft text-lane-low-fg" },
 };
 
 /**

@@ -430,6 +430,8 @@ export interface MotivationSummary {
   unread: number;
   prefs: MotivationPrefs;
   leaderboards: boolean;
+  /** Minutes a week the learner is held to when `prefs.weeklyGoalHours` is null (plan or onboarding), or null. */
+  defaultGoalMinutes?: number | null;
 }
 
 export interface MotivationPrefs {

@@ -251,6 +251,29 @@ async function axe(page: Page, label: string): Promise<void> {
   ok(row.serious + row.critical === 0, `axe ${label}: ${row.critical} critical, ${row.serious} serious${row.rules.length ? ` — ${row.rules.join("; ")}` : ""}`);
 }
 
+/**
+ * A signed-in context at one size and theme. The storage state carries the app's saved theme
+ * (localStorage `oyelabs-ui`), which wins over Playwright's colorScheme, so the theme is written
+ * before every page load (as in v5-mobile-admin.ts). Before Phase 9.1 the "dark" passes here ran in
+ * light.
+ */
+async function themedContext(browser: Browser, storage: string, theme: "light" | "dark", options: Parameters<Browser["newContext"]>[0] = {}): Promise<BrowserContext> {
+  const ctx = await browser.newContext({ ...options, storageState: storage, colorScheme: theme });
+  await ctx.addInitScript((t) => {
+    try {
+      window.localStorage.setItem("oyelabs-ui", JSON.stringify({ state: { theme: t, sidebarCollapsed: false }, version: 0 }));
+    } catch {
+      // ignore
+    }
+  }, theme);
+  return ctx;
+}
+
+async function checkTheme(page: Page, theme: "light" | "dark", label: string): Promise<void> {
+  const dark = await page.evaluate(() => document.documentElement.classList.contains("dark"));
+  ok(dark === (theme === "dark"), `the page is in ${theme} mode: ${label}`);
+}
+
 async function shot(page: Page, name: string): Promise<void> {
   fs.mkdirSync(SHOTS, { recursive: true });
   await page.screenshot({ path: path.join(SHOTS, `${name}.png`), fullPage: true }).catch(() => undefined);
@@ -424,10 +447,11 @@ async function axeSweep(browser: Browser, storage: string, s: Seeded): Promise<v
   for (const width of [768, 1440] as const) {
     for (const theme of ["light", "dark"] as const) {
       step(`axe at ${width} ${theme}`);
-      const ctx = await browser.newContext({ storageState: storage, viewport: { width, height: 900 }, colorScheme: theme });
+      const ctx = await themedContext(browser, storage, theme, { viewport: { width, height: 900 } });
       const page = await ctx.newPage();
       for (const route of routes) {
         await visit(page, route);
+        if (route === routes[0]) await checkTheme(page, theme, `${route} ${width}`);
         if (route.includes("person=")) await page.getByRole("dialog").first().waitFor({ timeout: WAIT }).catch(() => undefined);
         await axe(page, `${route} ${width} ${theme}`);
         if (width === 1440 && theme === "dark") await shot(page, `${route.replace(/[/?=]+/g, "_").replace(/^_/, "") || "admin"}-1440-dark`);
@@ -452,9 +476,10 @@ async function axeSweep(browser: Browser, storage: string, s: Seeded): Promise<v
   }
   step("axe at 390 (phone): inbox and people lookup");
   for (const theme of ["light", "dark"] as const) {
-    const ctx = await browser.newContext({ storageState: storage, viewport: { width: 390, height: 844 }, colorScheme: theme, isMobile: true, hasTouch: true });
+    const ctx = await themedContext(browser, storage, theme, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
     const page = await ctx.newPage();
     await visit(page, "/admin");
+    await checkTheme(page, theme, "/admin 390");
     await axe(page, `/admin 390 ${theme}`);
     await shot(page, `inbox-390-${theme}`);
     await visit(page, `/admin/people?person=${s.rahulId}`);

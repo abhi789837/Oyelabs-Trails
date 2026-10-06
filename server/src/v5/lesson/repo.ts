@@ -225,6 +225,9 @@ export function resumeFor(db: Db, content: ContentStore, user: SessionUser): Les
     if (!found) continue;
     const view = toView(found.topic, row, lessonFacts(db, user.id, row.topicId));
     if (view.complete) continue;
+    // Finished some other way (the older topic page, or a test passed outright): not a lesson to
+    // pick up again, so Today moves on to what's next instead (Phase 9.2).
+    if (topicCompleted(db, user.id, row.topicId)) continue;
     return {
       topicId: found.topic.id,
       title: found.topic.title,
@@ -235,6 +238,15 @@ export function resumeFor(db: Db, content: ContentStore, user: SessionUser): Les
     };
   }
   return null;
+}
+
+function topicCompleted(db: Db, userId: string, topicId: string): boolean {
+  const row = db
+    .select({ status: schema.topicProgress.status })
+    .from(schema.topicProgress)
+    .where(and(eq(schema.topicProgress.userId, userId), eq(schema.topicProgress.topicId, topicId)))
+    .get();
+  return row?.status === "completed";
 }
 
 function laneOf(db: Db, userId: string, topicId: string): LessonResume["lane"] {

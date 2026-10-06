@@ -14,9 +14,45 @@ const runnerHtml = path.join(repo, "public", "runner.html");
 
 function scriptHash(file: string): string {
   const html = fs.readFileSync(file, "utf8");
-  const body = /<script>([\s\S]*?)<\/script>/.exec(html)![1];
+  // A Windows checkout has CRLF; browsers hash the script with LF line breaks.
+  const body = /<script>([\s\S]*?)<\/script>/.exec(html)![1].replace(/\r\n?/g, "\n");
   return `'sha256-${crypto.createHash("sha256").update(body, "utf8").digest("base64")}'`;
 }
+
+const sha = (text: string) => `'sha256-${crypto.createHash("sha256").update(text, "utf8").digest("base64")}'`;
+
+describe("inline script hashes", () => {
+  let dir: string;
+  beforeAll(() => {
+    dir = fs.mkdtempSync(path.join(os.tmpdir(), "oyelearn-csp-"));
+  });
+  afterAll(() => {
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+
+  const script = "\n  (function () {\n    document.documentElement.classList.add('dark');\n  })();\n";
+  const page = (body: string) => `<!doctype html><html><head><script>${body}</script><script type="module" src="/assets/x.js"></script></head></html>`;
+
+  test("hash the script as the browser does, with LF line breaks, when the file has CRLF", () => {
+    const file = path.join(dir, "crlf.html");
+    fs.writeFileSync(file, page(script).replace(/\n/g, "\r\n"));
+    const sources = buildCsp({ indexHtmlPath: file })["script-src"];
+    expect(sources).toContain(sha(script));
+    expect(sources).not.toContain(sha(script.replace(/\n/g, "\r\n")));
+  });
+
+  test("a lone CR is a line break too, and an LF file is unchanged", () => {
+    const cr = path.join(dir, "cr.html");
+    fs.writeFileSync(cr, page(script.replace(/\n/g, "\r")));
+    expect(buildCsp({ indexHtmlPath: cr })["script-src"]).toContain(sha(script));
+    const lf = path.join(dir, "lf.html");
+    fs.writeFileSync(lf, page(script));
+    const sources = buildCsp({ indexHtmlPath: lf })["script-src"];
+    expect(sources).toContain(sha(script));
+    // Only the inline script is hashed, not the module with a src.
+    expect(sources.filter((s) => s.startsWith("'sha256-"))).toHaveLength(1);
+  });
+});
 
 describe("app CSP", () => {
   test("never allows eval in the app itself", () => {

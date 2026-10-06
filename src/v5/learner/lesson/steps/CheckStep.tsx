@@ -22,6 +22,8 @@ export interface CheckStepProps {
   videos: TopicVideosResponse | null;
   onGoWatch: () => void;
   onGraded: (result: QuizAttemptResult) => void;
+  /** The test was passed before this visit: say so first, and open the questions on request (K1). */
+  passedBefore?: boolean;
 }
 
 /**
@@ -29,13 +31,14 @@ export interface CheckStepProps {
  * or not yet (no part marks, v4.4), every answer is explained afterwards with the part of the lesson
  * it came from, and a "Not yet" answer can be sent to a person for review. Ask Oye is off here.
  */
-export function CheckStep({ topic, questions, videos, onGoWatch, onGraded }: CheckStepProps) {
+export function CheckStep({ topic, questions, videos, onGoWatch, onGraded, passedBefore = false }: CheckStepProps) {
   const applyAttempt = useProgressStore((s) => s.applyAttempt);
   const [answers, setAnswers] = useState<Record<string, number[]>>({});
   const [result, setResult] = useState<QuizAttemptResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [round, setRound] = useState(0);
+  const [retake, setRetake] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -106,6 +109,25 @@ export function CheckStep({ topic, questions, videos, onGoWatch, onGraded }: Che
         </p>
       </header>
 
+      {passedBefore && !result && !retake ? (
+        <StatusLine
+          tone="success"
+          icon={<Check />}
+          action={
+            <Button
+              onClick={() => {
+                setRetake(true);
+                requestAnimationFrame(() => formRef.current?.querySelector<HTMLInputElement>("input")?.focus());
+              }}
+            >
+              <RotateCcw aria-hidden="true" /> Take it again
+            </Button>
+          }
+        >
+          You passed this. Take it again?
+        </StatusLine>
+      ) : null}
+
       {result ? (
         <div ref={resultRef} tabIndex={-1} className="outline-none">
           <StatusLine
@@ -124,7 +146,7 @@ export function CheckStep({ topic, questions, videos, onGoWatch, onGraded }: Che
         </div>
       ) : null}
 
-      <form ref={formRef} onSubmit={submit} noValidate className="flex flex-col gap-8">
+      <form ref={formRef} onSubmit={submit} noValidate className="flex flex-col gap-8" hidden={passedBefore && !result && !retake}>
         <ol className="flex flex-col gap-8">
           {questions.map((q, qi) => {
             const graded = byId.get(q.id);

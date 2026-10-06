@@ -2,7 +2,14 @@ import { History, Menu, PanelLeftClose, PanelLeftOpen, Search } from "lucide-rea
 import { useEffect, useId, useState, type ComponentType, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { Kbd, Logo, Sheet, SkipLink, Tooltip, cn, useMediaQuery } from "@/v5/design";
+// Direct imports, not the `@/v5/design` barrel: the barrel loads every design module (Phase 9 performance).
+import { cn } from "@/v5/design/cn";
+import { useMediaQuery } from "@/v5/design/hooks";
+import { Sheet } from "@/v5/design/components/Overlays";
+import { Kbd } from "@/v5/design/components/Primitives";
+import { Logo } from "@/v5/design/components/Showcase";
+import { SkipLink } from "@/v5/design/components/SkipLink";
+import { Tooltip } from "@/v5/design/components/Tooltip";
 
 import { navMode, readNavPref, writeNavPref, type NavPref } from "./navPref";
 

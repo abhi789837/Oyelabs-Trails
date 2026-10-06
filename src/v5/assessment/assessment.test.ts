@@ -14,10 +14,11 @@ import {
   nextUnanswered,
   proctorWords,
   saveLine,
+  uniqueNotices,
   warningConsequence,
   warningsLine,
 } from "./navigator";
-import { answerWords, becauseOfLink, buildStory, listWords, reviewCounts } from "./story";
+import { answerWords, becauseOfLink, buildStory, listWords, nothingScored, plainReason, plainReasonSentence, reviewCounts } from "./story";
 
 const items = [
   { id: "a", state: "unanswered" as const, flagged: false },
@@ -159,6 +160,28 @@ describe("results story", () => {
     expect(story.start).toBeNull();
   });
 
+  test("nothing scored opens with the first step, not a solid start (UX review A6)", () => {
+    const story = buildStory({ strengths: [], focusFirst: [], mastery: [], missingLinks: [], firstSteps: [], nothingScored: true });
+    expect(story.sentences[0]).toBe("You've taken the first step.");
+    const item = (verdict: ReviewItem["verdict"]) => ({ verdict }) as ReviewItem;
+    expect(nothingScored({ items: [item("not_yet"), item("not_yet")], result: null })).toBe(true);
+    expect(nothingScored({ items: [item("not_yet"), item("waiting")], result: null })).toBe(false);
+    expect(nothingScored({ items: [item("full")], result: null })).toBe(false);
+    expect(nothingScored({ items: [], result: null })).toBe(false);
+  });
+
+  test("the path's staff wording reads as plain words (Phase 9.2)", () => {
+    expect(plainReason("Critical goal JavaScript fundamentals: you're at 0/5 and it needs 3/5.")).toBe("your JavaScript fundamentals goal needs level 3, and you're at level 0 now");
+    expect(plainReason("High goal Git: you're at not measured yet and it needs 2/5.")).toBe("your Git goal needs level 2, and we haven't measured yours yet");
+    expect(plainReasonSentence("Before Stand-ups because Stand-ups needs Spoken English, which you're missing (0/5; it needs 3/5).")).toBe(
+      "Stand-ups needs Spoken English first. It needs level 3, and you're at level 0 now.",
+    );
+    expect(plainReason("Moved up: Backend needs SQL first.")).toBe("Backend needs SQL first");
+    expect(plainReasonSentence("Next for your Stand-ups goal, after Spoken English.")).toBe("It comes next for your Stand-ups goal, after Spoken English.");
+    const story = buildStory({ strengths: [], focusFirst: [], mastery: [], missingLinks: [], firstSteps: [step("JavaScript Core", "Critical goal JavaScript fundamentals: you're at 0/5 and it needs 3/5.")] });
+    expect(story.sentences[1]).toBe("We'll start with JavaScript Core because your JavaScript fundamentals goal needs level 3, and you're at level 0 now.");
+  });
+
   test("an unmeasured missing link counts as 0; no goal name falls back to what it blocks", () => {
     expect(becauseOfLink(link("Async JS", null, 3, "", ["Express"]))).toBe("Express needs it at level 3, and you're at 0 now");
     expect(becauseOfLink(link("Async JS", 2, 4, "", []))).toBe("you need it at level 4, and you're at 2 now");
@@ -193,4 +216,15 @@ describe("answers list", () => {
     expect(answerWords({ ...base, options: null, chosen: null, answerText: "hello" })).toBe("hello");
     expect(reviewCounts([base, { ...base, verdict: "full" }, { ...base, verdict: "waiting" }])).toEqual({ full: 1, notYet: 1, waiting: 1 });
   });
+});
+
+test("soft notices show once per reason, and closing one closes its copies", () => {
+  const out = uniqueNotices([
+    { id: 1, reason: "developer tools may be open" },
+    { id: 2, reason: "you switched windows" },
+    { id: 3, reason: "developer tools may be open" },
+  ]);
+  expect(out.map((n) => n.warning.id)).toEqual([2, 3]);
+  expect(out[1].ids).toEqual([1, 3]);
+  expect(uniqueNotices([])).toEqual([]);
 });

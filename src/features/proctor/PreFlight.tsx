@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Check, CircleDashed, Maximize, Monitor, ScanFace, ShieldAlert, TriangleAlert, Volume2, X } from "lucide-react";
 
@@ -63,9 +63,17 @@ export interface PreFlightProps {
    * those questions then let the learner type the answer instead.
    */
   needsMicrophone?: boolean;
+  /**
+   * v5 Phase 9.2: what to call it. The v5 screens say "test" everywhere; the older UI keeps
+   * "assessment" (the default), so it reads exactly as before.
+   */
+  noun?: "assessment" | "test";
 }
 
-export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error = null, needsMicrophone = false }: PreFlightProps) {
+/** The word for the whole thing, for the step components below. */
+const NounContext = createContext<"assessment" | "test">("assessment");
+
+export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error = null, needsMicrophone = false, noun = "assessment" }: PreFlightProps) {
   const reduceMotion = useReducedMotion();
   const [step, setStep] = useState<Step>("consent");
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -173,11 +181,12 @@ export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error
   const index = STEPS.findIndex((s) => s.id === step);
 
   return (
+    <NounContext.Provider value={noun}>
     <div className="mx-auto w-full max-w-2xl px-4 py-10">
       <header className="mb-8">
         <h1 className="font-display text-2xl font-semibold">Before you start</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Five quick checks. Nothing is recorded until the assessment itself begins.
+          Five quick checks. Nothing is recorded until the {noun} itself begins.
         </p>
       </header>
 
@@ -249,6 +258,7 @@ export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error
         )}
       </motion.div>
     </div>
+    </NounContext.Provider>
   );
 }
 
@@ -395,18 +405,19 @@ function ConsentStep({
   onAgree: () => void;
   onCancel: () => void;
 }) {
+  const noun = useContext(NounContext);
   return (
     <section aria-labelledby="preflight-consent">
       <StepIcon>
         <ShieldAlert />
       </StepIcon>
       <h2 id="preflight-consent" className="font-display text-xl font-semibold">
-        What this assessment monitors
+        What this {noun} monitors
       </h2>
 
       <div className="mt-4 max-w-prose space-y-3 text-sm">
         <p>
-          While the assessment is open, this page watches your camera, whether this tab is focused
+          While the {noun} is open, this page watches your camera, whether this tab is focused
           and in fullscreen, and whether you copy, paste or take a screenshot.
         </p>
         <p>
@@ -431,14 +442,14 @@ function ConsentStep({
         <p>
           <strong className="font-semibold">The microphone is used only for speaking questions.</strong>{" "}
           {needsMicrophone
-            ? "This assessment has one or two. We'll ask for your microphone next. "
-            : "This assessment has none, so we won't ask for it. "}
+            ? `This ${noun} has one or two. We'll ask for your microphone next. `
+            : `This ${noun} has none, so we won't ask for it. `}
           It records only while you press record on a speaking question. The recording is turned
           into text, kept for up to 30 days by default, and only admins can listen to it. The text
           is kept with your results. If you say no to the microphone, you can type those answers
           instead.
         </p>
-        <p>Three warnings end the assessment. Your answers up to that point are still evaluated.</p>
+        <p>Three warnings end the {noun}. Your answers up to that point are still evaluated.</p>
       </div>
 
       {error && (
@@ -482,6 +493,7 @@ function CameraStep({
   onContinue: () => void;
   onCancel: () => void;
 }) {
+  const noun = useContext(NounContext);
   const held = Math.min(sample?.heldMs ?? 0, CALIBRATION_HOLD_MS);
   const percent = Math.round((held / CALIBRATION_HOLD_MS) * 100);
 
@@ -492,7 +504,7 @@ function CameraStep({
       : sample.faceCount === 0
         ? "No face yet. Make sure the room is lit from the front, not from behind you."
         : sample.faceCount > 1
-          ? "More than one face is visible. The assessment needs you alone in frame."
+          ? `More than one face is visible. The ${noun} needs you alone in frame.`
           : !sample.centred
             ? "Move so your face is in the middle of the frame, about an arm's length away."
             : "Hold still, looking at the screen…";
@@ -762,6 +774,7 @@ function FullscreenStep({
   onStart: () => void;
   onCancel: () => void;
 }) {
+  const noun = useContext(NounContext);
   return (
     <section aria-labelledby="preflight-fullscreen">
       <StepIcon>
@@ -771,7 +784,7 @@ function FullscreenStep({
         Ready to start
       </h2>
       <p className="mt-2 max-w-prose text-sm text-muted-foreground">
-        The assessment runs in fullscreen. Leaving fullscreen, switching tabs or switching windows
+        The {noun} runs in fullscreen. Leaving fullscreen, switching tabs or switching windows
         is a warning, so close anything that might pull focus — chat apps, calendar reminders,
         update prompts — before you begin.
       </p>

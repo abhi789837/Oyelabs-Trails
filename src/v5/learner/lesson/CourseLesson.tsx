@@ -141,15 +141,7 @@ function CourseLessonView({
         </header>
 
         {lesson.videoId ? (
-          <VideoPlayerFrame title={lesson.videoTitle ?? lesson.title}>
-            <iframe
-              className="absolute inset-0 size-full"
-              src={`https://www.youtube.com/embed/${encodeURIComponent(lesson.videoId)}?rel=0&cc_load_policy=1&cc_lang_pref=en`}
-              title={lesson.videoTitle ?? lesson.title}
-              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-              allowFullScreen
-            />
-          </VideoPlayerFrame>
+          <CourseVideo key={lesson.videoId} videoId={lesson.videoId} title={lesson.videoTitle ?? lesson.title} />
         ) : null}
 
         {blocks.length ? <BlocksView blocks={blocks} className="v5-article text-body leading-relaxed text-fg-1" /> : null}
@@ -232,5 +224,24 @@ function CourseLessonView({
         </div>
       </m.article>
     </div>
+  );
+}
+
+/**
+ * A course lesson's video behind a facade (Phase 9 performance): the thumbnail and a Play button,
+ * and the YouTube embed (about 1.3 MB) only once Play is pressed. It then starts playing.
+ */
+function CourseVideo({ videoId, title }: { videoId: string; title: string }) {
+  const [playing, setPlaying] = useState(false);
+  return (
+    <VideoPlayerFrame title={title} ready={playing} onPlay={() => setPlaying(true)} poster={`https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`}>
+      <iframe
+        className="absolute inset-0 size-full"
+        src={`https://www.youtube.com/embed/${encodeURIComponent(videoId)}?rel=0&autoplay=1&cc_load_policy=1&cc_lang_pref=en`}
+        title={title}
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        allowFullScreen
+      />
+    </VideoPlayerFrame>
   );
 }

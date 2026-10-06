@@ -22,7 +22,15 @@ import { now } from "../lib/ids";
 export function getUiV5Default(db: Db): UiV5Default {
   const raw = db.select().from(schema.appMeta).where(eq(schema.appMeta.key, UI_V5_DEFAULT_KEY)).get()?.value;
   const parsed = uiV5DefaultSchema.safeParse(raw);
-  return parsed.success ? parsed.data : "off";
+  return parsed.success ? parsed.data : uiV5Fallback();
+}
+
+/**
+ * The default before a super admin has chosen one. v5 Phase 9 switched it on. `UI_V5_DEFAULT=off`
+ * restores the old design as the default (the older e2e scripts, which test that design, run with it).
+ */
+export function uiV5Fallback(env: NodeJS.ProcessEnv = process.env): UiV5Default {
+  return env.UI_V5_DEFAULT === "off" ? "off" : "on";
 }
 
 function setUiV5Default(db: Db, value: UiV5Default): void {

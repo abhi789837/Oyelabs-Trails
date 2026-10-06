@@ -1,7 +1,7 @@
 import { Monitor, X } from "lucide-react";
 import { useState } from "react";
 
-import { cn } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
 
 const KEY = "oyelearn.v5.admin.bigger-screen";
 

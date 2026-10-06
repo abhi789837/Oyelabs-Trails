@@ -160,6 +160,15 @@ describe("lesson state", () => {
     expect(resume.minutesLeft).toBeGreaterThan(0);
   });
 
+  test("resume skips a lesson whose topic is already completed (Phase 9.2)", async () => {
+    await put(CODE_TOPIC, { step: "read" });
+    await put(QUIZ_TOPIC, { step: "read" });
+    const now = Date.now();
+    ctx.db.insert(schema.topicProgress).values({ userId: learner.id, topicId: QUIZ_TOPIC, status: "completed", attempts: 1, completedAt: now, updatedAt: now }).run();
+    const resume = (await req("GET", "/api/v5/lessons/resume")).json();
+    expect(resume).toMatchObject({ topicId: CODE_TOPIC, step: "read" });
+  });
+
   test("quick check: one or two of the topic's questions, keys never sent, XP once on a pass", async () => {
     const got = (await req("GET", `/api/v5/lessons/${QUIZ_TOPIC}/quick-check`)).json();
     expect(got.questions.length).toBeGreaterThanOrEqual(1);

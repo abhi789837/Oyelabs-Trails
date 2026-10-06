@@ -469,6 +469,9 @@ async function main(): Promise<void> {
           await openLesson(p, topicId, `?step=${stepName}`);
           await p.waitForLoadState("networkidle", { timeout: WAIT }).catch(() => undefined);
           await p.waitForTimeout(400);
+          // The saved theme (oyelabs-ui) wins over colorScheme, so check the page really is in this theme.
+          const dark = await p.evaluate(() => document.documentElement.classList.contains("dark"));
+          ok(dark === (theme === "dark"), `${stepName} @${width} ${theme}: the page is in ${theme} mode`);
           await axeCheck(p, `${topicId} ${stepName} @${width} ${theme}`);
           const overflow = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
           ok(overflow <= 1, `no sideways scroll on ${stepName} @${width} ${theme} (${overflow}px)`);

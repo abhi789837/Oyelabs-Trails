@@ -125,10 +125,12 @@ export default function ReportsPage() {
         description="How learning is going, for the dates you pick."
         actions={
           <>
-            <Button variant="secondary" size="sm" onClick={() => void toggleEmail()} aria-pressed={emailOn ?? false} disabled={emailOn === null}>
-              <Mail aria-hidden="true" />
-              {emailOn ? "Weekly email: on" : "Email me this weekly"}
-            </Button>
+            {data?.weeklyEmail.available ? (
+              <Button variant="secondary" size="sm" onClick={() => void toggleEmail()} aria-pressed={emailOn ?? false} disabled={emailOn === null}>
+                <Mail aria-hidden="true" />
+                {emailOn ? "Weekly email: on" : "Email me this weekly"}
+              </Button>
+            ) : null}
             <Suspense fallback={null}>
               <LeaderboardSetting />
             </Suspense>
@@ -230,9 +232,16 @@ export default function ReportsPage() {
               </dl>
             </Section>
             <Section id="ai" title="AI cost" description={`${data.ai.calls} requests, ${data.ai.failed} failed. Prices are list prices in US dollars.`}>
-              <Suspense fallback={<Skeleton className="h-[220px] w-full" />}>
-                <SimpleBarChart title="AI cost (USD)" unit="$" data={days.map((label, i) => ({ label, value: data.ai.perDay[i] ?? 0 }))} />
-              </Suspense>
+              {/* A zero state instead of an empty chart whose axis runs to $4 (UX review Rp1). */}
+              {data.ai.perDay.some((v) => v > 0) ? (
+                <Suspense fallback={<Skeleton className="h-[220px] w-full" />}>
+                  <SimpleBarChart title="AI cost (USD)" unit="$" data={days.map((label, i) => ({ label, value: data.ai.perDay[i] ?? 0 }))} />
+                </Suspense>
+              ) : (
+                <p className="text-small text-fg-2" data-testid="ai-cost-empty">
+                  No AI cost in these dates.
+                </p>
+              )}
             </Section>
           </div>
         </div>

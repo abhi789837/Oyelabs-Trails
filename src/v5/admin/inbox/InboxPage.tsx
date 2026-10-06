@@ -4,7 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { agoLabel, isReversible, UNDO_MS, withoutItem, type InboxAction, type InboxGroup, type InboxGroupId, type InboxItem } from "@shared/adminInbox";
 
-import { Badge, Button, EmptyState, ErrorState, v5Toast } from "@/v5/design";
+// Direct imports, not the `@/v5/design` barrel: the barrel loads every design module (Phase 9 performance).
+import { Button } from "@/v5/design/components/Button";
+import { v5Toast } from "@/v5/design/components/Overlays";
+import { Badge } from "@/v5/design/components/Primitives";
+import { EmptyState, ErrorState } from "@/v5/design/components/States";
 
 import { v5AdminApi } from "../api";
 import { Page, PageHeader, plainMessage, useLoad, useSlow } from "../parts/common";
@@ -168,7 +172,22 @@ export default function InboxPage() {
       ) : !inbox.data ? (
         slow ? <InboxSkeleton /> : null
       ) : groups.length === 0 ? (
-        <EmptyState className="motion-safe:animate-in motion-safe:fade-in" icon={<Inbox />} title="All caught up 🎉" body="Nothing needs you right now. New things appear here as they happen." />
+        <EmptyState
+          className="motion-safe:animate-in motion-safe:fade-in"
+          icon={<Inbox />}
+          title="All caught up 🎉"
+          body="Nothing needs you right now. New things appear here as they happen. Meanwhile, you can bring someone new on board."
+          action={
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button asChild variant="primary">
+                <Link to="/admin/onboard">Onboard someone</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link to="/admin/overview">See how everyone is doing</Link>
+              </Button>
+            </div>
+          }
+        />
       ) : (
         <div className="flex flex-col gap-6">
           {groups.map((group) => (

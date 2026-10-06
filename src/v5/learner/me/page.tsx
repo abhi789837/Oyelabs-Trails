@@ -19,12 +19,14 @@ export function V5Screen({ children, reducedMotion }: { children: ReactNode; red
   return <V5MotionProvider reducedMotion={reducedMotion}>{children}</V5MotionProvider>;
 }
 
-export function PageFrame({ title, lead, actions, children, className, wide }: { title: ReactNode; lead?: ReactNode; actions?: ReactNode; children: ReactNode; className?: string; wide?: boolean }) {
+/** `back` is a small "← Parent" link shown above the title (UX review C2). */
+export function PageFrame({ title, lead, actions, back, children, className, wide }: { title: ReactNode; lead?: ReactNode; actions?: ReactNode; back?: ReactNode; children: ReactNode; className?: string; wide?: boolean }) {
   return (
     <div className="min-h-full bg-surface-0 text-fg-1">
       <div className={cn("mx-auto flex w-full flex-col gap-(--v5-gap) px-4 py-6 sm:px-6 md:py-10 lg:gap-6", wide ? "max-w-6xl" : "max-w-5xl", className)}>
         <header className="flex flex-wrap items-end justify-between gap-3">
           <div className="min-w-0">
+            {back ? <div className="mb-2">{back}</div> : null}
             <h1 className="font-display text-h1 font-semibold text-fg-1">{title}</h1>
             {lead ? <p className="mt-1 max-w-prose text-body text-fg-2">{lead}</p> : null}
           </div>

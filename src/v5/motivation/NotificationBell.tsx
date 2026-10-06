@@ -1,5 +1,5 @@
 import * as Popover from "@radix-ui/react-popover";
-import { Bell } from "lucide-react";
+import { Bell, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -83,8 +83,10 @@ export function NotificationBell({ unread, onRead }: { unread: number; onRead: (
                   return (
                     <li key={n.id}>
                       {n.link ? (
-                        <Link to={n.link} onClick={() => setOpen(false)} className="block px-4 py-3 hover:bg-sunken">
-                          {body}
+                        // A chevron marks the ones that go somewhere (UX review B1).
+                        <Link to={n.link} onClick={() => setOpen(false)} className="flex items-center gap-2 px-4 py-3 hover:bg-sunken">
+                          <span className="block min-w-0 flex-1">{body}</span>
+                          <ChevronRight className="size-4 shrink-0 text-fg-2" aria-hidden="true" />
                         </Link>
                       ) : (
                         <div className="px-4 py-3">{body}</div>

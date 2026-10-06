@@ -7,7 +7,7 @@ import { CodeBlock } from "@/components/content/markdownCore";
 import { useGlossary } from "@/features/handbook/useGlossary";
 import { cn } from "@/v5/design/cn";
 import { Button } from "@/v5/design/components/Button";
-import { Tooltip } from "@/v5/design/components/Primitives";
+import { Tooltip } from "@/v5/design/components/Tooltip";
 
 import { parsePracticeBlock } from "@/lib/practiceBlocks";
 

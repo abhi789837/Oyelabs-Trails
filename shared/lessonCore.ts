@@ -335,7 +335,20 @@ export function lessonPassages(summary: string, sections: readonly { heading: st
   return out;
 }
 
-/** Up to `max` takeaways: the first sentence of each summary paragraph, then section headings. */
+/**
+ * A paragraph's lead for a takeaway: its first sentence, or the first two when the first is a short
+ * set-up line ("The stack is finite.") that says little on its own (UX review RD1).
+ */
+function takeawayLead(text: string): string {
+  const first = firstSentence(text);
+  if (first.split(/\s+/).filter(Boolean).length >= 6) return first;
+  const clean = stripInline(text).replace(/\s+/g, " ").trim();
+  const rest = clean.startsWith(first) ? clean.slice(first.length).trim() : "";
+  const next = rest ? firstSentence(rest) : "";
+  return next ? `${first} ${next}` : first;
+}
+
+/** Up to `max` takeaways: the lead of each summary paragraph, then of each section. */
 export function extractTakeaways(summary: string, sections: readonly { heading: string; body: string }[] = [], max = 4): string[] {
   const out: string[] = [];
   const seen = new Set<string>();
@@ -347,12 +360,12 @@ export function extractTakeaways(summary: string, sections: readonly { heading: 
   };
   for (const para of passageChunks(summary)) {
     if (/^\s*```/.test(para) || /^\s*[-*] |^\s*\d+[.)] /.test(para)) continue;
-    push(firstSentence(calloutOf(para)?.body ?? para));
+    push(takeawayLead(calloutOf(para)?.body ?? para));
     if (out.length >= max) return out;
   }
   for (const section of sections) {
     const first = passageChunks(section.body).find((p) => !/^\s*```/.test(p));
-    push(first ? firstSentence(calloutOf(first)?.body ?? first) : stripInline(section.heading));
+    push(first ? takeawayLead(calloutOf(first)?.body ?? first) : stripInline(section.heading));
     if (out.length >= max) return out;
   }
   return out;

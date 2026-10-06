@@ -12,8 +12,8 @@ const STOPS: TrailStop[] = [
   { id: "t1", title: "How JavaScript runs your code", meta: "Must know · 20 min", lane: "must_know", done: true },
   { id: "t2", title: "Closures", meta: "Do it now · 25 min", lane: "do_now", done: true },
   { id: "t3", title: "The event loop", meta: "Must know · 40 min", lane: "must_know", done: false },
-  { id: "t4", title: "Promises in depth", meta: "Medium · 30 min", lane: "medium", done: false },
-  { id: "t5", title: "Generators", meta: "Low · 15 min", lane: "low", done: false },
+  { id: "t4", title: "Promises in depth", meta: "Good to know · 30 min", lane: "medium", done: false },
+  { id: "t5", title: "Generators", meta: "Extra · 15 min", lane: "low", done: false },
 ];
 
 const HISTORY = [

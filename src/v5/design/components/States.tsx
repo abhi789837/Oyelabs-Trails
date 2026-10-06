@@ -33,14 +33,17 @@ export interface EmptyStateProps {
   body?: ReactNode;
   action?: ReactNode;
   className?: string;
+  /** The title's heading level. 3 by default (inside a section); 2 when it sits straight under the page's h1. */
+  headingLevel?: 2 | 3;
 }
 
-export function EmptyState({ icon, title, body, action, className }: EmptyStateProps) {
+export function EmptyState({ icon, title, body, action, className, headingLevel = 3 }: EmptyStateProps) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
     <div className={cn("relative isolate flex flex-col items-center overflow-hidden rounded-card border border-dashed border-line-1 px-6 py-12 text-center", className)}>
       <ContourBackground className="-z-10" />
       {icon ? <div className="mb-3 grid size-12 place-items-center rounded-full bg-brand-soft text-brand-fg [&_svg]:size-6" aria-hidden="true">{icon}</div> : null}
-      <h3 className="font-display text-h4 font-semibold text-fg-1">{title}</h3>
+      <Heading className="font-display text-h4 font-semibold text-fg-1">{title}</Heading>
       {body ? <p className="mt-1 max-w-[46ch] text-small text-fg-2">{body}</p> : null}
       {action ? <div className="mt-5">{action}</div> : null}
     </div>
@@ -60,6 +63,8 @@ export interface ErrorStateProps {
   /** Raw detail for staff (an error code), behind "Show details". */
   details?: string;
   className?: string;
+  /** The title's heading level, as on EmptyState. */
+  headingLevel?: 2 | 3;
 }
 
 /** A friendly failure with one way forward. Never blames the reader; never shows a code up front. */
@@ -70,13 +75,15 @@ export function ErrorState({
   retrying,
   details,
   className,
+  headingLevel = 3,
 }: ErrorStateProps) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
     <div role="alert" className={cn("flex flex-col items-center rounded-card border border-line-1 bg-surface-1 px-6 py-10 text-center", className)}>
       <div className="mb-3 grid size-12 place-items-center rounded-full bg-danger-soft text-danger-fg" aria-hidden="true">
         <CloudOff className="size-6" />
       </div>
-      <h3 className="font-display text-h4 font-semibold text-fg-1">{title}</h3>
+      <Heading className="font-display text-h4 font-semibold text-fg-1">{title}</Heading>
       <p className="mt-1 max-w-[46ch] text-small text-fg-2">{body}</p>
       {onRetry ? (
         <Button className="mt-5" variant="primary" onClick={onRetry} loading={retrying}>

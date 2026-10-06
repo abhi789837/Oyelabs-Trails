@@ -2,7 +2,7 @@ import { Users } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { useAuth } from "@/features/auth/AuthProvider";
-import { Button } from "@/v5/design/components/Button";
+import { cn } from "@/v5/design/cn";
 import { v5Toast } from "@/v5/design/components/Overlays";
 
 import { motivationApi } from "./api";
@@ -40,10 +40,27 @@ export default function LeaderboardSetting() {
     }
   };
 
+  // A switch, not a status line (UX review Rp2): the knob shows it can be flipped, and the name stays
+  // "Team boards" while `aria-checked` carries on/off. The visible "on"/"off" stays for sighted users.
   return (
-    <Button variant="secondary" size="sm" onClick={() => void toggle()} aria-pressed={on ?? false} disabled={on === null} data-testid="leaderboard-toggle">
-      <Users aria-hidden="true" />
-      {on ? "Team boards: on" : "Team boards: off"}
-    </Button>
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on ?? false}
+      aria-label="Team boards"
+      onClick={() => void toggle()}
+      disabled={on === null}
+      data-testid="leaderboard-toggle"
+      className="inline-flex min-h-8 items-center gap-2 rounded-control border border-line-2/60 bg-surface-1 px-3 text-small font-medium text-fg-1 hover:bg-sunken focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-60"
+    >
+      <Users className="size-4" aria-hidden="true" />
+      Team boards
+      <span className={cn("relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border-2 transition-colors duration-120", on ? "border-brand bg-brand" : "border-line-2 bg-sunken")} aria-hidden="true">
+        <span className={cn("inline-block size-3.5 rounded-full bg-surface-1 shadow-e1 transition-transform duration-120", on ? "translate-x-4" : "translate-x-0.5")} />
+      </span>
+      <span className="w-6 text-left text-caption text-fg-2" aria-hidden="true">
+        {on ? "on" : "off"}
+      </span>
+    </button>
   );
 }

@@ -20,7 +20,7 @@ import { usePrefersReducedMotion } from "@/v5/design/hooks";
 
 import { resultsApi } from "./api";
 import { Spinner } from "./Frame";
-import { answerWords, reviewCounts, storyFrom, VERDICT_WORDS } from "./story";
+import { answerWords, plainReasonSentence, reviewCounts, storyFrom, VERDICT_WORDS } from "./story";
 
 /**
  * The results: a short story ("You're strong at X. We'll start with Y because Z."), skill levels by
@@ -112,7 +112,7 @@ function ResultsBody({ data, onChanged }: { data: AssessmentResultsResponse; onC
                 <Card className="h-full">
                   <p className="text-caption font-medium text-fg-2">Step {i + 1}</p>
                   <p className="mt-1 font-display text-h4 font-semibold text-fg-1">{s.title}</p>
-                  {s.reason ? <p className="mt-1 text-small text-fg-2">{s.reason}</p> : null}
+                  {s.reason ? <p className="mt-1 text-small text-fg-2">{plainReasonSentence(s.reason)}</p> : null}
                 </Card>
               </li>
             ))}

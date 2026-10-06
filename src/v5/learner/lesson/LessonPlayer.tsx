@@ -19,18 +19,22 @@ import {
 } from "@shared/lessonCore";
 
 import type { TopicVideos } from "@/features/videos/useTopicVideos";
-import { topicNeighbors } from "@/content";
+import { api } from "@/api/client";
+import { findTopic, topicNeighbors, type TopicMeta } from "@/content";
+import { useProgressStore } from "@/store/progressStore";
 import { cn } from "@/v5/design/cn";
 import { Button } from "@/v5/design/components/Button";
 import { LessonStepHeader, StatusLine } from "@/v5/design/components/Lesson";
 import { SkeletonLayout } from "@/v5/design/components/States";
+import { afterLoadIdle } from "@/v5/app/afterLoad";
 import { useIsMobile } from "@/v5/design/hooks";
 import { duration, easing } from "@/v5/design/motion";
 
 import { WatchStep, type WatchControls } from "./steps/WatchStep";
-import { resumePoint } from "./lessonLinks";
+import { planNextTopicId, resumePoint } from "./lessonLinks";
 import { lessonToast } from "./toast";
 import { useLessonSave } from "./useLessonSave";
+import { plainTitle } from "@shared/plainTitle";
 
 // Only Watch (the usual first step) is in the lesson's first download; every other step, the
 // dialogs and Ask Oye load when they're first needed.
@@ -124,21 +128,24 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
   };
   const requirement = stepRequirement(step, facts);
 
-  // Fetch the other steps' code once the browser is idle, so Next doesn't wait on a download.
+  // Fetch the other steps' code once the page has loaded and the browser is idle, so Next doesn't
+  // wait on a download. Phase 9 performance: only the steps this lesson has (a lesson without a Do
+  // step used to pull the task kinds, the spreadsheet grid and zod into its first seconds), and only
+  // after the load event, so they don't compete with the video poster.
+  const hasRead = available.includes("read");
+  const hasDo = available.includes("do");
+  const hasCheck = available.includes("check");
   useEffect(() => {
     const warm = () => {
-      void import("./steps/ReadStep");
-      if (isCode) void import("./steps/CodeDo");
-      else void import("./steps/TaskDo");
-      void import("./steps/CheckStep");
+      if (hasRead) void import("./steps/ReadStep");
+      if (hasDo) {
+        if (isCode) void import("./steps/CodeDo");
+        else void import("./steps/TaskDo");
+      }
+      if (hasCheck) void import("./steps/CheckStep");
     };
-    if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(warm, { timeout: 4000 });
-      return () => window.cancelIdleCallback(id);
-    }
-    const id = window.setTimeout(warm, 1500);
-    return () => window.clearTimeout(id);
-  }, [isCode]);
+    return afterLoadIdle(warm, 4000);
+  }, [isCode, hasRead, hasDo, hasCheck]);
 
   // When the current step's rule is met, tell the server (it checks again before any XP). The step
   // shows as done straight away; a failed save or a "no" from the server rolls it back.
@@ -172,8 +179,10 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
     setSaveFailed(null);
   };
 
+  const stepChanged = useRef(false);
   const goTo = useCallback(
     (next: LessonStepId) => {
+      stepChanged.current = true;
       setStep(next);
       setParams(
         (p) => {
@@ -196,7 +205,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
   const index = order.indexOf(step);
   const nextStepId = index >= 0 && index < order.length - 1 ? order[index + 1] : null;
   const complete = lessonComplete(available, done);
-  const nextTopic = topicNeighbors(topic.id).next;
+  const nextTopic = useNextTopic(topic.id);
 
   const advance = () => {
     if (!nextStepId) return;
@@ -362,7 +371,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
       case "check":
         return (
           <Suspense fallback={<SkeletonLayout variant="article" label="Loading the test" />}>
-            <CheckStep topic={topic} questions={topic.quiz ?? []} videos={videos.data} onGoWatch={() => goTo("watch")} onGraded={onQuizGraded} />
+            <CheckStep topic={topic} questions={topic.quiz ?? []} videos={videos.data} onGoWatch={() => goTo("watch")} onGraded={onQuizGraded} passedBefore={done.check} />
           </Suspense>
         );
     }
@@ -379,7 +388,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
     >
       <LessonStepHeader
         className={cn("sticky z-20", focus ? "top-0" : "top-14")}
-        title={topic.title}
+        title={plainTitle(topic.title)}
         current={step}
         done={done}
         available={available}
@@ -398,21 +407,28 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
         </Button>
         <Button size="sm" variant="ghost" className="max-md:min-h-11" onClick={() => setFocus((f) => !f)} aria-pressed={focus}>
           {focus ? <Minimize2 aria-hidden="true" /> : <Maximize2 aria-hidden="true" />}
-          {focus ? "Leave focus" : "Focus"}
-          <span className="sr-only md:not-sr-only"> mode</span>
+          {/* One inline span, so the button's flex gap doesn't add to the space before "mode" (UX review W3). */}
+          <span>
+            {focus ? "Leave focus" : "Focus"}
+            <span className="sr-only md:not-sr-only"> mode</span>
+          </span>
         </Button>
         {/* Keyboard shortcuts mean nothing on a touch screen. */}
         <Button size="sm" variant="ghost" className="max-md:hidden" onClick={() => setHelpOpen(true)}>
           <Keyboard aria-hidden="true" /> Shortcuts
         </Button>
         <Button size="sm" variant="ghost" className="ml-auto max-md:min-h-11" onClick={() => setReportOpen(true)}>
-          <Flag aria-hidden="true" /> Report<span className="sr-only md:not-sr-only"> a problem</span>
+          <Flag aria-hidden="true" />
+          <span>
+            Report<span className="sr-only md:not-sr-only"> a problem</span>
+          </span>
         </Button>
       </div>
 
       <m.div
         key={step}
-        initial={{ opacity: 0, y: 8 }}
+        // The first step shows at once; changing step fades the new one in (Phase 9 performance).
+        initial={stepChanged.current ? { opacity: 0, y: 8 } : false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: duration.quick, ease: [...easing.out] as [number, number, number, number] }}
         className="mx-auto w-full max-w-7xl flex-1 px-4 py-6"
@@ -439,7 +455,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
               </>
             ) : (
               <p className="min-w-0 flex-1 text-caption text-fg-2" aria-live="polite">
-                {isLast && complete ? (nextTopic ? `Lesson finished. Up next: ${nextTopic.title}.` : "Lesson finished.") : !done[step] ? requirement.hint : `Step done.${xpNote}`}
+                {isLast && complete ? (nextTopic ? `Lesson finished. Up next: ${plainTitle(nextTopic.title)}.` : "Lesson finished.") : !done[step] ? requirement.hint : `Step done.${xpNote}`}
               </p>
             )}
             <Button variant="primary" className="min-h-11 shrink-0" onClick={headerNext.onNext} disabled={headerNext.disabled}>
@@ -472,7 +488,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
                   </Button>
                 }
               >
-                Lesson finished. {nextTopic ? `Up next: ${nextTopic.title}.` : "That's everything in this part of your plan."}
+                Lesson finished. {nextTopic ? `Up next: ${plainTitle(nextTopic.title)}.` : "That's everything in this part of your plan."}
               </StatusLine>
             ) : !isLast ? (
               <div className="flex flex-wrap items-center justify-end gap-3">
@@ -513,7 +529,7 @@ export function LessonPlayer({ topic, initial, videos }: LessonPlayerProps) {
       ) : null}
       {opened.celebrate ? (
         <Suspense fallback={null}>
-          <Celebration open={celebrate} onDone={() => setCelebrate(false)} title="Lesson finished" detail={nextTopic ? `Next up: ${nextTopic.title}` : "Nice work."} />
+          <Celebration open={celebrate} onDone={() => setCelebrate(false)} title="Lesson finished" detail={nextTopic ? `Next up: ${plainTitle(nextTopic.title)}` : "Nice work."} />
         </Suspense>
       ) : null}
     </div>
@@ -525,4 +541,42 @@ function useEverOpened<K extends string>(flags: Record<K, boolean>): Record<K, b
   const seen = useRef({} as Record<K, boolean>);
   for (const key of Object.keys(flags) as K[]) if (flags[key]) seen.current[key] = true;
   return seen.current;
+}
+
+// The plan's topic order, read once per page load (it changes only when an admin republishes).
+let planOrder: Promise<string[]> | null = null;
+function loadPlanOrder(): Promise<string[]> {
+  planOrder ??= api
+    .get<{ plan: { topicIds: string[] } | null }>("/api/me/plan")
+    .then((r) => r.plan?.topicIds ?? [])
+    .catch(() => {
+      planOrder = null;
+      return [];
+    });
+  return planOrder;
+}
+
+/**
+ * "Next lesson" follows the learner's plan (Phase 9.2). The track's order was used before, which
+ * ended a lesson on "Back to my plan" whenever the plan's next topic came earlier in the track.
+ * Outside the plan (a library lesson) it falls back to the track order.
+ */
+function useNextTopic(topicId: string): TopicMeta | undefined {
+  const progress = useProgressStore((s) => s.progress);
+  const [plan, setPlan] = useState<string[] | null>(null);
+  useEffect(() => {
+    let live = true;
+    void loadPlanOrder().then((ids) => {
+      if (live) setPlan(ids);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
+  return useMemo(() => {
+    const fromPlan = plan ? planNextTopicId(plan, topicId, (id) => progress[id]?.status === "completed") : undefined;
+    if (fromPlan === null) return undefined;
+    if (fromPlan) return findTopic(fromPlan)?.topic ?? undefined;
+    return topicNeighbors(topicId).next;
+  }, [plan, progress, topicId]);
 }

@@ -251,6 +251,16 @@
   outline-offset: 2px;
 }
 
+/* Headings and landmarks that only take focus from script (the error page, the skip link) aren't
+   controls; a ring around them reads as a broken box (Phase 9.2, UX_REVIEW E1). */
+[data-ui="v5"] h1[tabindex="-1"]:focus-visible,
+[data-ui="v5"] h2[tabindex="-1"]:focus-visible,
+[data-ui="v5"] h3[tabindex="-1"]:focus-visible,
+[data-ui="v5"] main[tabindex="-1"]:focus-visible,
+[data-ui="v5"] section[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
 /* The learner can force reduced motion in Me → Settings even when the OS does not ask for it. */
 [data-ui="v5"][data-motion="reduce"] *,
 [data-ui="v5"][data-motion="reduce"] *::before,

@@ -567,3 +567,240 @@ Learner agent. Files: `src/v5/learner/**` (new: `skeletons.tsx`, `lesson/SendToL
 
 ### Needs Abhishek
 - "Send to my email" goes out only with SMTP and `MAIL_DOMAIN` set (see Phase 6). Without them, learners get "Email isn't set up yet. Copy the link instead", which works on its own.
+
+## Phase 9.2
+
+Heuristic UX review agent: the review, the fixes and the client error log. The findings, the before and after screenshots and the click counts are in `docs/v5/UX_REVIEW.md`. Screenshots are in `docs/v5/shots/review/{before,after}/`, taken by the new `scripts/e2e/v5-review-shots.ts` (port 8842 or `E2E_PORT`, throwaway DATA_DIR, mock AI, `E2E_SHOTS_TAG=before|after`).
+
+### Results
+- **Found:** 4 high, 13 medium and 30 low issues.
+- **Fixed:** every high and medium, and 2 lows. The other 28 lows are listed as backlog in UX_REVIEW.md.
+- **Click counts** (all targets met):
+  - learner, opening the app → inside the next step: 1 (v4.4: 1);
+  - admin, onboard + send the test: 3 (v4.4: 3);
+  - admin, approve a review request: 1 (v4.4: 2).
+
+### Decisions
+- **"Next" means the same lesson everywhere.** These four now agree:
+  - Today's Continue;
+  - the trail's "You are here" on Today and on My plan;
+  - My plan's card;
+  - the lesson's "Next lesson".
+
+  Rules:
+  - The lesson resume (`resumeFor`) skips topics whose `topic_progress` is completed, so a lesson passed some other way is never resumed.
+  - Today's trail moves Continue's lesson to the front of the stops left (`buildWeek(week, hereTopicId)`).
+  - My plan reads `/api/v5/lessons/resume` and prefers that lesson when it's open this week (`nextStep(week, resumeTopicId)`, `WeekTrail hereId`).
+  - "Next lesson" follows the published plan (`/api/me/plan`, `planNextTopicId`): the next undone topic, then an earlier undone one, and the track order only outside the plan.
+- **Titles are plain text in v5.** Topic titles keep their Markdown code marks in the content (the older UI shows them), and `shared/plainTitle.ts` strips them at v5's edges:
+  - Today (server);
+  - the library syllabus and outcomes;
+  - Review card titles;
+  - My plan, the lesson header, Me → Notes.
+- **The weekly goal names the plan's pace.** `GET /api/v5/motivation` adds `defaultGoalMinutes` (`defaultGoalMinutesFor`: the onboarding hours, else the week's budget). With no goal of their own, the learner sees "Your plan's pace (15 hours a week)" instead of "No hours goal", which contradicted Today's ring.
+- **The learner reads plain reasons.** `plainReason` (`src/v5/assessment/story.ts`) rewrites the path's staff wording ("Critical goal X: you're at 0/5 and it needs 3/5") on the results page. `shared/pathOrder.ts` is unchanged, so the admin's path text is the same as before.
+- **Older shared code, changed only where it was a bug or behind a default:**
+  - `src/features/proctor/PreFlight.tsx` gets `noun` (default `"assessment"`, so the older UI is unchanged); v5's `Sitting` passes `"test"`.
+  - `server/src/goals/{rules,suggest}.ts` no longer lower-case a leading acronym ("aI-driven" showed as "al-driven"). This is a bug fix, and both UIs get it.
+- **Admin:**
+  - Overview counts a learner with no department under Engineering, the same default the People list uses (`learnerSignals`).
+  - The inbox says "Test:" instead of "Assessment:".
+  - The empty inbox offers "Onboard someone" and "See how everyone is doing".
+- **Smaller fixes:**
+  - The phone lesson stepper shows every step's word.
+  - The autoplay switch knob is anchored.
+  - The course page shows "Left to do".
+  - Library cards show "2 of 6".
+  - Headings and landmarks focused only by script (`[tabindex="-1"]`) draw no focus ring (`tokens.css`).
+
+### Client error log
+- `POST /api/client-errors` is registered from the lesson routes' aggregator (`server/src/v5/lesson/register.ts` → `server/src/v5/clientErrors/routes.ts`), so `app.ts` is untouched.
+- **Body:** `{ route, message, stack? }`, `.strict()`. Over-long fields are cut on the server too (`CLIENT_ERROR_MAX`: 300 / 1000 / 4000).
+- **Who can send:** signed-out pages can report (the public `/verify` page).
+- **Limits:** fixed 10-minute windows, 10 per user and 30 per IP, plus `@fastify/rate-limit` at 60 a minute. Over the limit is a 429.
+- **Storage:** there is no table, so no migration. Each report goes to the server log (`request.log.warn({ clientError })`) and into an in-memory ring of the last 200. Staff can read the newest 50 at `GET /api/admin/v5/client-errors`.
+- **Schema request (optional, later):** a capped `client_errors` table (id, user_id, ip, route, message, stack, user_agent, created_at; index on created_at) if the log should survive restarts.
+- **Client side:**
+  - `src/v5/app/clientErrorLog.ts` is called from `RouteErrorBoundary.componentDidCatch`, but not for stale-chunk reloads.
+  - It sends with fetch + keepalive and never throws.
+  - It drops the query and hash from the route.
+  - It sends the same crash once, and at most 5 per page load.
+- **Tests:** `server/src/v5/clientErrors/clientErrors.test.ts` (9) and `src/v5/app/clientErrorLog.test.ts` (4).
+
+### Tests added
+- `lesson.test.ts` (resume skips completed)
+- `today.test.ts` (trail order)
+- `planLogic.test.ts` (resume first)
+- `lessonLinks.test.ts` (plan order)
+- `assessment.test.ts` (plain reasons)
+- `me.test.ts` (outcome lines)
+- `motivation.test.ts` (goal label)
+- `goals.test.ts` (acronym)
+
+### Notes for the main session
+- Port 8842 was held by another process during this run (started 13:11, not mine), so the after shots used `E2E_PORT=8852` and `8853`.
+- `server/src/ai/adapters/mockPersonalise.ts` contains a raw control character (not mine, unchanged). Worth a look.
+
+## Phase 9.1
+
+Quality-gates agent. Files: `scripts/e2e/v5-journeys.ts` and `scripts/e2e/v5-visual.ts` (new), `scripts/perf/lighthouse-v5.mjs` (new), theme fixes in `scripts/e2e/v5-{admin,lesson,learner-pages,a11y}.ts`, `scripts/perf/lhci.mjs` (doc comment), `lighthouserc.cjs`, `.size-limit.js`, `docs/v5/QUALITY.md` (the report), and 176 baselines in `docs/v5/shots/v5/`. No product code and no packages. Ports: 8840 journeys, 8841 visual, 8842 and 8942 Lighthouse. (The "8842 held by another process" note under 9.2 was this Lighthouse run.)
+
+- **Journeys follow the week, not a fixed order.**
+  - Today's Continue picks the week plan's first lesson, and "Next lesson" follows the track order.
+  - The learner journey handles each step as it comes. It seeds one earlier visit to js-call-stack, so Continue resumes a lesson that has a Do step, and the track order then reaches a quiz lesson.
+  - The mismatch between the two orders is product bug 2 in QUALITY.md.
+- **Click counts** follow BASELINE.md's rule: every mouse click counts, typing and waiting don't. Onboarding is reported both ways: 2 after typing (the target's wording) and 3 from the inbox (the baseline's).
+- **Deterministic shots without new dependencies:**
+  - **Server clock.** A fake server clock, as a `--require` preload written into the throwaway DATA_DIR, with `TZ=UTC`.
+  - **Browser.** The browser's `Date` is fixed (`context.clock.setFixedTime`) and its time zone is UTC. External requests are blocked, frames and the QR are masked, and the certificate code is replaced with a placeholder.
+  - **Warm-up.** An unshot warm-up pass runs first.
+  - **Comparison.** PNGs are compared with a small `node:zlib` decoder in the script (pixelmatch and pngjs aren't installed): more than 24/255 on any channel counts as changed, and up to 0.05 % of pixels may differ.
+  - **Re-runs.** Two runs on the same snapshot matched to the pixel, except for the cases fixed below.
+- **Flakes handled in the test, with the product left as is.** The full-page capture at 390 runs without `isMobile`, because Chromium's mobile capture shifted the fixed bottom nav from run to run. A mismatch gets one re-shoot after a second.
+  - Headless Chromium on Windows flipped `navigator.onLine` to false, and Review showed its offline banner. `v5-visual.ts` pins the browser flag.
+  - `net::ERR_NO_BUFFER_SPACE` under load gets one retry.
+  - Init scripts are strings where they contain inner functions, because tsx's `__name` helper doesn't exist in the page.
+- **Theme in older scripts.** The saved theme (`oyelabs-ui`) wins over `colorScheme`.
+  - `v5-admin.ts` now writes the theme before every load and asserts `html.dark`. Its old dark passes ran in light.
+  - `v5-lesson`, `v5-learner-pages` and `v5-a11y` now assert the theme on every page.
+- **Lighthouse is measured production-like.**
+  - The Node server doesn't compress, while production sits behind Caddy (`encode zstd gzip`). So `lighthouse-v5.mjs` measures through a local gzip + immutable-cache proxy by default (`LH_PROXY=0` for bare Node).
+  - It uses the mobile profile, the median of 3 runs, and a seeded staff user (role admin) on the new design.
+  - `lighthouserc.cjs` now defaults to mobile and to the four Phase 9 routes (`LHCI_PRESET=desktop` restores the desktop profile).
+- **Bundle budgets.** `.size-limit.js` now lists every v5 learner route at 200 KB, plus `/admin` at 290 KB (a guard, about 10 % over today's 270 KB).
+  - The new entries flagged My plan, Library, the course page and Me as 23–31 KB over budget (zod through shared schema modules). The main session split zod out, and on the final snapshot every entry passes (181.6–191.4 KB; admin 271.0 KB).
+- **Results.** Click counts are 1 / 2 (3 from the inbox) / 1, all on target. Lighthouse mobile, production-like: perf 63–79 and LCP 5.1–8.6 s on all four routes (final snapshot; about ±5 points of machine noise), so all over budget. A11y is 98–100 and CLS is 0. QUALITY.md lists 8 concrete fixes, led by the request waterfall (route chunk and page query behind `/api/me/manifest`, and `V5App` behind `/api/auth/me`).
+- **Product bugs reported** (not fixed, not worked around):
+  - The CSP hash of the inline theme script breaks on CRLF builds (`server/src/lib/csp.ts`).
+  - "Next lesson" ignores the plan's order.
+  - Review heading order.
+- `npm run size` after these changes: the lesson route is 191.4 KB (limit 200) and `/learn` is 162.9 KB. The new My plan, Library and Course page budgets in `.size-limit.js` (from the 9.1 agent) are 23–31 KB over. This phase added only a few hundred bytes to those pages, so the overage was already there.
+- On a fresh private snapshot (`p9ux`, removed afterwards), `v5-foundation`, `v5-a11y`, `v5-lesson`, `v5-admin`, `v5-mobile-learner` and `v5-mobile-admin` all pass. `tsc -b`, `eslint .` and `npm test` (2539 passed, 6 skipped) are green.
+
+## Phase 9 size fix (main session)
+The 9.1 budgets (every learner route under 200 KB) showed My plan, Library, the course page and Me 19–26 KB over. Two causes, both fixed without behaviour changes:
+- **zod in learner pages.** Pure helpers lived in files that also define zod schemas. They moved to zod-free `shared/weeklyPlanCore.ts` and `shared/meCore.ts`, and `shared/weeklyPlan.ts` and `shared/me.ts` re-export them, so server imports are unchanged. Learner pages and `src/features/plan/{Lanes,WeekTrail}.tsx` import the values from the core files and only types from the originals.
+- **Radix tooltip and popper in every page using Badge or Tabs.** `Tooltip`/`TooltipProvider` moved from `Primitives.tsx` to `src/v5/design/components/Tooltip.tsx`; the design barrel still exports them.
+- After (gzipped): /learn 162.9, lesson 191.4, My plan 188.5, Library 181.6, course page 187.0, Review 184.2, Me 185.7 KB.
+
+## Email is off unless set up (main session, 2026-10-06)
+Abhishek doesn't need email. Without mail settings, v5 now has **no email features at all**, rather than queued-then-skipped rows:
+- **Server:** reminders still go to the in-app bell, but no email copy is queued (`sendDueReminders(…, emailOn)`). Weekly recaps and the admin weekly report aren't queued (`queueWeeklyRecaps`, `maybeQueueWeeklyReport`). With no skipped rows, the inbox's "Email isn't set up yet" line never appears.
+- **Screens:**
+  - Me → Settings hides "Weekly email"; `GET`/`PUT /api/v5/me/settings` return `emailEnabled`.
+  - Reports hides "Email me this weekly"; `weeklyEmail.available` is in the report.
+  - The phone coding step offers only "Copy the link".
+- **Turning it on later:** add the `SMTP_*` / `MAIL_*` settings documented in `.env.example` and restart. Everything appears again; no code change is needed.
+
+## Phase 9.4 switch-on (main session, 2026-10-06)
+- `ui_v5` is on by default: with no saved global setting, `getUiV5Default` falls back to `uiV5Fallback()` = "on". A super admin's saved choice in `app_meta` still wins, and so does each user's own choice.
+- `UI_V5_DEFAULT=off` in the environment makes the old design the default again. It's a rollback switch with no deploy of code, and the older e2e scripts (which test the old design) run with it. Vitest sets it in `vitest.config.ts`, because the existing tests were written against the old default; `ui.test.ts` tests the fallback itself.
+- "Use previous design" stays in Me → Settings and on the admin user menu, logged as `ui.v5_toggle`. The old UI code is removed 2 weeks after deploy (a follow-up, in RESULTS.md).
+
+## Phase 9 low backlog (2026-10-06)
+The 28 low items in `UX_REVIEW.md`: 13 fixed, 15 deferred (each row says why).
+- **Fixed:** T7 (compact trail ends under its last marker), C2 (`PageFrame` `back` slot), M2, M3 (`shared/weekLabel.ts`), B1, A4 (`uniqueNotices`), A6 (`nothingScored`), CT1, I3, Pe1, Ed1, Rp1, Rp2.
+- **Deferred to the performance pass's files:** T4, T5, T6, R1, R2, E2, W3, W4, RD1, D1, K1 (Today, Review, the lesson player, the error boundary, and the Today/Review server code).
+- **Deferred for other reasons:** P3 goes with T5, because one set of lane words must change Today's `HERO_LANE` and the old UI's `LANE_META` together. A2 and A3 live in the shared v4 `PreFlight` (outside this pass). On2 needs an old-UI sign-off (rule 1).
+- **Team boards** became a real switch (`role="switch"`, name "Team boards") instead of a button whose name changed with its state. "Email me this weekly" still uses the older pattern; it's hidden while email is off.
+- **Week labels.** The XP chart names a week by its Monday, computed in UTC like the streak's ISO weeks. `weekLabel.test.ts` checks it against `shared/streak.ts`.
+- **Tests:** `tsc -b`, `eslint .` and `npm test` are green. On a private snapshot (`p9low`, removed afterwards), v5-admin, v5-mobile-admin, v5-assessment and v5-a11y pass. v5-learner-pages fails at "Weekly email" in Me → Settings, because email is now off unless set up (see "Email is off unless set up"). That isn't caused by this pass: with `SMTP_URL` and `MAIL_FROM` set, it passes in full. The script needs updating to match.
+- **Second pass, after the performance pass (2026-10-06).** T4, T5, P3, T6, R1, R2, E2, W3, RD1, D1 and K1 are fixed; W4 is kept as is (the review's own suggestion). A2, A3 and On2 stay deferred (old-UI sign-off). Each row in `UX_REVIEW.md` says how.
+  - **Lane words** (T5, P3): one set, Up next's: Do it now, Must know, Good to know, Extra. The old UI already reads labels from `LANE_META`, the source v5 shares, so the rename reaches both designs there; hints, icons and colours are unchanged. `format.test.ts` ties `HERO_LANE`, `LANE_META` and `whyChip` together.
+  - **"N of M done"** (T6) adds lessons finished this ISO week outside the week's items to both numbers; the trail's stops don't change.
+  - **Test drivers** (D1) are hidden by splitting at the marker in the client (`steps/testDriver.ts`), not by editing 68 content files. The draft, Run, Check and Send to laptop keep the full code, so grading and the old topic page are unchanged.
+  - **Performance work untouched:** no change to the route prefetch, the YouTube facade, the lazy steps or fonts; the changed lesson files are lazy steps except two small `LessonPlayer` edits. `npm run size`: lesson 196.4 KB (was 196.3), /learn 167.5.
+  - **Tests:** `tsc -b`, `eslint .`, `npm test`, `npm run build` and `npm run size` are green. On a private snapshot (`p9last`, removed after), v5-lesson, v5-today, v5-learner-pages, v5-pwa, v5-mobile-learner, v5-a11y and v5-journeys pass. The old UI's plan pages now show "Good to know" and "Extra" too, so any visual baseline that shows lane names needs a re-shoot (not checked here).
+
+## Phase 9 performance
+
+Performance agent (QUALITY.md fixes 1–8 and product bugs 1–3). Numbers before and after are in QUALITY.md, "Performance after fixes". No packages were installed.
+
+### Start-up waterfall (fix 1)
+- **An inline start-up script** (`src/v5/app/routePlan.ts`, inlined into `index.html` by `vite.config.ts` `bootPrefetchScript`). On a device that last opened v5 it runs while the HTML is still parsing:
+  - it starts `/api/auth/me`, the route's main query (Today, Review's summary, a lesson's state, playlist and prefs, the admin inbox), and the manifest and progress;
+  - for a lesson, it starts the module content once the manifest is in, and the video poster once the state and playlist are in;
+  - it preloads Geist and Sora 600 (latin).
+- **The guess** is localStorage `oyelearn-ui-guess` ("v5" or "old"), written by App.tsx's `DesignSwitch`. A staff `?ui=` or the tab's override wins. There's no guess on a first visit, and the old UI never gets any of this. A wrong guess only wastes a few requests: rendering still follows `/api/auth/me`.
+  - A cookie was tried first. Tools that sign in by injecting a `Cookie` header (Lighthouse, lhci) lost the session once the page set a cookie of its own. A cookie would also ride on every request.
+- **The rules exist once.** `routePlan.ts` has no imports and no module-level values, and the build turns its functions back into source (`BOOT_FUNCTIONS`). The app uses the same functions (`routePrefetch.ts`), and a test checks they stay self-contained.
+- **`src/api/prefetch.ts`:** `apiFetch` takes a prefetched GET of the same path once, if it started within 15 s. It still honours the caller's abort signal and gives the same errors. The store is empty for the old UI, so `apiFetch` is unchanged there.
+- **Route code in parallel** (`routePrefetch.ts`, in the entry):
+  - V5App and the matched page's modules start loading next to `/api/auth/me`.
+  - `preload.ts` `lazyPreloaded` renders a module directly when it has already loaded. `React.lazy` suspends once even then, and React holds the reveal about 300 ms, which was most of the gap between the data arriving and the page showing.
+  - App.tsx's `DesignSwitch` waits for that prefetched code with its plain loading screen, not a Suspense fallback (4 s cap).
+  - The admin inbox also preloads the old dialog providers it renders inside.
+- **The manifest gate:** `V5CurriculumProvider` lets `/learn` and `/admin` (exact paths) render without the manifest, as Review already did. Lessons, My plan and the other admin pages still wait.
+
+### First paint
+- **No fade on the first screenful.** Chrome counts text that fades in from opacity 0 as painted only when the fade ends (+320 ms).
+  - Today's content and Review's cards now move 8 px without fading.
+  - The lesson's first step shows at once; changing step still fades the new one in.
+- **Today's below-the-hero chunk** is requested once the hero has painted (two animation frames). Its skeleton holds the place. Its ~25 files used to compete with the hero's data and fonts.
+- **The motivation host and the toaster** mount after the `load` event plus idle (`AfterFirstScreen`, `afterLoad.ts`). Celebrations asked for earlier are already queued by `celebrate.ts`.
+
+### Lesson (fixes 5 and 6)
+- **Warm-up.** The player warms only the steps the lesson has, and only after `load` plus idle, so the poster isn't competing with it.
+- **Task kinds are lazy in v5.** v5 `TaskDo` uses `steps/LazyTaskView.tsx`, where each task kind is its own chunk. `hasTaskAnswer` moved to `src/components/tasks/taskAnswer.ts`, and `TaskView` re-exports it. The old UI and the assessment still use `TaskView`, unchanged.
+- **YouTube facade** (`WatchStep.tsx`; design `VideoPlayerFrame` gets `playLabel` and `posterNote`):
+  - The frame shows the `i.ytimg.com` thumbnail and a Play button. Its name is "Play <title>", or "Play from m:ss, <title>" with "Resume at m:ss" on the poster when resuming.
+  - Play, K/Space, a chapter, a note's time, the transcript or a playlist pick create the player at that moment, and it starts playing. A `?t=` link (a note's link) creates it at once, as before.
+  - Watch tracking, the playlist, autoplay-next, quick-check pop-ins, speed, captions and N (on the facade, the note gets the resume time) are unchanged once it plays.
+  - If the API fails, the plain embed gets `autoplay=1`, because the person clicked. A poster that can't load is hidden, so there's no broken-image icon.
+  - `useYouTubePlayer` gets `enabled` (default true, so the old `VideoPlaylist` is unchanged). The first video's options are read when the effect starts; for an always-enabled player that's the first render, as before.
+  - Course lessons (`CourseLesson.tsx`) get the same facade, with the iframe created on click.
+- **Tests.** `v5-lesson.ts` passes unchanged: it never plays the video. `v43-video.ts` is the old UI. No test step needed a Play press.
+
+### Fonts and CSS (fixes 3 and 4)
+- **The old fonts left the entry.** `src/fonts/legacyFonts.ts` (Sora ×4, IBM Plex Sans ×4, IBM Plex Mono ×2) is imported by `LegacyRoutes` and `AuthPages` instead of `main.tsx`.
+  - v5's `styles.ts` declares Sora (the same four weights) next to Geist and JetBrains Mono, and V5App imports it, so old pages inside the v5 shell keep Sora.
+  - Monaco declares its own IBM Plex Mono.
+  - Checked in a browser: the old dashboard and `/login` declare and load IBM Plex Sans/Mono and Sora. v5 `/learn` declares only Geist, JetBrains Mono and Sora, and loads Geist, JetBrains Mono and Sora 600.
+- **The render-blocking CSS was not split.** Tailwind 4 builds one utilities layer. Two stylesheets would duplicate utilities, and a later file's base utility (`p-4`) would override an earlier file's variant (`md:p-6`) at the same specificity, which would change the old UI's look. That breaks rule 1, so it isn't done. It's about 27 KB gzipped.
+
+### Fewer first-load chunks (fix 2)
+- **Groups were tried and not kept:**
+  - `entriesAware` icon and Radix groups: +28–38 KB per route, or more files with the merge threshold off;
+  - a v5 design-system group: pulled into the entry (+190 KB), or 100+ files without `includeDependenciesRecursively`.
+  - Rolldown's automatic split stays.
+- **The admin inbox's static graph used the `@/v5/design` barrel.** Its `import "./styles"` side effect keeps every design module. Seven admin files now import components directly: 101 → 71 files, 269 → 235 KB gzipped.
+- **The real cost of many small chunks was the measurement.** The proxy spoke HTTP/1.1, which Lantern models as 6 connections. Production Caddy serves HTTP/2. See "Measuring" below.
+
+### Compression in Node (fix 8)
+- **Precompressed files.** `vite.config.ts` `precompressAssets` writes `.br` (quality 11) and `.gz` (level 9) next to every text asset of 1 KB or more under `assets/`. `@fastify/static` serves them with `preCompressed: true`.
+  - No new dependency, and no CPU per request.
+  - Behind Caddy nothing changes: `encode` leaves a response that already has a Content-Encoding alone.
+  - The SSE feed (`reply.raw`) and API JSON are untouched. The SPA's `index.html` is served uncompressed (2 KB), as before.
+- **Test:** `server/src/lib/precompressed.test.ts` checks br, then gzip, then the file itself, the right type and Vary, a file with no copies, and the SPA fallback and API staying uncompressed.
+
+### Product bugs
+1. **CSP on CRLF builds:** `csp.ts` hashes inline scripts after normalising `\r\n` and `\r` to `\n` (`normaliseNewlines`), as browsers do. Tests cover a CRLF file, a lone CR and an LF file. Best practices is now 100 on all four routes.
+2. **"Next lesson":** verified fixed by 9.2 (`planNextTopicId` wraps to an earlier undone plan topic). The 9.1 report's exact case is now a unit test in `lessonLinks.test.ts`.
+3. **Review heading order:** `EmptyState` and `ErrorState` take `headingLevel` (default 3, so every other screen is unchanged). Review's empty, offline and error states use 2. Accessibility on Review is now 100.
+
+### Measuring
+- **`scripts/perf/lighthouse-v5.mjs` gets `LH_PROXY=h2`:** the same gzip proxy over TLS with HTTP/2, as Caddy serves production.
+  - It uses a throwaway self-signed certificate from `openssl` and Chrome's `--ignore-certificate-errors`.
+  - Seeding talks to Node directly.
+  - The default stays the 9.1 HTTP/1.1 proxy, so before/after numbers compare.
+- **Lighthouse keeps localStorage between runs** (it clears only service workers, caches and file systems). So run 1 of the first route is a first visit, without the guess, and later runs are a returning device.
+
+### Tests
+- **Vitest:**
+  - `src/v5/app/routePrefetch.test.ts` (18): the plan per route, the manifest gate, prefetch reuse, staleness, errors and abort, the poster choice, and the boot script being self-contained;
+  - `server/src/lib/precompressed.test.ts` (3);
+  - `csp.test.ts` (+2);
+  - `lessonLinks.test.ts` (+1).
+- **End to end, on the final snapshot:** v5-lesson, v5-learner-pages, v5-today, v5-design, v5-a11y, v5-pwa, v5-mobile-learner and v5-journeys pass. v5-foundation, v4-departments and v43-video pass with `UI_V5_DEFAULT=off`.
+  - Those three start from "the old UI is the default". The default was switched to v5 in `server/src/routes/ui.ts` by another change in this phase. Without the variable, v5-foundation fails at "global default is off" and the two old-UI scripts time out waiting for old screens. They need the variable in their server env, or updating.
+- **Visual (`v5-visual.ts`).**
+  - Mine: the 8 `lesson-watch-*` baselines were rewritten for the facade (`--update`, then every other baseline restored from a copy).
+  - Not mine, still different, from other agents' changes in the working tree:
+    - Today: the compact trail height, `Trail.tsx` T7;
+    - the course page, Me, certificate and assessment results: their own edits;
+    - the admin editor, People and the People sheet: their edits;
+    - admin reports and the inbox, and lesson-do: already different on the snapshot taken before this pass;
+    - the admin top bar at 1280 and up: "Use previous design" shows its words (UX review I3), which moves Library, Onboard and Overview by a few thousand pixels.
+  - Their owners should re-shoot those baselines once their work is final.
+- **`npm run size` is green:** /learn 168.1, lesson 196.9 (limit 200, tight), Review 189.3, admin 240.7 (was 271) KB.
+  - The learner routes grew about 5 KB because the entry now carries the route plan and the route modules' preload lists. The admin inbox shrank 30 KB.

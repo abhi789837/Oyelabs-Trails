@@ -139,13 +139,14 @@ function ReviewScreen() {
       ) : summary.error && !s && saved && offline ? (
         <OfflineStart saved={saved} onStart={() => setSession(saved.session)} />
       ) : summary.error && !s && offline ? (
-        <EmptyState icon={<CloudOff />} title="Nothing saved on this device yet" body="Open Review once while you're online, and your next cards are kept here for offline use." />
+        <EmptyState headingLevel={2} icon={<CloudOff />} title="Nothing saved on this device yet" body="Open Review once while you're online, and your next cards are kept here for offline use." />
       ) : summary.error && !s ? (
-        <ErrorState title="We couldn't load your review deck" onRetry={() => void summary.reload()} retrying={summary.loading} />
+        <ErrorState headingLevel={2} title="We couldn't load your review deck" onRetry={() => void summary.reload()} retrying={summary.loading} />
       ) : !s ? (
         showSkeleton ? <ReviewSkeleton /> : null
       ) : s.totalCards === 0 ? (
         <EmptyState
+          headingLevel={2}
           icon={<BookOpenCheck />}
           title="Nothing to review yet"
           body="Cards appear here after you finish lessons and take their tests. Wrong answers come back here too, so you can fix them."
@@ -156,7 +157,8 @@ function ReviewScreen() {
           }
         />
       ) : (
-        <m.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={transitions.calm} className="grid gap-(--v5-gap) md:grid-cols-3">
+        // Moves in without fading (Phase 9 performance: the faded-in cards counted as shown only after the fade).
+        <m.div initial={{ y: 8 }} animate={{ y: 0 }} transition={transitions.calm} className="grid gap-(--v5-gap) md:grid-cols-3">
           {KINDS.map(({ kind, label, hint, icon: Icon }) => {
             const count = kind === "due" ? s.dueCount : kind === "mistakes" ? s.mistakesCount : s.totalCards;
             const empty = count === 0;
@@ -406,7 +408,8 @@ function SessionRunner({ userId, session, onRated, onFinish }: { userId: string 
               <span className="flex items-center gap-1.5">
                 {label} <Kbd className={cn("max-sm:hidden", rating === 3 ? "border-on-brand/40 bg-transparent text-on-brand" : "")}>{key}</Kbd>
               </span>
-              <span className="text-caption font-normal">{card.intervals[String(rating) as "1"]}</span>
+              {/* Says what the time is (UX review R1): when the card comes back. */}
+              <span className="text-caption font-normal">Back in {card.intervals[String(rating) as "1"]}</span>
             </Button>
           ))}
         </div>

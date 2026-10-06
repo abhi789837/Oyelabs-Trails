@@ -58,6 +58,12 @@ export interface TrailProps {
  * part drawn over the same path. The stops are also an ordered list, so a screen reader gets the
  * plan without the drawing.
  */
+/** The lowest marker (18 px half-size) or label, plus a little room. Never taller than the geometry's own height. */
+function compactHeight(g: { height: number; waypoints: readonly { point: { y: number }; labelHeight: number }[] }): number {
+  const lowest = g.waypoints.reduce((max, wp) => Math.max(max, wp.point.y + Math.max(18, wp.labelHeight / 2)), 0);
+  return Math.min(g.height, Math.ceil(lowest + 16));
+}
+
 export function Trail({ stops, label, startLabel = "Start", summitLabel = "Summit", compact, onSelect, className }: TrailProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
@@ -72,12 +78,15 @@ export function Trail({ stops, label, startLabel = "Start", summitLabel = "Summi
   }, []);
 
   const geometry = useMemo(() => (width > 0 ? buildTrail(stops, { width, compact }) : null), [stops, width, compact]);
+  // The shared geometry leaves 96 px under the summit for the full-page trail. In a compact card
+  // that read as a gap (UX review T7), so stop just under the lowest marker or label.
+  const height = geometry ? (compact ? compactHeight(geometry) : geometry.height) : 240;
 
   return (
-    <div ref={ref} className={cn("relative w-full", className)} style={{ height: geometry?.height ?? 240 }}>
+    <div ref={ref} className={cn("relative w-full", className)} style={{ height }}>
       {geometry ? (
         <>
-          <svg className="absolute inset-0" width={geometry.width} height={geometry.height} aria-hidden="true" data-testid="v5-trail-path">
+          <svg className="absolute inset-0" width={geometry.width} height={height} aria-hidden="true" data-testid="v5-trail-path">
             <path d={geometry.d} fill="none" className="stroke-line-2" strokeWidth={3} strokeDasharray="2 7" strokeLinecap="round" />
             {geometry.progressD ? (
               <m.path

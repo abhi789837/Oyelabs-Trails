@@ -18,6 +18,8 @@ export interface StoryInput {
   mastery: readonly MasteryView[];
   missingLinks: readonly MissingLinkView[];
   firstSteps: readonly FirstStep[];
+  /** Nothing scored yet (no full marks, nothing still being marked). Changes the opening line (UX review A6). */
+  nothingScored?: boolean;
 }
 
 export interface Story {
@@ -52,6 +54,32 @@ export function becauseOfLink(link: MissingLinkView): string {
   return `${base}, and you're at ${now} now`;
 }
 
+const nowWords = (at: string) => (/^\d\/5$/.test(at) ? `you're at level ${at.slice(0, -2)} now` : "we haven't measured yours yet");
+
+/**
+ * The path's reasons are written for staff ("Critical goal X: you're at 0/5 and it needs 3/5.").
+ * On the learner's results they read as a plain clause (Phase 9.2), without the priority word or
+ * the "/5" shorthand. Reasons in any other shape come back without their full stop.
+ */
+export function plainReason(reason: string): string {
+  const r = noStop(reason);
+  let m = /^[A-Z][a-z-]* goal (.+?): you're at (not measured yet|\d\/5) and it needs (\d)\/5$/.exec(r);
+  if (m) return `your ${m[1]} goal needs level ${m[3]}, and ${nowWords(m[2])}`;
+  m = /^Before (.+?) because \1 needs (.+?), which you're missing \((not measured yet|\d\/5); it needs (\d)\/5\)$/.exec(r);
+  if (m) return `${m[1]} needs ${m[2]} first. It needs level ${m[4]}, and ${nowWords(m[3])}`;
+  m = /^Moved up: (.+)$/.exec(r);
+  if (m) return m[1];
+  m = /^Next for your (.+?) goal, after (.+)$/.exec(r);
+  if (m) return `it comes next for your ${m[1]} goal, after ${m[2]}`;
+  return lowerFirst(r);
+}
+
+/** The same reason as a sentence of its own, for the "Your first steps" cards. */
+export function plainReasonSentence(reason: string): string {
+  const clause = plainReason(reason);
+  return clause ? `${clause.charAt(0).toUpperCase()}${clause.slice(1)}.` : "";
+}
+
 export function buildStory(input: StoryInput): Story {
   const strong = (input.strengths.length
     ? [...input.strengths]
@@ -68,12 +96,12 @@ export function buildStory(input: StoryInput): Story {
   if (start) {
     const link = input.missingLinks.find((l) => mentions(l.skillName, start)) ?? (step ? null : input.missingLinks[0]);
     if (link) because = becauseOfLink(link);
-    else if (step?.reason && noStop(step.reason)) because = lowerFirst(noStop(step.reason));
+    else if (step?.reason && noStop(step.reason)) because = plainReason(step.reason);
     else if (input.focusFirst.length) because = "it matters most for your goals";
   }
 
   const sentences: string[] = [];
-  sentences.push(strong.length ? `You're strong at ${listWords(strong)}.` : "You've made a solid start.");
+  sentences.push(strong.length ? `You're strong at ${listWords(strong)}.` : input.nothingScored ? "You've taken the first step." : "You've made a solid start.");
   if (start) sentences.push(because ? `We'll start with ${start} because ${because}.` : `We'll start with ${start}.`);
   else sentences.push("Your plan builds on what you already know.");
   return { strong, start, because, sentences };
@@ -87,7 +115,18 @@ export function storyFrom(results: AssessmentResultsResponse): Story | null {
     mastery: results.result.mastery,
     missingLinks: results.result.missingLinks,
     firstSteps: results.firstSteps,
+    nothingScored: nothingScored(results),
   });
+}
+
+/** No full marks and nothing still being marked; without the answers list, every skill level is 0 or unmeasured. */
+export function nothingScored(results: Pick<AssessmentResultsResponse, "items" | "result">): boolean {
+  if (results.items) {
+    const counts = reviewCounts(results.items);
+    return results.items.length > 0 && counts.full === 0 && counts.waiting === 0;
+  }
+  const skills = results.result?.skills ?? [];
+  return skills.length > 0 && skills.every((s) => !s.level);
 }
 
 // ---------------------------------------------------------------------------

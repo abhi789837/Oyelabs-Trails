@@ -83,7 +83,7 @@ export function LessonStepHeader({ title, current, done, available, secondsLeft,
                     onClick={() => onStep?.(id)}
                     aria-current={id === current ? "step" : undefined}
                     className={cn(
-                      "inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-small font-medium transition-colors duration-120",
+                      "inline-flex min-h-9 items-center gap-1 rounded-full px-2.5 text-small font-medium transition-colors duration-120 sm:gap-1.5 sm:px-3",
                       state === "current" && "bg-brand text-on-brand",
                       state === "done" && "bg-success-soft text-success-fg",
                       state === "todo" && "text-fg-1 hover:bg-sunken",
@@ -91,8 +91,8 @@ export function LessonStepHeader({ title, current, done, available, secondsLeft,
                     )}
                   >
                     <Icon className="size-4" aria-hidden="true" />
-                    {/* On a phone only the current step keeps its visible label; the rest stay named for screen readers. */}
-                    <span className={id === current ? undefined : "sr-only sm:not-sr-only"}>{label}</span>
+                    {/* Every step keeps its word on a phone too (Phase 9.2): a bare tick or pencil had to be guessed. */}
+                    <span>{label}</span>
                     <span className="sr-only">{state === "done" ? " (done)" : state === "locked" ? " (finish the earlier steps first)" : ""}</span>
                   </button>
               </li>
@@ -124,28 +124,48 @@ export interface VideoPlayerFrameProps {
   poster?: string;
   ready?: boolean;
   onPlay?: () => void;
+  /** The play button's name; "Play <title>" by default (e.g. "Play from 3:12, <title>" when resuming). */
+  playLabel?: string;
+  /** Shown over the poster's corner, e.g. where playing will start. Decorative: say it in `playLabel` too. */
+  posterNote?: ReactNode;
   /** Under the player: speed, captions, notes. */
   controls?: ReactNode;
   className?: string;
 }
 
-export function VideoPlayerFrame({ title, children, poster, ready = true, onPlay, controls, className }: VideoPlayerFrameProps) {
+export function VideoPlayerFrame({ title, children, poster, ready = true, onPlay, playLabel, posterNote, controls, className }: VideoPlayerFrameProps) {
   return (
     <figure className={cn("flex flex-col gap-2", className)}>
       <div className="relative aspect-video w-full overflow-hidden rounded-card bg-[rgb(9_12_17)] shadow-e2">
         {ready && children ? children : null}
         {!ready || !children ? (
           <div className="absolute inset-0 grid place-items-center">
-            {poster ? <img src={poster} alt="" className="absolute inset-0 size-full object-cover opacity-70" /> : null}
+            {poster ? (
+              <img
+                src={poster}
+                alt=""
+                className="absolute inset-0 size-full object-cover opacity-70"
+                fetchPriority="high"
+                // Offline or blocked: the dark frame and the Play button, not a broken-image icon.
+                onError={(e) => {
+                  e.currentTarget.style.visibility = "hidden";
+                }}
+              />
+            ) : null}
             {onPlay ? (
               <button
                 type="button"
                 onClick={onPlay}
                 className="relative grid size-16 place-items-center rounded-full bg-white/95 text-[rgb(17_24_39)] shadow-e3 transition-transform duration-120 hover:scale-105"
-                aria-label={`Play ${title}`}
+                aria-label={playLabel ?? `Play ${title}`}
               >
                 <Play className="ml-1 size-7" fill="currentColor" aria-hidden="true" />
               </button>
+            ) : null}
+            {posterNote ? (
+              <span className="absolute bottom-3 left-3 rounded-control bg-black/75 px-2 py-1 text-caption text-white" aria-hidden="true">
+                {posterNote}
+              </span>
             ) : null}
           </div>
         ) : null}

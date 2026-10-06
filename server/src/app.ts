@@ -287,7 +287,10 @@ export async function buildApp({
  */
 async function registerSpa(app: FastifyInstance, env: Env, indexHtml: string, hasBuild: boolean): Promise<void> {
   if (hasBuild) {
-    await app.register(fastifyStatic, { root: env.clientDist, prefix: "/", index: false, wildcard: false });
+    // preCompressed (Phase 9 performance): the build writes .br/.gz next to each text asset
+    // (vite.config.ts `precompressAssets`), sent when the browser accepts them, so the app is fast
+    // without a compressing proxy too. Only static files; API responses and the SSE feed are untouched.
+    await app.register(fastifyStatic, { root: env.clientDist, prefix: "/", index: false, wildcard: false, preCompressed: true });
   } else if (!env.isTest) {
     app.log.warn({ dir: env.clientDist }, "no SPA build found; serving the API only");
   }

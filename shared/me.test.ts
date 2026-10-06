@@ -99,6 +99,8 @@ describe("library helpers", () => {
     expect(outcomeLine("Closures", "advanced")).toBe("Apply Closures");
     expect(outcomeLine("build a CRUD API.", "intermediate")).toBe("Build a CRUD API");
     expect(outcomeLine("React Router Fundamentals", null)).toBe("Use React Router Fundamentals");
+    expect(outcomeLine("How JS Code is Executed & the Call Stack", "intermediate")).toBe("Explain how JS Code is Executed & the Call Stack");
+    expect(outcomeLine("`let` & `const`: the Temporal Dead Zone", "beginner")).toBe("Explain let & const: the Temporal Dead Zone");
   });
 
   test("module item ids round-trip", () => {

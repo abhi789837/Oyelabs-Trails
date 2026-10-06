@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyRequest } from "fastify";
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, gte, inArray } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -13,6 +13,7 @@ import {
   type TodayWin,
 } from "../../../../shared/today";
 import { LANE_ORDER, planLaneSchema, type WeekItemView, type WeekView } from "../../../../shared/weeklyPlan";
+import { mondayOf } from "../../../../shared/streak";
 import { WIN_KINDS, XP_LABELS, type WinKind } from "../../../../shared/xp";
 import { requireActiveUser } from "../../auth/guards";
 import type { ContentStore } from "../../content/store";
@@ -22,6 +23,7 @@ import { activeWeek, weekView } from "../../plans/weekly/repo";
 import { listForLearner } from "../announcements/repo";
 import { refreshStreak } from "../streak/repo";
 import { recentXp, syncMilestoneXp, xpTotals } from "../xp/repo";
+import { plainTitle } from "../../../../shared/plainTitle";
 
 /**
  * `GET /api/v5/today`: everything the Today screen shows, in one call.
@@ -106,14 +108,22 @@ function contextFor(content: ContentStore, topicId: string): string | null {
   return `${module?.name ?? location.moduleId} · ${track?.name ?? location.trackId}`;
 }
 
-function buildWeek(week: WeekView | null): TodayWeek | null {
+/**
+ * The week's trail. `hereTopicId` is the big Continue's lesson: when it's in the week it goes first
+ * among the stops left, so the trail's "You are here" and the Continue name the same lesson
+ * (Phase 9.2; before, a resumed lesson could sit further down the trail than the marker).
+ */
+export function buildWeek(week: WeekView | null, hereTopicId: string | null = null, extraDone = 0): TodayWeek | null {
   if (!week || week.items.length === 0) return null;
   const rank = new Map(LANE_ORDER.map((lane, i) => [lane, i] as const));
   const ordered = [...week.items].sort((a, b) => (rank.get(a.lane) ?? 9) - (rank.get(b.lane) ?? 9) || a.position - b.position);
   // The trail shows done items first (the walked part), then what's left in the order to do it.
-  const stops = [...ordered.filter((i) => i.status === "done"), ...ordered.filter((i) => i.status !== "done")].map((item) => ({
+  const open = ordered.filter((i) => i.status !== "done");
+  const here = hereTopicId ? open.findIndex((i) => i.topicId === hereTopicId) : -1;
+  if (here > 0) open.unshift(...open.splice(here, 1));
+  const stops = [...ordered.filter((i) => i.status === "done"), ...open].map((item) => ({
     id: item.id,
-    title: item.title,
+    title: plainTitle(item.title),
     lane: item.lane,
     minutes: item.minutes,
     done: item.status === "done",
@@ -124,9 +134,35 @@ function buildWeek(week: WeekView | null): TodayWeek | null {
     startDate: week.startDate,
     endDate: week.endDate,
     stops,
-    doneCount: stops.filter((s) => s.done).length,
-    totalCount: stops.length,
+    // Lessons finished this ISO week that aren't week items (finished before the week was built, or
+    // picked outside the plan) count too, so the line doesn't say "0 of 4 done" after real work.
+    doneCount: stops.filter((s) => s.done).length + extraDone,
+    totalCount: stops.length + extraDone,
   };
+}
+
+/**
+ * Lessons finished since Monday 00:00 UTC (the streak's ISO week) that aren't in the week's items:
+ * curriculum topics from `topic_progress`, course lessons from `course_progress`. Exported for tests.
+ */
+export function doneOutsideWeek(db: Db, userId: string, week: WeekView | null, now = Date.now()): number {
+  if (!week || week.items.length === 0) return 0;
+  const since = mondayOf(now);
+  const topicIds = new Set(week.items.map((i) => i.topicId).filter((id): id is string => id !== null));
+  const lessonIds = new Set(week.items.map((i) => i.lessonId).filter((id): id is string => id !== null));
+  const topics = db
+    .select({ topicId: schema.topicProgress.topicId })
+    .from(schema.topicProgress)
+    .where(and(eq(schema.topicProgress.userId, userId), eq(schema.topicProgress.status, "completed"), gte(schema.topicProgress.completedAt, since)))
+    .all()
+    .filter((r) => !topicIds.has(r.topicId)).length;
+  const lessons = db
+    .select({ topicId: schema.courseProgress.topicId })
+    .from(schema.courseProgress)
+    .where(and(eq(schema.courseProgress.userId, userId), gte(schema.courseProgress.completedAt, since)))
+    .all()
+    .filter((r) => !lessonIds.has(r.topicId)).length;
+  return topics + lessons;
 }
 
 function winsFor(db: Db, userId: string): TodayWin[] {
@@ -171,7 +207,7 @@ function winsFor(db: Db, userId: string): TodayWin[] {
 export function heroFrom(content: ContentStore, resume: ResumeInput | null, week: WeekView | null): TodayHero | null {
   if (resume) {
     const fromWeek = week?.items.find((i) => i.topicId === resume.topicId) ?? null;
-    const title = resume.title ?? content.topicIndex.get(resume.topicId)?.meta.title ?? fromWeek?.title ?? "Your lesson";
+    const title = plainTitle(resume.title ?? content.topicIndex.get(resume.topicId)?.meta.title ?? fromWeek?.title ?? "Your lesson");
     const step = resume.step ?? null;
     return {
       kind: "resume",
@@ -191,7 +227,7 @@ export function heroFrom(content: ContentStore, resume: ResumeInput | null, week
   return {
     kind: "plan",
     topicId: first.topicId,
-    title: first.title,
+    title: plainTitle(first.title),
     step: first.topicId ? "watch" : null,
     positionSec: null,
     minutesLeft: first.minutes,
@@ -226,7 +262,7 @@ export async function registerV5TodayRoutes(app: FastifyInstance): Promise<void>
       .slice(0, 3)
       .map((item) => ({
         id: item.id,
-        title: item.title,
+        title: plainTitle(item.title),
         href: hrefFor(item),
         minutes: item.minutes,
         lane: item.lane,
@@ -239,7 +275,7 @@ export async function registerV5TodayRoutes(app: FastifyInstance): Promise<void>
     return {
       firstName: display.trim().split(/\s+/)[0] ?? "",
       hero,
-      week: buildWeek(week),
+      week: buildWeek(week, hero?.topicId ?? null, doneOutsideWeek(app.db, user.id, week)),
       goal,
       streak: { current: state.current, best: state.best, freezesLeft: state.freezesLeft, history: state.history.slice(-8) },
       upNext,

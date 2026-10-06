@@ -1,7 +1,9 @@
 import { lazy, Suspense, type ReactNode } from "react";
 import { Outlet } from "react-router-dom";
 
+import { lazyPreloaded } from "./preload";
 import { ScreenFallback } from "./RouteFallback";
+import { ROUTE_MODULES } from "./routePrefetch";
 
 /**
  * V5App's overlays, split so /learn's first download doesn't carry them (docs/v5/DECISIONS.md,
@@ -14,7 +16,8 @@ import { ScreenFallback } from "./RouteFallback";
  *   them (old pages, admin, assessment, /design).
  */
 const AppToaster = lazy(() => import("@/components/overlays/Toaster").then((m) => ({ default: m.AppToaster })));
-const OldDialogProviders = lazy(() => import("./oldDialogProviders"));
+// Preloaded with the admin inbox at start-up (routePrefetch), so the console doesn't pause on it.
+const OldDialogProviders = lazyPreloaded("oldDialogs", ROUTE_MODULES.oldDialogs);
 
 export function LazyToaster() {
   return (

@@ -19,7 +19,8 @@ export { useIsMobile, useMediaQuery, usePrefersReducedMotion } from "./hooks";
 
 export { Button, buttonVariants, type ButtonProps } from "./components/Button";
 export { Field, Input, Textarea, type FieldProps } from "./components/Field";
-export { Avatar, Badge, Kbd, Tabs, TabsContent, TabsList, TabsTrigger, Tooltip, TooltipProvider, badgeVariants, initialsOf } from "./components/Primitives";
+export { Avatar, Badge, Kbd, Tabs, TabsContent, TabsList, TabsTrigger, badgeVariants, initialsOf } from "./components/Primitives";
+export { Tooltip, TooltipProvider } from "./components/Tooltip";
 export { Card, CardHeader, type CardProps } from "./components/Card";
 export { ProgressBar, ProgressRing, type ProgressRingProps, type ProgressBarProps } from "./components/Progress";
 export { SkillMeter, StatTile, StreakFlame, XPCounter, type StatTileProps, type StreakFlameProps } from "./components/Stats";

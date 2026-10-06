@@ -14,6 +14,7 @@ import type { PlanLane, WeekItemView, WeekView } from "@shared/weeklyPlan";
 
 import { formatMinutes } from "../me/page";
 import { PART_TONE, currentMilestone, milestoneDone, planOrder, sortMilestones } from "./planLogic";
+import { plainTitle } from "@shared/plainTitle";
 
 /**
  * The v5 trails, drawn from the v4.3 pure geometry (`features/plan/trailGeometry`). Same rule as
@@ -78,12 +79,17 @@ function TrailSvg({ geometry, testId, progressTestId, compact }: { geometry: Tra
 // This week
 // ---------------------------------------------------------------------------
 
-export function WeekTrail({ week, selectedId, onSelect }: { week: WeekView; selectedId: string | null; onSelect: (item: WeekItemView) => void }) {
+/**
+ * `hereId`: the lesson the learner is part-way through (Phase 9.2). When it's an open stop this week,
+ * "You are here" marks it, so the trail, the card above it and Today all name the same lesson.
+ */
+export function WeekTrail({ week, selectedId, onSelect, hereId = null }: { week: WeekView; selectedId: string | null; onSelect: (item: WeekItemView) => void; hereId?: string | null }) {
   const [ref, width] = useElementWidth<HTMLDivElement>();
   const items = useMemo(() => planOrder(week.items), [week.items]);
+  const resumedIndex = hereId ? items.findIndex((i) => i.id === hereId && i.status !== "done") : -1;
   const geometry = useMemo(() => {
     if (width <= 0) return null;
-    const firstOpen = items.findIndex((i) => i.status !== "done");
+    const firstOpen = resumedIndex >= 0 ? resumedIndex : items.findIndex((i) => i.status !== "done");
     return computeTrail({
       width,
       startLabelHeight: 44,
@@ -92,10 +98,10 @@ export function WeekTrail({ week, selectedId, onSelect }: { week: WeekView; sele
         id: item.id,
         tone: item.lane,
         done: item.status === "done",
-        labelHeight: (w: number) => estimateLabelHeight({ title: item.title, meta: `${LANE_META[item.lane].label}   ${formatMinutes(item.minutes)}`, extraLines: i === firstOpen ? 1 : 0 }, w),
+        labelHeight: (w: number) => estimateLabelHeight({ title: plainTitle(item.title), meta: `${LANE_META[item.lane].label}   ${formatMinutes(item.minutes)}`, extraLines: i === firstOpen ? 1 : 0 }, w),
       })),
     });
-  }, [items, width]);
+  }, [items, width, resumedIndex]);
 
   return (
     <div ref={ref} className="relative w-full" style={{ height: geometry?.height ?? 320 }} data-testid="week-trail">
@@ -106,7 +112,7 @@ export function WeekTrail({ week, selectedId, onSelect }: { week: WeekView; sele
           <ol aria-label="This week's trail, in the order we suggest">
             {items.map((item, i) => {
               const wp = geometry.waypoints[i + 1];
-              const here = i === geometry.hereIndex;
+              const here = i === (resumedIndex >= 0 ? resumedIndex : geometry.hereIndex);
               const done = item.status === "done";
               const lane = LANE_CLASSES[item.lane];
               return (
@@ -116,7 +122,7 @@ export function WeekTrail({ week, selectedId, onSelect }: { week: WeekView; sele
                     data-testid="week-trail-waypoint"
                     aria-expanded={selectedId === item.id}
                     aria-controls="week-item-detail"
-                    aria-label={`${i + 1}. ${item.title}, ${LANE_META[item.lane].label}, ${formatMinutes(item.minutes)}${done ? ", done" : here ? ", you are here" : ""}`}
+                    aria-label={`${i + 1}. ${plainTitle(item.title)}, ${LANE_META[item.lane].label}, ${formatMinutes(item.minutes)}${done ? ", done" : here ? ", you are here" : ""}`}
                     onClick={() => onSelect(item)}
                     className={cn(
                       "absolute z-10 grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center font-mono text-caption font-semibold transition-transform duration-120 hover:scale-105",
@@ -135,7 +141,7 @@ export function WeekTrail({ week, selectedId, onSelect }: { week: WeekView; sele
                     className={cn("absolute -translate-y-1/2", wp.label.side === "left" ? "text-right" : "text-left")}
                     style={{ left: wp.label.left, top: wp.point.y, width: wp.label.width }}
                   >
-                    <span className={cn("block font-display text-body font-semibold leading-snug", done ? "text-fg-2" : "text-fg-1")}>{item.title}</span>
+                    <span className={cn("block font-display text-body font-semibold leading-snug", done ? "text-fg-2" : "text-fg-1")}>{plainTitle(item.title)}</span>
                     <span className="block text-caption text-fg-2">
                       <span className={lane.fg}>{LANE_META[item.lane].label}</span>
                       {"   "}

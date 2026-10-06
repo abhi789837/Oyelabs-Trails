@@ -9,7 +9,11 @@ import {
 } from "react-router-dom";
 
 import { RequireStaff, RequireSuperadmin } from "@/features/auth/guards";
+// v5's fonts and tokens for every v5 route, old pages in the v5 shell included: since Phase 9 the
+// previous design's fonts (Sora among them) are no longer loaded for everyone.
+import "@/v5/design/styles";
 
+import { AfterFirstScreen } from "./AfterFirstScreen";
 import * as Old from "./legacyPages";
 import { useAppMotionPref } from "./motionPref";
 import { LazyToaster, OldDialogsOutlet, WithOldDialogs } from "./overlays";
@@ -17,6 +21,8 @@ import { startServiceWorker } from "./pwa/register";
 import { UpdatePrompt } from "./pwa/UpdatePrompt";
 import { RouteErrorBoundary, SilentBoundary } from "./RouteErrorBoundary";
 import { RouteFallback } from "./RouteFallback";
+import { lazyPreloaded } from "./preload";
+import { ROUTE_MODULES } from "./routePrefetch";
 import { LearnerShell } from "./shells";
 import { V5CurriculumProvider as CurriculumProvider } from "./V5CurriculumProvider";
 import { SkipLink } from "@/v5/design/components/SkipLink";
@@ -33,20 +39,21 @@ import { MotivationHost } from "@/v5/motivation/MotivationHost";
  */
 
 // Learner
-const TodayPage = lazy(() => import("@/v5/learner/today/TodayPage"));
+// The routes routePrefetch.ts starts at app start render at once when already loaded (lazyPreloaded).
+const TodayPage = lazyPreloaded("today", ROUTE_MODULES.today);
 const PlanPage = lazy(() => import("@/v5/learner/plan/PlanPage"));
 const LibraryPage = lazy(() => import("@/v5/learner/library/LibraryPage"));
 const CoursePage = lazy(() => import("@/v5/learner/library/CoursePage"));
-const ReviewPage = lazy(() => import("@/v5/learner/review/ReviewPage"));
+const ReviewPage = lazyPreloaded("review", ROUTE_MODULES.review);
 const MePage = lazy(() => import("@/v5/learner/me/MePage"));
-const LessonPage = lazy(() => import("@/v5/learner/lesson/LessonPage"));
+const LessonPage = lazyPreloaded("lesson", ROUTE_MODULES.lesson);
 const CertificatePage = lazy(
   () => import("@/v5/learner/certificate/CertificatePage"),
 );
 // Assessment
 const AssessmentPage = lazy(() => import("@/v5/assessment/AssessmentPage"));
 // Admin
-const InboxPage = lazy(() => import("@/v5/admin/inbox/InboxPage"));
+const InboxPage = lazyPreloaded("inbox", ROUTE_MODULES.inbox);
 const OverviewPage = lazy(() => import("@/v5/admin/overview/OverviewPage"));
 const PeoplePage = lazy(() => import("@/v5/admin/people/PeoplePage"));
 const LibraryAdminPage = lazy(
@@ -54,11 +61,7 @@ const LibraryAdminPage = lazy(
 );
 const ReportsPage = lazy(() => import("@/v5/admin/reports/ReportsPage"));
 // Admin (P7): the v5 admin frame and its screens. The frame is lazy too, so learners never load it.
-const AdminShell = lazy(() =>
-  import("@/v5/admin/shell/AdminShell").then((m) => ({
-    default: m.AdminShell,
-  })),
-);
+const AdminShell = lazyPreloaded("admin", ROUTE_MODULES.admin);
 const OnboardPage = lazy(() => import("@/v5/admin/onboard/OnboardPage"));
 const CourseEditPage = lazy(
   () => import("@/v5/admin/library/editor/CourseEditPage"),
@@ -300,12 +303,15 @@ export default function V5App() {
 
         <Route path="*" element={<Navigate to="/learn" replace />} />
       </Routes>
-      <SilentBoundary>
-        <MotivationHost />
-      </SilentBoundary>
-      <SilentBoundary>
-        <LazyToaster />
-      </SilentBoundary>
+      {/* Not needed for any screen's first view: fetched once the page has loaded (Phase 9 performance). */}
+      <AfterFirstScreen>
+        <SilentBoundary>
+          <MotivationHost />
+        </SilentBoundary>
+        <SilentBoundary>
+          <LazyToaster />
+        </SilentBoundary>
+      </AfterFirstScreen>
       <UpdatePrompt />
     </V5MotionProvider>
   );

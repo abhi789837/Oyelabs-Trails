@@ -163,6 +163,13 @@ describe("reading", () => {
     expect(extractTakeaways("", [])).toEqual([]);
   });
 
+  test("takeaways: a short set-up sentence takes the next one with it (RD1)", () => {
+    expect(extractTakeaways("The stack is finite. Each call adds a frame, and deep recursion runs out of room. More here.")).toEqual([
+      "The stack is finite. Each call adds a frame, and deep recursion runs out of room.",
+    ]);
+    expect(extractTakeaways("The stack is finite.")).toEqual(["The stack is finite."]);
+  });
+
   test("callouts from a leading label", () => {
     expect(calloutOf("Tip: use const.")).toEqual({ kind: "tip", body: "use const." });
     expect(calloutOf("**Watch out:** this leaks.")).toEqual({ kind: "warning", body: "this leaks." });

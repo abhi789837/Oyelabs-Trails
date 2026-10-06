@@ -1,3 +1,4 @@
+import { emailConfigFromEnv } from "../email/sender";
 import { and, desc, eq, gte } from "drizzle-orm";
 
 import { settingsFrom } from "../../../../shared/me";
@@ -99,7 +100,8 @@ export interface ReminderOutcome {
  * the write (the notification row that *is* the record) run in one synchronous transaction, so two
  * ticks can't both send. An email copy is queued with it; the sender skips it when email isn't set up.
  */
-export function sendDueReminders(db: Db, content: ContentStore, appUrl: string, nowMs = Date.now()): ReminderOutcome[] {
+/** `emailOn`: email copies only when mail is set up; the in-app reminder always goes out. */
+export function sendDueReminders(db: Db, content: ContentStore, appUrl: string, nowMs = Date.now(), emailOn = emailConfigFromEnv().ok): ReminderOutcome[] {
   const out: ReminderOutcome[] = [];
   for (const learner of learners(db)) {
     const data = readPrefs(db, learner.id);
@@ -121,10 +123,12 @@ export function sendDueReminders(db: Db, content: ContentStore, appUrl: string, 
       const text = reminderText(firstNameOf(learner.displayName), next?.title ?? null);
       const link = next?.href ?? "/learn";
       notify(db, { recipientId: learner.id, kind: REMINDER_KIND, title: text.title, body: text.body, link });
-      const mail = reminderEmail(text, `${appUrl.replace(/\/+$/, "")}${link}`, appUrl);
-      db.insert(schema.emailOutbox)
-        .values({ id: newId(), toUserId: learner.id, toAddress: learner.username, kind: REMINDER_EMAIL_KIND, subject: text.title, html: mail.html, text: mail.text, status: "queued", createdAt: nowMs })
-        .run();
+      if (emailOn) {
+        const mail = reminderEmail(text, `${appUrl.replace(/\/+$/, "")}${link}`, appUrl);
+        db.insert(schema.emailOutbox)
+          .values({ id: newId(), toUserId: learner.id, toAddress: learner.username, kind: REMINDER_EMAIL_KIND, subject: text.title, html: mail.html, text: mail.text, status: "queued", createdAt: nowMs })
+          .run();
+      }
       return result;
     });
     out.push({ userId: learner.id, decision });
@@ -196,8 +200,10 @@ export function recapFor(db: Db, content: ContentStore, learner: Learner, appUrl
 export function queueWeeklyRecaps(
   db: Db,
   content: ContentStore,
-  options: { appUrl: string; nowMs?: number; schedule?: RecapSchedule; force?: boolean },
+  options: { appUrl: string; nowMs?: number; schedule?: RecapSchedule; force?: boolean; emailOn?: boolean },
 ): number {
+  // No mail settings = no email features at all (no queued rows, no "isn't set up" nag).
+  if (!(options.emailOn ?? emailConfigFromEnv().ok)) return 0;
   const nowMs = options.nowMs ?? Date.now();
   if (!options.force && !recapWindowOpen(new Date(nowMs), options.schedule ?? recapScheduleFromEnv())) return 0;
   let queued = 0;

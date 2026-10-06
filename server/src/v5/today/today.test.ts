@@ -12,7 +12,7 @@ import { recordAttempt } from "../../progress/repo";
 import { activeLearner, adminSession, as, createTestApp, publishPlanFor, type Session, type TestContext } from "../../test/harness";
 import { refreshStreak } from "../streak/repo";
 import { awardXp, levelUpsFrom, syncMilestoneXp } from "../xp/repo";
-import { heroFrom } from "./routes";
+import { buildWeek, heroFrom } from "./routes";
 
 let ctx: TestContext;
 let admin: Session;
@@ -109,6 +109,20 @@ describe("GET /api/v5/today", () => {
     expect(stored?.current).toBe(body.streak.current);
   });
 
+  test("lessons finished this week outside the week's items still count as done (T6)", async () => {
+    await publishPlanFor(ctx, admin, learner.id, ctx.content.orderedTopicIds.slice(0, 30));
+    const week = (await ctx.app.inject({ method: "GET", url: "/api/me/week", ...as(learner.session) })).json() as WeekResponse;
+    const inWeek = new Set(week.week!.items.map((i) => i.topicId));
+    const outside = ctx.content.orderedTopicIds.filter((id) => !inWeek.has(id)).slice(0, 2);
+    expect(outside.length).toBe(2);
+    for (const topicId of outside) recordAttempt(ctx.db, { userId: learner.id, topicId, kind: "quiz", score: 100, passed: true });
+
+    const body = await today();
+    expect(body.week?.doneCount).toBe(2);
+    expect(body.week?.totalCount).toBe(body.week!.stops.length + 2);
+    expect(body.week?.stops.every((s) => !s.done)).toBe(true);
+  });
+
   test("no goal at all: 3 steps meet the week", async () => {
     ctx.db.delete(schema.learnerPriorities).where(eq(schema.learnerPriorities.userId, learner.id)).run();
     for (const step of ["watch", "read", "do"]) awardXp(ctx.db, learner.id, "step_completed", `t1:${step}`);
@@ -170,6 +184,20 @@ describe("GET /api/v5/today", () => {
 
     expect(heroFrom(ctx.content, null, null)).toBeNull();
     expect(heroFrom(ctx.content, null, week)?.kind).toBe("plan");
+  });
+
+  test("the trail puts the Continue lesson first among the stops left, so 'You are here' matches it", async () => {
+    await publishPlanFor(ctx, admin, learner.id, ctx.content.orderedTopicIds.slice(0, 10));
+    await today();
+    const week = weekView(ctx.db, ctx.content, learner.id, activeWeek(ctx.db, learner.id)!);
+    const plain = buildWeek(week)!;
+    expect(plain.stops.length).toBeGreaterThan(2);
+    const last = plain.stops[plain.stops.length - 1]!;
+    const lastTopic = week.items.find((i) => i.id === last.id)!.topicId!;
+    const moved = buildWeek(week, lastTopic)!;
+    expect(moved.stops[0]!.id).toBe(last.id);
+    expect(moved.stops.map((s) => s.id).sort()).toEqual(plain.stops.map((s) => s.id).sort());
+    expect(buildWeek(week, "not-in-the-week")!.stops.map((s) => s.id)).toEqual(plain.stops.map((s) => s.id));
   });
 });
 

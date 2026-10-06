@@ -1,3 +1,4 @@
+import "@/fonts/legacyFonts";
 import { MotionConfig } from "motion/react";
 import { OverlayProvider } from "@/components/overlays";
 import { TooltipProvider } from "@/components/ui/tooltip";

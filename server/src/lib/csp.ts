@@ -30,12 +30,19 @@ export interface CspOptions {
   indexHtmlPath?: string | undefined;
 }
 
+/** CRLF and lone CR become LF, as the HTML parser does before a browser hashes the script. */
+export function normaliseNewlines(text: string): string {
+  return text.replace(/\r\n?/g, "\n");
+}
+
 function inlineScriptHashes(indexHtmlPath: string | undefined): string[] {
   if (!indexHtmlPath || !fs.existsSync(indexHtmlPath)) return [];
   const html = fs.readFileSync(indexHtmlPath, "utf8");
   const hashes: string[] = [];
   for (const match of html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)) {
-    const body = match[1];
+    // Browsers normalise line breaks to LF before hashing an inline script, so a CRLF file (a build
+    // from a Windows checkout with core.autocrlf) must be hashed the same way or the script is blocked.
+    const body = normaliseNewlines(match[1]);
     if (!body.trim()) continue;
     hashes.push(`'sha256-${crypto.createHash("sha256").update(body, "utf8").digest("base64")}'`);
   }

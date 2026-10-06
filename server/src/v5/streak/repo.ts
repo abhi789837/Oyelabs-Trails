@@ -33,7 +33,14 @@ export function goalMinutesFor(db: Db, userId: string): number | null {
   const prefs = db.select({ data: schema.userPrefs.data }).from(schema.userPrefs).where(eq(schema.userPrefs.userId, userId)).get()?.data;
   const pref = prefs?.weeklyGoalHours;
   if (typeof pref === "number" && Number.isFinite(pref) && pref > 0) return Math.round(Math.min(pref, MAX_HOURS_PER_WEEK) * 60);
+  return defaultGoalMinutesFor(db, userId);
+}
 
+/**
+ * The goal a learner has when they haven't picked one: the onboarding hours, else this week's plan
+ * budget, else none. Me → Settings names it, so "no goal of my own" doesn't read as "no goal".
+ */
+export function defaultGoalMinutesFor(db: Db, userId: string): number | null {
   const priorities = db
     .select({ hours: schema.learnerPriorities.hoursPerWeek })
     .from(schema.learnerPriorities)

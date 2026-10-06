@@ -5,7 +5,7 @@ import { useUiStore } from "@/store/uiStore";
 
 import { Button } from "./components/Button";
 import { V5Toaster } from "./components/Overlays";
-import { TooltipProvider } from "./components/Primitives";
+import { TooltipProvider } from "./components/Tooltip";
 import { Logo } from "./components/Showcase";
 import { SkeletonLayout } from "./components/States";
 import type { Density } from "./density";

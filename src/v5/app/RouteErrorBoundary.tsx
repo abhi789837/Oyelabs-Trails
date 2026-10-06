@@ -7,6 +7,7 @@ import { useV5Root } from "@/v5/design/useV5Root";
 import { isStaffRole } from "@shared/uiFlag";
 
 import { isChunkLoadError, reloadForChunkError } from "./chunkReload";
+import { logClientError } from "./clientErrorLog";
 
 /**
  * The v5 route-level error boundary (Phase 8). Every v5 route renders inside one, so a crash in a
@@ -16,7 +17,7 @@ import { isChunkLoadError, reloadForChunkError } from "./chunkReload";
  * - "Try again" resets the boundary, which mounts the screen again, and the screen fetches again.
  * - Moving to another page resets it too.
  * - A lazy file that no longer exists after a deploy reloads the page once (`chunkReload.ts`).
- * - There is no client error log on the server yet, so errors go to the console with the route.
+ * - Errors go to the console with the route, and to the server log (`POST /api/client-errors`).
  */
 export function RouteErrorBoundary({ children, fullPage = false }: { children: ReactNode; fullPage?: boolean }) {
   const { pathname } = useLocation();
@@ -62,6 +63,7 @@ class Boundary extends Component<BoundaryProps, BoundaryState> {
   componentDidCatch(error: unknown, info: ErrorInfo) {
     if (reloadForChunkError(error)) return;
     console.error(`[oyelearn] ${window.location.pathname} crashed`, error, info.componentStack);
+    logClientError(error, window.location.pathname);
   }
 
   componentDidUpdate(prev: BoundaryProps) {
@@ -85,7 +87,10 @@ function ErrorScreen({ error, onRetry, fullPage }: { error: unknown; onRetry: ()
   // The screen that crashed may have owned the v5 scope; keep the tokens on while this shows.
   useV5Root();
   const { user } = useAuth();
+  const { pathname } = useLocation();
   const staff = user ? isStaffRole(user.role) : false;
+  // A way out that isn't the page that just crashed (UX review E2): from Today itself, My plan.
+  const onToday = pathname.replace(/\/+$/, "") === "/learn";
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     heading.current?.focus({ preventScroll: false });
@@ -102,7 +107,7 @@ function ErrorScreen({ error, onRetry, fullPage }: { error: unknown; onRetry: ()
   return (
     <div className={fullPage ? "flex min-h-dvh items-center justify-center bg-surface-0 px-4 text-fg-1" : "flex min-h-[50vh] items-center justify-center px-4 py-10 text-fg-1"}>
       <div role="alert" className="flex w-full max-w-md flex-col items-center rounded-card border border-line-1 bg-surface-1 px-6 py-10 text-center">
-        <h1 ref={heading} tabIndex={-1} className="font-display text-h3 font-semibold text-fg-1 outline-none">
+        <h1 ref={heading} tabIndex={-1} className="font-display text-h3 font-semibold text-fg-1 outline-none focus-visible:outline-none">
           Something went wrong on this page.
         </h1>
         <p className="mt-2 text-body text-fg-2">{body}</p>
@@ -111,7 +116,7 @@ function ErrorScreen({ error, onRetry, fullPage }: { error: unknown; onRetry: ()
             {missingFile && !offline ? "Reload the page" : "Try again"}
           </Button>
           <Button asChild variant="secondary">
-            {staff ? <Link to="/admin">Go to the inbox</Link> : <Link to="/learn">Go to Today</Link>}
+            {staff ? <Link to="/admin">Go to the inbox</Link> : onToday ? <Link to="/learn/plan">Go to My plan</Link> : <Link to="/learn">Go to Today</Link>}
           </Button>
         </div>
         {error instanceof Error && error.message ? (

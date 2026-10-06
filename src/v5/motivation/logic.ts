@@ -110,8 +110,12 @@ export function claimOnce(key: string): boolean {
 /** The choices offered for the weekly goal. null = no hours goal (3 steps a week counts). */
 export const GOAL_CHOICES: readonly (number | null)[] = [null, 1, 2, 3, 4, 5, 6, 8, 10];
 
-export function goalLabel(hours: number | null): string {
-  if (hours === null) return "No hours goal (3 steps a week)";
+/**
+ * The goal select's labels. With no goal of their own, a learner still has the plan's pace when
+ * there is one (`defaultMinutes`); the label says so, so Today's ring and this field agree.
+ */
+export function goalLabel(hours: number | null, defaultMinutes: number | null = null): string {
+  if (hours === null) return defaultMinutes && defaultMinutes > 0 ? `Your plan's pace (${hoursText(defaultMinutes)} a week)` : "No hours goal (3 steps a week)";
   return `${hours} ${hours === 1 ? "hour" : "hours"} a week`;
 }
 
@@ -132,4 +136,9 @@ export function timeAgo(at: number, now = Date.now()): string {
   const h = Math.round(m / 60);
   if (h < 24) return `${h} h ago`;
   return new Date(at).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+}
+
+function hoursText(minutes: number): string {
+  const h = Math.round((minutes / 60) * 10) / 10;
+  return `${h} ${h === 1 ? "hour" : "hours"}`;
 }

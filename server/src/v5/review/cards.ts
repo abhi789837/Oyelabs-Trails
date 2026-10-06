@@ -11,6 +11,7 @@ import { BOX_INTERVAL_DAYS } from "../../routes/handbook";
 import { buildGrounding } from "../../topicTests/grounding";
 import { getGrounding } from "../../topicTests/repo";
 import { cardFromLeitner, newCard, type StoredCard } from "./scheduler";
+import { plainTitle } from "../../../../shared/plainTitle";
 
 /**
  * Where review cards come from. Every function here is idempotent: the unique index
@@ -111,7 +112,8 @@ export function mistakeCard(topicId: string, topicTitle: string | null, rowId: s
 }
 
 function topicTitle(content: ContentStore | null, topicId: string): string | null {
-  return content?.topicIndex.get(topicId)?.meta.title ?? null;
+  const title = content?.topicIndex.get(topicId)?.meta.title;
+  return title ? plainTitle(title) : null;
 }
 
 /**
@@ -178,7 +180,8 @@ export function topicPointCards(db: Db, content: ContentStore | null, topicId: s
     topicId,
     front:
       p.source === "summary"
-        ? { kind: "text" as const, prompt: `What is the main idea of "${title}"?`, context: "Say it in your own words, then check." }
+        ? // The lesson's own title, as section cards use their own heading (UX review R2).
+          { kind: "text" as const, prompt: title, context: "The lesson in a sentence or two. Say it in your own words, then check." }
         : { kind: "text" as const, prompt: p.heading, context: `From "${title}". What do you remember about this?` },
     back: { answer: clip(p.text) },
   }));

@@ -4,7 +4,11 @@
  * scripts/perf/lhci.mjs for how the session cookie and URLs are supplied).
  */
 const base = process.env.LHCI_BASE_URL || "http://127.0.0.1:8787";
-const paths = (process.env.LHCI_PATHS || "/learn?ui=v5,/learn/plan?ui=v5,/learn/library?ui=v5,/design?ui=v5").split(",");
+const paths = (process.env.LHCI_PATHS || "/learn?ui=v5,/learn/lesson/js-closures?ui=v5,/learn/review?ui=v5,/admin?ui=v5").split(",");
+// Phase 9.1: the budgets are judged on the mobile profile (Lighthouse's default config). Set
+// LHCI_PRESET=desktop for the desktop profile. scripts/perf/lighthouse-v5.mjs runs the same routes on
+// a private snapshot with a seeded login and a production-like (gzip) proxy.
+const preset = process.env.LHCI_PRESET === "desktop" ? { preset: "desktop" } : {};
 
 module.exports = {
   ci: {
@@ -12,7 +16,7 @@ module.exports = {
       url: paths.map((p) => `${base}${p.trim()}`),
       numberOfRuns: Number(process.env.LHCI_RUNS || 3),
       settings: {
-        preset: "desktop",
+        ...preset,
         // The session cookie is added by scripts/perf/lhci.mjs as an extra header.
         extraHeaders: process.env.LHCI_EXTRA_HEADERS ? JSON.parse(process.env.LHCI_EXTRA_HEADERS) : undefined,
         skipAudits: ["uses-http2"],

@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 
+import { registerClientErrorRoutes } from "../clientErrors/routes";
 import { registerNoteRoutes } from "../notes/routes";
 import { registerAdminProblemRoutes, registerProblemRoutes } from "../problems/routes";
 import { registerAdminTutorRoutes, registerTutorRoutes } from "../tutor/routes";
@@ -20,4 +21,6 @@ export async function registerV5LessonRoutes(app: FastifyInstance): Promise<void
   await registerTutorRoutes(app);
   await app.register(registerAdminProblemRoutes);
   await app.register(registerAdminTutorRoutes);
+  // Phase 9.2: the client error log (POST /api/client-errors). Here so app.ts is not touched.
+  await registerClientErrorRoutes(app);
 }

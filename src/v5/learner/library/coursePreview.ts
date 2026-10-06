@@ -1,5 +1,6 @@
 import type { Course } from "@shared/courses";
-import { formatOf, outcomeLine, type CourseDetail } from "@shared/me";
+import type { CourseDetail } from "@shared/me";
+import { formatOf, outcomeLine } from "@shared/meCore";
 
 import { courseLessonHref } from "@/v5/learner/lesson/lessonLinks";
 

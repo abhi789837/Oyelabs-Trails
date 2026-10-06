@@ -5,6 +5,7 @@ import { SESSION_COOKIE } from "../../../shared/auth";
 import { effectiveUiV5, parseUiOverride, uiV5PrefFrom } from "../../../shared/ui";
 import { schema } from "../db";
 import { activeLearner, adminSession, as, createTestApp, login, type Session, type TestContext } from "../test/harness";
+import { uiV5Fallback } from "./ui";
 
 let ctx: TestContext;
 let admin: Session;
@@ -79,7 +80,13 @@ describe("effectiveUiV5 (pure)", () => {
 });
 
 describe("the ui_v5 flag", () => {
-  test("defaults to off", async () => {
+  test("the built-in default is on (v5 Phase 9); UI_V5_DEFAULT=off restores the old design", () => {
+    expect(uiV5Fallback({})).toBe("on");
+    expect(uiV5Fallback({ UI_V5_DEFAULT: "on" })).toBe("on");
+    expect(uiV5Fallback({ UI_V5_DEFAULT: "off" })).toBe("off");
+  });
+
+  test("defaults to off when UI_V5_DEFAULT=off (the test environment)", async () => {
     expect((await me(learner.session)).ui).toEqual({ v5: false });
     expect((await me(admin)).ui).toEqual({ v5: false });
     const settings = await ctx.app.inject({ method: "GET", url: "/api/admin/settings/ui", ...as(admin) });

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { ApiRequestError } from "@/api/client";
-import { cn } from "@/v5/design";
+import { cn } from "@/v5/design/cn";
 
 /** Plain words for a failed request. The server's own message is already written for people. */
 export function plainMessage(error: unknown, fallback = "Something went wrong. Try again."): string {

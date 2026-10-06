@@ -1,10 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
+import zlib from "node:zlib";
 import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
 
 import { precacheList, precacheVersion, type BuiltChunk } from "./src/v5/app/pwa/precache";
+import { BOOT_FUNCTIONS } from "./src/v5/app/routePlan";
 
 /**
  * v5 Phase 8: writes dist/sw.js from src/v5/app/pwa/sw.template.js with this build's precache list
@@ -38,8 +40,73 @@ function oyelearnServiceWorker(): Plugin {
   };
 }
 
+/**
+ * Phase 9 performance: an inline start-up script in index.html (src/v5/app/routePlan.ts
+ * `bootPrefetch`). On a device that last opened v5 (or a staff `?ui=v5`), while the HTML is still
+ * parsing, it:
+ * - starts the route's queries (Today's, Review's, a lesson's, the admin inbox's) in parallel with
+ *   the JavaScript download, instead of after it;
+ * - for a lesson, warms the video poster and the module content as soon as their inputs arrive;
+ * - preloads v5's fonts: Geist (body text) and Sora 600 (headings, Today's hero among them), latin
+ *   only. Text in a web font that's still downloading isn't painted for a moment.
+ * The old UI never gets any of it. The functions are inlined from routePlan.ts (one copy of the
+ * rules); the font files are found in the bundle by name. server/src/lib/csp.ts hashes every inline
+ * script in dist/index.html, so the CSP allows it.
+ */
+function bootPrefetchScript(): Plugin {
+  const FONTS = [/(^|\/)geist-latin-wght-normal-[\w-]+\.woff2$/, /(^|\/)sora-latin-600-normal-[\w-]+\.woff2$/];
+  return {
+    name: "oyelearn-boot-prefetch",
+    apply: "build",
+    transformIndexHtml: {
+      order: "post",
+      handler(html, ctx) {
+        const files = Object.keys(ctx.bundle ?? {});
+        const fonts = FONTS.map((re) => {
+          const hit = files.find((f) => re.test(f));
+          if (!hit) throw new Error(`bootPrefetchScript: no font matching ${re} in the bundle`);
+          return `/${hit}`;
+        });
+        const source = BOOT_FUNCTIONS.map((fn) => fn.toString()).join("\n");
+        if (/__name|__vite|import\(|require\(/.test(source)) throw new Error("bootPrefetchScript: routePlan.ts compiled to code that can't run inline");
+        const script = `<script>(function(){\n${source}\nbootPrefetch(${JSON.stringify(fonts)});\n})();</script>`;
+        // Before the module script and the stylesheet: an inline script after a stylesheet waits for it.
+        const at = html.indexOf('<script type="module"');
+        return at === -1 ? html.replace("</head>", `${script}\n</head>`) : `${html.slice(0, at)}${script}\n    ${html.slice(at)}`;
+      },
+    },
+  };
+}
+
+/**
+ * Phase 9 performance (docs/v5/QUALITY.md, fix 8): writes a `.br` and a `.gz` next to every text
+ * asset, so the Node server can send them compressed on its own (`@fastify/static`
+ * `preCompressed`), without a proxy. Behind Caddy nothing changes: `encode` leaves a response that
+ * already has a Content-Encoding alone. Build only; files under 1 KB, and copies that aren't smaller,
+ * are skipped.
+ */
+function precompressAssets(): Plugin {
+  return {
+    name: "oyelearn-precompress",
+    apply: "build",
+    writeBundle(options, bundle) {
+      const outDir = options.dir ?? path.resolve("dist");
+      for (const name of Object.keys(bundle)) {
+        if (!/^assets\/.+\.(js|css|svg|json|txt|map)$/.test(name)) continue;
+        const file = path.join(outDir, name);
+        const raw = fs.readFileSync(file);
+        if (raw.length < 1024) continue;
+        const br = zlib.brotliCompressSync(raw, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11, [zlib.constants.BROTLI_PARAM_SIZE_HINT]: raw.length } });
+        const gz = zlib.gzipSync(raw, { level: 9 });
+        if (br.length < raw.length) fs.writeFileSync(`${file}.br`, br);
+        if (gz.length < raw.length) fs.writeFileSync(`${file}.gz`, gz);
+      }
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), oyelearnServiceWorker()],
+  plugins: [react(), oyelearnServiceWorker(), bootPrefetchScript(), precompressAssets()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

@@ -356,15 +356,17 @@ async function meFlow(page: Page): Promise<void> {
   ok(href === "/learn/lesson/js-hoisting", `a note links to its lesson (${href})`);
 
   await page.getByRole("tab", { name: "Settings" }).click();
-  const weekly = page.getByRole("switch", { name: "Weekly email" });
-  await weekly.waitFor({ timeout: WAIT });
-  ok((await weekly.getAttribute("aria-checked")) === "true", "weekly email starts on");
-  await weekly.click();
+  // A setting that's always shown (the weekly email one is hidden unless mail is set up).
+  const toggle = page.getByRole("switch", { name: "Captions" });
+  await toggle.waitFor({ timeout: WAIT });
+  ok((await toggle.getAttribute("aria-checked")) === "false", "captions start off");
+  await toggle.click();
   await page.getByText("Saved", { exact: true }).waitFor({ timeout: WAIT }).catch(() => undefined);
   await page.reload({ waitUntil: "networkidle" });
-  const again = page.getByRole("switch", { name: "Weekly email" });
+  const again = page.getByRole("switch", { name: "Captions" });
   await again.waitFor({ timeout: WAIT });
-  ok((await again.getAttribute("aria-checked")) === "false", "the change is still there after a reload");
+  ok((await again.getAttribute("aria-checked")) === "true", "the change is still there after a reload");
+  ok((await page.getByRole("switch", { name: "Weekly email" }).count()) === 0, "no weekly email option when mail isn't set up");
   ok(await page.getByRole("button", { name: "Use previous design" }).isVisible(), "Use previous design is offered");
   ok(await page.getByRole("link", { name: "Replay the welcome" }).isVisible(), "Replay the welcome is offered");
 }
@@ -413,6 +415,9 @@ async function sweep(browser: Browser, storage: string): Promise<void> {
           await go(page, target.url, target.heading);
           if (target.prepare) await target.prepare(page);
           await page.waitForTimeout(300);
+          // The saved theme (oyelabs-ui) wins over colorScheme, so check the page really is in this theme.
+          const dark = await page.evaluate(() => document.documentElement.classList.contains("dark"));
+          ok(dark === (theme === "dark"), `${target.name} ${width} ${theme}: the page is in ${theme} mode`);
           const scroll = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
           ok(scroll <= 1, `${target.name} ${width} ${theme}: no sideways scroll (${scroll}px)`);
           await axe(page, `${target.name} ${width} ${theme}`);
