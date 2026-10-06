@@ -16,7 +16,7 @@ import { CurriculumProvider } from "@/features/curriculum/CurriculumProvider";
 
 import * as Old from "./legacyPages";
 import { RouteFallback } from "./RouteFallback";
-import { AdminShell, LearnerShell } from "./shells";
+import { LearnerShell } from "./shells";
 
 /**
  * The v5 route tree (docs/v5/PLAN.md, "v5 routes"). App.tsx renders this, lazily, when the ui_v5
@@ -48,6 +48,21 @@ const LibraryAdminPage = lazy(
   () => import("@/v5/admin/library/LibraryAdminPage"),
 );
 const ReportsPage = lazy(() => import("@/v5/admin/reports/ReportsPage"));
+// Admin (P7): the v5 admin frame and its screens. The frame is lazy too, so learners never load it.
+const AdminShell = lazy(() =>
+  import("@/v5/admin/shell/AdminShell").then((m) => ({ default: m.AdminShell })),
+);
+const OnboardPage = lazy(() => import("@/v5/admin/onboard/OnboardPage"));
+const CourseEditPage = lazy(
+  () => import("@/v5/admin/library/editor/CourseEditPage"),
+);
+const AnnouncementsPage = lazy(
+  () => import("@/v5/admin/feedback/AnnouncementsPage"),
+);
+const ProblemsPage = lazy(() => import("@/v5/admin/feedback/ProblemsPage"));
+const TutorAnswersPage = lazy(
+  () => import("@/v5/admin/feedback/TutorAnswersPage"),
+);
 // Living style guide (design system, P1)
 const DesignPage = lazy(() => import("@/v5/design/DesignPage"));
 
@@ -175,7 +190,9 @@ export default function V5App() {
               element={
                 <RequireStaff>
                   <CurriculumProvider>
-                    <AdminShell />
+                    <Suspense fallback={<RouteFallback />}>
+                      <AdminShell />
+                    </Suspense>
                   </CurriculumProvider>
                 </RequireStaff>
               }
@@ -186,12 +203,19 @@ export default function V5App() {
               <Route path="library" element={<LibraryAdminPage />} />
               <Route
                 path="library/:courseId/edit"
-                element={<Old.OldAdminCourseEditorPage />}
+                element={<CourseEditPage />}
               />
               <Route path="reports" element={<ReportsPage />} />
+              <Route path="onboard" element={<OnboardPage />} />
+              <Route path="announcements" element={<AnnouncementsPage />} />
+              <Route path="problems" element={<ProblemsPage />} />
+              <Route path="tutor-answers" element={<TutorAnswersPage />} />
 
               {/* Old admin pages, unchanged, inside the v5 shell until each is replaced. */}
-              <Route path="onboard" element={<Old.OldAdminOnboardPage />} />
+              <Route
+                path="onboard/classic"
+                element={<Old.OldAdminOnboardPage />}
+              />
               <Route
                 path="people/:userId"
                 element={<Old.OldAdminLearnerPage />}

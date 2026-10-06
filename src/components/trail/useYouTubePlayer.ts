@@ -94,6 +94,8 @@ export interface YouTubePlayerOptions extends PlayerHandlers {
   videoId: string;
   start?: number;
   end?: number | null;
+  /** Extra player parameters for the first video (v5: captions on by default). Read once, like `videoId`. */
+  playerVars?: Record<string, string | number>;
 }
 
 export interface YouTubePlayerHandle {
@@ -110,7 +112,7 @@ export function useYouTubePlayer(hostRef: RefObject<HTMLDivElement | null>, opti
   const handlers = useRef<PlayerHandlers>(options);
   handlers.current = options;
   // Only the first video is used to construct the player.
-  const initial = useRef({ videoId: options.videoId, start: options.start, end: options.end });
+  const initial = useRef({ videoId: options.videoId, start: options.start, end: options.end, extra: options.playerVars });
 
   useEffect(() => {
     const host = hostRef.current;
@@ -123,8 +125,9 @@ export function useYouTubePlayer(hostRef: RefObject<HTMLDivElement | null>, opti
     loadApi()
       .then((YT) => {
         if (cancelled) return;
-        const { videoId, start, end } = initial.current;
+        const { videoId, start, end, extra } = initial.current;
         const playerVars: Record<string, string | number> = {
+          ...extra,
           enablejsapi: 1,
           origin: window.location.origin,
           rel: 0,

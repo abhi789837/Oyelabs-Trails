@@ -36,6 +36,8 @@ export const AI_TASKS = [
   "topic_test_write",
   "topic_test_relevance",
   "topic_test_answer",
+  "tutor_answer",
+  "tutor_solution",
 ] as const;
 export const aiTaskSchema = z.enum(AI_TASKS);
 export type AiTask = z.infer<typeof aiTaskSchema>;
@@ -80,6 +82,8 @@ export const TASK_DEFAULTS: Record<AiTask, TaskDefault> = {
   topic_test_write: { label: "Topic tests: writing grounded items", model: SONNET, maxTokens: 6000, urgent: false, batch: false, note: "One call per topic that needs items; only the topic's own text goes in" },
   topic_test_relevance: { label: "Topic tests: does the cited passage support the key", model: HAIKU, maxTokens: 2000, urgent: false, batch: false, note: "One call per topic checked" },
   topic_test_answer: { label: "Topic tests: answering items blind (with and without the content)", model: HAIKU, maxTokens: 800, urgent: false, batch: false, note: "Two calls per topic checked" },
+  tutor_answer: { label: "Ask Oye: answering a learner's question in a lesson", model: HAIKU, maxTokens: 700, urgent: true, batch: false, note: "One call per question; the lesson text is cached; daily limit per learner" },
+  tutor_solution: { label: "Ask Oye: writing a worked solution for a coding practice", model: HAIKU, maxTokens: 1500, urgent: true, batch: false, note: "Once per challenge, checked against every test, then cached" },
 };
 
 /** Calls that predate task types are routed by their purpose. */
@@ -126,6 +130,8 @@ export function taskForPurpose(purpose: AiPurpose): AiTask {
       return "topic_test_write";
     case "topic_test_check":
       return "topic_test_relevance";
+    case "tutor":
+      return "tutor_answer";
   }
 }
 

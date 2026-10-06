@@ -21,6 +21,7 @@ import { badRequest, notFound } from "../lib/errors";
 import { newId, now } from "../lib/ids";
 import { departmentOf, listSkip, replacePriorities } from "../setup/repo";
 import { getOutcome, listUsableOutcomes } from "./outcomes";
+import { awardXpSafely } from "../v5/xp/repo";
 
 /**
  * v4.3 goals: what the admin edits ("What should they be able to do?"), and the one place the skill
@@ -327,6 +328,8 @@ export function achieveGoal(db: Db, userId: string, goalId: string): boolean {
   if (goal.status === "achieved") return false;
   const at = now();
   db.update(schema.learnerGoals).set({ status: "achieved", achievedAt: at, updatedAt: at }).where(eq(schema.learnerGoals.id, goalId)).run();
+  // v5: XP for the practical case (idempotent; never fails the achievement).
+  awardXpSafely(db, userId, "case_passed", goalId, { at });
   createSuggestions(db, userId, nextLevelCandidates(db, userId, { ...goal, status: "achieved", achievedAt: at }));
   return true;
 }

@@ -51,6 +51,13 @@ import { registerAdminVideoRoutes, registerVideoRoutes } from "./routes/videos";
 import { registerAdminTopicTestRoutes } from "./routes/admin/topicTests";
 import { registerAdminNextActionRoutes } from "./routes/admin/nextAction";
 import { registerAdminBulkOnboardRoutes } from "./routes/admin/onboardBulk";
+import { registerV5AdminRoutes } from "./v5/admin/routes";
+import { registerV5AnnouncementRoutes } from "./v5/announcements/routes";
+import { registerV5TodayRoutes } from "./v5/today/routes";
+import { registerV5XpRoutes } from "./v5/xp/routes";
+import { registerV5ReviewRoutes } from "./v5/review/routes";
+import { registerV5MeRoutes } from "./v5/me/routes";
+import { registerV5LessonRoutes } from "./v5/lesson/register";
 import type { CodeSandbox } from "./sandbox";
 import { PistonClient } from "./sandbox/polyglot";
 
@@ -204,6 +211,15 @@ export async function buildApp({
   await registerGoalRoutes(app);
   await registerSpeechRoutes(app);
   await registerReviewRoutes(app);
+  // v5 Today (P2): /api/v5/today, /api/v5/me/xp, announcements (learner + /api/admin/announcements).
+  await registerV5TodayRoutes(app);
+  await registerV5XpRoutes(app);
+  await registerV5AnnouncementRoutes(app);
+  // v5 Plan/Library/Review/Me (P4): /api/v5/review/*, /api/v5/me/{settings,notes,profile,library}.
+  await registerV5ReviewRoutes(app);
+  await registerV5MeRoutes(app);
+  // v5 Lesson (P3): /api/v5/lessons/*, notes, tutor, problems (+ /api/admin/v5/{problems,tutor-quality}).
+  await registerV5LessonRoutes(app);
   // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);
@@ -228,6 +244,8 @@ export async function buildApp({
   await app.register(registerAdminTopicTestRoutes);
   await app.register(registerAdminNextActionRoutes);
   await app.register(registerAdminBulkOnboardRoutes);
+  // v5 Admin (P7): /api/admin/v5/{inbox,people,overview,reports,library,courses/:id/versions}.
+  await app.register(registerV5AdminRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

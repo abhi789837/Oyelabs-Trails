@@ -12,6 +12,7 @@ import { blueprintHandler } from "./assessment/blueprintJob";
 import { evaluateHandler } from "./assessment/evaluateJob";
 import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
 import { startDailyMaintenance } from "./maintenance/retention";
+import { startNightlyStreaks } from "./v5/streak/repo";
 import { bankFillHandler } from "./bank/fillJob";
 import { bankRevalidateHandler } from "./handbook/revalidate";
 import { personaliseHandler } from "./assessment/personalise/job";
@@ -139,6 +140,9 @@ async function main(): Promise<void> {
   const courseWake = setInterval(wakeCourses, 5 * 60 * 1000);
   courseWake.unref?.();
 
+  // v5: weekly streaks and milestone XP, recomputed nightly (reads recompute too).
+  const stopStreaks = startNightlyStreaks({ db, content, log: (m) => console.log(`[oyelearn] ${m}`) });
+
   // Snapshot retention and the nightly backup (brief §10.6, §15).
   const stopMaintenance = startDailyMaintenance({
     db,
@@ -154,6 +158,7 @@ async function main(): Promise<void> {
       clearInterval(linkCheck);
       clearInterval(courseWake);
       stopMaintenance();
+      stopStreaks();
       await worker.stop();
       await app.close();
       // Checkpoint the WAL so the .db file is complete for a backup or a container restart.

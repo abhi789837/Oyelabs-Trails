@@ -8,6 +8,7 @@ import { fixtureRoleplayReply, fixtureRoleplayScore } from "./mockRoleplay";
 import { fixtureSpeakGrade } from "./mockSpeak";
 import { fixtureRubricGrade } from "./mockScoring";
 import { fixtureTopicTestAnswer, fixtureTopicTestItems, fixtureTopicTestRelevance } from "./mockTopicTests";
+import { fixtureTutorAnswer, fixtureTutorSolution } from "./mockTutor";
 
 /**
  * A deterministic stand-in for a real provider, for development and tests only.
@@ -154,6 +155,10 @@ export class MockProvider implements AiProvider {
         return fixtureTopicTestAnswer(request.user);
       case "speak_grade":
         return fixtureSpeakGrade(request.user);
+      case "tutor_answer":
+        return fixtureTutorAnswer(request.system, request.user);
+      case "tutor_solution":
+        return fixtureTutorSolution(request.user);
       default:
         return undefined;
     }

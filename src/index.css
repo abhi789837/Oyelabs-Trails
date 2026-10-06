@@ -11,13 +11,11 @@
 }
 
 @theme {
-  --font-*: initial;
   --font-brand: Sora, ui-sans-serif, system-ui, sans-serif;
   --font-display: Sora, ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --text-*: initial;
   --text-xs: 0.75rem;
   --text-xs--line-height: 1.125rem;
   --text-sm: 0.875rem;

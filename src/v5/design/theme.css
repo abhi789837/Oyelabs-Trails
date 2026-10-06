@@ -9,6 +9,17 @@
  * The old UI never uses these class names, so its CSS output is unchanged apart from the new
  * utilities v5 files use.
  */
+/*
+ * The resets live here, not in index.css: index.css's @theme comes after this file (CSS @import
+ * must come first), so a reset there wiped the v5 text sizes below and every v5 text-* class
+ * produced no CSS. Order now: reset -> v5 sizes -> the old UI's fonts and sizes (index.css), which
+ * is exactly what the old UI had before.
+ */
+@theme {
+  --font-*: initial;
+  --text-*: initial;
+}
+
 @theme inline {
   --color-surface-0: rgb(var(--v5-surface-0));
   --color-surface-1: rgb(var(--v5-surface-1));

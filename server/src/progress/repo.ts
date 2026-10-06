@@ -5,6 +5,8 @@ import type { AttemptKind } from "../../../shared/enums";
 import { schema, type Db } from "../db";
 import { newId, now } from "../lib/ids";
 import { achieveGoalsForTopic } from "../goals/repo";
+import { awardXpSafely } from "../v5/xp/repo";
+import { onTopicAttemptSafely } from "../v5/review/cards";
 
 export function getProgress(db: Db, userId: string): Record<string, TopicProgressValue> {
   const rows = db.select().from(schema.topicProgress).where(eq(schema.topicProgress.userId, userId)).all();
@@ -95,6 +97,12 @@ export function recordAttempt(db: Db, input: RecordAttemptInput): TopicProgressV
       set: { ...next, updatedAt: timestamp },
     })
     .run();
+
+  // v5: XP for a passed topic test (idempotent; never fails the attempt).
+  if (input.passed) awardXpSafely(db, input.userId, "topic_test_passed", input.topicId, { at: timestamp });
+
+  // v5 Review: wrong quiz answers become "Fix my mistakes" cards; a completed topic adds key-point cards.
+  onTopicAttemptSafely(db, input.userId, input.topicId);
 
   // v4.3: a passed topic that is a goal's capstone achieves that goal.
   if (input.passed) {

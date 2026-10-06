@@ -94,6 +94,8 @@ export const aiPurposeSchema = z.enum([
   "topic_test_write",
   /** v4.3: the topic-test quality gates (relevance, blind answering). */
   "topic_test_check",
+  /** v5: the in-lesson tutor "Ask Oye" (answers and checked solutions). */
+  "tutor",
 ]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 

@@ -389,9 +389,10 @@ function labelHits(): CopyHit[] {
 }
 
 export function allCopyHits(): CopyHit[] {
-  const admin = walk(path.join(root, "src/features/admin"), isSource);
-  const sharedCopy = [path.join(root, "shared/nextAction.ts")];
-  const serverDirs = ["server/src/routes/admin", "server/src/setup", "server/src/goals", "server/src/builder", "server/src/assessment", "server/src/speech", "server/src/handbook", "server/src/plans", "server/src/jobs", "server/src/courses"];
+  // v5 Phase 7: the v5 admin console, its shared copy and its server routes follow the same guide.
+  const admin = [...walk(path.join(root, "src/features/admin"), isSource), ...walk(path.join(root, "src/v5/admin"), isSource)];
+  const sharedCopy = [path.join(root, "shared/nextAction.ts"), path.join(root, "shared/adminInbox.ts"), path.join(root, "shared/reports.ts")];
+  const serverDirs = ["server/src/v5/admin", "server/src/routes/admin", "server/src/setup", "server/src/goals", "server/src/builder", "server/src/assessment", "server/src/speech", "server/src/handbook", "server/src/plans", "server/src/jobs", "server/src/courses"];
   const server = serverDirs.flatMap((d) => walk(path.join(root, d), isSource));
   return [...hitsIn(admin, copyIn), ...hitsIn(sharedCopy, copyIn), ...hitsIn(server, serverCopyIn), ...labelHits()];
 }
