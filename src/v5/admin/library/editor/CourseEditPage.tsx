@@ -13,7 +13,8 @@ import { v5AdminApi, type VersionMeta } from "../../api";
 import { BiggerScreenNote } from "../../parts/BiggerScreen";
 import { formatDateTime, Page, PageHeader, plainMessage, useLoad } from "../../parts/common";
 import { EditorSkeleton } from "../../parts/Skeletons";
-import { withoutTopic } from "./courseOps";
+import { AudiencePanel } from "./AudiencePanel";
+import { courseUpdate, withoutTopic } from "./courseOps";
 import { docToLesson, EMPTY_QUIZ, EMPTY_TASK, lessonToDoc, type PMDoc } from "./blocks";
 import { QuizBlock, TaskBlock, VideoBlock } from "./nodes";
 import { lessonStarterKit } from "./schema";
@@ -112,22 +113,15 @@ export default function CourseEditPage() {
     }
   };
 
-  const togglePublished = async () => {
-    if (!course) return;
+  /** `base` is the course as it is now, when the caller has just saved it (who gets it, say). */
+  const togglePublished = async (base: Course | null = course) => {
+    if (!base) return;
     try {
-      const r = await coursesApi.update(course.id, {
-        title: course.title,
-        summary: course.summary,
-        accent: course.accent,
-        audience: course.audience,
-        published: !course.published,
-        level: course.level,
-        departmentId: course.departmentId,
-      });
+      const r = await coursesApi.update(base.id, courseUpdate(base, { published: !base.published }));
       setCourse(r.course);
       await v5AdminApi.snapshot(courseId).catch(() => null);
       setVersionsKey((k) => k + 1);
-      v5Toast.success(r.course.published ? "It's live. Learners can see it." : "It's a draft again. Learners can't see it.");
+      v5Toast.success(r.course.published ? (r.course.audience === "everyone" ? "It's live. Every learner can see it." : "It's live. The people you picked can see it.") : "It's a draft again. Learners can't see it.");
     } catch (error) {
       v5Toast.error("That didn't work", plainMessage(error));
     }
@@ -153,7 +147,7 @@ export default function CourseEditPage() {
       <BiggerScreenNote id="course-editor" className="mb-4" body="You can fix a typo here, but writing lessons is easier on a tablet or a computer." />
       <PageHeader
         title={course.title}
-        description={course.published ? "Live: learners can see it." : "Draft: learners can't see it yet."}
+        description={course.published ? (course.audience === "everyone" ? "Live: every learner can see it." : "Live: the people you picked can see it.") : "Draft: learners can't see it until you make it live."}
         actions={
           <>
             <Button variant="ghost" size="sm" asChild>
@@ -173,6 +167,7 @@ export default function CourseEditPage() {
           </>
         }
       />
+      <AudiencePanel course={course} onCourseChange={setCourse} onMakeLive={(next) => togglePublished(next)} />
       <div className="grid gap-(--v5-gap) lg:grid-cols-[260px_minmax(0,1fr)]">
         <nav aria-label="Lessons in this course" className="flex flex-col gap-3">
           {course.sections.map((s) => (

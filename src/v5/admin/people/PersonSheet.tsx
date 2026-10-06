@@ -12,6 +12,7 @@ import { Avatar, Badge, Button, ProgressBar, Sheet, Skeleton, StatusLine, useIsM
 
 import { v5AdminApi } from "../api";
 import { formatDate, plainMessage, useLoad } from "../parts/common";
+import { AddCourse } from "./AddCourse";
 import type { PersonRow } from "./views";
 
 const TONE: Record<NextActionTone, "info" | "success" | "neutral" | "danger"> = { todo: "info", done: "success", waiting: "neutral", blocked: "danger" };
@@ -140,6 +141,12 @@ function PersonBody({ person, onChanged }: { person: PersonRow; onChanged: () =>
       ) : (
         <StatusLine tone="neutral">Staff account: nothing to assign.</StatusLine>
       )}
+
+      {learner ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <AddCourse userId={person.id} name={person.displayName} />
+        </div>
+      ) : null}
 
       {learner ? (
         <section aria-labelledby="sheet-plan">

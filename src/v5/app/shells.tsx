@@ -1,9 +1,10 @@
 import { Suspense, useState } from "react";
-import { BookOpen, CalendarRange, Inbox, LayoutDashboard, Library, Repeat, Sun, UserPlus, Users, UserRound, BarChart3, type LucideIcon } from "lucide-react";
+import { BookMarked, BookOpen, CalendarRange, Inbox, ShieldCheck, LayoutDashboard, Library, Repeat, Sun, UserPlus, Users, UserRound, BarChart3, type LucideIcon } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
 import { Logo } from "@/components/layout/Logo";
 import { useAuth } from "@/features/auth/AuthProvider";
+import { isStaffRole } from "@shared/uiFlag";
 import { cn } from "@/lib/utils";
 
 import { SkipLink as V5SkipLink } from "@/v5/design/components/SkipLink";
@@ -11,6 +12,7 @@ import { SkipLink as V5SkipLink } from "@/v5/design/components/SkipLink";
 import { chooseDesign } from "./designFlag";
 import { RouteErrorBoundary } from "./RouteErrorBoundary";
 import { ScreenFallback } from "./RouteFallback";
+import { ThemeToggle } from "./ThemeToggle";
 
 /**
  * Temporary v5 shells from Phase 0. Deliberately plain: the design system phase (P1) supplies the
@@ -105,7 +107,16 @@ function UsePreviousDesign({ landing }: { landing: string }) {
   );
 }
 
+/** Links under the main ones: the handbook for everyone, and the admin console for staff. */
+function learnerExtras(role: string | undefined): NavItem[] {
+  const items: NavItem[] = [{ to: "/glossary", label: "Handbook", icon: BookMarked }];
+  if (role && isStaffRole(role)) items.push({ to: "/admin", label: "Admin", icon: ShieldCheck });
+  return items;
+}
+
 export function LearnerShell() {
+  const { user } = useAuth();
+  const extras = learnerExtras(user?.role);
   return (
     <div className="flex min-h-dvh flex-col bg-background text-foreground">
       <SkipLink />
@@ -122,6 +133,16 @@ export function LearnerShell() {
                 <SideNavLink item={item} />
               </li>
             ))}
+          </ul>
+          <ul className="mt-4 space-y-1 border-t pt-4" aria-label="More">
+            {extras.map((item) => (
+              <li key={item.to}>
+                <SideNavLink item={item} />
+              </li>
+            ))}
+            <li>
+              <ThemeToggle className="w-full" />
+            </li>
           </ul>
         </nav>
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 pb-20 focus:outline-hidden md:pb-0">

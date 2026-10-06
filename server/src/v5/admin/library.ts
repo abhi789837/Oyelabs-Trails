@@ -12,6 +12,8 @@ export interface LibraryCourse {
   status: LibraryStatus;
   /** Made by our course writer rather than typed by a person. */
   generated: boolean;
+  /** Who sees it once it's live: everyone, or only the people picked for it. */
+  audience: "everyone" | "assigned";
   /** The plain reason a generated course needs a look. */
   reason: string | null;
   lessons: number;
@@ -77,6 +79,7 @@ export function buildLibrary(db: Db): LibraryResponse {
           summary: c.summary,
           status: statusOf(c.published, g?.status),
           generated: Boolean(g),
+          audience: c.audience,
           reason: g?.status === "needs_review" ? (g.reviewReason ?? null) : null,
           lessons: lessons.get(c.id) ?? 0,
           level: c.level ?? null,

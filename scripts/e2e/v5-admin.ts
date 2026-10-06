@@ -414,6 +414,68 @@ async function editorJourney(page: Page, admin: APIRequestContext, s: Seeded): P
   await page.keyboard.press("Escape");
 }
 
+/** v5.0.1: write a course, give it to one person, make it live, and see it in their Library. */
+async function audienceJourney(browser: Browser, page: Page, admin: APIRequestContext, s: Seeded): Promise<void> {
+  step("create a course with a video lesson, give it to Rahul only, make it live");
+  await visit(page, "/admin/library");
+  await page.getByRole("button", { name: "Create course" }).first().click({ timeout: WAIT });
+  await page.getByLabel("Course name").fill("Our deploy checklist");
+  await page.getByRole("button", { name: "Create and start writing" }).click({ timeout: WAIT });
+  await page.waitForURL(/\/admin\/library\/[^/]+\/edit$/, { timeout: WAIT });
+  const courseId = new URL(page.url()).pathname.split("/")[3]!;
+
+  await page.getByRole("textbox", { name: "Lesson content" }).waitFor({ timeout: WAIT });
+  await page.getByRole("toolbar", { name: "Formatting and blocks" }).getByRole("button", { name: "Video", exact: true }).click({ timeout: WAIT });
+  await page.getByLabel("YouTube link").fill("https://www.youtube.com/watch?v=ZvbzSrg0afE");
+  const save = page.getByRole("button", { name: "Save", exact: true });
+  await poll("Save to be ready", WAIT, async () => ((await save.isEnabled()) ? true : null), 200);
+  await save.click({ timeout: WAIT });
+  await page.getByText(/Saved\. This is version \d+/).first().waitFor({ timeout: WAIT });
+
+  ok(await page.getByText("Draft: nobody sees it yet.").first().isVisible(), "a new course says nobody sees it yet");
+  await page.getByRole("radio", { name: /Only people I pick/ }).check();
+  await page.getByLabel("Find people").fill("rahul");
+  await page.getByRole("checkbox", { name: /Rahul Verma/ }).check();
+  ok((await page.getByRole("checkbox", { name: /Sana Iqbal/ }).count()) === 0, "the search narrows the list to Rahul");
+  await shot(page, "editor-audience-1440-light");
+  await page.getByRole("button", { name: "Save who gets it" }).click({ timeout: WAIT });
+  await page.getByText("Make it live and 1 person will.").first().waitFor({ timeout: WAIT });
+  await page.getByRole("button", { name: "Make it live" }).first().click({ timeout: WAIT });
+  await page.getByText("Live for 1 person.").first().waitFor({ timeout: WAIT });
+
+  const saved = await getJson<{ course: { audience: string; published: boolean; sections: { topics: { videoId: string | null }[] }[] } }>(admin, `/api/admin/courses/${courseId}`);
+  const { userIds } = await getJson<{ userIds: string[] }>(admin, `/api/admin/courses/${courseId}/assignees`);
+  ok(saved.course.published && saved.course.audience === "assigned", `the course is live for picked people (${saved.course.audience}, published ${saved.course.published})`);
+  ok(saved.course.sections[0]?.topics[0]?.videoId === "ZvbzSrg0afE", "the lesson kept its video");
+  ok(userIds.length === 1 && userIds[0] === s.rahulId, `only Rahul is picked (${userIds.join(", ")})`);
+
+  step("Rahul sees it in his Library; Sana doesn't until she's added from People");
+  const libraryOf = async (userId: string, username: string, password: string): Promise<string[]> => {
+    await sendJson(admin, "post", `/api/admin/users/${userId}/reset-password`, { password });
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    try {
+      const p = await ctx.newPage();
+      await signIn(p, username, password, `${password}-2`);
+      const lib = await getJson<{ items: { id: string }[] }>(p.request, "/api/v5/me/library");
+      return lib.items.map((i) => i.id);
+    } finally {
+      await ctx.close();
+    }
+  };
+  ok((await libraryOf(s.rahulId, "rahul.verma", "Trail-Learner-5521!")).includes(courseId), "the course is in Rahul's Library (learner API)");
+  ok(!(await libraryOf(s.stuckId, "sana.iqbal", "Trail-Learner-6632!")).includes(courseId), "it isn't in Sana's");
+
+  await visit(page, `/admin/people?person=${s.stuckId}`);
+  const sheet = page.getByRole("dialog", { name: "Sana Iqbal" });
+  await sheet.getByRole("button", { name: "Add a course" }).click({ timeout: WAIT });
+  const picker = page.getByRole("dialog", { name: "Add a course for Sana Iqbal" });
+  await picker.getByRole("button", { name: "Add Our deploy checklist" }).click({ timeout: WAIT });
+  await picker.getByText("Added", { exact: true }).waitFor({ timeout: WAIT });
+  const after = await getJson<{ userIds: string[] }>(admin, `/api/admin/courses/${courseId}/assignees`);
+  ok(after.userIds.includes(s.rahulId) && after.userIds.includes(s.stuckId), `People's "Add a course" adds Sana and keeps Rahul (${after.userIds.length} picked)`);
+  await page.keyboard.press("Escape");
+}
+
 async function reportsJourney(page: Page): Promise<void> {
   step("export a report CSV");
   await visit(page, "/admin/reports");
@@ -514,6 +576,7 @@ async function main(): Promise<void> {
     await peopleJourney(page, s);
     await paletteJourney(page, s);
     await editorJourney(page, page.request, s);
+    await audienceJourney(browser, page, page.request, s);
     await reportsJourney(page);
     await visit(page, "/admin/overview");
     await shot(page, "overview-1440-light");

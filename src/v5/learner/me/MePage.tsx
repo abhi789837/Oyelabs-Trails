@@ -1,12 +1,14 @@
 import { lazy, Suspense, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { Award, Download, ExternalLink, NotebookPen, RotateCcw, Search, Trophy } from "lucide-react";
+import { Award, BookMarked, Download, ExternalLink, NotebookPen, RotateCcw, Search, ShieldCheck, Trophy } from "lucide-react";
 import { m } from "motion/react";
 import { Link } from "react-router-dom";
 
 import { api, ApiRequestError } from "@/api/client";
 import type { CertificateData } from "@/lib/certificate";
 import type { TrackId } from "@/types/curriculum";
+import { useAuth } from "@/features/auth/AuthProvider";
 import { chooseDesign } from "@/v5/app/designFlag";
+import { isStaffRole } from "@shared/uiFlag";
 import { Button } from "@/v5/design/components/Button";
 import { Card, CardHeader } from "@/v5/design/components/Card";
 import { Input } from "@/v5/design/components/Field";
@@ -47,6 +49,25 @@ function initialTab(): Tab {
   return TABS.includes(t as Tab) ? (t as Tab) : "progress";
 }
 
+/** On phones the bottom bar is full, so the sidebar's extra links live here (hidden from md up). */
+function MoreLinks() {
+  const { user } = useAuth();
+  const staff = user ? isStaffRole(user.role) : false;
+  const link = "flex min-h-11 flex-1 items-center justify-center gap-2 rounded-card border border-line-1 bg-surface-1 px-3 text-small font-medium text-fg-1 hover:bg-sunken";
+  return (
+    <nav aria-label="More" className="mb-4 flex gap-2 md:hidden">
+      <Link to="/glossary" className={link}>
+        <BookMarked className="size-4" aria-hidden="true" /> Handbook
+      </Link>
+      {staff ? (
+        <Link to="/admin" className={link}>
+          <ShieldCheck className="size-4" aria-hidden="true" /> Admin
+        </Link>
+      ) : null}
+    </nav>
+  );
+}
+
 function MeScreen({ settings }: { settings: ApiData<{ settings: Settings; emailEnabled?: boolean }> }) {
   const profile = useApiData<MeProfile>("/api/v5/me/profile");
   const [tab, setTab] = useState<Tab>(initialTab);
@@ -66,6 +87,7 @@ function MeScreen({ settings }: { settings: ApiData<{ settings: Settings; emailE
       lead="What you can do now, how far you've come, and how Oyelearn works for you."
       actions={p ? <XPCounter value={p.xp.total} /> : null}
     >
+      <MoreLinks />
       <Tabs value={tab} onValueChange={changeTab}>
         <TabsList aria-label="Me">
           <TabsTrigger value="progress">Progress</TabsTrigger>

@@ -3,6 +3,7 @@ import { useEffect, useId, useState, type ComponentType, type ReactNode } from "
 import { Link, useLocation } from "react-router-dom";
 
 // Direct imports, not the `@/v5/design` barrel: the barrel loads every design module (Phase 9 performance).
+import { ThemeToggle } from "@/v5/app/ThemeToggle";
 import { cn } from "@/v5/design/cn";
 import { useMediaQuery } from "@/v5/design/hooks";
 import { Sheet } from "@/v5/design/components/Overlays";
@@ -159,7 +160,8 @@ export function AdminFrame({ main, more, older, topRight, onSearch, children }: 
             )}
           </div>
 
-          <div className={cn("mt-auto pt-3", !expanded && "flex justify-center")}>
+          <div className={cn("mt-auto flex flex-col gap-1 pt-3", !expanded && "items-center")}>
+            <ThemeToggle compact={!expanded} />
             <Tooltip content={expanded ? "Collapse menu" : "Expand menu"} side="right">
               <button
                 type="button"

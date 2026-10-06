@@ -123,7 +123,7 @@ export default function LibraryAdminPage() {
         <EmptyState
           icon={<BookOpen />}
           title={filter === "all" ? "No courses yet" : "Nothing here"}
-          body={filter === "all" ? "Write one about how your team works, or let the course writer make them from people's plans." : "Try another tab."}
+          body={filter === "all" ? "Start with Create course: give it a name, add lessons with your own videos, pick who gets it, then make it live." : "Try another tab."}
           action={
             filter === "all" ? (
               <Button variant="primary" onClick={() => setCreating(true)}>

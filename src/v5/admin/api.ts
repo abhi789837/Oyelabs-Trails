@@ -31,6 +31,7 @@ export interface LibraryCourse {
   summary: string;
   status: LibraryStatus;
   generated: boolean;
+  audience: "everyone" | "assigned";
   reason: string | null;
   lessons: number;
   level: string | null;

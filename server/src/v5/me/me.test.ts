@@ -95,6 +95,25 @@ describe("library", () => {
     expect(Array.isArray(course.prerequisites)).toBe(true);
   });
 
+  test("a course for people the admin picked shows up once it's live, and only for them (v5.0.1)", async () => {
+    const other = await activeLearner(ctx, admin, "learner.two");
+    const adminReq = (method: "POST" | "PUT", url: string, payload: object) => ctx.app.inject({ method, url, payload, ...as(admin) });
+    const created = (await adminReq("POST", "/api/admin/courses", { title: "How we ship", audience: "assigned", published: false })).json().course;
+    const section = (await adminReq("POST", `/api/admin/courses/${created.id}/sections`, { title: "Part 1" })).json().course.sections[0];
+    await adminReq("POST", `/api/admin/courses/sections/${section.id}/topics`, { title: "Watch this", video: "https://www.youtube.com/watch?v=ZvbzSrg0afE", estMinutes: 5 });
+    expect((await adminReq("PUT", `/api/admin/courses/${created.id}/assignees`, { userIds: [learner.id] })).statusCode).toBe(200);
+
+    const ids = async (s: Session) => (await ctx.app.inject({ method: "GET", url: "/api/v5/me/library", ...as(s) })).json().items.map((i: { id: string }) => i.id);
+    expect(await ids(learner.session)).not.toContain(created.id); // still a draft
+
+    await adminReq("PUT", `/api/admin/courses/${created.id}`, { title: "How we ship", audience: "assigned", published: true });
+    expect(await ids(learner.session)).toContain(created.id);
+    expect(await ids(other.session)).not.toContain(created.id);
+    const detail = await get(`/api/v5/me/library/${encodeURIComponent(created.id)}`);
+    expect(detail.statusCode).toBe(200);
+    expect(detail.json().course.syllabus[0].lessons[0].hasVideo).toBe(true);
+  });
+
   test("an unknown or hidden course is a 404", async () => {
     expect((await get("/api/v5/me/library/nope")).statusCode).toBe(404);
     expect((await get(`/api/v5/me/library/${encodeURIComponent(moduleItemId("backend", "be-node-core"))}`)).statusCode).toBe(404);
