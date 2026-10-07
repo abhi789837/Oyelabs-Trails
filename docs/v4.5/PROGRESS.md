@@ -37,10 +37,10 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md`; contracts 
 - [x] 4.4 Gates + commit `feat(v4.5-p4)`
 
 ## Phase 5: Tests, deploy and report
-- [ ] 5.1 Unit/integration tests per the brief
-- [ ] 5.2 Playwright e2e: PM course with 2 modules → questions → learner watches → module test → certificate
-- [ ] 5.3 Deploy (Abhishek runs it; upload storage + limits; Caddy body size)
-- [ ] 5.4 RESULTS.md + chat summary; tag `v4.5.0`
+- [x] 5.1 Unit/integration tests per the brief (PLAN §8 checked; private-link table for every source added; two Phase 5 regressions fixed: old UI loading v5 CSS, BD losing Part 2)
+- [x] 5.2 Playwright e2e: PM course with 2 modules → questions → learner watches → module test → certificate (`scripts/e2e/v45-oyelabs-flow.ts`; passes with v45-oyelabs-editor, v45-video-sources, v5-admin, v5-lesson, v5-design, v4-departments and v44-reference-case on snapshot p45fin)
+- [ ] 5.3 Deploy (Abhishek runs it; upload storage + limits; Caddy body size). Steps in `DEPLOY.md`
+- [x] 5.4 RESULTS.md + chat summary (tag `v4.5.0` still to do, after the deploy)
 
 ## Needs Abhishek
 

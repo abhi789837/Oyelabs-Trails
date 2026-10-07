@@ -11,12 +11,10 @@ import {
   type PickedCourse,
 } from "@shared/oyelabsCourses";
 
-import { Dialog as ClassicDialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { notify } from "@/lib/toast";
 import { Badge, Button, Dialog, Input, SkeletonLayout, v5Toast } from "@/v5/design";
 
 import { plainMessage, useLoad } from "../parts/common";
-import { assignRequest, courseAssignApi, courseSizeLine, type AddTarget } from "./courseAssign";
+import { assignRequest, courseAssignApi, courseSizeLine, type AddTarget } from "@/features/courses/assign/courseAssign";
 
 /**
  * "Add a course" (v5.0.1; v4.5 Phase 4): search every course written here, Oyelabs courses first
@@ -27,9 +25,9 @@ import { assignRequest, courseAssignApi, courseSizeLine, type AddTarget } from "
  *     everyone in this department": Do it now in their first weeks).
  * Adding never removes anyone; adding again changes the priority.
  *
- * Two looks of the same picker: `AddCourse` (v5 People sheet) and `ClassicAddCourse` (the old
- * learner page and the onboarding summary card). With `onPick`, nothing is saved: the course is
- * handed back (onboarding, before the account exists).
+ * This is the v5 People sheet's picker. The old UI (learner page, onboarding card) has its own
+ * `ClassicAddCourse` in `src/features/courses/assign/`, built from the old design only, so `?ui=old`
+ * never loads `@/v5/design`. Both share the API and pure parts in `courseAssign.ts`.
  */
 
 interface PickerProps {
@@ -45,27 +43,15 @@ interface PickerProps {
   picked?: readonly string[];
 }
 
-const LOOK = {
-  v5: {
-    muted: "text-fg-2",
-    strong: "text-fg-1",
-    small: "text-small",
-    caption: "text-caption",
-    list: "flex max-h-72 flex-col divide-y divide-line-1 overflow-y-auto rounded-card border border-line-1",
-    radio: "mt-0.5 size-5 shrink-0 accent-[rgb(var(--v5-brand))]",
-    added: "text-success-fg",
-    link: "text-brand-fg",
-  },
-  classic: {
-    muted: "text-muted-foreground",
-    strong: "text-foreground",
-    small: "text-sm",
-    caption: "text-xs",
-    list: "flex max-h-72 flex-col divide-y overflow-y-auto rounded-md border",
-    radio: "mt-0.5 size-4 shrink-0 accent-[var(--color-trailmark,currentColor)]",
-    added: "text-summit",
-    link: "text-foreground",
-  },
+const css = {
+  muted: "text-fg-2",
+  strong: "text-fg-1",
+  small: "text-small",
+  caption: "text-caption",
+  list: "flex max-h-72 flex-col divide-y divide-line-1 overflow-y-auto rounded-card border border-line-1",
+  radio: "mt-0.5 size-5 shrink-0 accent-[rgb(var(--v5-brand))]",
+  added: "text-success-fg",
+  link: "text-brand-fg",
 } as const;
 
 /** Waits for a pause in typing before searching. */
@@ -78,8 +64,7 @@ function useDebounced<T>(value: T, ms: number): T {
   return out;
 }
 
-function PickerBody({ look, userId, name, departmentId: knownDept, departmentName: knownDeptName, onPick, picked, onDone }: PickerProps & { look: keyof typeof LOOK; onDone: (message: string, ok: boolean) => void }) {
-  const css = LOOK[look];
+function PickerBody({ userId, name, departmentId: knownDept, departmentName: knownDeptName, onPick, picked, onDone }: PickerProps & { onDone: (message: string, ok: boolean) => void }) {
   const uid = useId();
   const [query, setQuery] = useState("");
   const q = useDebounced(query, 250);
@@ -167,18 +152,7 @@ function PickerBody({ look, userId, name, departmentId: knownDept, departmentNam
         </fieldset>
       ) : null}
 
-      {look === "v5" ? (
-        <Input type="search" aria-label="Find a course" placeholder="Find a course" value={query} onChange={(e) => setQuery(e.target.value)} className="text-small" />
-      ) : (
-        <input
-          type="search"
-          aria-label="Find a course"
-          placeholder="Find a course"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="h-9 rounded-md border border-input bg-surface px-3 text-sm placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
-        />
-      )}
+            <Input type="search" aria-label="Find a course" placeholder="Find a course" value={query} onChange={(e) => setQuery(e.target.value)} className="text-small" />
 
       {hits.error && !hits.data ? (
         <p role="alert" className={`flex flex-wrap items-center gap-2 ${css.small} ${css.muted}`}>
@@ -188,11 +162,7 @@ function PickerBody({ look, userId, name, departmentId: knownDept, departmentNam
           </button>
         </p>
       ) : !hits.data ? (
-        look === "v5" ? (
-          <SkeletonLayout variant="list" rows={3} label="Loading courses" />
-        ) : (
-          <p className={`${css.small} ${css.muted}`}>Loading courses…</p>
-        )
+        <SkeletonLayout variant="list" rows={3} label="Loading courses" />
       ) : hits.data.courses.length === 0 ? (
         <p className={`${css.small} ${css.muted}`}>
           {q ? "No course matches that." : "No courses written here yet."}{" "}
@@ -209,8 +179,8 @@ function PickerBody({ look, userId, name, departmentId: knownDept, departmentNam
                 <span className={`min-w-0 flex-1 ${css.small}`}>
                   <span className={`flex flex-wrap items-center gap-1.5 font-medium ${css.strong}`}>
                     <span className="truncate">{hit.title}</span>
-                    {hit.oyelabs ? look === "v5" ? <Badge tone="brand">{OYELABS_BADGE}</Badge> : <span className="rounded-full border px-1.5 text-[11px] font-medium">{OYELABS_BADGE}</span> : null}
-                    {hit.published === false ? look === "v5" ? <Badge tone="outline">Draft</Badge> : <span className="rounded-full border px-1.5 text-[11px]">Draft</span> : null}
+                    {hit.oyelabs ? <Badge tone="brand">{OYELABS_BADGE}</Badge> : null}
+                    {hit.published === false ? <Badge tone="outline">Draft</Badge> : null}
                   </span>
                   <span className={`${css.caption} ${css.muted}`}>
                     {courseSizeLine(hit)}
@@ -222,20 +192,10 @@ function PickerBody({ look, userId, name, departmentId: knownDept, departmentNam
                     <Check className="size-4" aria-hidden="true" />
                     Added
                   </span>
-                ) : look === "v5" ? (
+                ) : (
                   <Button variant="secondary" size="sm" loading={busy === hit.courseId} disabled={busy !== null && busy !== hit.courseId} onClick={() => void add(hit)} aria-label={`Add ${hit.title}`}>
                     {hit.assigned ? "Update" : "Add"}
                   </Button>
-                ) : (
-                  <button
-                    type="button"
-                    disabled={busy !== null}
-                    onClick={() => void add(hit)}
-                    aria-label={`Add ${hit.title}`}
-                    className="h-8 min-w-[3.5rem] rounded-md border px-3 text-sm font-medium hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong disabled:opacity-60"
-                  >
-                    {busy === hit.courseId ? "Adding…" : hit.assigned ? "Update" : "Add"}
-                  </button>
                 )}
               </li>
             );
@@ -266,39 +226,8 @@ export function AddCourse({ userId, name }: { userId: string; name: string }) {
           </Button>
         }
       >
-        {open ? <PickerBody look="v5" userId={userId} name={name} onDone={(message, ok) => (ok ? v5Toast.success(message) : v5Toast.error("We couldn't add the course", message))} /> : null}
+        {open ? <PickerBody userId={userId} name={name} onDone={(message, ok) => (ok ? v5Toast.success(message) : v5Toast.error("We couldn't add the course", message))} /> : null}
       </Dialog>
-    </>
-  );
-}
-
-/** The same picker in the previous design: the old learner page, and the onboarding summary card. */
-export function ClassicAddCourse(props: PickerProps & { label?: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-sm font-medium hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
-      >
-        <BookPlus className="size-4" aria-hidden="true" />
-        {props.label ?? "Add a course"}
-      </button>
-      <ClassicDialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-lg">
-          <DialogTitle className="font-display text-base font-semibold">{props.onPick ? "Add a course to the plan" : `Add a course for ${props.name}`}</DialogTitle>
-          <DialogDescription className="mb-3 text-sm text-muted-foreground">
-            {props.onPick ? `${props.name} gets it once you send the test.` : "Oyelabs courses come first. Nobody loses a course they already have."}
-          </DialogDescription>
-          <PickerBody look="classic" {...props} onDone={(message, ok) => (ok ? notify.success(message) : notify.error(`We couldn't add the course. ${message}`))} />
-          <div className="mt-4 flex justify-end">
-            <button type="button" onClick={() => setOpen(false)} className="h-9 rounded-md px-4 text-sm font-medium hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong">
-              Done
-            </button>
-          </div>
-        </DialogContent>
-      </ClassicDialog>
     </>
   );
 }

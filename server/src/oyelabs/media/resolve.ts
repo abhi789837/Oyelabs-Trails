@@ -75,7 +75,7 @@ export function pageTitle(html: string): string | null {
   const raw = og?.[1] ?? /<title[^>]*>([^<]{1,300})<\/title>/i.exec(html)?.[1];
   if (!raw) return null;
   const title = decodeEntities(raw)
-    .replace(/\s+[-|–]\s+(Google Drive|Box|OneDrive|Dropbox|Loom|Vimeo|YouTube)\s*$/i, "")
+    .replace(/\s+[-|–]\s+(Google Drive|Google Docs|Google Sheets|Google Slides|Box|OneDrive|Dropbox|Loom|Vimeo|YouTube)\s*$/i, "")
     .trim();
   return title && !/^(sign in|log in|google drive|box|onedrive|dropbox)$/i.test(title) ? title.slice(0, 200) : null;
 }

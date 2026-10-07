@@ -6,8 +6,8 @@ import { choiceForSlider, PRIORITY_CHOICE_LABELS, PRIORITY_CHOICES, type Onboard
 import type { UnsureOption } from "@shared/intents";
 import { ASSIGNMENT_PRIORITIES, ASSIGNMENT_PRIORITY_LABELS, OYELABS_BADGE, type AssignmentPriority, type PickedCourse } from "@shared/oyelabsCourses";
 
-import { ClassicAddCourse } from "@/v5/admin/people/AddCourse";
-import { withPicked } from "@/v5/admin/people/courseAssign";
+import { ClassicAddCourse } from "@/features/courses/assign/ClassicAddCourse";
+import { withPicked } from "@/features/courses/assign/courseAssign";
 
 import { Button } from "@/components/ui/button";
 import { PlainError } from "@/components/form/PlainError";

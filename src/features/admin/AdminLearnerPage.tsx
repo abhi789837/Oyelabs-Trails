@@ -30,7 +30,7 @@ import { PlanTab } from "./learner/PlanTab";
 import { WeekTab } from "./learner/WeekTab";
 import { ProgressTab } from "./learner/ProgressTab";
 import { SetupTab } from "./learner/SetupTab";
-import { ClassicAddCourse } from "@/v5/admin/people/AddCourse";
+import { ClassicAddCourse } from "@/features/courses/assign/ClassicAddCourse";
 
 const TABS = [
   { id: "setup", label: "Setup" },

@@ -1,0 +1,6 @@
+:root{
+  --brand-600:#2067D3; /* Oyelabs blue */ --brand-400:#5F93E3; --brand-950:#0B2347;
+  --accent:#F59E0B; /* amber: progress / achievement */ --accent-600:#D97706;
+  --bg-dark:#0A1428; --ink:#0B2347; --muted:#5B6B82;
+  --font-brand:'Outfit',system-ui,sans-serif;
+}

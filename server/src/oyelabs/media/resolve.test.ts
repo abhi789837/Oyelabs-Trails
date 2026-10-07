@@ -42,6 +42,37 @@ describe("video sharing check", () => {
     });
   });
 
+  /** v4.5 P5: every source the resolver checks spots a private link and names its own plain fix. */
+  const login = (to: string): Fake => ({ status: 302, headers: { location: to } });
+  const privateCases: [string, string, Record<string, Fake>, string, RegExp][] = [
+    ["YouTube", "https://youtu.be/dQw4w9WgXcQ", { "https://www.youtube.com/oembed": { status: 401 } }, "This YouTube video is private.", /YouTube Studio.*Unlisted or Public/],
+    ["Vimeo", "https://vimeo.com/76979871", { "https://vimeo.com/api/oembed.json": { status: 403 } }, "This Vimeo video is private.", /In Vimeo: Settings → Privacy/],
+    ["Loom", "https://www.loom.com/share/0123456789abcdef0123456789abcdef", { "https://www.loom.com/v1/oembed": { status: 403 } }, "This Loom video is private.", /In Loom: Share → .*Anyone with the link can view/],
+    ["Drive", DRIVE, { [DRIVE]: login("https://accounts.google.com/ServiceLogin"), "https://accounts.google.com/": { status: 200 } }, "This Drive video is private.", /In Google Drive: Share → General access → 'Anyone with the link'/],
+    [
+      "OneDrive",
+      "https://onedrive.live.com/redir?cid=ABC&resid=ABC!123",
+      { "https://onedrive.live.com/": login("https://login.live.com/oauth"), "https://login.live.com/": { status: 200 } },
+      "This OneDrive video is private.",
+      /In OneDrive or SharePoint: Share → 'Anyone with the link can view'/,
+    ],
+    ["SharePoint", "https://oyelabs.sharepoint.com/:v:/s/Team/EaBcD123", { "https://oyelabs.sharepoint.com/": login("https://login.microsoftonline.com/x"), "https://login.microsoftonline.com/": { status: 200 } }, "This OneDrive video is private.", /OneDrive or SharePoint/],
+    ["Dropbox", "https://www.dropbox.com/s/abc/kickoff.mp4?dl=0", { "https://www.dropbox.com/s/": login("https://www.dropbox.com/login?cont=x"), "https://www.dropbox.com/login": { status: 200 } }, "This Dropbox video is private.", /In Dropbox: Share → Create link/],
+    ["Box", "https://app.box.com/s/abcdef123456", { "https://app.box.com/s/": login("https://account.box.com/login"), "https://account.box.com/": { status: 200 } }, "This Box video is private.", /In Box: Share → Shared link → 'People with the link'/],
+    ["a direct file", "https://cdn.example.com/videos/intro.mp4", { "https://cdn.example.com/": { status: 403 } }, "This video is private.", /link that works without signing in.*or upload it here/],
+    ["any other page", "https://videos.example.com/watch/42", { "https://videos.example.com/watch": login("https://videos.example.com/login?next=42"), "https://videos.example.com/login": { status: 200 } }, "This video is private.", /work without signing in/],
+  ];
+  for (const [name, link, routes, message, fix] of privateCases) {
+    test(`private ${name} link: detected, with its plain fix`, async () => {
+      const r = await resolveVideoLink(link, fakeDeps(routes));
+      expect(r.status).toBe("private");
+      expect(r.problem?.code).toBe("private");
+      expect(r.problem?.message).toBe(message);
+      expect(r.problem?.fix).toMatch(fix);
+      expect(r.problem?.fix).toMatch(/Check again\.$/);
+    });
+  }
+
   test("a shared Drive video plays, with its title", async () => {
     const r = await resolveVideoLink(DRIVE, fakeDeps({ [DRIVE]: { status: 200, body: '<meta property="og:title" content="Kick-off call.mp4"><title>Kick-off call.mp4 - Google Drive</title>' } }));
     expect(r).toMatchObject({ status: "ok", problem: null, title: "Kick-off call.mp4", tracking: "estimated", durationSeconds: null });
@@ -168,6 +199,7 @@ describe("doc links", () => {
 describe("helpers", () => {
   test("page titles and framing headers", () => {
     expect(pageTitle("<title>Process &amp; rates - Google Drive</title>")).toBe("Process & rates");
+    expect(pageTitle("<title>Handover checklist - Google Docs</title>")).toBe("Handover checklist");
     expect(pageTitle("<title>Sign in</title>")).toBeNull();
     expect(framingForbidden(new Headers({ "x-frame-options": "SAMEORIGIN" }))).toBe(true);
     expect(framingForbidden(new Headers({ "content-security-policy": "default-src 'self'; frame-ancestors 'self'" }))).toBe(true);

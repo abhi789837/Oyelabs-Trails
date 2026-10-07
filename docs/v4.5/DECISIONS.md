@@ -485,3 +485,69 @@ Videos from any drive: the link resolver, the sharing check, uploads, the player
   - **path builder:** it picks the Oyelabs course with the reason, queues no `course.generate`, assigns the course, and the view has `oyelabs: true`.
 - `src/v5/admin/people/courseAssign.test.ts` (the pure helpers).
 - **Gates:** `tsc -b`, `eslint .`, `npm test` (201 files), `npm run build` and `npm run size` are green. On snapshot `p45d` (removed afterwards), `v5-admin.ts` and `v44-reference-case.ts` (`UI_V5_DEFAULT=off`) pass.
+
+## Phase 5
+
+### Regression 1: the old UI loaded the v5 design CSS
+**Cause.** Phase 4's `ClassicAddCourse` lived in `src/v5/admin/people/AddCourse.tsx`, and that file imports `@/v5/design`. The old learner page (`AdminLearnerPage.tsx`) and the onboarding card (`PlanCard.tsx`) imported it, and `QuickOnboard.tsx` imported `@/v5/admin/people/courseAssign`. So `?ui=old` pulled in the v5 tokens CSS chunk, and the v5-design check "the v5 tokens are not loaded in the old UI" failed.
+
+**Fix.** The old UI never imports anything under `src/v5/**` that reaches the design system.
+- **`src/features/courses/assign/courseAssign.ts`** holds the shared, design-free part: the API calls, `assignRequest`, `courseSizeLine`, `withPicked`, `assignPicked` and a new `assignErrorMessage`. It was moved with `git mv`, together with its test.
+- **`src/features/courses/assign/ClassicAddCourse.tsx`** is the old-design picker. It is built only from `src/components/ui` (Button, Input, Badge, Dialog) and has its own small fetch and debounce hooks.
+- **`src/v5/admin/people/AddCourse.tsx`** keeps only the v5 look. The two-look `LOOK` table is gone, and it imports the shared logic from the new place.
+- **The three old-UI files** now import from `@/features/courses/assign/…`.
+
+The two pickers share no JSX. That costs about 150 duplicated lines, and it is what keeps the designs apart.
+
+### Regression 2: Business Development lost "Part 2" (v4-departments, `UI_V5_DEFAULT=off`)
+**Cause.** Phase 0's `onePerCourse` (`server/src/builder/repo.ts`, inside `currentPath`).
+- BD maps most of its catalog skills onto two curriculum modules, `bd-beginner` and `bd-intermediate`.
+- Part 1 (Cold email → `bd-beginner`, Running discovery calls → `bd-intermediate`) already used both modules. Every later item (Objection handling → `bd-intermediate`, and the rest) pointed at one of them again.
+- `onePerCourse` treated every later mention of a module as a repeat and dropped it, so the path read `[P1] BD Foundations, [P1] Winning Deals`, with no Part 2.
+- After the fix it reads `[P1] BD Foundations, [P1] Winning Deals, [P2] Winning Deals ← Objection handling`.
+- Engineering and PM have enough distinct modules that it never showed there.
+
+**Ruled out:** Phase 4's `oyelabsCourseForPath` in `builder/run.ts`. The e2e database has no Oyelabs course, so it returns null.
+
+**Fix (product code, the test is unchanged).** `onePerCourse` now keeps **every part**.
+- When all of a part's items are repeats, the part's first item stays, in its place. So the path still reads Part 1 → Part 2 → the rest, and the parts keep their order.
+- Repeats inside a part that has an item of its own are still dropped or turned into "Needs: …", as Phase 0 designed.
+- Stored `path_items` were never touched, so existing paths heal on the next read.
+
+**Test:** `connection.test.ts`, "a part made only of repeats keeps its first item (Business Development)". It uses the BD shape, plus a mixed case where the repeat in Part 2 is still dropped because Part 2 has its own item.
+
+### Tests added for the brief (PLAN §8 checked against the code)
+Most were already there per builder.
+
+**The gap:** the private-link check was asserted only for Drive (with the exact fix), Vimeo and SharePoint (status only). `resolve.test.ts` now has a table with one case per source: YouTube, Vimeo, Loom, Drive, OneDrive, SharePoint, Dropbox, Box, a direct file and any other page. Each case checks:
+- the sign-in redirect or 401/403 gives `private`;
+- the plain message for that source;
+- that source's own fix, ending "Then press Check again."
+
+**Small product fix found by the e2e.** `pageTitle` now also removes " - Google Docs / Sheets / Slides", so a Google Doc link is titled "Handover checklist", not "Handover checklist - Google Docs". Module tests cite the doc by that title. A case was added to the helpers test.
+
+### Playwright: `scripts/e2e/v45-oyelabs-flow.ts`
+- **Name.** PLAN §8 called it `v45-oyelabs-course.ts`. The brief for Phase 5 names it `v45-oyelabs-flow.ts`, and that name is used.
+- **Scope.** Its steps 6 and 11 (assignment from People, the edit-and-regenerate pass) are covered by `assign.test.ts`, `moduleTests.test.ts` and `v45-oyelabs-editor.ts`, so the e2e stays on the one journey the brief lists.
+- **The real editor:**
+  - Drive link + typed length + uploaded PDF;
+  - Dropbox link + Google Doc link + notes;
+  - Save & publish.
+- **Automatic questions** with no clicks: both modules Ready with 8 questions, and every item cited, including "Kick-off SOP.pdf, page N" and "Handover checklist".
+- **The learner:**
+  - the Library badge;
+  - Drive active time, with "I've watched this" at 80% and then the click;
+  - Dropbox played to the end (exact);
+  - both tests passed through the UI, using the admin preview's key;
+  - the certificate is issued, `public` says valid, and `/verify/<id>` shows it.
+- **Offline.** The `OYELABS_FETCH_STUB` stub answers for Drive, Dropbox and Google Docs (`/edit` and `/export?format=txt`). The browser's Drive player and Dropbox file are fulfilled by Playwright.
+- **Test data, not a product change.**
+  - The editor's shortest video length is 1 minute (`minutesToSeconds` floors at 60 s), so the Drive step waits about 50 s of active time.
+  - Each module needs at least 1,500 characters of material (`MODULE_TEST_MIN_SOURCE_CHARS`). The first run's module 2 had 1,330 and correctly showed "needs content", so the Google Doc text and the notes were made longer.
+  - The local machine has no ffmpeg, so the Dropbox video's transcript is "not used for questions". That is the designed fallback.
+
+### Size budget
+`npm run size` was over by about 0.3 KB on "lesson player initial JS" (200.29 KB) and "/design first load" (230.27 KB) while this phase ran.
+- Both come from the rebrand agent's in-progress edits to shared entry files, not from v4.5: `App.tsx`, `RouteFallback`, `RouteErrorBoundary`, `useDocumentTitle` and the `/design` brand section.
+- Phase 5's front-end changes touch only the old admin pages and the v5 People sheet, which are not in those chunks.
+- Recheck after the rebrand phases land.

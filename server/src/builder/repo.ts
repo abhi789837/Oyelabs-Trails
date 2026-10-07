@@ -424,14 +424,39 @@ function sameCourseKey(item: PathItemView): string {
  * v4.5 P0: a course appears once on the path. A later mention of a course already scheduled (a
  * "learn first" for a second goal) is dropped, and the item it was for says "Needs: <course>
  * (earlier in your path)" instead. Exported for the tests.
+ *
+ * v4.5 P5: **a part never disappears.** A curriculum module often serves several parts (Business
+ * Development maps most of its skills onto `bd-beginner` / `bd-intermediate`, so Part 2 and later
+ * can be nothing but repeats of Part 1's modules). When every item of a part is a repeat, the
+ * part's first item stays, in its place, so the path keeps Part 1 → Part 2 → the rest.
+ * Repeats inside a part that has an item of its own are still dropped.
  */
 export function onePerCourse(views: readonly PathItemView[]): PathItemView[] {
+  const keys = views.map(sameCourseKey);
+  const seen = new Set<string>();
+  const repeat = keys.map((key) => {
+    const again = seen.has(key);
+    seen.add(key);
+    return again;
+  });
+  const covered = new Set(views.filter((_, i) => !repeat[i]).map((view) => view.partNumber));
+  const keepAnyway = new Set<number>();
+  views.forEach((view, i) => {
+    if (!repeat[i] || view.partNumber === null || covered.has(view.partNumber)) return;
+    covered.add(view.partNumber);
+    keepAnyway.add(i);
+  });
+
   const first = new Map<string, PathItemView>();
   const kept: PathItemView[] = [];
   const pending: { title: string; itemId: string; targetSkill: string | null; index: number }[] = [];
-  for (const view of views) {
-    const key = sameCourseKey(view);
+  for (const [i, view] of views.entries()) {
+    const key = keys[i];
     const earlier = first.get(key);
+    if (keepAnyway.has(i)) {
+      kept.push({ ...view });
+      continue;
+    }
     if (earlier) {
       // A repeat inside the same goal is simply dropped; for another goal it becomes a "Needs".
       if (earlier.targetSkill !== view.targetSkill) pending.push({ title: earlier.courseTitle, itemId: earlier.id, targetSkill: view.targetSkill, index: kept.length });

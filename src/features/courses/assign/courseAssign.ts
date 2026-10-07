@@ -7,11 +7,14 @@ import type {
   PickedCourse,
 } from "@shared/oyelabsCourses";
 
-import { api } from "@/api/client";
+import { api, ApiRequestError } from "@/api/client";
 
 /**
  * v4.5 Phase 4: "Add a course" (People sheet, old learner page, onboarding summary). The API calls
  * and the pure parts, shared by every place the picker shows.
+ *
+ * This file lives outside `src/v5/**` on purpose and imports no design system: the old UI uses it
+ * too, and anything that reaches `@/v5/design` pulls the v5 tokens CSS into `?ui=old`.
  */
 export const courseAssignApi = {
   search: (query: { q: string; userId?: string; departmentId?: string }, signal?: AbortSignal) => {
@@ -62,4 +65,14 @@ export async function assignPicked(userId: string, picked: readonly PickedCourse
     }
   }
   return { added, failed };
+}
+
+/** Plain words for a failed search or add (the same wording as the v5 admin's `plainMessage`). */
+export function assignErrorMessage(error: unknown, fallback = "Something went wrong. Try again."): string {
+  if (error instanceof ApiRequestError) {
+    if (error.status === 0) return "We couldn't reach Oyelearn. Check your connection and try again.";
+    if (error.status === 404) return "That isn't there any more. Refresh the page to see the latest.";
+    return error.message || fallback;
+  }
+  return fallback;
 }

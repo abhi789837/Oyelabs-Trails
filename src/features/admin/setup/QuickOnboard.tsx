@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { unsureMessage } from "@shared/intents";
 import type { PickedCourse } from "@shared/oyelabsCourses";
 import { notify } from "@/lib/toast";
-import { assignPicked } from "@/v5/admin/people/courseAssign";
+import { assignPicked } from "@/features/courses/assign/courseAssign";
 
 import { adminApi } from "../api";
 

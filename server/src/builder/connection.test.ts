@@ -89,6 +89,29 @@ describe("v4.5 P0: a course appears once on the path", () => {
     expect(out.find((i) => i.id === "z")!.needs).toEqual([{ title: "Code review", itemId: "x" }]);
   });
 
+  test("v4.5 P5: a part made only of repeats keeps its first item (Business Development)", () => {
+    // BD maps most skills onto bd-beginner / bd-intermediate, so later parts can only repeat Part 1's modules.
+    const out = onePerCourse([
+      view("p1a", { moduleId: "bd-beginner", courseTitle: "BD Foundations", targetSkill: "Cold email", partNumber: 1 }),
+      view("p1b", { moduleId: "bd-intermediate", courseTitle: "Winning Deals", targetSkill: "Running discovery calls", partNumber: 1 }),
+      view("p1c", { moduleId: "bd-beginner", courseTitle: "BD Foundations", targetSkill: "Running discovery calls", partNumber: 1 }),
+      view("p2", { moduleId: "bd-beginner", courseTitle: "BD Foundations", targetSkill: null, partNumber: 2, partType: "ai_dev" }),
+      view("p3a", { moduleId: "bd-intermediate", courseTitle: "Winning Deals", targetSkill: "Objection handling", partNumber: 3 }),
+      view("p3b", { moduleId: "bd-beginner", courseTitle: "BD Foundations", targetSkill: "Objection handling", partNumber: 3 }),
+    ]);
+    // Inside Part 1 the repeat still goes; Parts 2 and 3 each keep their first item, in order.
+    expect(out.map((i) => i.id)).toEqual(["p1a", "p1b", "p2", "p3a"]);
+    expect(out.map((i) => i.partNumber)).toEqual([1, 1, 2, 3]);
+    expect(out.findIndex((i) => i.partNumber === 2)).toBeGreaterThan(0);
+    // A part with an item of its own still drops its repeats.
+    const mixed = onePerCourse([
+      view("a", { courseId: "c1", partNumber: 1, targetSkill: "A" }),
+      view("b", { courseId: "c1", partNumber: 2, targetSkill: "B" }),
+      view("c", { courseId: "c2", partNumber: 2, targetSkill: "B" }),
+    ]);
+    expect(mixed.map((i) => i.id)).toEqual(["a", "c"]);
+  });
+
   test("a path with no repeats is unchanged", () => {
     const items = [view("a", { courseId: "1" }), view("b", { courseId: "2" })];
     expect(onePerCourse(items)).toEqual(items);
