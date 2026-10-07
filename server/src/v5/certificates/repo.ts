@@ -3,11 +3,13 @@ import { createHash, randomBytes } from "node:crypto";
 import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 
 import {
+  CERTIFICATE_CODE_BYTES,
   certificateCode,
   certificateHashInput,
   MIN_TRACK_TOPICS,
   normalizeHolderName,
   verifyPathFor,
+  verifyUrlFor,
   type AdminCertificate,
   type CertificateKind,
   type CertificateStatus,
@@ -45,9 +47,28 @@ export function hashOf(row: Pick<CertRow, "id" | "kind" | "refId" | "title" | "l
     .digest("hex");
 }
 
+/**
+ * Something to do once a certificate's printed words are new: issued, or the holder's name
+ * corrected. The routes use it to draw the PDF and PNGs straight away (files.ts); it runs after the
+ * write and can't fail the write.
+ */
+type CertificateListener = (id: string) => void;
+let changed: CertificateListener | null = null;
+export function onCertificateChanged(listener: CertificateListener | null): void {
+  changed = listener;
+}
+function notifyChanged(id: string): void {
+  try {
+    changed?.(id);
+  } catch {
+    // Files are drawn again on their next request anyway.
+  }
+}
+
+/** 80 random bits since rebrand Phase 5 (`OYL-XXXX-XXXX-XXXX-XXXX`); older 40-bit codes stay valid. */
 function newCertificateId(db: Db): string {
   for (let i = 0; i < 8; i++) {
-    const id = certificateCode(randomBytes(5));
+    const id = certificateCode(randomBytes(CERTIFICATE_CODE_BYTES));
     if (!db.select({ id: schema.certificates.id }).from(schema.certificates).where(eq(schema.certificates.id, id)).get()) return id;
   }
   throw new Error("could not find a free certificate id");
@@ -82,7 +103,9 @@ export function setHolderName(db: Db, userId: string, name: string): string {
   const holder = holderNameFor(db, userId);
   for (const row of db.select().from(schema.certificates).where(and(eq(schema.certificates.userId, userId), isNull(schema.certificates.revokedAt))).all()) {
     const next = { ...row, learnerName: holder };
+    if (row.learnerName === holder) continue;
     db.update(schema.certificates).set({ learnerName: holder, hash: hashOf(next) }).where(eq(schema.certificates.id, row.id)).run();
+    notifyChanged(row.id);
   }
   return holder;
 }
@@ -195,6 +218,7 @@ export function issueCertificate(db: Db, userId: string, candidate: Candidate): 
     .onConflictDoNothing()
     .run();
   if (result.changes === 0) return null;
+  notifyChanged(id);
   awardXpSafely(db, userId, "certificate", id, { at: Math.min(candidate.at, now()) });
   try {
     notify(db, {
@@ -243,7 +267,12 @@ function titleOf(row: CertRow, content: ContentStore): string {
   return row.title || content.manifest.find((t) => t.id === row.trackId)?.name || row.trackId;
 }
 
-export function toMine(row: CertRow, content: ContentStore): MyCertificate {
+export function titleFor(row: CertRow, content: ContentStore): string {
+  return titleOf(row, content);
+}
+
+/** `origin` is the configured public origin (PUBLIC_ORIGIN), for the full verify link. */
+export function toMine(row: CertRow, content: ContentStore, origin: string): MyCertificate {
   return {
     id: row.id,
     kind: row.kind,
@@ -256,17 +285,18 @@ export function toMine(row: CertRow, content: ContentStore): MyCertificate {
     averageScore: row.averageScore,
     revokedAt: row.revokedAt ?? null,
     verifyPath: verifyPathFor(row.id),
+    verifyUrl: verifyUrlFor(origin, row.id),
   };
 }
 
-export function myCertificates(db: Db, content: ContentStore, userId: string): MyCertificate[] {
+export function myCertificates(db: Db, content: ContentStore, userId: string, origin: string): MyCertificate[] {
   return db
     .select()
     .from(schema.certificates)
     .where(eq(schema.certificates.userId, userId))
     .orderBy(desc(schema.certificates.issuedAt))
     .all()
-    .map((row) => toMine(row, content));
+    .map((row) => toMine(row, content, origin));
 }
 
 export function certificateRow(db: Db, id: string): CertRow | undefined {
@@ -293,7 +323,7 @@ export function publicView(row: CertRow, content: ContentStore): PublicCertifica
   };
 }
 
-export function adminCertificates(db: Db, content: ContentStore, userId?: string): AdminCertificate[] {
+export function adminCertificates(db: Db, content: ContentStore, origin: string, userId?: string): AdminCertificate[] {
   return db
     .select()
     .from(schema.certificates)
@@ -301,7 +331,7 @@ export function adminCertificates(db: Db, content: ContentStore, userId?: string
     .orderBy(desc(schema.certificates.issuedAt))
     .limit(500)
     .all()
-    .map((row) => ({ ...toMine(row, content), userId: row.userId }));
+    .map((row) => ({ ...toMine(row, content, origin), userId: row.userId }));
 }
 
 /** Revoke (or restore). Returns the updated row, or null when there is no such certificate. */

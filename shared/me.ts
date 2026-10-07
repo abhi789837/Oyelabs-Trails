@@ -117,6 +117,8 @@ export interface CertificateView {
   trackId: string;
   topicCount: number;
   averageScore: number | null;
+  /** The public check link on the configured origin (rebrand Phase 5). */
+  verifyUrl: string;
 }
 
 export interface MeProfile {

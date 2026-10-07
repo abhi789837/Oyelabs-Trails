@@ -14,6 +14,8 @@ const SimpleBarChart = lazy(() => import("../parts/Charts").then((m) => ({ defau
 const SimpleLineChart = lazy(() => import("../parts/Charts").then((m) => ({ default: m.SimpleLineChart })));
 // Phase 6: the opt-in team board switch (super admins), next to the weekly email.
 const LeaderboardSetting = lazy(() => import("@/v5/motivation/LeaderboardSetting"));
+// Rebrand Phase 5: certificates (see, draw again, revoke), the signature setting and the PDF list.
+const CertificatesSection = lazy(() => import("./CertificatesSection"));
 
 /** The summary rows that go above the day series in the CSV. */
 export function reportSummaryCsv(report: ReportsResponse): string {
@@ -246,6 +248,12 @@ export default function ReportsPage() {
           </div>
         </div>
       )}
+
+      <div className="mt-(--v5-gap)">
+        <Suspense fallback={<Skeleton className="h-40 w-full" />}>
+          <CertificatesSection />
+        </Suspense>
+      </div>
     </Page>
   );
 }

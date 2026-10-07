@@ -5,6 +5,9 @@
  * a goal is complete (`server/src/v5/certificates/repo.ts`), idempotently on (user, kind, ref). The
  * client only shows what it is given. `/verify/:certId` is public and shows the minimum: holder,
  * title, issue date and whether it is still valid.
+ *
+ * Rebrand Phase 5: the PDF and the PNG are drawn by the server from the kit's A4 template
+ * (`server/src/v5/certificates/template.ts`); the browser only shows and downloads them.
  */
 
 export type CertificateKind = "track" | "course" | "goal";
@@ -30,8 +33,10 @@ export interface MyCertificate {
   topicCount: number;
   averageScore: number | null;
   revokedAt: number | null;
-  /** Path only (`/verify/<id>`); the client adds its own origin. */
+  /** Path only (`/verify/<id>`), for links inside the app. */
   verifyPath: string;
+  /** The full public link on the configured origin (PUBLIC_ORIGIN): what the QR, LinkedIn and "copy link" use. */
+  verifyUrl: string;
 }
 
 export interface MyCertificatesResponse {
@@ -75,29 +80,41 @@ export function certificateHashInput(c: { id: string; kind: CertificateKind; ref
 const CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
 /**
- * A short public code from random bytes: `OYL-XXXX-XXXX` (Crockford base32, no I, L, O or U, so
- * it reads aloud and types without confusion). 40 bits: unguessable enough for a public link
- * that only ever shows a name and a title.
+ * Random bytes for a new certificate code. Phase 5 (rebrand) raised it from 5 bytes (40 bits,
+ * `OYL-XXXX-XXXX`) to 10 bytes (80 bits, `OYL-XXXX-XXXX-XXXX-XXXX`): the code is the only key to a
+ * public page and a public image, and 80 bits can't be found by trying codes, even at the public
+ * routes' rate limit. Codes already issued keep working.
+ */
+export const CERTIFICATE_CODE_BYTES = 10;
+
+/**
+ * A public code from random bytes: `OYL-` plus groups of four Crockford base32 characters (no I, L,
+ * O or U, so it reads aloud and types without confusion). 5 bytes give two groups (the older
+ * codes), 10 bytes four.
  */
 export function certificateCode(bytes: Uint8Array): string {
+  const chars = Math.floor((bytes.length * 8) / 5 / 4) * 4;
   let bits = 0;
   let value = 0;
   let out = "";
   for (const byte of bytes) {
     value = (value << 8) | byte;
     bits += 8;
-    while (bits >= 5 && out.length < 8) {
+    while (bits >= 5 && out.length < chars) {
       out += CROCKFORD[(value >>> (bits - 5)) & 31];
       bits -= 5;
     }
     value &= (1 << bits) - 1;
   }
-  while (out.length < 8) out += "0";
-  return `OYL-${out.slice(0, 4)}-${out.slice(4, 8)}`;
+  while (out.length < chars) out += "0";
+  return `OYL-${out.match(/.{4}/g)?.join("-") ?? ""}`;
 }
 
-/** Accepts new codes (OYL-XXXX-XXXX) and the older browser ones (OYL-FE-XXXX-XXXX). */
-export const CERTIFICATE_ID_RE = /^OYL-[0-9A-Z]{1,6}(-[0-9A-Z]{4}){1,2}$/;
+/**
+ * Accepts the current codes (OYL-XXXX-XXXX-XXXX-XXXX), the first v5 codes (OYL-XXXX-XXXX) and the
+ * older browser ones (OYL-FE-XXXX-XXXX).
+ */
+export const CERTIFICATE_ID_RE = /^OYL-[0-9A-Z]{1,6}(-[0-9A-Z]{4}){1,3}$/;
 
 export function isCertificateId(value: string): boolean {
   return CERTIFICATE_ID_RE.test(value);
@@ -107,58 +124,60 @@ export function verifyPathFor(id: string): string {
   return `/verify/${encodeURIComponent(id)}`;
 }
 
+/** `https://learn.oyegen.com/verify/<id>` on the configured public origin (no trailing slash twice). */
+export function verifyUrlFor(origin: string, id: string): string {
+  return `${origin.replace(/\/+$/, "")}${verifyPathFor(id)}`;
+}
+
+/** What the certificate prints under "Verify:": the link without its scheme. */
+export function verifyDisplay(url: string): string {
+  return url.replace(/^https?:\/\//, "");
+}
+
+/** The credential name LinkedIn shows: "Oyelearn – <Course>". */
+export function linkedInCredentialName(title: string): string {
+  return `Oyelearn – ${title}`;
+}
+
+/** "oyelearn-certificate-OYL-AB12-CD34.pdf". */
+export function certificateFileName(id: string, ext: "pdf" | "png"): string {
+  return `oyelearn-certificate-${id.replace(/[^A-Za-z0-9-]/g, "")}.${ext}`;
+}
+
+/** The line between the name and the title, by kind. A course reads exactly as the kit's template. */
+export function completionLine(kind: CertificateKind): string {
+  if (kind === "goal") return "has reached the goal";
+  if (kind === "track") return "has completed the path";
+  return "has completed";
+}
+
+// ---------------------------------------------------------------------------
+// Signature (admin setting)
+// ---------------------------------------------------------------------------
+
+/** The optional signatory printed above the signature line, e.g. a name and a job title. */
+export interface CertificateSignature {
+  name: string;
+  title: string;
+}
+
+export const SIGNATURE_NAME_MAX = 60;
+export const SIGNATURE_TITLE_MAX = 60;
+
+/**
+ * What the signature block prints: above the line and under it. With no signatory set it is the
+ * organisation itself ("Oyelabs" over "Issued by"): a neutral placeholder, never an invented name.
+ */
+export function signatureLines(sig: CertificateSignature | null): { above: string; below: string } {
+  const name = sig?.name.trim() ?? "";
+  const title = sig?.title.trim() ?? "";
+  if (!name) return { above: "Oyelabs", below: "Issued by" };
+  return { above: name, below: title ? `${title}, Oyelabs` : "Oyelabs" };
+}
+
 /** "6 October 2026", in UTC so the same certificate reads the same everywhere. */
 export function formatIssueDate(ms: number): string {
   return new Date(ms).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
-}
-
-// ---------------------------------------------------------------------------
-// Share image (1200 × 630, the Open Graph size)
-// ---------------------------------------------------------------------------
-
-export const SHARE_IMAGE = { width: 1200, height: 630 } as const;
-
-/**
- * The largest font size (px, whole numbers) at which `text` fits in `maxWidth`, never above `max`
- * or below `min`. `charEm` is the average glyph width in em for the font (Sora ≈ 0.6).
- */
-export function fitFontSize(text: string, maxWidth: number, max: number, min: number, charEm = 0.6): number {
-  const length = Math.max(1, [...text].length);
-  const fits = Math.floor(maxWidth / (length * charEm));
-  return Math.max(min, Math.min(max, fits));
-}
-
-export interface ShareLayout {
-  width: number;
-  height: number;
-  /** Outer margin. */
-  pad: number;
-  /** QR square, bottom right. */
-  qr: { x: number; y: number; size: number };
-  name: { x: number; y: number; size: number; maxWidth: number };
-  title: { x: number; y: number; size: number; maxWidth: number };
-  kicker: { x: number; y: number; size: number };
-  footer: { x: number; y: number; size: number };
-  logo: { x: number; y: number; height: number };
-}
-
-/** Where everything goes on the share image. Pure, so the sizes are tested without a canvas. */
-export function shareImageLayout(holderName: string, title: string): ShareLayout {
-  const { width, height } = SHARE_IMAGE;
-  const pad = 64;
-  const qrSize = 168;
-  const textWidth = width - pad * 2 - qrSize - 48;
-  return {
-    width,
-    height,
-    pad,
-    qr: { x: width - pad - qrSize, y: height - pad - qrSize, size: qrSize },
-    logo: { x: pad, y: pad, height: 44 },
-    kicker: { x: pad, y: 210, size: 26 },
-    name: { x: pad, y: 300, size: fitFontSize(holderName, textWidth, 72, 34), maxWidth: textWidth },
-    title: { x: pad, y: 392, size: fitFontSize(title, textWidth, 44, 24), maxWidth: textWidth },
-    footer: { x: pad, y: height - pad, size: 22 },
-  };
 }
 
 // ---------------------------------------------------------------------------

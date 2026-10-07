@@ -1,11 +1,9 @@
 import { lazy, Suspense, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { Award, BookMarked, Download, ExternalLink, NotebookPen, RotateCcw, Search, ShieldCheck, Trophy } from "lucide-react";
+import { Award, BookMarked, Download, ExternalLink, Image as ImageIcon, NotebookPen, RotateCcw, Search, ShieldCheck, Trophy } from "lucide-react";
 import { m } from "motion/react";
 import { Link } from "react-router-dom";
 
 import { api, ApiRequestError } from "@/api/client";
-import type { CertificateData } from "@/lib/certificate";
-import type { TrackId } from "@/types/curriculum";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { chooseDesign } from "@/v5/app/designFlag";
 import { isStaffRole } from "@shared/uiFlag";
@@ -19,6 +17,7 @@ import { cn } from "@/v5/design/cn";
 import { transitions } from "@/v5/design/motion";
 import type { CertificateView, MeProfile, NoteView, Settings } from "@shared/me";
 import { linkedInAddUrl, searchNotes } from "@shared/meCore";
+import { certificateFileName, linkedInCredentialName } from "@shared/certificates";
 
 import { PageFrame, V5Screen, useApiData, useDelayed, type ApiData } from "./page";
 import { applyTheme } from "./settings";
@@ -142,12 +141,13 @@ function ProgressTab({ profile }: { profile: MeProfile }) {
       <Card>
         <CardHeader title="XP" description={`+${profile.xp.thisWeek} this week`} />
         <ol className="flex h-28 items-end gap-1.5" aria-label="XP in the last 8 weeks">
-          {profile.xp.weeks.map((w) => (
+          {/* Blue leads; this week (the learner's own highlight) is amber. */}
+          {profile.xp.weeks.map((w, i) => (
             <li key={w.week} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
               <span className="sr-only">
                 {weekOfLabel(w.week)}: {w.xp} XP
               </span>
-              <span aria-hidden="true" className={cn("w-full rounded-t-sm", w.xp ? "bg-brand" : "bg-sunken")} style={{ height: `${Math.max(4, (w.xp / maxWeekXp) * 100)}%` }} />
+              <span aria-hidden="true" className={cn("w-full rounded-t-sm", !w.xp ? "bg-sunken" : i === profile.xp.weeks.length - 1 ? "bg-progress" : "bg-brand")} style={{ height: `${Math.max(4, (w.xp / maxWeekXp) * 100)}%` }} />
               <span aria-hidden="true" className="whitespace-nowrap text-[0.625rem] text-fg-2">
                 {weekStartLabel(w.week)}
               </span>
@@ -184,7 +184,7 @@ function ProgressTab({ profile }: { profile: MeProfile }) {
         )}
       </Card>
 
-      <Card>
+      <Card id="certificates" className="scroll-mt-20">
         <CardHeader title="Certificates" description="Download them, or add them to your LinkedIn profile." />
         {profile.certificates.length ? (
           <ul className="flex flex-col gap-3">
@@ -201,36 +201,14 @@ function ProgressTab({ profile }: { profile: MeProfile }) {
 }
 
 function CertificateRow({ cert }: { cert: CertificateView }) {
-  const [state, setState] = useState<"idle" | "working" | "error">("idle");
-  const download = async () => {
-    setState("working");
-    try {
-      const { downloadCertificatePdf } = await import("@/components/certificate/generateCertificatePdf");
-      const data: CertificateData = {
-        name: cert.holderName,
-        trackId: (cert.trackId || cert.kind) as TrackId,
-        trackName: cert.title,
-        accentHex: "#2067D3",
-        topicsCount: cert.topicCount,
-        campCount: 0,
-        milestoneCount: 0,
-        totalMinutes: 0,
-        averageScore: cert.averageScore,
-        completedAt: new Date(cert.issuedAt).toISOString(),
-        certificateId: cert.id,
-      };
-      await downloadCertificatePdf(data);
-      setState("idle");
-    } catch {
-      setState("error");
-    }
-  };
+  // Rebrand Phase 5: the server draws the PDF and the image from the kit's template.
+  const id = encodeURIComponent(cert.id);
   return (
     <li className="flex flex-col gap-2 rounded-control border border-line-1 p-3">
       <div className="flex items-start gap-2">
         <Award className="mt-0.5 size-4 shrink-0 text-brand-fg" aria-hidden="true" />
         <div className="min-w-0">
-          <Link to={`/learn/certificate/${encodeURIComponent(cert.id)}`} className="font-medium text-fg-1 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
+          <Link to={`/learn/certificate/${id}`} className="font-medium text-fg-1 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
             {cert.title}
           </Link>
           <p className="text-caption text-fg-2">
@@ -239,22 +217,32 @@ function CertificateRow({ cert }: { cert: CertificateView }) {
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
-        <Button size="sm" variant="secondary" onClick={() => void download()} loading={state === "working"}>
-          {state === "working" ? null : <Download aria-hidden="true" />} Download PDF
+        <Button asChild size="sm" variant="secondary">
+          <a href={`/api/v5/certificates/${id}/file.pdf?download=1`} download={certificateFileName(cert.id, "pdf")}>
+            <Download aria-hidden="true" /> Download PDF
+          </a>
         </Button>
         <Button asChild size="sm" variant="secondary">
-          <a href={linkedInAddUrl(cert, window.location.origin)} target="_blank" rel="noopener noreferrer">
+          <a href={`/api/v5/certificates/${id}/file.png?download=1`} download={certificateFileName(cert.id, "png")}>
+            <ImageIcon aria-hidden="true" /> Download image
+          </a>
+        </Button>
+        <Button asChild size="sm" variant="secondary">
+          <a href={linkedInAddUrl({ ...cert, title: linkedInCredentialName(cert.title) }, originOf(cert.verifyUrl))} target="_blank" rel="noopener noreferrer">
             <ExternalLink aria-hidden="true" /> Add to LinkedIn<span className="sr-only"> (opens in a new tab)</span>
           </a>
         </Button>
       </div>
-      {state === "error" ? (
-        <p role="alert" className="text-small text-danger-fg">
-          The PDF didn't build. Try again, or reload the page.
-        </p>
-      ) : null}
     </li>
   );
+}
+
+function originOf(url: string): string {
+  try {
+    return new URL(url).origin;
+  } catch {
+    return window.location.origin;
+  }
 }
 
 // ---------------------------------------------------------------------------

@@ -19,8 +19,9 @@
  *    reviewable, "Request review" on a Not-yet one → "Review requested" (server agrees), and
  *    "Your plan is ready" → the animation → /learn/plan.
  * 5. A goal is marked achieved in the throwaway DB → a certificate is issued by the server; the
- *    certificate page shows the QR; the PDF downloads (%PDF); the share image is a 1200 × 630 PNG;
- *    /verify/:id opens logged out ("valid"), and says "withdrawn" after an admin revokes it.
+ *    certificate page shows the server's picture; the PDF downloads (%PDF); the image is the 2× A4
+ *    PNG (3508 × 2480); /verify/:id opens logged out ("valid"), and says "revoked" after an admin
+ *    revokes it (rebrand Phase 5).
  * 6. axe (WCAG 2.2 AA tags): no serious or critical violations on the sheet, results, certificate
  *    and verify pages at 390 and 1440, light and dark.
  * Screenshots: %TEMP%/claude/e2e-shots-v5-assessment. Port 8825, throwaway DATA_DIR, mock AI.
@@ -556,15 +557,16 @@ async function certificates(browser: Browser, s: Seeded, dataDir: string): Promi
 
     await page.goto(`${BASE}/learn/certificate/${certId}`, { waitUntil: "domcontentloaded", timeout: WAIT });
     await page.getByRole("heading", { level: 1, name: "Give a clear stand-up update" }).waitFor({ timeout: WAIT });
-    const art = page.getByRole("img", { name: /Goal certificate: Give a clear stand-up update, awarded to Asha Learner/ });
-    ok(await art.isVisible(), "the certificate art names the holder and the goal");
-    await poll("QR drawn", WAIT, async () => ((await art.locator("svg path[fill='#0F172A']").count()) > 0 ? true : null), 200).catch(() => null);
-    ok((await art.locator("svg path[fill='#0F172A']").count()) > 0, "the QR code is drawn");
+    // Rebrand Phase 5: the certificate is the server's PNG, drawn from the kit's template.
+    const art = page.getByRole("img", { name: /Certificate of completion: Asha Learner has reached the goal Give a clear stand-up update/ });
+    ok(await art.isVisible(), "the certificate picture names the holder and the goal");
+    const natural = await poll("certificate picture loaded", WAIT, async () => ((await art.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth)) || null), 200).catch(() => 0);
+    ok(natural === 3508, `the picture is the server's 2× PNG (${natural} px wide)`);
     await page.waitForTimeout(2300); // let the celebration finish
     await shot(page, "14-certificate-1440");
 
     const pdfDl = page.waitForEvent("download", { timeout: 60_000 });
-    await page.getByRole("button", { name: "Download PDF" }).click();
+    await page.getByRole("link", { name: "Download PDF" }).click();
     const pdf = await pdfDl;
     const pdfPath = path.join(dataDir, pdf.suggestedFilename());
     await pdf.saveAs(pdfPath);
@@ -572,12 +574,12 @@ async function certificates(browser: Browser, s: Seeded, dataDir: string): Promi
     ok(head === "%PDF-" && fs.statSync(pdfPath).size > 5000, `the PDF downloads (${pdf.suggestedFilename()}, ${fs.statSync(pdfPath).size} bytes)`);
 
     const pngDl = page.waitForEvent("download", { timeout: 60_000 });
-    await page.getByRole("button", { name: "Download share image" }).click();
+    await page.getByRole("link", { name: "Download image" }).click();
     const png = await pngDl;
     const pngPath = path.join(dataDir, png.suggestedFilename());
     await png.saveAs(pngPath);
     const size = pngSize(pngPath);
-    ok(size.width === 1200 && size.height === 630, `the share image is 1200 × 630 (${size.width} × ${size.height})`);
+    ok(size.width === 3508 && size.height === 2480, `the image is the 2× A4 PNG, 3508 × 2480 (${size.width} × ${size.height})`);
     fs.copyFileSync(pngPath, path.join(SHOTS, "15-share-image.png"));
 
     for (const width of [390, 1440]) {
@@ -594,7 +596,7 @@ async function certificates(browser: Browser, s: Seeded, dataDir: string): Promi
     await ctx.close();
   }
 
-  step("/verify/:id logged out: valid, then withdrawn after a revoke");
+  step("/verify/:id logged out: valid, then revoked after a revoke");
   for (const width of [390, 1440]) {
     for (const theme of ["light", "dark"] as const) {
       const anon = await browser.newContext({ viewport: { width, height: width < 768 ? 844 : 900 }, colorScheme: theme });
@@ -621,11 +623,11 @@ async function certificates(browser: Browser, s: Seeded, dataDir: string): Promi
   const p = await anon.newPage();
   try {
     await p.goto(`${BASE}/verify/${certId}`, { waitUntil: "domcontentloaded", timeout: WAIT });
-    await p.getByRole("heading", { name: "This certificate was withdrawn" }).waitFor({ timeout: WAIT });
-    ok(true, "after a revoke the check page says it was withdrawn");
+    await p.getByRole("heading", { name: "This certificate was revoked" }).waitFor({ timeout: WAIT });
+    ok(true, "after a revoke the check page says it was revoked");
     await shot(p, "18-verify-withdrawn");
     await p.goto(`${BASE}/verify/OYL-0000-0000`, { waitUntil: "domcontentloaded", timeout: WAIT });
-    await p.getByRole("heading", { name: "We couldn't find this certificate" }).waitFor({ timeout: WAIT });
+    await p.getByRole("heading", { name: "Certificate not found" }).waitFor({ timeout: WAIT });
     ok(true, "an unknown code says it can't be found");
   } finally {
     await anon.close();

@@ -24,6 +24,7 @@ import { refreshStreak } from "../streak/repo";
 import { xpTotals } from "../xp/repo";
 import { courseDetailFor, libraryFor } from "./library";
 import { skillLevels } from "./levels";
+import { verifyUrlFor } from "../../../../shared/certificates";
 import { syncCertificates } from "../certificates/repo";
 
 /**
@@ -133,6 +134,7 @@ export async function registerV5MeRoutes(app: FastifyInstance): Promise<void> {
         trackId: c.trackId,
         topicCount: c.topicIds.length,
         averageScore: c.averageScore,
+        verifyUrl: verifyUrlFor(app.env.publicOrigin, c.id),
       }));
 
     let streak: MeProfile["streak"] = null;

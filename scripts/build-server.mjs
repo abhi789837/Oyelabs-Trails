@@ -64,6 +64,10 @@ if (result.errors.length) process.exit(1);
 // The bundle looks for migrations next to itself (see server/src/db/index.ts).
 await cp(path.join(root, "server/drizzle"), path.join(outDir, "drizzle"), { recursive: true });
 
+// Rebrand Phase 5: the certificate template and its fonts, found next to the bundle
+// (server/src/v5/certificates/render.ts, certificateAssetsDir).
+await cp(path.join(root, "server/assets"), path.join(outDir, "assets"), { recursive: true });
+
 // Mark the output as ESM so `node dist-server/index.js` does not need a flag.
 await writeFile(path.join(outDir, "package.json"), JSON.stringify({ type: "module" }, null, 2) + "\n");
 

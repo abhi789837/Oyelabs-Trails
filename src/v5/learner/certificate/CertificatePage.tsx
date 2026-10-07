@@ -2,8 +2,7 @@ import { Copy, Download, ExternalLink, Image as ImageIcon, Share2, ShieldCheck }
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { formatIssueDate, type MyCertificate } from "@shared/certificates";
-import { linkedInAddUrl } from "@shared/meCore";
+import { certificateFileName, completionLine, formatIssueDate, type MyCertificate } from "@shared/certificates";
 
 import { ApiRequestError } from "@/api/client";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
@@ -18,15 +17,27 @@ import { useV5Root } from "@/v5/design/useV5Root";
 import { V5MotionProvider } from "@/v5/design/V5MotionProvider";
 import { celebrate } from "@/v5/motivation/celebrate";
 
-import { certificateApi } from "./api";
-import type { CertificateText } from "./art";
-import { CertificateArt } from "./CertificateArt";
-import { useQr } from "./qr";
+import { certificateApi, certificateFiles, linkedInUrlFor } from "./api";
+import { SealMoment } from "./SealMoment";
+
+const SEEN_KEY = "oyelearn.certificate.seen";
+
+/** True the first time this browser opens this certificate (the moment plays once). */
+function firstVisit(id: string): boolean {
+  try {
+    const seen = JSON.parse(window.localStorage.getItem(SEEN_KEY) ?? "[]") as string[];
+    if (seen.includes(id)) return false;
+    window.localStorage.setItem(SEEN_KEY, JSON.stringify([...seen, id].slice(-50)));
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 /**
- * `/learn/certificate/:certId`: the learner's certificate, with its public check link and QR, a PDF
- * and a 1200 × 630 share image (both made in the browser, lazily), LinkedIn, and the name printed
- * on it. The certificate itself is issued by the server; this page never decides completion.
+ * `/learn/certificate/:certId`: the learner's certificate. The server issues it and draws its PDF
+ * and PNG from the kit's template (rebrand Phase 5); this page shows that picture, downloads the
+ * files, copies the public check link and adds it to LinkedIn. It never decides completion.
  */
 export default function CertificatePage() {
   useV5Root();
@@ -44,11 +55,6 @@ export default function CertificatePage() {
   };
   useEffect(load, [certId]);
 
-  // The moment: once per browser per certificate, through the motivation host (Phase 6).
-  useEffect(() => {
-    if (cert && !cert.revokedAt) celebrate("certificate", { ref: cert.id, detail: cert.title, once: `certificate:${cert.id}` });
-  }, [cert]);
-
   return (
     <V5MotionProvider>
       <div className="min-h-full bg-surface-0 text-fg-1">
@@ -62,13 +68,13 @@ export default function CertificatePage() {
           ) : !cert ? (
             <div role="status" aria-label="Loading your certificate" className="flex flex-col gap-4">
               <Skeleton className="h-10 w-2/3" />
-              <Skeleton className="aspect-[1.414/1] w-full" />
+              <Skeleton className="aspect-[1754/1240] w-full" />
             </div>
           ) : (
             <CertificateView cert={cert} onChange={setCert} />
           )}
           <p className="text-small text-fg-2">
-            <Link to="/learn/me" className="font-medium text-brand-fg underline-offset-4 hover:underline">
+            <Link to="/learn/me#certificates" className="font-medium text-brand-fg underline-offset-4 hover:underline">
               All your certificates
             </Link>
           </p>
@@ -79,96 +85,99 @@ export default function CertificatePage() {
 }
 
 function CertificateView({ cert, onChange }: { cert: MyCertificate; onChange: (next: MyCertificate) => void }) {
-  const verifyUrl = `${window.location.origin}${cert.verifyPath}`;
-  const qr = useQr(verifyUrl);
-  const [busy, setBusy] = useState<"pdf" | "image" | null>(null);
   const revoked = cert.revokedAt !== null;
-  const text: CertificateText = { holderName: cert.holderName, title: cert.title, kind: cert.kind, issuedAt: cert.issuedAt, id: cert.id, verifyUrl };
+  const [play] = useState(() => !revoked && firstVisit(cert.id));
+  const [imageState, setImageState] = useState<"loading" | "ready" | "failed">("loading");
 
-  const downloadPdf = async () => {
-    if (!qr || busy) return;
-    setBusy("pdf");
-    try {
-      const { downloadCertificatePdfV5 } = await import("./pdf");
-      await downloadCertificatePdfV5(text, qr, revoked);
-    } catch {
-      v5Toast.error("The PDF couldn't be made", "Try again, or use the share image instead.");
-    } finally {
-      setBusy(null);
-    }
-  };
-
-  const downloadImage = async () => {
-    if (!qr || busy) return;
-    setBusy("image");
-    try {
-      const { downloadShareImage } = await import("./shareImage");
-      await downloadShareImage(text, qr);
-    } catch {
-      v5Toast.error("The image couldn't be made", "Try again in a moment.");
-    } finally {
-      setBusy(null);
-    }
-  };
+  // The app-wide moment (toast-sized, through the motivation host), once per browser per certificate.
+  useEffect(() => {
+    if (!revoked) celebrate("certificate", { ref: cert.id, detail: cert.title, once: `certificate:${cert.id}` });
+  }, [cert.id, cert.title, revoked]);
 
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(verifyUrl);
+      await navigator.clipboard.writeText(cert.verifyUrl);
       v5Toast.success("Link copied", "Anyone with it can check your certificate.");
     } catch {
-      v5Toast.info("Copy this link", verifyUrl);
+      v5Toast.info("Copy this link", cert.verifyUrl);
     }
   };
 
+  const alt = `Certificate of completion: ${cert.holderName} ${completionLine(cert.kind)} ${cert.title}, ${formatIssueDate(cert.issuedAt)}. Certificate code ${cert.id}.`;
+
   return (
     <>
-      <header className="flex flex-col gap-1">
-        <p className="text-small font-medium text-brand-fg">{formatIssueDate(cert.issuedAt)}</p>
-        <h1 className="font-display text-h1 font-semibold text-fg-1">{cert.title}</h1>
-        <p className="text-body text-fg-2">Your certificate. Share it, print it, or add it to LinkedIn.</p>
+      <header className="flex items-center gap-4">
+        <SealMoment play={play} size={64} />
+        <div className="min-w-0">
+          <p className="text-small font-medium text-brand-fg">{revoked ? "Certificate" : `Certificate earned ${formatIssueDate(cert.issuedAt)}`}</p>
+          <h1 className="font-display text-h1 font-semibold text-fg-1">{cert.title}</h1>
+          <p className="text-body text-fg-2">{revoked ? "This certificate is no longer valid." : "Download it, share the link, or add it to LinkedIn."}</p>
+        </div>
       </header>
 
       {revoked ? (
-        <StatusLine tone="danger">This certificate was withdrawn on {formatIssueDate(cert.revokedAt!)}. Its check page says so. Ask your manager if you think that's a mistake.</StatusLine>
-      ) : null}
+        <StatusLine tone="danger">This certificate was revoked on {formatIssueDate(cert.revokedAt!)}. Its check page says so. Ask your manager if you think that's a mistake.</StatusLine>
+      ) : (
+        <Card elevation={1} className="flex flex-col gap-4">
+          <div className="relative overflow-hidden rounded-control border border-line-1 bg-white">
+            {imageState !== "ready" ? <Skeleton className="absolute inset-0 rounded-none" /> : null}
+            <img
+              src={certificateFiles.png(cert.id, { v: cert.holderName })}
+              alt={alt}
+              width={1754}
+              height={1240}
+              className="relative block h-auto w-full"
+              onLoad={() => setImageState("ready")}
+              onError={() => setImageState("failed")}
+            />
+            {imageState === "failed" ? (
+              <p role="alert" className="absolute inset-0 grid bg-surface-1 place-items-center p-4 text-center text-small text-fg-2">
+                The picture didn't load. The downloads still work.
+              </p>
+            ) : null}
+          </div>
 
-      <div className="overflow-hidden rounded-card border border-line-1 shadow-e2">
-        <CertificateArt cert={text} qr={qr} revoked={revoked} className="block h-auto w-full" />
-      </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="primary" asChild>
+              <a href={certificateFiles.pdf(cert.id)} download={certificateFileName(cert.id, "pdf")}>
+                <Download aria-hidden="true" />
+                Download PDF
+              </a>
+            </Button>
+            <Button variant="secondary" asChild>
+              <a href={certificateFiles.png(cert.id, { download: true })} download={certificateFileName(cert.id, "png")}>
+                <ImageIcon aria-hidden="true" />
+                Download image
+              </a>
+            </Button>
+            <Button variant="secondary" onClick={() => void copyLink()}>
+              <Copy aria-hidden="true" />
+              Copy verify link
+            </Button>
+            <Button variant="secondary" asChild>
+              <a href={linkedInUrlFor(cert)} target="_blank" rel="noopener noreferrer">
+                <Share2 aria-hidden="true" />
+                Add to LinkedIn
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </Button>
+            <Button variant="ghost" asChild>
+              <a href={cert.verifyPath} target="_blank" rel="noopener noreferrer">
+                <ShieldCheck aria-hidden="true" />
+                Open the check page
+                <ExternalLink aria-hidden="true" />
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </Button>
+          </div>
+          <p className="break-all text-small text-fg-2">
+            Verify link: <span className="font-mono">{cert.verifyUrl}</span>
+          </p>
+        </Card>
+      )}
 
-      <div className="flex flex-wrap gap-2">
-        <Button variant="primary" onClick={() => void downloadPdf()} loading={busy === "pdf"} disabled={!qr || revoked}>
-          <Download aria-hidden="true" />
-          Download PDF
-        </Button>
-        <Button variant="secondary" onClick={() => void downloadImage()} loading={busy === "image"} disabled={!qr || revoked}>
-          <ImageIcon aria-hidden="true" />
-          Download share image
-        </Button>
-        <Button variant="secondary" onClick={() => void copyLink()} disabled={revoked}>
-          <Copy aria-hidden="true" />
-          Copy check link
-        </Button>
-        {!revoked ? (
-          <Button variant="secondary" asChild>
-            <a href={linkedInAddUrl(cert, window.location.origin)} target="_blank" rel="noreferrer">
-              <Share2 aria-hidden="true" />
-              Add to LinkedIn
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
-          </Button>
-        ) : null}
-        <Button variant="ghost" asChild>
-          <a href={cert.verifyPath} target="_blank" rel="noreferrer">
-            <ShieldCheck aria-hidden="true" />
-            Open the check page
-            <ExternalLink aria-hidden="true" />
-            <span className="sr-only"> (opens in a new tab)</span>
-          </a>
-        </Button>
-      </div>
-
-      <HolderName cert={cert} onChange={onChange} />
+      {!revoked ? <HolderName cert={cert} onChange={onChange} /> : null}
     </>
   );
 }
@@ -187,7 +196,7 @@ function HolderName({ cert, onChange }: { cert: MyCertificate; onChange: (next: 
       const updated = res.certificates.find((c) => c.id === cert.id);
       if (updated) onChange(updated);
       setName(res.holderName);
-      v5Toast.success("Name updated", "It's on your certificates now.");
+      v5Toast.success("Name updated", "Your certificates now show it.");
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "That didn't save. Try again.");
     } finally {
@@ -204,7 +213,7 @@ function HolderName({ cert, onChange }: { cert: MyCertificate; onChange: (next: 
           if (changed) void save();
         }}
       >
-        <Field label="Name on your certificates" hint="Spelled the way you want it to appear. It changes on all your certificates." error={error ?? undefined} className="flex-1">
+        <Field label="Name on your certificates" hint="Spelled the way you want it printed. It changes on all your certificates." error={error ?? undefined} className="flex-1">
           <Input value={name} onChange={(e) => setName(e.target.value)} maxLength={80} autoComplete="name" />
         </Field>
         <Button type="submit" variant="secondary" loading={saving} disabled={!changed || name.trim().length < 2}>

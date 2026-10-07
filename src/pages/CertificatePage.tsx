@@ -1,63 +1,23 @@
-import { lazy, Suspense, useEffect, useState } from "react";
-import { useReducedMotion } from "motion/react";
-import { Download, Lock } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Lock } from "lucide-react";
+import { Link, Navigate, useParams } from "react-router-dom";
 
-import { CertificateView } from "@/components/certificate/CertificateView";
+import type { MyCertificatesResponse } from "@shared/certificates";
+
+import { api } from "@/api/client";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { StatusDot } from "@/components/trail/StatusDot";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { getTrack, modulePath, topicPath, trackTopics, type TrackMeta } from "@/content";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { summarizeModule, summarizeTrack } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
-import { buildCertificateData, normalizeName } from "@/lib/certificate";
 import { cn } from "@/lib/utils";
-import { useProfileStore } from "@/store/profileStore";
 import { useProgressStore } from "@/store/progressStore";
 
 import { SectionHeading } from "./parts/Stats";
 import NotFoundPage from "./NotFoundPage";
-
-/**
- * Loaded only once someone has actually reached a summit. Everyone else never fetches the chunk.
- */
-const Confetti = lazy(() => import("@/components/certificate/Confetti"));
-
-const CELEBRATED_KEY = "oyelearn.certificate.celebrated";
-
-/**
- * Which summits this browser has already celebrated, keyed by track and completion time.
- *
- * Keyed by the completion timestamp as well as the track so a re-issued plan that is finished
- * again is a new event, and a reload of the same one is not. It lives in `localStorage` because
- * "have I already seen this animation in this browser" is exactly the kind of per-viewer
- * convenience that does not belong on a server — and it has to survive that storage being blocked
- * or cleared, in which case the worst outcome is confetti twice.
- */
-function alreadyCelebrated(key: string): boolean {
-  try {
-    const raw = window.localStorage.getItem(CELEBRATED_KEY);
-    return raw ? (JSON.parse(raw) as string[]).includes(key) : false;
-  } catch {
-    return false;
-  }
-}
-
-function markCelebrated(key: string): void {
-  try {
-    const raw = window.localStorage.getItem(CELEBRATED_KEY);
-    const seen = raw ? (JSON.parse(raw) as string[]) : [];
-    if (seen.includes(key)) return;
-    // Bounded: one entry per track per completion, and nobody finishes twenty trails twice.
-    window.localStorage.setItem(CELEBRATED_KEY, JSON.stringify([...seen, key].slice(-40)));
-  } catch {
-    // Private window or blocked site data. The burst simply plays again next time.
-  }
-}
 
 export default function CertificatePage() {
   const { trackId } = useParams();
@@ -166,94 +126,52 @@ function CertificateContent({ track }: { track: TrackMeta }) {
   );
 }
 
-function UnlockedCertificate({ track, completedAt }: { track: TrackMeta; completedAt: string }) {
-  const progress = useProgressStore((s) => s.progress);
-  const learnerName = useProfileStore((s) => s.learnerName);
-  const setLearnerName = useProfileStore((s) => s.setLearnerName);
-  const reduceMotion = useReducedMotion();
-  const [status, setStatus] = useState<"idle" | "working" | "error">("idle");
-  const [celebrating, setCelebrating] = useState(false);
+/**
+ * Rebrand Phase 5: the certificate is the server's (issued once, with a public check link, drawn
+ * from the kit's template). This page used to draw its own in the browser, with an id nobody could
+ * check; now it finds the server's certificate for this track and opens it.
+ */
+function UnlockedCertificate({ track }: { track: TrackMeta; completedAt: string }) {
+  const [state, setState] = useState<{ kind: "loading" } | { kind: "none" } | { kind: "failed" } | { kind: "found"; id: string }>({ kind: "loading" });
   const accent = accentClasses[track.accentToken];
-  const data = buildCertificateData(track, progress, learnerName, completedAt);
-  const hasName = normalizeName(learnerName).length > 0;
 
-  // Once per unlock, and never on a revisit: the first time is a moment, the fifth is noise.
-  const celebrationKey = `${track.id}:${completedAt}`;
   useEffect(() => {
-    if (alreadyCelebrated(celebrationKey)) return;
-    markCelebrated(celebrationKey);
-    if (!reduceMotion) setCelebrating(true);
-  }, [celebrationKey, reduceMotion]);
+    const controller = new AbortController();
+    api
+      .get<MyCertificatesResponse>("/api/v5/certificates", controller.signal)
+      .then(({ certificates }) => {
+        const mine = certificates.find((c) => c.kind === "track" && c.refId === track.id && c.revokedAt === null);
+        setState(mine ? { kind: "found", id: mine.id } : { kind: "none" });
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setState({ kind: "failed" });
+      });
+    return () => controller.abort();
+  }, [track.id]);
 
-  const handleDownload = async () => {
-    setStatus("working");
-    try {
-      const { downloadCertificatePdf } = await import("@/components/certificate/generateCertificatePdf");
-      await downloadCertificatePdf(data);
-      setStatus("idle");
-    } catch (error) {
-      console.error(error);
-      setStatus("error");
-    }
-  };
+  if (state.kind === "found") return <Navigate to={`/learn/certificate/${encodeURIComponent(state.id)}`} replace />;
 
   return (
     <div className="mt-8">
-      {celebrating && (
-        <Suspense fallback={null}>
-          <Confetti accentToken={track.accentToken} onDone={() => setCelebrating(false)} />
-        </Suspense>
-      )}
-
       <h1 className="text-2xl font-bold sm:text-3xl">{track.name} certificate</h1>
-      <p className="mt-3 max-w-prose text-muted-foreground">
-        Summit reached. Add the name you'd like printed, check the preview, then download the PDF.
-      </p>
-
-      {/* The download is the only thing anyone came here to do, so it is the only filled button on
-          the page and the largest control on it. Everything else is a field or a note. */}
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-end">
-        <div className="w-full max-w-sm">
-          <Label htmlFor="learner-name">Name on the certificate</Label>
-          <Input
-            id="learner-name"
-            className="mt-2"
-            value={learnerName}
-            maxLength={60}
-            autoComplete="name"
-            placeholder="Your full name"
-            onChange={(e) => setLearnerName(e.target.value)}
-            aria-describedby="learner-name-note"
-          />
-        </div>
-        <Button
-          size="lg"
-          onClick={handleDownload}
-          disabled={!hasName}
-          loading={status === "working"}
-          className={cn(accent.solid)}
-        >
-          <Download aria-hidden="true" />
-          {status === "working" ? "Preparing PDF" : "Download PDF"}
-        </Button>
-      </div>
-      <p id="learner-name-note" className="mt-2 text-xs text-muted-foreground" aria-live="polite">
-        {status === "error"
-          ? "The PDF couldn't be generated. Try again, or reload the page."
-          : hasName
-            ? "Saved in this browser. The certificate ID changes if you change the name."
-            : "Add your name to download the PDF."}
-      </p>
-
-      <div className="mt-8">
-        <CertificateView data={data} />
-      </div>
-
-      <p className="mt-6 max-w-prose text-xs leading-relaxed text-muted-foreground">
-        This certificate is generated in your browser from progress stored on this device. There's no server-side
-        verification yet, so the certificate ID can't be checked by anyone else. It's a record for you and your lead, not
-        a verifiable credential.
-      </p>
+      {state.kind === "loading" ? (
+        <p role="status" className="mt-3 text-muted-foreground">
+          Finding your certificate…
+        </p>
+      ) : (
+        <>
+          <p className="mt-3 max-w-prose text-muted-foreground" role={state.kind === "failed" ? "alert" : undefined}>
+            {state.kind === "failed"
+              ? "We couldn't load your certificate just now. Reload the page to try again."
+              : `Summit reached. Your ${track.name} certificate is issued for the topics in your plan; it isn't ready yet. Your certificates are listed on your Me page.`}
+          </p>
+          <div className="mt-6">
+            <Button asChild className={cn(accent.solid)}>
+              <Link to="/learn/me#certificates">Your certificates</Link>
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
