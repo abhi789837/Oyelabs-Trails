@@ -221,7 +221,7 @@ export default function AdminPoolPage() {
       {thin && (
         <div className="mt-4 rounded-md border border-trailmark/50 bg-trailmark/6 px-4 py-3">
           <p className="flex items-start gap-3 text-sm">
-            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning-strong" aria-hidden="true" />
             <span>
               <span className="font-medium">This pool came out thinner than planned.</span>{" "}
               <span className="text-muted-foreground">

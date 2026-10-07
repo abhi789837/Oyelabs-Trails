@@ -292,7 +292,7 @@ function TestRow({
       <span className="text-sm">
         {description}
         {isEdgeCase && (
-          <span className="ml-2 rounded-sm border border-trailmark/40 px-1.5 py-px font-mono text-[11px] text-trailmark-strong">
+          <span className="ml-2 rounded-sm border border-warning/40 px-1.5 py-px font-mono text-[11px] text-warning-strong">
             Edge case
           </span>
         )}

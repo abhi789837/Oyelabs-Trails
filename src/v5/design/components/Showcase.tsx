@@ -1,4 +1,4 @@
-import { Award, Mountain, X } from "lucide-react";
+import { Mountain, X } from "lucide-react";
 import { AnimatePresence, m } from "motion/react";
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
 
@@ -34,53 +34,24 @@ export function Logo({ variant = "horizontal", className }: { variant?: "horizon
 // CertificatePreview
 // ---------------------------------------------------------------------------
 
+/** The sample the server drew (scripts/brand/certificate-sample.ts): 1754 × 1240, like the verify page's preview. */
+export const CERTIFICATE_SAMPLE_SRC = "/brand/certificate/certificate-sample.png?v=1";
+
 export interface CertificatePreviewProps {
-  holderName: string;
-  title: string;
-  /** "Track", "Course", "Goal". */
-  kind: string;
-  issuedAt: string;
-  certId: string;
-  verifyUrl: string;
+  /** A certificate picture from the server (`/api/v5/certificates/:id/preview.png` or `file.png`). Defaults to the sample. */
+  src?: string;
+  alt?: string;
   className?: string;
 }
 
 /**
- * The on-screen certificate. Always light (it's a document, and the PDF matches it). The verify
- * URL is plain text so it survives a printout.
+ * The certificate as learners get it: the server's own drawing of the brand kit's A4 template
+ * (server/src/v5/certificates), never a re-creation in HTML. Always on white, like the PDF.
  */
-export function CertificatePreview({ holderName, title, kind, issuedAt, certId, verifyUrl, className }: CertificatePreviewProps) {
+export function CertificatePreview({ src = CERTIFICATE_SAMPLE_SRC, alt = "Sample certificate: Rahul Mehta has completed the path Backend foundations, 5 October 2026, issued by Oyelabs.", className }: CertificatePreviewProps) {
   return (
-    <figure className={cn("v5-light relative isolate aspect-[1.414/1] w-full overflow-hidden rounded-card border border-line-1 bg-surface-1 p-[5%] shadow-e2", className)} aria-label={`Certificate: ${title}, awarded to ${holderName}`}>
-      <div className="absolute inset-[2.5%] -z-10 rounded-md border-2 border-brand/25" aria-hidden="true" />
-      <div className="flex h-full flex-col">
-        <div className="flex items-start justify-between">
-          <Logo className="h-[clamp(1.25rem,3vw,2rem)]" />
-          <span className="grid size-[clamp(2.5rem,9%,4rem)] place-items-center rounded-full bg-brand text-on-brand shadow-e1" aria-hidden="true">
-            <Award className="size-1/2" />
-          </span>
-        </div>
-        <div className="my-auto text-center">
-          <p className="text-[clamp(0.625rem,1.6vw,0.875rem)] font-medium text-fg-2">{kind} certificate</p>
-          <p className="mt-[2%] text-[clamp(0.75rem,1.8vw,1rem)] text-fg-2">This is to say that</p>
-          <p className="mt-[1%] font-display text-[clamp(1.25rem,4.5vw,2.5rem)] font-semibold leading-tight text-fg-1">{holderName}</p>
-          <p className="mt-[2%] text-[clamp(0.75rem,1.8vw,1rem)] text-fg-2">reached the summit of</p>
-          <p className="mt-[1%] font-display text-[clamp(1rem,3vw,1.75rem)] font-semibold text-brand-fg">{title}</p>
-        </div>
-        <div className="flex items-end justify-between gap-4 text-[clamp(0.5625rem,1.3vw,0.75rem)] text-fg-2">
-          <span>
-            Issued {issuedAt}
-            <br />
-            <span className="font-mono">ID {certId}</span>
-          </span>
-          <Mountain className="size-[clamp(1rem,3vw,1.5rem)] text-success" aria-hidden="true" />
-          <span className="text-right">
-            Check it at
-            <br />
-            <span className="break-all font-mono text-fg-1">{verifyUrl}</span>
-          </span>
-        </div>
-      </div>
+    <figure className={cn("overflow-hidden rounded-control border border-line-1 bg-white shadow-e2", className)}>
+      <img src={src} alt={alt} width={1754} height={1240} loading="lazy" decoding="async" className="block h-auto w-full" />
     </figure>
   );
 }

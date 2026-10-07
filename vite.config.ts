@@ -127,8 +127,11 @@ export default defineConfig({
     },
   },
   build: {
-    // The only chunk above the default 500 kB is @react-pdf/renderer (~1.2 MB), which is
-    // loaded on demand when someone clicks "Download PDF", never on page load.
+    // The chunks above the default 500 kB are Monaco's (editor.api, MonacoEditorImpl and its language
+    // workers, the TypeScript worker ~6.9 MB), loaded only when a code editor opens, so the warning
+    // that names them is expected. The limit stays at 1.3 MB so anything else this big is still
+    // flagged. Certificates are drawn on the server since rebrand Phase 5 (no PDF code in the
+    // browser); `npm run size` guards the route budgets.
     chunkSizeWarningLimit: 1300,
     rolldownOptions: {
       output: {

@@ -49,11 +49,13 @@ Runs alongside v4.5 (`docs/v4.5/PROGRESS.md`); phases that touch the same files 
 - [ ] 6.4 Gates + commit `feat(brand-p6)`
 
 ## Phase 7: Clean-up, checks, deploy
-- [ ] 7.1 Old assets, fonts, colours and "Trails" strings removed
-- [ ] 7.2 Logo-rule test, certificate tests, favicon/manifest 200s, axe both themes, Playwright snapshots
-- [ ] 7.3 Deploy (Abhishek runs it) + production checks
-- [ ] 7.4 RESULTS.md + chat summary; tag `brand-v1.0`
+- [x] 7.1 Old assets, fonts, colours and "Trails" strings removed
+- [x] 7.2 Logo-rule test, certificate tests, favicon/manifest 200s, axe both themes, Playwright snapshots
+- [ ] 7.3 Deploy (Abhishek runs it) + production checks (steps: `DEPLOY.md`)
+- [x] 7.4 RESULTS.md + chat summary (tag `brand-v1.0` not yet: on the deployed commit)
 
 ## Needs Abhishek
 - Confirm the email From name: `MAIL_FROM` decides it (docs/v5: "Email is off unless set up"); we suggest `Oyelearn <learning@oyelabs.com>` so the From name matches the header and footer. (Phase 6)
 - Signature name/title for certificates: set it in Admin → Reports → Certificates → "Signature on certificates" (e.g. your name and job title). Until then certificates print "Oyelabs" over "Issued by".
+- Names in non-Latin scripts: the certificate font (Outfit) covers Latin only and the image has no fallback, so such names print as missing glyphs; adding a fallback font (e.g. Noto Sans) is the fix if needed. (Phase 5/7)
+- The deploy: `DEPLOY.md` (no migration; roll back to `v4.5.0`, not `pre-rebrand`), then tag `brand-v1.0` and tick 7.3. (Phase 7)

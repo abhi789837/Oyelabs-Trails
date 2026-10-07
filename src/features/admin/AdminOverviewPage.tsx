@@ -174,7 +174,7 @@ export default function AdminOverviewPage() {
 
       {data.ai.usingMock && (
         <div className="mt-6 flex gap-3 rounded-md border border-trailmark/50 bg-trailmark/[0.07] px-4 py-3 text-sm">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-strong" aria-hidden="true" />
           <p>
             A development mock is standing in for a real AI provider. Generated assessments and plans are structurally
             valid and semantically meaningless.
@@ -491,7 +491,7 @@ function Attention({ to, label }: { to: string; label: string }) {
         to={to}
         className="flex items-start gap-3 rounded-md border border-trailmark/50 bg-trailmark/6 px-4 py-3 text-sm transition-colors hover:bg-trailmark/10"
       >
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-strong" aria-hidden="true" />
         {label}
       </Link>
     </li>

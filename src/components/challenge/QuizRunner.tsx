@@ -112,7 +112,7 @@ export function QuizRunner({ topic, questions }: { topic: ServedTopic; questions
                       <span>
                         Question {questionIndex + 1} of {questions.length}
                       </span>
-                      {question.multi && <span className="text-trailmark-strong">Select all that apply</span>}
+                      {question.multi && <span className="text-primary-strong">Select all that apply</span>}
                       {graded && (
                         <span className={graded.correct ? "text-summit-strong" : "text-destructive"}>
                           {graded.correct ? "Correct" : "Incorrect"}

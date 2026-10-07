@@ -92,7 +92,7 @@ export function AdminEvaluationView({ assessmentId, userId }: { assessmentId: st
       {result.serverWarnings && result.serverWarnings.length > 0 && (
         <div className="rounded-md border border-trailmark/50 bg-trailmark/6 px-4 py-3">
           <p className="flex items-center gap-2 text-sm font-medium">
-            <AlertTriangle className="h-4 w-4 text-trailmark-strong" aria-hidden="true" />
+            <AlertTriangle className="h-4 w-4 text-warning-strong" aria-hidden="true" />
             The server changed the proposed plan
           </p>
           <ul className="mt-2 space-y-1 text-sm text-muted-foreground">

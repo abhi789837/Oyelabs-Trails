@@ -9,8 +9,8 @@ import {
 } from "react-router-dom";
 
 import { RequireStaff, RequireSuperadmin } from "@/features/auth/guards";
-// v5's fonts and tokens for every v5 route, old pages in the v5 shell included: since Phase 9 the
-// previous design's fonts (Sora among them) are no longer loaded for everyone.
+// v5's code font and tokens for every v5 route, old pages in the v5 shell included (Outfit, the
+// brand face, is global from src/main.tsx).
 import "@/v5/design/styles";
 
 import { AfterFirstScreen } from "./AfterFirstScreen";

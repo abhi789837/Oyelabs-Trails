@@ -388,3 +388,71 @@ Celebration (summit): the dot pops and the ring completes for a moment, then ope
   (codes, LinkedIn, file URLs, the verify page's states). `scripts/e2e/brand-certificate.ts` (port 8967)
   passes, as do v5-assessment (its certificate part updated to the server files), v45-oyelabs-flow and
   v5-motivation on snapshot `brand5`.
+
+## Phase 7: Clean-up, checks, deploy notes
+
+- **Old fonts and the browser PDF library uninstalled.** `@fontsource/sora`, `@fontsource/ibm-plex-sans`,
+  `@fontsource/ibm-plex-mono`, `@fontsource-variable/geist` and `@react-pdf/renderer` had no importer
+  (`npm uninstall`, 55 packages fewer). `src/assets/fonts/` (Sora and IBM Plex TTFs for the old
+  browser PDF) and `scripts/woff2ttf.mjs` (its converter) are deleted. JetBrains Mono and Outfit stay.
+  Stale comments fixed: vite.config.ts (the chunks over 500 kB are now Monaco's, loaded only with a code
+  editor; the 1.3 MB warning limit stays so anything else that big is still flagged), the v5 design
+  barrel and V5App font notes. `scripts/perf/chunks.mjs` HEAVY no longer lists `generateCertificatePdf` /
+  `react-pdf`; check-heavy's description and v5-pwa's "heavy libraries are not precached" regex follow.
+- **The old logo kit folder is deleted.** `Oyelearn-Logo-Kit/` (115 files, the Sora-era logos) was
+  referenced only by docs/v5/CODEMAP.md (now points at `public/brand/` and `Oyelearn-Brand-Kit/`) and two
+  `.dockerignore` lines (kept: they only exclude it). Nothing in src, server, scripts or the Dockerfile used
+  it. The untracked `Oyelearn-Brand-Guidelines.pdf` at the repo root is a byte-identical copy of the kit's
+  PDF; left alone (not ours to delete).
+- **Old colours.** No old-palette hex remains in components: the hex left in src is the kit's own
+  colours (brandAssets, Monaco's theme, the confetti, /design's swatches, SummitRing), the badge's
+  amber-800 and the markdown code block's three syntax colours on a dark surface (Phase 1). No "Trails"
+  brand name remains; "Trails" in the old sidebar and command palette is the list of tracks (the trail
+  metaphor, kept as in Phase 4).
+- **/design CertificatePreview** is the server's own drawing now, not an HTML stand-in:
+  `scripts/brand/certificate-sample.ts` renders `public/brand/certificate/certificate-sample.png` (1754 ×
+  1240, "Rahul Mehta", path "Backend foundations", unsigned, a sample code that never verifies) with
+  `renderCertificatePng`, and the component is an `<img>` on white. Props are now `src`/`alt` (it can
+  show any server certificate picture). Re-run the script after a template change; the logo-rule test
+  checks the file exists at the right size.
+- **Amber audit (the old UI's `trailmark`, "amber only for progress and achievement").** 33 uses changed,
+  where amber meant something else:
+  - warnings and attention → the warning token: alert icons (`AlertTriangle`/`TriangleAlert`/`CircleAlert`
+    in admin overview, AI, evaluation, pool, research settings, generated courses, path priorities, video
+    gate), the notification "attention" tone, integrity timeline soft events, the proctoring warning toast,
+    AI-usage and role-play "near the cap" bars and cards, the timing chart's "over estimate" segment, setup
+    over-length and "rules only" notes, V4 results warnings, the code runner's "Edge case" tag;
+  - selection and navigation → Oyelabs Blue: the old notification count badge (as v5's in Phase 6), the
+    playlist's Autoplay switch, the admin learner tabs' underline, the assessment's selected answer
+    (border, number chip and native radio accent), the quiz's "Select all that apply".
+  Kept, as progress or achievement, or recorded for the old UI's retirement: in-progress status dots,
+  waypoints, the trail map, "You are here", the old sidebar's current-route marker (the trail's
+  "you are here"), plan/people progress bars, the video playlist's watched bar, pre-flight's current step,
+  the completion toast; the Frontend track's accent (src/lib/accent.ts, unchanged since Phase 4); priority-4
+  chips in goal/plan setup (a ranking colour scale), handbook "To confirm" chips, review-request "open",
+  role-play speaker badges, the article tag in ResourceKindTag and the milestone flag in the old Library.
+  These are in the old UI, which retires; v5 already uses `progress` only for progress.
+- **Logo-rule test** (`src/components/brand/logoRules.test.ts`): scans every `.tsx` in src (lesson
+  content excluded) for (1) `<Mark>`, `<Logo variant="mark">` or a mark `<img>` followed, through spaces,
+  `{" "}` and tags only, by "Oyelearn"/"yelearn"; (2) any string naming the old kit folder or its seven
+  files (also index.html and the manifest); (3) an element whose whole content is "Oyelearn"/"yelearn"
+  when it is a heading or has a logo-like class (`logo`, `wordmark`, `font-display`, `font-brand`,
+  `brand-name`, `text-display`). It tests its own rules on good and bad snippets first, so a sentence like
+  "Welcome to Oyelearn" or "Oyelearn · by Oyelabs" never trips it, and colour alone (`text-brand-fg`) isn't
+  a logo. It also checks the old kit folder and files are gone.
+- **Hashed build files are immutable (server).** `/assets/<name>-<hash>.<ext>` was sent with
+  `@fastify/static`'s `max-age=0`, and Caddyfile.example's `@hashed` rule (`.hash.` names) never matched
+  Vite 8's `name-hash.ext`. The app now sends `public, max-age=31536000, immutable` for those names
+  (`HASHED_ASSET_PATH`, only on a 200 that isn't HTML, so the SPA fallback for a missing asset isn't
+  cached), and the example's regex is fixed. This covers the brand font.
+- **Email image with an encoded "@".** `/brand/email/…%40600w.png` fell through to the SPA (index.html,
+  200), because the static routes are the literal names. The not-found handler now 301s a `/brand/` path
+  written with `%40` to its real name (`brandFileRedirect`). Emails themselves write "@".
+- **E2E.** brand-auth.ts now also requests every file under `public/brand/` (200, image type, the day's
+  cache), the encoded-@ redirect, the font's immutable header (and a missing asset's lack of it), and
+  checks the manifest's id, 192/512 icons and icon types. `scripts/e2e/brand-visual.ts` (port 8968) is new:
+  login, Today, My plan, a lesson, admin inbox, the certificate page, /design's certificate sample, verify
+  and the 404 at 390 and 1440, light and dark, each asserting `<html>`'s dark class; baselines in
+  `docs/branding/shots/`. The certificate pictures are answered with the fixed sample (each run's code
+  and QR are random). The 404 is the previous design's (v5 redirects unknown paths), opened as staff with
+  `?ui=old`. v5-visual.ts masks the server certificate pictures for the same reason.

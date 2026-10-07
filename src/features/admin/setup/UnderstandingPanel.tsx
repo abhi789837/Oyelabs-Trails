@@ -140,7 +140,7 @@ export function UnderstandingPanel({
             </div>
           )}
           {understanding.source === "rules" && (
-            <p className="text-xs text-trailmark-strong">Rules only — add an AI key for a smarter plan.</p>
+            <p className="text-xs text-warning-strong">Rules only — add an AI key for a smarter plan.</p>
           )}
         </div>
       )}

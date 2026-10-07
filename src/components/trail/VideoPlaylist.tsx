@@ -461,7 +461,7 @@ function AutoplayToggle({ checked, onChange }: { checked: boolean; onChange: (va
     >
       <span
         aria-hidden="true"
-        className={cn("relative inline-block h-4 w-7 rounded-full transition-colors", checked ? "bg-trailmark" : "bg-foreground/20")}
+        className={cn("relative inline-block h-4 w-7 rounded-full transition-colors", checked ? "bg-primary" : "bg-foreground/20")}
       >
         <span className={cn("absolute top-0.5 h-3 w-3 rounded-full bg-white transition-transform", checked ? "translate-x-3.5" : "translate-x-0.5")} />
       </span>

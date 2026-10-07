@@ -105,7 +105,7 @@ export function TimingChart({ days }: { days: number }) {
                     {row.estSeconds > 0 && (
                       <>
                         <span
-                          className={cn("absolute top-1/2 h-0.5 -translate-y-1/2", row.over ? "bg-trailmark" : "bg-primary/40")}
+                          className={cn("absolute top-1/2 h-0.5 -translate-y-1/2", row.over ? "bg-warning" : "bg-primary/40")}
                           style={{ left: `${Math.min(row.estPct, row.actualPct)}%`, width: `${Math.abs(row.actualPct - row.estPct)}%` }}
                           aria-hidden="true"
                         />

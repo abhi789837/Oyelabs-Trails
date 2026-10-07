@@ -326,12 +326,12 @@ export default function AdminLearnerPage() {
               {tab.label}
               {selected &&
                 (reduceMotion ? (
-                  <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-trailmark" />
+                  <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary" />
                 ) : (
                   /* The page's one deliberate motion moment: the marker slides to the new camp. */
                   <motion.span
                     layoutId="learner-tab-marker"
-                    className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-trailmark"
+                    className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary"
                     transition={spring}
                   />
                 ))}

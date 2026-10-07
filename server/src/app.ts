@@ -64,7 +64,7 @@ import { registerV5AssessmentRoutes } from "./v5/assessment/routes";
 import { registerOyelabsRoutes } from "./oyelabs/routes";
 import type { CodeSandbox } from "./sandbox";
 import { PistonClient } from "./sandbox/polyglot";
-import { BRAND_ICON_CACHE, BRAND_ICON_PATH, SHARED_IMAGE_PATH } from "./lib/brandIcons";
+import { BRAND_ICON_CACHE, BRAND_ICON_PATH, HASHED_ASSET_CACHE, HASHED_ASSET_PATH, SHARED_IMAGE_PATH, brandFileRedirect } from "./lib/brandIcons";
 import { registerOgPages } from "./lib/ogPages";
 
 export interface RouteRecord {
@@ -193,6 +193,9 @@ export async function buildApp({
       reply.header("cache-control", BRAND_ICON_CACHE);
       // Rebrand P6: email images and OG images are loaded by mail apps and crawlers, off our origin.
       if (SHARED_IMAGE_PATH.test(pathname)) reply.header("cross-origin-resource-policy", "cross-origin");
+    } else if (HASHED_ASSET_PATH.test(pathname) && reply.statusCode === 200 && !String(reply.getHeader("content-type") ?? "").startsWith("text/html")) {
+      // Rebrand P7: hashed build files never change under their name (lib/brandIcons.ts).
+      reply.header("cache-control", HASHED_ASSET_CACHE);
     }
     return payload;
   });
@@ -316,6 +319,9 @@ async function registerSpa(app: FastifyInstance, env: Env, indexHtml: string, ha
     if (!hasBuild || request.method !== "GET" || request.url.startsWith("/api/")) {
       return reply.status(404).send({ error: { code: ERROR_CODES.NOT_FOUND, message: "Not found." } });
     }
+    // Rebrand P7: an email image asked for with "@" encoded as "%40" goes to its real name, not to the SPA.
+    const brandFile = brandFileRedirect(request.url);
+    if (brandFile) return reply.redirect(brandFile, 301);
     return reply.type("text/html").send(fs.createReadStream(indexHtml));
   });
 }

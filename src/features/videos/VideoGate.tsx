@@ -69,7 +69,7 @@ export function VideoGate({
     <>
       <div className="mb-5 rounded-md border border-trailmark/50 bg-trailmark/10 px-4 py-3" role="note">
         <p className="flex items-center gap-2 text-sm font-medium">
-          <TriangleAlert className="h-4 w-4 text-trailmark-strong" aria-hidden="true" />
+          <TriangleAlert className="h-4 w-4 text-warning-strong" aria-hidden="true" />
           {videos.total - videos.watchedCount === 1 ? "1 video" : `${videos.total - videos.watchedCount} videos`} not watched yet
         </p>
         <p className="mt-1 text-sm text-muted-foreground">You can take the test now, but it covers what the videos teach.</p>

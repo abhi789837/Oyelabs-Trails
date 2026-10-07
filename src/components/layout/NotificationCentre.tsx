@@ -40,7 +40,7 @@ const TONE_ICON: Record<NotificationTone, LucideIcon> = {
 };
 
 const TONE_CLASS: Record<NotificationTone, string> = {
-  attention: "text-trailmark-strong",
+  attention: "text-warning-strong",
   progress: "text-basalt-strong",
   good: "text-summit-strong",
   bad: "text-destructive",
@@ -71,7 +71,7 @@ export function NotificationCentre() {
           {unread > 0 && (
             <span
               aria-hidden="true"
-              className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-trailmark px-1 font-mono text-[10px] font-semibold leading-none text-trailmark-foreground"
+              className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 font-mono text-[10px] font-semibold leading-none text-primary-foreground"
             >
               {unreadBadgeLabel(unread)}
             </span>

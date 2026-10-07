@@ -284,7 +284,7 @@ export default function AdminGeneratedPage() {
 
       {waitingSetup && (
         <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3 text-sm">
-          <AlertTriangle className="size-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+          <AlertTriangle className="size-4 shrink-0 text-warning-strong" aria-hidden="true" />
           <span className="min-w-0 flex-1">
             We couldn't create {waitingSetup.count === 1 ? "a course" : `${waitingSetup.count} courses`} because {waitingSetup.problem}.
             We'll finish automatically after it's set up.

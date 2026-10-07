@@ -103,7 +103,7 @@ export default function AdminAiPage() {
 
       {status.usingMockProvider && (
         <div className="mt-6 flex gap-3 rounded-md border border-trailmark/50 bg-trailmark/[0.07] px-4 py-3 text-sm">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-strong" aria-hidden="true" />
           <div>
             <p className="font-medium">A development mock is standing in for a real provider</p>
             <p className="mt-1 text-muted-foreground">Output is structurally valid but meaningless; production needs a real credential.</p>

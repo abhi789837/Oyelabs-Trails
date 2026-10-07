@@ -309,7 +309,7 @@ function SetupFormInner({
               id={ids.descriptionCount}
               className={cn(
                 "ml-auto font-mono text-[11px] tabular",
-                descriptionLength > DESCRIPTION_MAX ? "text-trailmark-strong" : "text-muted-foreground",
+                descriptionLength > DESCRIPTION_MAX ? "text-warning-strong" : "text-muted-foreground",
               )}
             >
               {descriptionLength}/{DESCRIPTION_MAX}
@@ -332,7 +332,7 @@ function SetupFormInner({
             )}
           />
           {descriptionLength > DESCRIPTION_MAX && (
-            <p className="mt-1 text-xs text-trailmark-strong">Over {DESCRIPTION_MAX} characters: shorter reads better.</p>
+            <p className="mt-1 text-xs text-warning-strong">Over {DESCRIPTION_MAX} characters: shorter reads better.</p>
           )}
           <FieldMessage error={descriptionError} />
           {intentsCurrent(state) && (

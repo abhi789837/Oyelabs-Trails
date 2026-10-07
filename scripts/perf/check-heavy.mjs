@@ -1,5 +1,5 @@
 /**
- * Fails when a heavy library (Monaco, Recharts, Tiptap, confetti, the PDF code, MediaPipe) is in
+ * Fails when a heavy library (Monaco, Recharts, Tiptap, confetti, MediaPipe, ExcelJS) is in
  * the first download of the v5 learner landing or of /design. Run after `npm run build`.
  */
 

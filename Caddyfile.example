@@ -13,7 +13,8 @@ oyelearn.example.com {
 	encode zstd gzip
 
 	# Long-lived caching for hashed build assets, which never change under a given name.
-	@hashed path_regexp ^/assets/.+\.[0-9a-zA-Z_-]{8,}\.(js|css|woff2?|ttf|svg|png|jpg)$
+	# Vite writes <name>-<8-character hash>.<ext>. The app sends the same header itself (rebrand Phase 7).
+	@hashed path_regexp ^/assets/[^/]+-[0-9a-zA-Z_-]{8}\.(js|css|woff2?|ttf|svg|png|jpg)$
 	header @hashed Cache-Control "public, max-age=31536000, immutable"
 
 	# The MediaPipe WASM and models are large and versioned by path.

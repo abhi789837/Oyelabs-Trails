@@ -188,7 +188,7 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
                 <OptionCard key={index} checked={selected.includes(index)} position={position}>
                   <input
                     type="checkbox"
-                    className="mt-0.5 h-4 w-4 shrink-0 accent-[rgb(var(--trailmark))]"
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-[rgb(var(--primary))]"
                     checked={selected.includes(index)}
                     onChange={() => toggle(index)}
                   />
@@ -338,7 +338,7 @@ function OptionCard({
       className={cn(
         "flex cursor-pointer items-start gap-3 rounded-md border px-4 py-3.5 text-sm transition-colors duration-[120ms]",
         "focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary-strong",
-        checked ? "border-trailmark bg-trailmark/[0.09]" : "border-border hover:border-basalt/60 hover:bg-surface-sunken/60",
+        checked ? "border-primary bg-primary/[0.07]" : "border-border hover:border-basalt/60 hover:bg-surface-sunken/60",
       )}
     >
       {position < MAX_SHORTCUTS && (
@@ -347,7 +347,7 @@ function OptionCard({
           className={cn(
             "mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded border font-mono text-[11px] tabular",
             checked
-              ? "border-trailmark bg-trailmark text-trailmark-foreground"
+              ? "border-primary bg-primary text-primary-foreground"
               : "border-border bg-surface text-muted-foreground",
           )}
         >

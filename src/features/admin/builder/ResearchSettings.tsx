@@ -147,7 +147,7 @@ export function ResearchSettings() {
 
       {!settings.configured && (
         <div className="mt-4 flex gap-3 rounded-md border border-trailmark/50 bg-trailmark/[0.07] px-4 py-3 text-sm">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-strong" aria-hidden="true" />
           <p className="max-w-prose">
             <span className="font-medium">Not set up, so new courses wait.</span>{" "}
             <span className="text-muted-foreground">
@@ -416,7 +416,7 @@ function TestResult({ check, testing }: { check: ResearchCheck | null; testing: 
       {ok ? (
         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-summit-strong" aria-hidden="true" />
       ) : (
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-strong" aria-hidden="true" />
       )}
       <p className="max-w-prose">
         {!ok && <span className="font-medium">{CHECK_TITLE[check.state]}. </span>}

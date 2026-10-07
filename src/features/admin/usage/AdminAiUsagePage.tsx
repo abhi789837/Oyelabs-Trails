@@ -156,7 +156,7 @@ function Tile({ children, tone }: { children: ReactNode; tone?: "warn" | "over" 
     <div
       className={cn(
         "flex h-full min-w-0 flex-col rounded-lg border bg-background p-3 sm:p-4",
-        tone === "warn" && "border-trailmark/60 bg-trailmark/[0.05]",
+        tone === "warn" && "border-warning/60 bg-warning/[0.05]",
         tone === "over" && "border-destructive/50 bg-destructive/[0.05]",
       )}
     >
@@ -189,7 +189,7 @@ function BudgetTile({ budget }: { budget: BudgetStatus }) {
           <Progress
             value={pct}
             aria-label={`${pct}% of the monthly budget used`}
-            indicatorClassName={cn(tone === "over" ? "bg-destructive" : tone === "warn" ? "bg-trailmark" : "bg-primary")}
+            indicatorClassName={cn(tone === "over" ? "bg-destructive" : tone === "warn" ? "bg-warning" : "bg-primary")}
           />
           <p className="mt-1.5 text-xs text-muted-foreground">
             of {formatUsd(budget.monthlyBudgetUsd)} ({Math.round((budget.share ?? 0) * 100)}%)

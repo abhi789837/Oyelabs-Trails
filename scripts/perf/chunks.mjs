@@ -63,4 +63,4 @@ export const LEARNER_CHUNKS = ["V5App", "TodayPage"];
 export const DESIGN_CHUNKS = ["V5App", "DesignPage"];
 
 /** Libraries that must never be in a learner's first download. */
-export const HEAVY = /editor\.api|MonacoEditor|monaco|recharts|tiptap|prosemirror|confetti|generateCertificatePdf|react-pdf|mediapipe|vision_wasm|exceljs|sheetGrid/i;
+export const HEAVY = /editor\.api|MonacoEditor|monaco|recharts|tiptap|prosemirror|confetti|mediapipe|vision_wasm|exceljs|sheetGrid/i;

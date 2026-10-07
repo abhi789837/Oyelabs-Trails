@@ -220,10 +220,10 @@ export default function ComponentsLesson() {
         </Preview>
       </Demo>
 
-      <Demo id="c-certificate" name="CertificatePreview" use="Always light, like the PDF. The check URL is printed as text so a paper copy can still be verified.">
+      <Demo id="c-certificate" name="CertificatePreview" use="The server's own drawing of the kit's A4 template (a sample, made by scripts/brand/certificate-sample.ts). Always on white, like the PDF. The verify URL is printed as text and as a QR code, so a paper copy can still be checked.">
         <Preview single>
           <div className="mx-auto max-w-2xl pt-4">
-            <CertificatePreview holderName="Rahul Mehta" title="Backend foundations" kind="Track" issuedAt="5 October 2026" certId="OYE-7K2Q-91" verifyUrl="learn.oyelabs.com/verify/OYE-7K2Q-91" />
+            <CertificatePreview />
           </div>
         </Preview>
       </Demo>

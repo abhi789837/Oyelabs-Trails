@@ -255,7 +255,7 @@ async function manifestChecks(): Promise<void> {
   const body = await sw.text();
   const list = JSON.parse(/PRECACHE_URLS = (\[[\s\S]*?\]);/.exec(body)?.[1] ?? "[]") as string[];
   ok(list.includes("/index.html") && !list.some((u) => u.startsWith("/api")), `the precache has the shell and no /api URL (${list.length} files)`);
-  ok(!list.some((u) => /Monaco|editor\.api|ts\.worker|react-pdf/i.test(u) && u.endsWith(".js")), "heavy libraries are not precached");
+  ok(!list.some((u) => /Monaco|editor\.api|ts\.worker/i.test(u) && u.endsWith(".js")), "heavy libraries are not precached");
 }
 
 async function main(): Promise<void> {

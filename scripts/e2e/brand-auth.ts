@@ -142,6 +142,44 @@ async function assetChecks(): Promise<void> {
     }
   }
 
+  // Phase 7: every file of the brand kit the app ships (public/brand/**) answers 200 with an image type
+  // and the brand cache header, so no screen, email or certificate can point at a missing file.
+  const brandRoot = path.join(APP, "public", "brand");
+  const brandFiles: string[] = [];
+  const walk = (dir: string) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) walk(full);
+      else brandFiles.push("/brand/" + path.relative(brandRoot, full).split(path.sep).join("/"));
+    }
+  };
+  walk(brandRoot);
+  const brandBad: string[] = [];
+  for (const url of brandFiles) {
+    const r = await fetch(`${BASE}${url}`);
+    await r.arrayBuffer();
+    const type = r.headers.get("content-type") ?? "";
+    const want = url.endsWith(".svg") ? /image\/svg\+xml/ : /image\/png/;
+    if (r.status !== 200 || !want.test(type) || !/max-age=86400/.test(r.headers.get("cache-control") ?? "")) brandBad.push(`${url} ${r.status} ${type} ${r.headers.get("cache-control")}`);
+  }
+  ok(brandFiles.length >= 35 && brandBad.length === 0, `every public/brand file (${brandFiles.length}) is 200, an image, cached a day${brandBad.length ? `: ${brandBad.join("; ")}` : ""}`);
+
+  // A mail proxy may send the "@" in the email images' names as "%40": that redirects to the file.
+  const encoded = await fetch(`${BASE}/brand/email/email-header-light%40600w.png?v=1`, { redirect: "manual" });
+  const followed = await fetch(`${BASE}/brand/email/email-header-light%40600w.png?v=1`);
+  ok(encoded.status === 301 && encoded.headers.get("location") === "/brand/email/email-header-light@600w.png?v=1" && followed.headers.get("content-type") === "image/png", `an encoded @ redirects to the email image (${encoded.status} ${encoded.headers.get("location")}, then ${followed.headers.get("content-type")})`);
+
+  // Hashed build files (the brand font among them) are immutable; a missing one still isn't cached.
+  const fontHref = html.match(/<link rel="preload" href="(\/assets\/[^"]+\.woff2)"/)?.[1];
+  if (ok(fontHref, `index.html preloads the brand font (${fontHref})`)) {
+    const font = await fetch(`${BASE}${fontHref}`);
+    await font.arrayBuffer();
+    ok(font.status === 200 && font.headers.get("cache-control") === "public, max-age=31536000, immutable", `${fontHref}: ${font.status} ${font.headers.get("cache-control")}`);
+  }
+  const missing = await fetch(`${BASE}/assets/missing-AbCd1234.js`);
+  await missing.arrayBuffer();
+  ok(!/immutable/.test(missing.headers.get("cache-control") ?? ""), `a missing hashed file isn't cached as immutable (${missing.status} ${missing.headers.get("cache-control")})`);
+
   const res = await fetch(`${BASE}/site.webmanifest`);
   ok(res.status === 200 && /manifest\+json|application\/json/.test(res.headers.get("content-type") ?? ""), `the manifest is served (${res.status} ${res.headers.get("content-type")})`);
   ok((res.headers.get("cache-control") ?? "").includes("no-cache"), "the manifest is revalidated");
@@ -156,10 +194,12 @@ async function assetChecks(): Promise<void> {
   ok(m.start_url === "/learn" && m.scope === "/" && m.display === "standalone", "start_url /learn, scope /, standalone (the v5 PWA settings)");
   ok(m.theme_color?.toUpperCase() === "#2067D3" && m.background_color?.toUpperCase() === "#FFFFFF", "theme #2067D3, background #FFFFFF");
   ok(Boolean(m.icons?.some((i) => i.purpose?.includes("maskable"))), "a maskable icon");
+  ok((m as { id?: string }).id === "/learn", "the manifest id is /learn (installs keep their identity)");
+  ok((m.icons?.length ?? 0) >= 3 && Boolean(m.icons?.some((i) => i.sizes === "192x192")) && Boolean(m.icons?.some((i) => i.sizes === "512x512")), "192 and 512 icons (installable)");
   for (const icon of m.icons ?? []) {
     const r = await fetch(`${BASE}${icon.src}`);
     const got = pngSize(Buffer.from(await r.arrayBuffer()));
-    ok(r.status === 200 && got === icon.sizes, `manifest icon ${icon.src}: ${r.status} ${got}`);
+    ok(r.status === 200 && got === icon.sizes && icon.type === "image/png" && r.headers.get("content-type") === "image/png", `manifest icon ${icon.src}: ${r.status} ${got} ${icon.type}`);
   }
 }
 

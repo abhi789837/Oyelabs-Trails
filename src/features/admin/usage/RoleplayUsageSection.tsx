@@ -78,7 +78,7 @@ export function RoleplayUsageSection({ canEdit }: { canEdit: boolean }) {
             <div
               className={cn(
                 "flex min-w-0 flex-col rounded-lg border bg-background p-3 sm:p-4",
-                tone === "warn" && "border-trailmark/60 bg-trailmark/[0.05]",
+                tone === "warn" && "border-warning/60 bg-warning/[0.05]",
                 tone === "over" && "border-destructive/50 bg-destructive/[0.05]",
               )}
             >
@@ -88,7 +88,7 @@ export function RoleplayUsageSection({ canEdit }: { canEdit: boolean }) {
                 <Progress
                   value={pct}
                   className="h-1.5"
-                  indicatorClassName={tone === "over" ? "bg-destructive" : tone === "warn" ? "bg-trailmark" : "bg-summit"}
+                  indicatorClassName={tone === "over" ? "bg-destructive" : tone === "warn" ? "bg-warning" : "bg-summit"}
                   aria-label={`${pct}% of the role-play cap used`}
                 />
                 <span className="mt-1 block font-mono text-[11px] text-muted-foreground">{usage.overCap ? "Reached: practice paused" : `${pct}% used`}</span>

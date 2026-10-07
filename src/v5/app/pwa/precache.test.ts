@@ -22,8 +22,8 @@ describe("service worker precache", () => {
 
   it("keeps CSS and woff2 fonts, skips woff, ttf and other files", () => {
     expect(isPrecachedAsset("assets/index-x.css")).toBe(true);
-    expect(isPrecachedAsset("assets/geist-latin.woff2")).toBe(true);
-    expect(isPrecachedAsset("assets/geist-latin.woff")).toBe(false);
+    expect(isPrecachedAsset("assets/outfit-latin-wght-normal.woff2")).toBe(true);
+    expect(isPrecachedAsset("assets/outfit-latin-wght-normal.woff")).toBe(false);
     expect(isPrecachedAsset("assets/codicon.ttf")).toBe(false);
     expect(isPrecachedAsset("index.html")).toBe(false);
   });

@@ -212,7 +212,7 @@ function PersonalisationSummary({ report }: { report: NonNullable<V4Detail["conf
       )}
       <p className="mt-1.5 font-mono text-xs text-muted-foreground tabular">{personalisationCounts(report)}</p>
       {report.fallbackReason && (
-        <p className="mt-2 flex items-start gap-1.5 rounded-sm border border-trailmark/40 bg-trailmark/[0.07] px-2 py-1.5 text-xs text-trailmark-strong">
+        <p className="mt-2 flex items-start gap-1.5 rounded-sm border border-warning/40 bg-warning/[0.07] px-2 py-1.5 text-xs text-warning-strong">
           <AlertTriangle className="mt-px size-3.5 shrink-0" aria-hidden="true" />
           {report.fallbackReason}
         </p>
@@ -225,7 +225,7 @@ function Stat({ label, value, warn }: { label: string; value: string; warn?: boo
   return (
     <div className="rounded-md border px-3 py-2">
       <dt className="text-xs text-muted-foreground">{label}</dt>
-      <dd className={cn("font-display text-lg leading-tight font-semibold tabular", warn && "text-trailmark-strong")}>{value}</dd>
+      <dd className={cn("font-display text-lg leading-tight font-semibold tabular", warn && "text-warning-strong")}>{value}</dd>
     </div>
   );
 }

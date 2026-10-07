@@ -612,7 +612,8 @@ async function capture(page: Page, name: string, theme: Theme, s: Seeded, settle
   const dark = await page.evaluate(() => document.documentElement.classList.contains("dark"));
   if (!ok(dark === (theme === "dark"), `${name}: the page is in ${theme} mode`)) return;
   await scrubPage(page, s.scrub);
-  const masks = [page.locator("iframe"), page.locator('svg[shape-rendering="crispEdges"]')];
+  // Rebrand Phase 7: certificates are the server's pictures now, printing this run's random code and QR.
+  const masks = [page.locator("iframe"), page.locator('svg[shape-rendering="crispEdges"]'), page.locator('img[src*="/api/v5/certificates/"]')];
   const take = () => page.screenshot({ fullPage: true, animations: "disabled", caret: "hide", mask: masks, timeout: WAIT });
   let png = await take();
   const baseline = path.join(BASELINES, `${name}.png`);

@@ -214,10 +214,10 @@ function SoftWarningToast({ warning, onDismiss }: { warning: SoftWarning; onDism
   return (
     <div
       role="status"
-      className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-md border border-trailmark/40 bg-popover px-4 py-3 text-popover-foreground shadow-lg animate-in fade-in-0 slide-in-from-bottom-2 sm:w-96"
+      className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-md border border-warning/40 bg-popover px-4 py-3 text-popover-foreground shadow-lg animate-in fade-in-0 slide-in-from-bottom-2 sm:w-96"
     >
       <span
-        className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-trailmark text-trailmark-foreground"
+        className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-warning text-warning-foreground"
         aria-hidden="true"
       >
         <TriangleAlert className="h-4 w-4" />

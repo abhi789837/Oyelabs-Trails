@@ -1,7 +1,7 @@
 /**
  * The v5 design system. Import from here (`@/v5/design`) in v5 code only.
  *
- * Importing this module loads the v5 fonts (Geist Sans, JetBrains Mono; Sora is already global)
+ * Importing this module loads the v5 code font (JetBrains Mono; Outfit is already global)
  * and the scoped tokens. Both land in the lazy v5 CSS chunk, never in the old UI's stylesheet.
  * Call `useV5Root()` once at the top of the v5 tree and wrap it in `V5MotionProvider`.
  *

@@ -24,7 +24,7 @@ Search by name; line numbers drift. The server side is mapped in `docs/v4.4/CODE
   - Lane and accent colours: trailmark (warning), summit (success), ridge, glacier, basalt, canyon, alpenglow, lichen.
   - Dark mode is class-based. An inline script in `index.html` reads localStorage `oyelabs-ui`, and `uiStore` sets the theme.
 - **Helpers:** `lib/utils.ts` `cn`, `lib/accent.ts`, and `lib/motion.ts` (duration, easing, spring presets).
-- **Logos:** `public/brand/oyelearn-{horizontal,mark,stacked}-{light,dark}-mode.svg`, plus the source kit in `Oyelearn-Logo-Kit/`. `public/` holds the icons and `site.webmanifest`.
+- **Logos:** only the brand kit's files in `public/brand/` (`logo/`, `mark/`, `app/`, `social/`, `email/`), rendered through `src/components/brand/` (`Logo`, `Mark`). The source kit is `Oyelearn-Brand-Kit/` (the old `Oyelearn-Logo-Kit/` was removed in rebrand Phase 7). `public/` holds the icons and `site.webmanifest`.
 - **`src/lib/contrast.test.ts`** parses `index.css` `:root` and `.dark`, so keep those blocks parseable.
 
 ## Learner screens (old UI)

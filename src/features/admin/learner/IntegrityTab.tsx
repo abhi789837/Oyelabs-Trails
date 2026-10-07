@@ -206,7 +206,7 @@ function TimelineEvent({
       <span
         className={cn(
           "absolute -left-[1.9375rem] top-1.5 size-2.5 rounded-full border-2 border-background",
-          hard ? "bg-destructive" : event.severity === "hard" ? "bg-destructive/50" : "bg-trailmark",
+          hard ? "bg-destructive" : event.severity === "hard" ? "bg-destructive/50" : "bg-warning",
         )}
         aria-hidden="true"
       />
