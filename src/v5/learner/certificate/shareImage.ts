@@ -44,7 +44,7 @@ export async function renderShareImage(cert: CertificateText, qr: QrShape): Prom
   ctx.lineWidth = 2;
   ctx.strokeRect(24, 24, L.width - 48, L.height - 48);
 
-  const logo = await loadImage("/brand/oyelearn-horizontal-light-mode.svg");
+  const logo = await loadImage("/brand/logo/oyelearn-light.svg");
   if (logo) {
     const h = L.logo.height;
     ctx.drawImage(logo, L.logo.x, L.logo.y, (logo.naturalWidth / logo.naturalHeight || 3.93) * h, h);

@@ -21,6 +21,7 @@ import "./styles";
  * costs one small chunk. `?all=1` mounts everything at once (the e2e check and screenshots use it).
  */
 
+const BrandSection = lazy(() => import("./page/BrandSection"));
 const TokensSection = lazy(() => import("./page/TokensSection"));
 const FoundationsSection = lazy(() => import("./page/FoundationsSection"));
 const ComponentsCore = lazy(() => import("./page/ComponentsCore"));
@@ -30,6 +31,7 @@ const ComponentsLesson = lazy(() => import("./page/ComponentsLesson"));
 const ComponentsShell = lazy(() => import("./page/ComponentsShell"));
 
 const SECTIONS = [
+  { id: "brand", title: "Brand", intro: "The Oyelearn brand kit v1.0: every logo on the backgrounds it's made for, the mark, the brand components, and what never to do. Learning never closes.", C: BrandSection },
   { id: "colour", title: "Colour", intro: "Every colour token in light and dark, with its measured contrast. Text needs 4.5:1; focus rings, input borders and meaningful fills need 3:1.", C: TokensSection },
   { id: "foundations", title: "Type, space and motion", intro: undefined, C: FoundationsSection },
   { id: "basics", title: "Basics", intro: "Buttons, fields, tabs and the small pieces everything else is built from.", C: ComponentsCore },

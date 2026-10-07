@@ -75,8 +75,16 @@ const GROUPS: { title: string; swatches: SwatchSpec[] }[] = [
       { token: "focus", on: "surface-0", need: "ui", use: "The focus ring (2 px, offset 2 px)" },
     ],
   },
-  ...(["brand", "success", "warning", "danger", "info", "neutral"] as const).map((k) => ({
-    title: { brand: "Brand (Oyelabs blue)", success: "Success", warning: "Warning", danger: "Danger", info: "Info", neutral: "Neutral" }[k],
+  ...(["brand", "progress", "success", "warning", "danger", "info", "neutral"] as const).map((k) => ({
+    title: {
+      brand: "Brand (Oyelabs blue)",
+      progress: "Progress (amber: progress and achievement only)",
+      success: "Success",
+      warning: "Warning",
+      danger: "Danger",
+      info: "Info",
+      neutral: "Neutral",
+    }[k],
     swatches: [
       { token: k, on: "surface-1", need: "ui" as const, use: "Fill: buttons, progress, dots" },
       { token: `on-${k}`, on: k, need: "text" as const, use: "Text on the fill" },
@@ -169,27 +177,62 @@ function ThemePane({ theme }: { theme: "light" | "dark" }) {
 
 const BRAND_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
 
-function BrandScale() {
-  const [ref, values] = useTokens(BRAND_STEPS.map((s) => `--brand-${s}`));
-  const white: Rgb = [255, 255, 255];
-  const ink: Rgb = [17, 24, 39];
+/** The kit's eight named colours (PDF p6), read from the global tokens so the page shows what ships. */
+const KIT_COLOURS = [
+  { name: "Oyelabs Blue", token: "--brand-600", use: "Primary, about 60%" },
+  { name: "Night Navy", token: "--brand-950", use: "Text and dark surfaces, about 25%" },
+  { name: "Amber", token: "--accent-500", use: "Progress and wins only, about 10%" },
+  { name: "Sky", token: "--brand-400", use: "Blue on dark" },
+  { name: "Night", token: "--bg-dark", use: "Dark backgrounds" },
+  { name: "Mist", token: "--mist", use: "Tints and surfaces" },
+  { name: "Cloud", token: "--cloud", use: "The page background" },
+  { name: "Slate", token: "--muted", use: "Secondary text" },
+] as const;
+
+function KitColours() {
+  const [ref, values] = useTokens(KIT_COLOURS.map((c) => c.token));
   return (
     <div ref={ref}>
-      <h3 className="font-display text-h3 font-semibold text-fg-1">Brand scale</h3>
-      <p className="mt-1 max-w-article text-small text-fg-2">
-        Oyelabs blue, hue 216. <span className="font-mono">brand-600</span> is #2067D3, the fill in light mode; <span className="font-mono">brand-400</span> is the fill in dark mode.
-        Shared with the previous design, so the brand never shifts between them.
-      </p>
+      <h3 className="font-display text-h3 font-semibold text-fg-1">Brand colours</h3>
+      <p className="mt-1 max-w-article text-small text-fg-2">Blue leads, amber celebrates. Amber is never a general button, link or large background; amber text on white is #B45309.</p>
+      <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {KIT_COLOURS.map((c) => {
+          const rgb = values.get(c.token);
+          return (
+            <li key={c.name} className="overflow-hidden rounded-control border border-line-1 bg-surface-1">
+              <span className="block h-16" style={{ background: rgb ? `rgb(${rgb.join(" ")})` : undefined }} aria-hidden="true" />
+              <span className="block p-2 text-caption text-fg-2">
+                <span className="block text-small font-semibold text-fg-1">{c.name}</span>
+                <span className="font-mono">{rgb ? toHex(rgb) : "…"}</span> · {c.use}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function Scale({ prefix, title, intro }: { prefix: "brand" | "accent"; title: string; intro: React.ReactNode }) {
+  const [ref, values] = useTokens(BRAND_STEPS.map((s) => `--${prefix}-${s}`));
+  const white: Rgb = [255, 255, 255];
+  const ink: Rgb = [11, 35, 71];
+  return (
+    <div ref={ref}>
+      <h3 className="font-display text-h3 font-semibold text-fg-1">{title}</h3>
+      <p className="mt-1 max-w-article text-small text-fg-2">{intro}</p>
       <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-11">
         {BRAND_STEPS.map((step) => {
-          const rgb = values.get(`--brand-${step}`);
+          const rgb = values.get(`--${prefix}-${step}`);
           const onWhite = rgb ? contrastRatio(rgb, white) : 0;
           const onInk = rgb ? contrastRatio(rgb, ink) : 0;
           return (
             <li key={step} className="overflow-hidden rounded-control border border-line-1 bg-surface-1">
               <span className="block h-14" style={{ background: rgb ? `rgb(${rgb.join(" ")})` : undefined }} aria-hidden="true" />
               <span className="block p-2 font-mono text-[0.6875rem] text-fg-2">
-                <span className="block text-caption font-semibold text-fg-1">brand-{step}</span>
+                <span className="block text-caption font-semibold text-fg-1">
+                  {prefix}-{step}
+                </span>
                 {rgb ? toHex(rgb) : "…"}
                 <br />
                 white {onWhite.toFixed(1)} · ink {onInk.toFixed(1)}
@@ -205,7 +248,27 @@ function BrandScale() {
 export default function TokensSection() {
   return (
     <div className="flex flex-col gap-10">
-      <BrandScale />
+      <KitColours />
+      <Scale
+        prefix="brand"
+        title="Brand scale"
+        intro={
+          <>
+            Oyelabs blue, hue 216. <span className="font-mono">brand-600</span> is #2067D3, the fill in light mode; <span className="font-mono">brand-400</span> (Sky) is the
+            fill in dark mode; <span className="font-mono">brand-950</span> is Night Navy. Shared with the previous design, so the brand never shifts between them.
+          </>
+        }
+      />
+      <Scale
+        prefix="accent"
+        title="Amber scale"
+        intro={
+          <>
+            <span className="font-mono">accent-500</span> is #F59E0B, the ring and dot of the mark; <span className="font-mono">accent-700</span> (#B45309) is amber text on white.
+            In v5 use the <span className="font-mono">progress</span> tokens, which clear 3:1 as a mark in both themes.
+          </>
+        }
+      />
       <div className="grid gap-4 xl:grid-cols-2">
         <ThemePane theme="light" />
         <ThemePane theme="dark" />

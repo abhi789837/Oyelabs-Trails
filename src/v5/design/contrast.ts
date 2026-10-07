@@ -49,7 +49,7 @@ export interface TokenPair {
   note: string;
 }
 
-const SEMANTIC = ["brand", "success", "warning", "danger", "info", "neutral"] as const;
+const SEMANTIC = ["brand", "progress", "success", "warning", "danger", "info", "neutral"] as const;
 const LANES = ["lane-now", "lane-must", "lane-medium", "lane-low"] as const;
 const SURFACES = ["surface-0", "surface-1", "surface-2", "surface-3", "sunken"] as const;
 

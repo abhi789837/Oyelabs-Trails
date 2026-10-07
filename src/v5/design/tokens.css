@@ -24,24 +24,32 @@
 [data-ui="v5"],
 [data-ui="v5"] .v5-light {
   /* Elevation: 0 page, 1 card, 2 raised (menu, popover), 3 overlay (dialog, sheet). */
-  --v5-surface-0: 244 246 249;
+  /* Brand kit v1.0: page Cloud #F4F7FB, text Night Navy #0B2347, secondary Slate #5B6B82. */
+  --v5-surface-0: 244 247 251;
   --v5-surface-1: 255 255 255;
   --v5-surface-2: 255 255 255;
   --v5-surface-3: 255 255 255;
-  --v5-sunken: 234 238 243;
+  --v5-sunken: 233 239 247;
 
-  --v5-fg-1: 17 24 39;
-  --v5-fg-2: 71 81 98;
-  --v5-fg-3: 96 106 122;
-  --v5-line-1: 224 228 235;
-  --v5-line-2: 130 140 156;
+  --v5-fg-1: 11 35 71;
+  --v5-fg-2: 91 107 130;
+  --v5-fg-3: 88 103 126;
+  --v5-line-1: 221 229 240;
+  --v5-line-2: 125 139 161;
   --v5-focus: 32 103 211;
 
-  /* Oyelabs blue. Fill is brand-600 #2067D3; text-safe shade is brand-700. */
+  /* Oyelabs blue. Fill is brand-600 #2067D3; text-safe shade is brand-700; the tint is Mist. */
   --v5-brand: 32 103 211;
   --v5-brand-fg: 24 86 180;
   --v5-on-brand: 255 255 255;
-  --v5-brand-soft: 234 242 253;
+  --v5-brand-soft: 225 235 250;
+
+  /* Amber: progress and achievement only. The fill is #CD7006 in light (3:1 on white, Cloud and the
+     track; #F59E0B is 2.15:1 on white); amber text is #B45309. */
+  --v5-progress: 205 112 6;
+  --v5-progress-fg: 180 83 9;
+  --v5-on-progress: 10 20 40;
+  --v5-progress-soft: 253 243 224;
 
   --v5-success: 21 128 82;
   --v5-success-fg: 19 111 71;
@@ -69,34 +77,40 @@
   --v5-on-neutral: 255 255 255;
   --v5-neutral-soft: 238 240 243;
 
-  --v5-scrim: 9 12 17;
+  --v5-scrim: 6 13 28;
 
-  --v5-shadow-1: 0 1px 2px rgb(16 24 40 / 0.06), 0 1px 3px rgb(16 24 40 / 0.08);
-  --v5-shadow-2: 0 2px 4px -2px rgb(16 24 40 / 0.06), 0 6px 16px -4px rgb(16 24 40 / 0.12);
-  --v5-shadow-3: 0 20px 48px -12px rgb(16 24 40 / 0.28);
+  --v5-shadow-1: 0 1px 2px rgb(11 35 71 / 0.06), 0 1px 3px rgb(11 35 71 / 0.08);
+  --v5-shadow-2: 0 2px 4px -2px rgb(11 35 71 / 0.06), 0 6px 16px -4px rgb(11 35 71 / 0.12);
+  --v5-shadow-3: 0 20px 48px -12px rgb(11 35 71 / 0.28);
   color-scheme: light;
 }
 
 /* tokens:dark */
 [data-ui="v5"].dark,
 [data-ui="v5"] .dark {
-  --v5-surface-0: 13 17 23;
-  --v5-surface-1: 22 27 35;
-  --v5-surface-2: 30 36 46;
-  --v5-surface-3: 38 45 57;
-  --v5-sunken: 9 12 17;
+  /* Night #0A1428 page; raised surfaces step towards Night Navy. Blue on dark is Sky #5F93E3. */
+  --v5-surface-0: 10 20 40;
+  --v5-surface-1: 16 30 56;
+  --v5-surface-2: 22 38 68;
+  --v5-surface-3: 28 46 80;
+  --v5-sunken: 6 13 28;
 
-  --v5-fg-1: 236 239 244;
-  --v5-fg-2: 168 177 192;
-  --v5-fg-3: 143 153 170;
-  --v5-line-1: 42 49 61;
-  --v5-line-2: 112 123 142;
+  --v5-fg-1: 236 241 248;
+  --v5-fg-2: 168 181 202;
+  --v5-fg-3: 143 157 180;
+  --v5-line-1: 36 52 84;
+  --v5-line-2: 104 122 152;
   --v5-focus: 95 147 227;
 
   --v5-brand: 95 147 227;
   --v5-brand-fg: 148 187 244;
-  --v5-on-brand: 13 17 23;
-  --v5-brand-soft: 22 38 64;
+  --v5-on-brand: 10 20 40;
+  --v5-brand-soft: 20 40 76;
+
+  --v5-progress: 245 158 11;
+  --v5-progress-fg: 251 191 36;
+  --v5-on-progress: 10 20 40;
+  --v5-progress-soft: 50 36 16;
 
   --v5-success: 56 176 121;
   --v5-success-fg: 104 206 152;
@@ -203,10 +217,10 @@
 
 /* Fonts, spacing, radius and motion do not change with the theme. */
 [data-ui="v5"] {
-  /* Sora stays the display face (loaded globally for the old UI already). */
-  --font-sans: "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif;
+  /* Brand kit v1.0: Outfit (600 headings, 400 text, 500 labels); JetBrains Mono for code. */
+  --font-sans: "Outfit Variable", Outfit, ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --v5-font-display: Sora, ui-sans-serif, system-ui, sans-serif;
+  --v5-font-display: "Outfit Variable", Outfit, ui-sans-serif, system-ui, sans-serif;
 
   /* Motion. Keep in step with motion.ts (motion.test.ts compares them). */
   --v5-dur-1: 120ms;

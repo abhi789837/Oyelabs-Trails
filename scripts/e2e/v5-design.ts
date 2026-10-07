@@ -5,7 +5,7 @@
  *   npx tsx scripts/e2e/v5-design.ts
  *
  * 1. The superadmin signs in (API) and opens /design?ui=v5&all=1 (every section mounted).
- * 2. At 390 and 1440 px, in light and dark: <html> carries data-ui="v5", the body font is Geist,
+ * 2. At 390 and 1440 px, in light and dark: <html> carries data-ui="v5", the body font is Outfit,
  *    every section heading is there, the colour swatches resolved, and axe (WCAG 2.2 AA tags)
  *    finds **no serious or critical** violations. Moderate/minor ones are listed as notes.
  * 3. Interactions: the dialog opens, traps focus and closes on Escape; the command palette opens
@@ -36,7 +36,7 @@ const SHOTS = process.env.E2E_SHOTS ?? path.join(os.tmpdir(), "claude", "e2e-sho
 const HEADED = process.env.E2E_HEADED === "1";
 const WAIT = 30_000;
 
-const SECTION_TITLES = ["Colour", "Type, space and motion", "Basics", "Progress and the trail", "Status, states and overlays", "Lesson parts", "Shell and tables"];
+const SECTION_TITLES = ["Brand", "Colour", "Type, space and motion", "Basics", "Progress and the trail", "Status, states and overlays", "Lesson parts", "Shell and tables"];
 
 const failures: string[] = [];
 const notes: string[] = [];
@@ -192,9 +192,9 @@ async function checkPage(page: Page, label: string): Promise<void> {
   const dataUi = await page.evaluate(() => document.documentElement.getAttribute("data-ui"));
   ok(dataUi === "v5", `${label}: <html data-ui="v5">`);
   const font = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
-  ok(/Geist/.test(font), `${label}: body font is Geist (${font.split(",")[0]})`);
+  ok(/Outfit/.test(font), `${label}: body font is Outfit (${font.split(",")[0]})`);
   const headingFont = await page.evaluate(() => getComputedStyle(document.querySelector("h1")!).fontFamily);
-  ok(/Sora/.test(headingFont), `${label}: headings use Sora`);
+  ok(/Outfit/.test(headingFont), `${label}: headings use Outfit`);
   for (const title of SECTION_TITLES) {
     const n = await page.getByRole("heading", { level: 2, name: title, exact: true }).count();
     if (!ok(n === 1, `${label}: section "${title}"`)) break;
@@ -306,15 +306,17 @@ async function oldUiUntouched(browser: Browser, storage: string): Promise<void> 
     const dataUi = await page.evaluate(() => document.documentElement.getAttribute("data-ui"));
     ok(dataUi === null, `the old UI's <html> has no data-ui (${dataUi})`);
     const font = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
-    ok(/IBM Plex Sans/.test(font), `the old UI keeps IBM Plex Sans (${font.split(",")[0]})`);
-    const geistLoaded = await page.evaluate(() => [...document.styleSheets].some((s) => {
+    // Rebrand Phase 1: both designs use the brand face, Outfit.
+    ok(/Outfit/.test(font), `the old UI uses the brand font Outfit (${font.split(",")[0]})`);
+    const v5TokensLoaded = await page.evaluate(() => [...document.styleSheets].some((s) => {
       try {
-        return [...s.cssRules].some((r) => r.cssText.includes("Geist Variable"));
+        // tokens.css's scoped blocks (src/index.css only names the Tailwind aliases that point at them).
+        return [...s.cssRules].some((r) => r instanceof CSSStyleRule && r.selectorText.includes("data-ui") && r.style.getPropertyValue("--v5-surface-0") !== "");
       } catch {
         return false;
       }
     }));
-    ok(!geistLoaded, "the v5 fonts and tokens are not loaded in the old UI");
+    ok(!v5TokensLoaded, "the v5 tokens are not loaded in the old UI");
     await shot(page, "20-old-admin");
   } finally {
     await ctx.close();

@@ -11,10 +11,11 @@
 }
 
 @theme {
-  --font-brand: Sora, ui-sans-serif, system-ui, sans-serif;
-  --font-display: Sora, ui-sans-serif, system-ui, sans-serif;
-  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Brand type (Oyelearn kit v1.0): Outfit for everything, JetBrains Mono for code. Both designs. */
+  --font-brand: 'Outfit Variable', Outfit, ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Outfit Variable', Outfit, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Outfit Variable', Outfit, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --text-xs: 0.75rem;
   --text-xs--line-height: 1.125rem;
@@ -57,6 +58,29 @@
   --color-brand-800: rgb(var(--brand-800));
   --color-brand-900: rgb(var(--brand-900));
   --color-brand-950: rgb(var(--brand-950));
+
+  /* Amber: progress and achievement only (never a general button, link or large background).
+     Amber text on a light surface is accent-700 (#B45309). */
+  --color-accent-50: rgb(var(--accent-50));
+  --color-accent-100: rgb(var(--accent-100));
+  --color-accent-200: rgb(var(--accent-200));
+  --color-accent-300: rgb(var(--accent-300));
+  --color-accent-400: rgb(var(--accent-400));
+  --color-accent-500: rgb(var(--accent-500));
+  --color-accent-600: rgb(var(--accent-600));
+  --color-accent-700: rgb(var(--accent-700));
+  --color-accent-800: rgb(var(--accent-800));
+  --color-accent-900: rgb(var(--accent-900));
+  --color-accent-950: rgb(var(--accent-950));
+
+  /* The kit's named colours (Oyelearn-Brand-Kit/11-code/tokens.css). */
+  --color-oyelabs-blue: rgb(var(--brand-600));
+  --color-sky: rgb(var(--brand-400));
+  --color-night-navy: rgb(var(--brand-950));
+  --color-night: rgb(var(--bg-dark));
+  --color-mist: rgb(var(--mist));
+  --color-cloud: rgb(var(--cloud));
+  --color-brand-slate: rgb(var(--muted));
 
   --color-trailmark: rgb(var(--trailmark));
   --color-trailmark-strong: rgb(var(--trailmark-strong));
@@ -102,9 +126,10 @@
   --color-success-strong: rgb(var(--summit-strong));
   --color-success-foreground: rgb(var(--summit-foreground));
 
-  --color-warning: rgb(var(--trailmark));
-  --color-warning-strong: rgb(var(--trailmark-strong));
-  --color-warning-foreground: rgb(var(--trailmark-foreground));
+  /* A warning is not progress, so it doesn't borrow the amber (trailmark): its own orange-brown. */
+  --color-warning: rgb(var(--warning));
+  --color-warning-strong: rgb(var(--warning-strong));
+  --color-warning-foreground: rgb(var(--warning-foreground));
 
   --color-secondary: rgb(var(--surface-sunken));
   --color-secondary-foreground: rgb(var(--foreground));
@@ -184,9 +209,10 @@
 
 /*
  * Design tokens. Values are RGB channels so Tailwind opacity modifiers work.
- * Brand hexes from the brief: paper #F5F6F2, ink #1B1F27, slate-900 #12151C,
- * slate-50 #EDEFF3, trailmark #D98E2B, summit #2F6E5B, basalt #6B7280/#7B8496,
- * ridge #6C5CE7. `glacier` is an added accent for the Full-Stack track (see README).
+ * Brand colours from the Oyelearn kit v1.0 (docs/branding/DECISIONS.md): Oyelabs Blue #2067D3,
+ * Night Navy #0B2347, Amber #F59E0B, Sky #5F93E3, Night #0A1428, Mist #E1EBFA, Cloud #F4F7FB,
+ * Slate #5B6B82. The track accents (summit, ridge, glacier, ...) are older and stay for the
+ * track colours. `glacier` is an added accent for the Full-Stack track (see README).
  * `*-strong` variants are text-safe (>= 4.5:1) on the page background;
  * the base accent is used for fills, strokes and markers.
  */
@@ -196,8 +222,8 @@
 
     /* Oyelabs brand blue. brand-600 is #2067D3 (HSL 216 74% 48%), the primary; the rest of the
        ramp holds hue 216 and varies lightness. brand-400 is #5F93E3, the dark-mode primary.
-       Contrast, measured not assumed: brand-600 on paper 4.91:1, white on brand-600 5.33:1,
-       brand-700 on paper 6.39:1, brand-400 on the dark background 5.89:1. */
+       Contrast, measured not assumed: brand-600 on paper (Cloud) 4.96:1, white on brand-600 5.33:1,
+       brand-700 on paper 6.45:1, brand-400 on the dark background (Night) 5.92:1. */
     --brand-50: 240 246 254;
     --brand-100: 226 237 253;
     --brand-200: 194 216 250;
@@ -208,7 +234,28 @@
     --brand-700: 24 86 180;
     --brand-800: 22 72 146;
     --brand-900: 21 57 111;
-    --brand-950: 12 35 69;
+    --brand-950: 11 35 71;
+
+    /* Amber (the kit's accent). 500 is #F59E0B, 600 #D97706, 700 #B45309 (amber text on white). */
+    --accent-50: 255 251 235;
+    --accent-100: 254 243 199;
+    --accent-200: 253 230 138;
+    --accent-300: 252 211 77;
+    --accent-400: 251 191 36;
+    --accent-500: 245 158 11;
+    --accent-600: 217 119 6;
+    --accent-700: 180 83 9;
+    --accent-800: 146 64 14;
+    --accent-900: 120 53 15;
+    --accent-950: 69 26 3;
+
+    /* The kit's tokens.css, as channels. --accent is Amber, --bg-dark Night, --ink Night Navy,
+       --muted Slate. Mist and Cloud are the light tints. */
+    --accent: var(--accent-500);
+    --bg-dark: 10 20 40;
+    --muted: 91 107 130;
+    --mist: 225 235 250;
+    --cloud: 244 247 251;
 
     /* The brand blue as it is actually consumed. `strong` is the text- and border-safe shade. */
     --primary: var(--brand-600);
@@ -216,23 +263,30 @@
     --primary-foreground: 255 255 255;
     --ring: var(--brand-600);
 
-    --paper: 245 246 242;
-    --ink: 27 31 39;
+    /* Page Cloud #F4F7FB, text Night Navy #0B2347, secondary text Slate #5B6B82. */
+    --paper: 244 247 251;
+    --ink: 11 35 71;
 
-    --background: 245 246 242;
-    --foreground: 27 31 39;
-    --surface: 251 251 249;
-    --surface-sunken: 234 236 230;
-    --border: 216 219 212;
-    --input: 196 200 192;
-    --muted-foreground: 89 97 112;
-    --popover: 27 31 39;
-    --popover-foreground: 245 246 242;
+    --background: 244 247 251;
+    --foreground: 11 35 71;
+    --surface: 255 255 255;
+    --surface-sunken: 233 239 247;
+    --border: 219 227 238;
+    --input: 184 196 214;
+    --muted-foreground: 91 107 130;
+    --popover: 11 35 71;
+    --popover-foreground: 244 247 251;
     --destructive: 185 56 47;
 
-    --trailmark: 217 142 43;
-    --trailmark-strong: 149 87 15;
-    --trailmark-foreground: 27 31 39;
+    /* "In progress" is the brand's amber. The fill is darkened from #F59E0B to #CD7006 in light so a
+       progress mark clears 3:1 on white, Cloud and the sunken track; its text shade is #B45309. */
+    --trailmark: 205 112 6;
+    --trailmark-strong: 180 83 9;
+    --trailmark-foreground: 10 20 40;
+
+    --warning: 184 110 11;
+    --warning-strong: 146 84 14;
+    --warning-foreground: 13 17 23;
 
     --summit: 47 110 91;
     --summit-strong: 47 110 91;
@@ -265,9 +319,9 @@
     --lichen-foreground: 255 255 255;
 
     /* The code editor stays dark in both themes. */
-    --editor: 22 26 34;
-    --editor-gutter: 31 36 47;
-    --editor-foreground: 221 225 233;
+    --editor: 11 22 44;
+    --editor-gutter: 18 32 58;
+    --editor-foreground: 221 228 240;
 
     color-scheme: light;
   }
@@ -276,22 +330,28 @@
     /* On dark the primary lifts to brand-400 so it clears 4.5:1; its foreground goes back to ink. */
     --primary: var(--brand-400);
     --primary-strong: var(--brand-300);
-    --primary-foreground: 18 21 28;
+    --primary-foreground: 10 20 40;
     --ring: var(--brand-400);
 
-    --background: 18 21 28;
-    --foreground: 237 239 243;
-    --surface: 25 29 38;
-    --surface-sunken: 32 37 48;
-    --border: 45 51 64;
-    --input: 62 70 86;
-    --muted-foreground: 150 158 174;
-    --popover: 237 239 243;
-    --popover-foreground: 18 21 28;
+    /* Night #0A1428 page, navy-tinted raised surfaces. */
+    --background: 10 20 40;
+    --foreground: 236 241 248;
+    --surface: 16 30 56;
+    --surface-sunken: 22 38 68;
+    --border: 37 53 84;
+    --input: 64 82 114;
+    --muted-foreground: 160 174 197;
+    --popover: 236 241 248;
+    --popover-foreground: 10 20 40;
     --destructive: 232 112 101;
 
-    --trailmark-strong: 232 168 82;
-    --trailmark-foreground: 18 21 28;
+    --trailmark: 245 158 11;
+    --trailmark-strong: 245 158 11;
+    --trailmark-foreground: 10 20 40;
+
+    --warning: 226 160 72;
+    --warning-strong: 240 186 112;
+    --warning-foreground: 13 17 23;
 
     --summit-strong: 93 177 147;
     --summit-foreground: 237 239 243;
@@ -305,14 +365,14 @@
     /* The dark override lifts the fill, so white on it is 3.76:1 — under AA for the button label
        `accentClasses.basalt.solid` puts there. Ink on it is 4.86:1, which is the same call already
        made for trailmark in both themes. */
-    --basalt-foreground: 18 21 28;
+    --basalt-foreground: 10 20 40;
 
     --canyon-strong: 240 132 90;
     --alpenglow-strong: 238 138 174;
     --lichen-strong: 174 199 92;
 
-    --editor: 12 15 21;
-    --editor-gutter: 21 25 33;
+    --editor: 6 13 28;
+    --editor-gutter: 12 22 42;
 
     color-scheme: dark;
   }
@@ -369,4 +429,67 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/*
+ * Brand components (src/components/brand). Global on purpose: both designs and the sign-in pages
+ * use them, and the rules are a few hundred bytes.
+ *
+ * Theme-following logo: both files render and CSS shows the one for the nearest theme. `.dark` is
+ * the app's class strategy (index.html sets it before first paint from the saved theme or
+ * prefers-color-scheme); `.v5-light` is /design's forced-light preview inside a dark page.
+ */
+.brand-only-dark {
+  display: none;
+}
+.dark .brand-only-dark {
+  display: revert;
+}
+.dark .brand-only-light {
+  display: none;
+}
+.v5-light .brand-only-light {
+  display: revert;
+}
+.v5-light .brand-only-dark {
+  display: none;
+}
+
+/* BrandLoader (kit 10-motion/loader.svg): the amber ring draws, spins and releases, never closing. */
+@keyframes brand-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes brand-loader-draw {
+  0% {
+    stroke-dashoffset: 300;
+  }
+  60% {
+    stroke-dashoffset: 60;
+  }
+  100% {
+    stroke-dashoffset: 300;
+  }
+}
+.brand-loader-spin {
+  transform-origin: 100px 100px;
+  animation: brand-loader-spin 1.4s linear infinite;
+}
+.brand-loader-arc {
+  stroke-dasharray: 308;
+  animation: brand-loader-draw 1.4s ease-in-out infinite;
+}
+/* Reduced motion (the OS, or Me → Settings in v5): a still, three-quarter ring. */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-reduced-motion="off"]) .brand-loader-spin,
+  :root:not([data-reduced-motion="off"]) .brand-loader-arc {
+    animation: none !important;
+    stroke-dashoffset: 77;
+  }
+}
+[data-motion="reduce"] .brand-loader-spin,
+[data-motion="reduce"] .brand-loader-arc {
+  animation: none !important;
+  stroke-dashoffset: 77;
 }

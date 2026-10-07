@@ -2,6 +2,8 @@ import { Award, Mountain, X } from "lucide-react";
 import { AnimatePresence, m } from "motion/react";
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
 
+import { Logo as BrandLogo, Mark } from "@/components/brand";
+
 import { cn } from "../cn";
 
 import { usePrefersReducedMotion } from "../hooks";
@@ -11,14 +13,20 @@ import { clampCelebrationMs, springs, transitions } from "../motion";
 // Logo
 // ---------------------------------------------------------------------------
 
-/** The Oyelearn logo for the current theme (both files render; CSS shows the right one). */
+/**
+ * The Oyelearn logo, sized by `className` (e.g. `h-7`): the brand kit v1.0 files through
+ * src/components/brand. `horizontal` is the primary lockup, `stacked` the endorsed one. Both theme
+ * files render and CSS shows the one for the nearest theme, so /design's side-by-side previews work.
+ */
 export function Logo({ variant = "horizontal", className }: { variant?: "horizontal" | "mark" | "stacked"; className?: string }) {
-  return (
-    <span className={cn("inline-flex", className)}>
-      <img src={`/brand/oyelearn-${variant}-light-mode.svg`} alt="Oyelearn" className="v5-only-light h-full w-auto" />
-      <img src={`/brand/oyelearn-${variant}-dark-mode.svg`} alt="Oyelearn" className="v5-only-dark h-full w-auto" />
-    </span>
-  );
+  if (variant === "mark") {
+    return (
+      <span className={cn("inline-flex", className)}>
+        <Mark />
+      </span>
+    );
+  }
+  return <BrandLogo variant={variant === "stacked" ? "endorsed" : "primary"} className={className} />;
 }
 
 // ---------------------------------------------------------------------------
@@ -122,7 +130,7 @@ export function Celebration({ open, onDone, title, detail, icon, durationMs = 18
       if (cancelled || !canvasRef.current) return;
       const fire = confettiLib.create(canvasRef.current, { resize: true, useWorker: true, disableForReducedMotion: true });
       reset = () => fire.reset();
-      const colors = ["#2067D3", "#5F93E3", "#38B079", "#E2A048", "#FFFFFF"];
+      const colors = ["#2067D3", "#5F93E3", "#F59E0B", "#FBBF24", "#FFFFFF"]; // Blue leads, amber celebrates (brand kit p6).
       void fire({ particleCount: 80, spread: 70, startVelocity: 38, origin: { y: 0.6 }, ticks: 160, colors, scalar: 0.9 });
     });
     return () => {

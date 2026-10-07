@@ -46,15 +46,17 @@ function oyelearnServiceWorker(): Plugin {
  * parsing, it:
  * - starts the route's queries (Today's, Review's, a lesson's, the admin inbox's) in parallel with
  *   the JavaScript download, instead of after it;
- * - for a lesson, warms the video poster and the module content as soon as their inputs arrive;
- * - preloads v5's fonts: Geist (body text) and Sora 600 (headings, Today's hero among them), latin
- *   only. Text in a web font that's still downloading isn't painted for a moment.
+ * - for a lesson, warms the video poster and the module content as soon as their inputs arrive.
  * The old UI never gets any of it. The functions are inlined from routePlan.ts (one copy of the
- * rules); the font files are found in the bundle by name. server/src/lib/csp.ts hashes every inline
- * script in dist/index.html, so the CSP allows it.
+ * rules). server/src/lib/csp.ts hashes every inline script in dist/index.html, so the CSP allows it.
+ *
+ * Rebrand Phase 1: the brand font, Outfit (one variable latin file for every weight), is preloaded
+ * for every page, both designs and the sign-in pages, by a plain `<link rel="preload">` placed
+ * before the script; the file is found in the bundle by name. Text in a web font that's still
+ * downloading isn't painted for a moment, so headings no longer wait for the CSS to find it.
  */
 function bootPrefetchScript(): Plugin {
-  const FONTS = [/(^|\/)geist-latin-wght-normal-[\w-]+\.woff2$/, /(^|\/)sora-latin-600-normal-[\w-]+\.woff2$/];
+  const BRAND_FONT = /(^|\/)outfit-latin-wght-normal-[\w-]+\.woff2$/;
   return {
     name: "oyelearn-boot-prefetch",
     apply: "build",
@@ -62,14 +64,12 @@ function bootPrefetchScript(): Plugin {
       order: "post",
       handler(html, ctx) {
         const files = Object.keys(ctx.bundle ?? {});
-        const fonts = FONTS.map((re) => {
-          const hit = files.find((f) => re.test(f));
-          if (!hit) throw new Error(`bootPrefetchScript: no font matching ${re} in the bundle`);
-          return `/${hit}`;
-        });
+        const font = files.find((f) => BRAND_FONT.test(f));
+        if (!font) throw new Error(`bootPrefetchScript: no font matching ${BRAND_FONT} in the bundle`);
+        const preload = `<link rel="preload" href="/${font}" as="font" type="font/woff2" crossorigin />`;
         const source = BOOT_FUNCTIONS.map((fn) => fn.toString()).join("\n");
         if (/__name|__vite|import\(|require\(/.test(source)) throw new Error("bootPrefetchScript: routePlan.ts compiled to code that can't run inline");
-        const script = `<script>(function(){\n${source}\nbootPrefetch(${JSON.stringify(fonts)});\n})();</script>`;
+        const script = `${preload}\n    <script>(function(){\n${source}\nbootPrefetch([]);\n})();</script>`;
         // Before the module script and the stylesheet: an inline script after a stylesheet waits for it.
         const at = html.indexOf('<script type="module"');
         return at === -1 ? html.replace("</head>", `${script}\n</head>`) : `${html.slice(0, at)}${script}\n    ${html.slice(at)}`;

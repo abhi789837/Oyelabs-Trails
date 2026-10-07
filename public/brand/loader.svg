@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="9.0 9.0 182.0 182.0" width="64" height="64" role="img" aria-label="Loading">
+<style>@keyframes spin{to{transform:rotate(360deg)}}@keyframes draw{0%{stroke-dashoffset:300}60%{stroke-dashoffset:60}100%{stroke-dashoffset:300}}
+.in{transform-origin:100px 100px;animation:spin 1.4s linear infinite}.arc{stroke-dasharray:308;animation:draw 1.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.in,.arc{animation:none}}</style>
+<path d="M149.25 163.04A80 80 0 1 1 137.56 29.36" fill="none" stroke="#2067D3" stroke-width="22"/><path d="M161.28 48.58A80 80 0 0 1 169.28 140.00" fill="none" stroke="#2067D3" stroke-width="22"/>
+<g class="in"><circle class="arc" cx="100" cy="100" r="49" fill="none" stroke="#F59E0B" stroke-width="20" stroke-linecap="round"/></g></svg>

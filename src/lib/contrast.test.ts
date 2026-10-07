@@ -150,10 +150,10 @@ describe("the numbers index.css states", () => {
   /* The token block names four ratios explicitly. If one of them is edited without re-measuring,
      the comment becomes a lie that nothing else would catch — these pin the exact claims. */
   test.each([
-    ["brand-600 on paper", "brand-600", "paper", light, 4.91],
+    ["brand-600 on paper", "brand-600", "paper", light, 4.96],
     ["white on brand-600", "primary-foreground", "brand-600", light, 5.33],
-    ["brand-700 on paper", "brand-700", "paper", light, 6.39],
-    ["brand-400 on the dark background", "brand-400", "background", dark, 5.89],
+    ["brand-700 on paper", "brand-700", "paper", light, 6.45],
+    ["brand-400 on the dark background", "brand-400", "background", dark, 5.92],
   ])("%s is %s:1", (_label, fg, on, tokens, expected) => {
     expect(ratio(rgb(tokens as Map<string, string>, fg as string), rgb(tokens as Map<string, string>, on as string))).toBeCloseTo(
       expected as number,

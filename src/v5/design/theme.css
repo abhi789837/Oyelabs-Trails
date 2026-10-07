@@ -40,6 +40,12 @@
   --color-on-brand: rgb(var(--v5-on-brand));
   --color-brand-soft: rgb(var(--v5-brand-soft));
 
+  /* Amber, for progress and achievement only (bars, rings, streaks, certificates, level-ups). */
+  --color-progress: rgb(var(--v5-progress));
+  --color-progress-fg: rgb(var(--v5-progress-fg));
+  --color-on-progress: rgb(var(--v5-on-progress));
+  --color-progress-soft: rgb(var(--v5-progress-soft));
+
   /* `success` and `warning` already exist (old UI); tokens.css repoints them inside the scope. */
   --color-success-fg: rgb(var(--v5-success-fg));
   --color-on-success: rgb(var(--v5-on-success));
@@ -78,7 +84,9 @@
   --color-lane-low-soft: rgb(var(--v5-lane-low-soft));
   --color-on-lane-low: rgb(var(--v5-on-lane-low));
 
-  /* Type scale. Body 16px; the article measure is 68ch (inside the 65–75ch range). */
+  /* Type scale. Body 16px; the article measure is 68ch (inside the 65–75ch range).
+     The brand kit's scale (Outfit): Display 72/600, Heading 48/600, Title 32/600 (= h1), Body 16–22/400
+     (body, lead), Label 16/500 tracked. Display and heading are fluid so a phone still fits a line. */
   --text-caption: 0.75rem;
   --text-caption--line-height: 1.125rem;
   --text-small: 0.875rem;
@@ -97,9 +105,18 @@
   --text-h1: 2rem;
   --text-h1--line-height: 2.5rem;
   --text-h1--letter-spacing: -0.02em;
-  --text-display: clamp(2.125rem, 1.6rem + 2.2vw, 2.75rem);
-  --text-display--line-height: 1.15;
+  --text-title: 2rem;
+  --text-title--line-height: 2.5rem;
+  --text-title--letter-spacing: -0.02em;
+  --text-heading: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  --text-heading--line-height: 1.12;
+  --text-heading--letter-spacing: -0.025em;
+  --text-display: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+  --text-display--line-height: 1.05;
   --text-display--letter-spacing: -0.03em;
+  --text-label: 1rem;
+  --text-label--line-height: 1.5rem;
+  --text-label--letter-spacing: 0.12em;
   --container-article: 68ch;
 
   /* Density sizes are NOT theme keys: adding --spacing-* keys changes tailwindcss-animate's

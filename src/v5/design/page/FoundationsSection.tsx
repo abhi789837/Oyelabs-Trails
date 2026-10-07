@@ -7,16 +7,19 @@ import { usePrefersReducedMotion } from "../hooks";
 import { cubicBezier, durationMs, easing, springs, type DurationName, type EasingName } from "../motion";
 import { Preview } from "./scaffold";
 
+/** The brand kit's scale (PDF p7, Outfit) first, then the UI sizes between them. */
 const TYPE_SCALE = [
-  { cls: "text-display font-display font-semibold", name: "display", spec: "34–44 px fluid, Sora 600", use: "One per page at most: the Today greeting, a summit." },
-  { cls: "text-h1 font-display font-semibold", name: "h1", spec: "32 / 40, Sora 600", use: "Page titles." },
-  { cls: "text-h2 font-display font-semibold", name: "h2", spec: "24 / 32, Sora 600", use: "Section titles." },
-  { cls: "text-h3 font-display font-semibold", name: "h3", spec: "20 / 28, Sora 600", use: "Card and dialog titles." },
-  { cls: "text-h4 font-display font-semibold", name: "h4", spec: "17 / 24, Sora 600", use: "Small headings inside cards." },
-  { cls: "text-lead", name: "lead", spec: "18 / 28, Geist", use: "The first line under a page title." },
-  { cls: "text-body", name: "body", spec: "16 / 26, Geist", use: "Everything you read." },
-  { cls: "text-small", name: "small", spec: "14 / 22, Geist", use: "Labels, table cells, buttons." },
-  { cls: "text-caption", name: "caption", spec: "12 / 18, Geist", use: "Meta lines, timestamps. Never for sentences." },
+  { cls: "text-display font-display font-semibold", name: "display", spec: "72 / 600 (40–72 px fluid), Outfit", use: "Brand moments only: the sign-in panel, a summit. One per page at most." },
+  { cls: "text-heading font-display font-semibold", name: "heading", spec: "48 / 600 (32–48 px fluid), Outfit", use: "Hero headings: a celebration, an empty page's big line." },
+  { cls: "text-title font-display font-semibold", name: "title", spec: "32 / 40, Outfit 600 (= h1)", use: "Page titles." },
+  { cls: "text-h2 font-display font-semibold", name: "h2", spec: "24 / 32, Outfit 600", use: "Section titles." },
+  { cls: "text-h3 font-display font-semibold", name: "h3", spec: "20 / 28, Outfit 600", use: "Card and dialog titles." },
+  { cls: "text-h4 font-display font-semibold", name: "h4", spec: "17 / 24, Outfit 600", use: "Small headings inside cards." },
+  { cls: "text-lead", name: "lead", spec: "18 / 28, Outfit 400", use: "The first line under a page title (the kit's body runs 16–22)." },
+  { cls: "text-body", name: "body", spec: "16 / 26, Outfit 400", use: "Everything you read." },
+  { cls: "text-label font-medium uppercase", name: "label", spec: "16 / 500, tracked 0.12em, Outfit", use: "The kit's label: short upper-case kickers, never sentences." },
+  { cls: "text-small", name: "small", spec: "14 / 22, Outfit 400", use: "Labels, table cells, buttons." },
+  { cls: "text-caption", name: "caption", spec: "12 / 18, Outfit 400", use: "Meta lines, timestamps. Never for sentences." },
   { cls: "font-mono text-small", name: "mono", spec: "14, JetBrains Mono", use: "Code, IDs, keyboard keys." },
 ];
 
@@ -34,7 +37,8 @@ function TypeScale() {
     <div>
       <h3 className="font-display text-h3 font-semibold text-fg-1">Type</h3>
       <p className="mt-1 max-w-article text-small text-fg-2">
-        Sora for headings, Geist Sans for reading and UI, JetBrains Mono for code. All three are self-hosted and load only in the new design.
+        Outfit, the brand face: Semibold 600 for headings, Regular 400 for text, Medium 500 for labels. JetBrains Mono for code. Both are self-hosted,
+        Outfit is preloaded, and the previous design uses the same two.
       </p>
       <ul className="mt-4 divide-y divide-line-1 rounded-card border border-line-1 bg-surface-1">
         {TYPE_SCALE.map((t) => (
