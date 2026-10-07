@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { ApiRequestError } from "@/api/client";
+import { markPageTitled, pageTitle } from "@/lib/pageTitle";
 import { cn } from "@/v5/design/cn";
 
 /** Plain words for a failed request. The server's own message is already written for people. */
@@ -78,7 +79,8 @@ export function useSlow(loading: boolean, ms = 300): boolean {
 export function PageHeader({ title, description, actions, className }: { title: string; description?: ReactNode; actions?: ReactNode; className?: string }) {
   useEffect(() => {
     const before = document.title;
-    document.title = `${title} · Oyelearn admin`;
+    document.title = pageTitle(title);
+    markPageTitled();
     return () => {
       document.title = before;
     };

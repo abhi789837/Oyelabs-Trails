@@ -34,8 +34,22 @@ export const OFFLINE_ROOTS = [
   "src/components/overlays/Toaster.tsx",
 ] as const;
 
-/** Files from `public/` worth having offline. */
-export const PUBLIC_PRECACHE = ["/site.webmanifest", "/favicon.svg", "/favicon.ico", "/icon-192.png", "/icon-512.png", "/icon-maskable-512.png", "/apple-touch-icon.png"] as const;
+/**
+ * Files from `public/` worth having offline: the brand kit v1.0 icons and the manifest. index.html
+ * links them with `?v=2` (cache-busting the previous logo); the worker matches precached files by
+ * path, so the query doesn't matter offline.
+ */
+export const PUBLIC_PRECACHE = [
+  "/site.webmanifest",
+  "/favicon.svg",
+  "/favicon.ico",
+  "/favicon-16x16.png",
+  "/favicon-32x32.png",
+  "/icon-192.png",
+  "/icon-512.png",
+  "/icon-maskable-512.png",
+  "/apple-touch-icon.png",
+] as const;
 
 const norm = (p: string) => p.replace(/\\/g, "/");
 

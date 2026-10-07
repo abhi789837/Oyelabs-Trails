@@ -1,8 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 
 import { AuthProvider, useAuth } from "@/features/auth/AuthProvider";
 import { RequireAuth } from "@/features/auth/guards";
+import { pageTitle, pageTitledFor, routeTitle } from "@/lib/pageTitle";
 import { useUiStore } from "@/store/uiStore";
 import { RouteFallback } from "@/v5/app/RouteFallback";
 import { effectiveDesignV5 } from "@/v5/app/designFlag";
@@ -37,6 +38,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <RouteTitle />
       <AuthProvider>
         <Routes>
           {/* Public. Both render their own full-page layout, without the app chrome. */}
@@ -77,6 +79,18 @@ export default function App() {
       </AuthProvider>
     </BrowserRouter>
   );
+}
+
+/**
+ * Rebrand Phase 2: every route has a "<Page> · Oyelearn" title. A page that names itself
+ * (`useDocumentTitle`, v5 `PageHeader`) wins: its effect runs first and is remembered per path.
+ */
+function RouteTitle() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (!pageTitledFor(pathname)) document.title = pageTitle(routeTitle(pathname));
+  }, [pathname]);
+  return null;
 }
 
 /** Signed in: the effective flag (server value, or a staff `?ui=` override) picks the tree. */

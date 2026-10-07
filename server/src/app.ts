@@ -64,6 +64,7 @@ import { registerV5AssessmentRoutes } from "./v5/assessment/routes";
 import { registerOyelabsRoutes } from "./oyelabs/routes";
 import type { CodeSandbox } from "./sandbox";
 import { PistonClient } from "./sandbox/polyglot";
+import { BRAND_ICON_CACHE, BRAND_ICON_PATH } from "./lib/brandIcons";
 
 export interface RouteRecord {
   method: string;
@@ -184,6 +185,11 @@ export async function buildApp({
       reply.header("service-worker-allowed", "/");
     } else if (pathname === "/site.webmanifest") {
       reply.header("cache-control", "no-cache");
+    } else if (BRAND_ICON_PATH.test(pathname)) {
+      // Rebrand P2: favicons and app icons keep stable names, so a day's cache (then a background
+      // revalidate) rather than the static default of max-age=0. index.html links them with `?v=2`
+      // so a browser still holding the previous logo fetches the new one at once.
+      reply.header("cache-control", BRAND_ICON_CACHE);
     }
     return payload;
   });
