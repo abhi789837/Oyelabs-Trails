@@ -1,5 +1,6 @@
 import type { AssessmentStatus, UserStatus } from "./enums";
 import type { PathStatus } from "./builder";
+import { afterFixWords, failedLine, stateOfLine } from "./connection";
 
 /**
  * v4.3 Phase 6: the learner page's top bar. One status line, the next thing the admin should do, and
@@ -39,8 +40,12 @@ export interface NextActionFacts {
   speakToListen?: number;
   /** v4.4 P6: the learner's "please check this again" requests still open. */
   openReviews?: number;
-  /** v4.4 P6: new courses being made for this learner, and those waiting for setup (and why). */
-  courses?: { creating: number; waitingSetup: number; problem: string | null };
+  /**
+   * v4.4 P6: new courses being made for this learner, and those waiting for setup (and why).
+   * v4.5 P0: counted from the learner's current path, exactly as its banners count them, plus
+   * the ones that failed 5 times.
+   */
+  courses?: { creating: number; waitingSetup: number; problem: string | null; failed?: number; failedProblem?: string | null };
 }
 
 /** What the primary button does. The page maps each to an existing API call or tab. */
@@ -83,7 +88,8 @@ export interface NextAction {
     | "listen"
     | "reviews"
     | "courses-creating"
-    | "courses-waiting";
+    | "courses-waiting"
+    | "courses-failed";
   /** One line: the state and what comes next. */
   title: string;
   tone: NextActionTone;
@@ -202,21 +208,32 @@ export function nextAction(facts: NextActionFacts): NextAction {
     };
   }
 
-  // v4.4 P6: missing courses are being made, or wait for the AI or the web search to be connected.
+  /* v4.4 P6: missing courses are being made, or wait for the AI or the web search.
+     v4.5 P0: the line says "Test done" (never just "Completed") while any course is blocked, being
+     made or failed, words the reason in its own state, and agrees with the path banners. */
   const courses = facts.courses;
   if (courses && courses.waitingSetup > 0) {
-    const what = courses.problem ?? "the setup isn't finished";
+    const what = courses.problem ?? "the web search isn't set up";
+    const state = stateOfLine(what);
     return {
       kind: "courses-waiting",
-      title: `${plural(courses.waitingSetup, "new course")} waiting: ${what}. We'll finish them on our own after.`,
+      title: `Test done · ${plural(courses.waitingSetup, "new course")} blocked: ${what}. We'll finish ${courses.waitingSetup === 1 ? "it" : "them"} on our own ${afterFixWords(state)}.`,
       tone: "blocked",
-      button: { action: "link", label: "Connect it", to: CONNECT_SETUP_ROUTE },
+      button: { action: "link", label: state === "not_set_up" ? "Set it up" : "Check the connection", to: CONNECT_SETUP_ROUTE },
+    };
+  }
+  if (courses?.failed) {
+    return {
+      kind: "courses-failed",
+      title: `Test done · ${plural(courses.failed, "new course")} couldn't be made. ${failedLine(courses.failedProblem)}.`,
+      tone: "blocked",
+      button: { action: "open", label: "See it and retry", tab: "path" },
     };
   }
   if (courses && courses.creating > 0) {
     return {
       kind: "courses-creating",
-      title: `${plural(courses.creating, "new course")} being created (about ${courses.creating * MINUTES_PER_NEW_COURSE} min)`,
+      title: `Test done · ${plural(courses.creating, "course")} being created (about ${courses.creating * MINUTES_PER_NEW_COURSE} min)`,
       tone: "waiting",
       button: null,
     };
@@ -268,4 +285,17 @@ function listen(n: number): NextAction {
     tone: "todo",
     button: { action: "open", label: "Listen and mark", tab: "assessment", anchor: "needs-listen" },
   };
+}
+
+/**
+ * v4.5 P0: the short status next to a learner's name (admin learner page header). It never says
+ * "Completed" while a new course is blocked, being made or failed, and agrees with `nextAction`.
+ */
+export function testStatusLabel(assessmentStatus: AssessmentStatus | null, courses: NextActionFacts["courses"] | null | undefined): string | null {
+  if (assessmentStatus !== "completed") return null;
+  if (!courses) return "Test done";
+  if (courses.waitingSetup > 0) return `Test done · ${plural(courses.waitingSetup, "course")} blocked`;
+  if (courses.failed) return `Test done · ${plural(courses.failed, "course")} failed`;
+  if (courses.creating > 0) return `Test done · ${plural(courses.creating, "course")} being created`;
+  return "Test done";
 }

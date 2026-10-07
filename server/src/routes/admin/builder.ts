@@ -14,9 +14,11 @@ import { getGlobalAutoPublish, publishToLibrary, requestFix, setGlobalAutoPublis
 import { activeWeek } from "../../plans/weekly/repo";
 import { getFocus, setFocus, setTargets } from "../../targets/repo";
 import { schema, type Db } from "../../db";
-import { enqueue } from "../../jobs/queue";
+import { enqueue, getJob, retryJob } from "../../jobs/queue";
+import { testResearch } from "../../builder/connection";
+import { pathCoverage } from "../../builder/coverage";
 import { writeAudit } from "../../lib/audit";
-import { badRequest, notFound, parseOrThrow } from "../../lib/errors";
+import { badRequest, conflict, notFound, parseOrThrow } from "../../lib/errors";
 import { now } from "../../lib/ids";
 
 const userParams = z.object({ userId: z.string().min(1).max(64) });
@@ -141,7 +143,8 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
     const { userId } = parseOrThrow(userParams, request.params);
     const path = currentPath(app.db, userId, app.content);
     // v4.4 P6: what the description asked for and whether the path has it ("Already strong: scored 5/5").
-    return { gaps: listGaps(app.db, userId), path, intents: path ? pathIntentLines(app.db, path.id) : [] };
+    // v4.5 P0: per skill, what the test measured or that it came after the test (never "not assessed").
+    return { gaps: listGaps(app.db, userId), path, intents: path ? pathIntentLines(app.db, path.id) : [], coverage: pathCoverage(app.db, userId) };
   });
 
   /** Runs the builder now, rather than waiting for the next evaluation. */
@@ -198,7 +201,7 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
       .all();
     // v4.4: new courses that wait for the AI or web search, for the page's "Set up" notice.
     const waiting = waitingForSetup(app.db);
-    const waitingSetup = waiting.count > 0 ? { count: waiting.count, problem: waiting.problem ?? "the web search isn't connected" } : null;
+    const waitingSetup = waiting.count > 0 ? { count: waiting.count, problem: waiting.problem ?? "the web search isn't set up" } : null;
     if (rows.length === 0) return { courses: [], waitingSetup };
 
     const dead = coursesWithDeadLinks(app.db);
@@ -389,7 +392,7 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
 
   app.get("/api/admin/research", async (request) => {
     requireSuperadmin(request);
-    return { settings: getResearchSettings(app.db) };
+    return { settings: getResearchSettings(app.db, app.env) };
   });
 
   app.put("/api/admin/research", async (request) => {
@@ -405,6 +408,13 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
       request.body,
     );
 
+    /* v4.5 P0: a key with no service picked was saved silently before, and every new course then
+       waited on "the web search isn't connected". A Tavily key ("tvly-") is recognised on its own. */
+    const stored = getResearchSettings(app.db);
+    const provider = body.provider === undefined ? stored.provider : body.provider;
+    if (body.searchKey && !provider && !body.searchKey.trim().startsWith("tvly-")) {
+      throw badRequest("Pick which search service this key is for (Tavily, Brave Search or Serper), then save again.");
+    }
     const settings = updateResearchSettings(app.db, app.env, { ...body, updatedBy: actor.id });
     // v4.4: new courses that waited for this start now (each one checks setup again as it runs).
     wakeWaitingCourses(app.db);
@@ -417,6 +427,30 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
       details: { provider: settings.provider, hasSearchKey: Boolean(settings.searchHint), hasYoutubeKey: Boolean(settings.youtubeHint) },
     });
     return { settings };
+  });
+
+  /**
+   * v4.5 P0: Test runs a real search from this server with the saved key (and one YouTube lookup
+   * when a YouTube key is saved), says what happened in one plain line, and on a pass wakes every
+   * blocked new course at once.
+   */
+  app.post("/api/admin/research/test", async (request) => {
+    const actor = requireSuperadmin(request);
+    const check = await testResearch({ db: app.db, env: app.env });
+    writeAudit(app.db, { actorId: actor.id, action: "research.tested", targetType: "research", targetId: "singleton", details: { state: check.state, results: check.results, videos: check.videos, woken: check.woken } });
+    return { check, settings: getResearchSettings(app.db, app.env) };
+  });
+
+  /** v4.5 P0: Retry on a new course that failed 5 times. Back in the queue now, with 5 fresh tries. */
+  app.post("/api/admin/course-jobs/:jobId/retry", async (request, reply) => {
+    const actor = requireStaff(request);
+    const { jobId } = parseOrThrow(z.object({ jobId: z.string().min(1).max(64) }), request.params);
+    const job = getJob(app.db, jobId);
+    if (!job || job.type !== "course.generate") throw notFound("We couldn't find that course job. Reload the page.");
+    if (!retryJob(app.db, jobId)) throw conflict("This course isn't failed any more. Reload the page to see where it is.");
+    writeAudit(app.db, { actorId: actor.id, action: "course_job.retried", targetType: "job", targetId: jobId });
+    reply.status(202);
+    return { jobId };
   });
 
   /** Queues the weekly link re-check by hand, for an admin who wants it now. */

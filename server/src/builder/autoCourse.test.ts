@@ -9,7 +9,13 @@ import { schema } from "../db";
 import { JobWorker } from "../jobs/worker";
 import { activeLearner, adminSession, as, createTestApp, type TestContext } from "../test/harness";
 import { courseGenerateHandler, nameSimilarity, setGlobalAutoPublish, type ResearchClientsResult } from "./autoCourse";
-import type { SearchClient, VideoClient } from "./providers";
+import { ProviderError, type SearchClient, type VideoClient } from "./providers";
+import { recheckBlocked } from "./connection";
+import { bankItemSchema } from "../../../shared/bank";
+import { testStatusLabel, type NextAction, type NextActionFacts } from "../../../shared/nextAction";
+import { evaluateV4 } from "../assessment/evaluateV4";
+import { itemsOf, storeItems, submitItem } from "../assessment/v4";
+import { newId } from "../lib/ids";
 import { runBuilder } from "./run";
 
 /**
@@ -42,8 +48,8 @@ const video: VideoClient = {
 };
 const fetcher = { fetchUrl: vi.fn(async () => ({ status: 200, headers: new Headers({ "content-type": "text/html" }), text: async () => "<html><head><title>Real page</title></head><body>content</body></html>" })) };
 
-const connected = (): ResearchClientsResult => ({ ok: true, search, video });
-const notConnected = (): ResearchClientsResult => ({ ok: false, reason: "No research provider is set up." });
+const connected = (): ResearchClientsResult => ({ ok: true, provider: "tavily", search, video, videos: true });
+const notConnected = (): ResearchClientsResult => ({ ok: false, state: "not_set_up", reason: "the web search isn't set up", detail: "No search service is picked." });
 
 /** A model stub for the course calls; anything else goes to the test app's mock. `reviews` are used in turn. */
 function aiStub(ctx: TestContext, reviews: { score: number; weak?: string[] }[] = [{ score: 5 }]) {
@@ -293,7 +299,7 @@ describe("a course that fails the quality check", () => {
   }, 120_000);
 });
 
-describe("when the web search isn't connected", () => {
+describe("when the web search isn't set up", () => {
   test("the course waits in waiting_setup and is made as soon as the settings are saved", async () => {
     const ctx = await createTestApp();
     const admin = await adminSession(ctx);
@@ -305,17 +311,17 @@ describe("when the web search isn't connected", () => {
 
     const [job] = courseJobs(ctx);
     expect(job.status).toBe("waiting_setup");
-    expect(job.lastError).toBe("the web search isn't connected");
+    expect(job.lastError).toBe("the web search isn't set up");
 
     // The admin's learner page says so in plain words.
     const gaps = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${rahul.id}/gaps`, ...as(admin) });
     const path = gaps.json().path as LearningPathView;
-    expect(path.setupNeeded).toBe("We couldn't create the course because the web search isn't connected. We'll finish automatically after it's set up.");
-    expect(path.setupNeeded).toBe(setupNeededMessage("the web search isn't connected"));
+    expect(path.setupNeeded).toBe("We couldn't create the course because the web search isn't set up. We'll finish automatically after it's set up.");
+    expect(path.setupNeeded).toBe(setupNeededMessage("the web search isn't set up"));
     expect(path.notice).toBe(path.setupNeeded);
     expect(codeReviewItem(path)).toMatchObject({ creating: "waiting_setup" });
     const page = await ctx.app.inject({ method: "GET", url: "/api/admin/generated-courses", ...as(admin) });
-    expect(page.json().waitingSetup).toEqual({ count: 1, problem: "the web search isn't connected" });
+    expect(page.json().waitingSetup).toEqual({ count: 1, problem: "the web search isn't set up" });
 
     // The worker never claims it while it waits.
     expect(await worker(ctx, ai, notConnected).drain()).toBe(0);
@@ -342,7 +348,7 @@ describe("when the web search isn't connected", () => {
     await build(ctx, rahul.id, ai, notConnected);
     ctx.db.update(schema.jobs).set({ status: "queued" }).run();
     await worker(ctx, ai, notConnected).drain();
-    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the web search isn't connected", attempts: 0 });
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the web search isn't set up", attempts: 0 });
     await ctx.close();
   }, 60_000);
 });
@@ -419,4 +425,291 @@ describe("plain words", () => {
     expect(nameSimilarity("SQL joins", "SQL indexes")).toBeLessThan(0.6);
     expect(nameSimilarity("Writing clear work emails", "Spoken English")).toBe(0);
   });
+});
+
+// ---------------------------------------------------------------------------
+// v4.5 Phase 0: "web search isn't connected" when it is
+// ---------------------------------------------------------------------------
+
+/** A search service that always fails the same way, as the real one does with a bad key or no network. */
+function failingSearch(state: "key_rejected" | "quota" | "unreachable" | "temporary"): () => ResearchClientsResult {
+  const client: SearchClient = {
+    id: "tavily",
+    search: vi.fn(async () => {
+      throw new ProviderError(state, "search", `fake ${state}`, state === "key_rejected" ? 401 : state === "quota" ? 432 : null);
+    }),
+  };
+  return () => ({ ok: true, provider: "tavily", search: client, video, videos: true });
+}
+
+/** Tavily's real endpoint, answered by a stub: checks the auth header and returns `count` results. */
+function stubTavily(count: number, status = 200) {
+  const seen: { url: string; auth: string | null; body: string }[] = [];
+  const realFetch = globalThis.fetch;
+  vi.stubGlobal("fetch", async (input: string | URL | Request, init?: RequestInit) => {
+    const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+    if (!url.startsWith("https://api.tavily.com/")) return realFetch(input as never, init);
+    const headers = new Headers(init?.headers);
+    seen.push({ url, auth: headers.get("authorization"), body: String(init?.body ?? "") });
+    if (status !== 200) return new Response(JSON.stringify({ detail: { error: "Unauthorized: missing or invalid API key." } }), { status });
+    const results = URLS.concat(URLS)
+      .slice(0, count)
+      .map((u, i) => ({ url: `${u}?r=${i}`, title: `Result ${i}`, content: "A page that exists.", published_date: "2025-02-01" }));
+    return new Response(JSON.stringify({ results }), { status: 200, headers: { "content-type": "application/json" } });
+  });
+  return seen;
+}
+
+describe("v4.5 P0: the root cause — a saved search key without a YouTube key", () => {
+  test("is enough: the web app and the worker read the same saved settings, and the course is made", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const { ai } = aiStub(ctx);
+    const seen = stubTavily(5);
+    try {
+      // Exactly what production has: Tavily picked and its key saved, no YouTube key.
+      const saved = await ctx.app.inject({ method: "PUT", url: "/api/admin/research", ...as(admin), payload: { provider: "tavily", searchKey: "tvly-prod-like-key" } });
+      expect(saved.json().settings).toMatchObject({ configured: true, videosConfigured: false });
+
+      const priyanka = await learner(ctx, admin, "Priyanka");
+      // The path builder and the worker both read the saved settings (no `clients` override here).
+      const outcome = await runBuilder({ userId: priyanka.id, assessmentId: null, evaluation: EVAL, adminNotes: "" }, { db: ctx.db, env: ctx.env, ai, content: ctx.content });
+      expect(outcome.waitingForResearch ?? 0).toBe(0);
+      expect(courseJobs(ctx)[0].status).toBe("queued");
+
+      const realWorker = new JobWorker({ db: ctx.db, handlers: { "course.generate": courseGenerateHandler({ db: ctx.db, env: ctx.env, ai, research: fetcher }) } });
+      await realWorker.drain();
+      expect(courseJobs(ctx)[0]).toMatchObject({ status: "done", lastError: null });
+      expect(generated(ctx)[0]).toMatchObject({ status: "published", library: true });
+      // Tavily is called with the documented Bearer header, never with the key in the body.
+      expect(seen.length).toBeGreaterThan(0);
+      expect(seen.every((call) => call.auth === "Bearer tvly-prod-like-key" && !call.body.includes("tvly-prod-like-key"))).toBe(true);
+
+      // The banner says what was added, with her first name.
+      const gaps = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${priyanka.id}/gaps`, ...as(admin) });
+      expect((gaps.json().path as LearningPathView).addedLine).toBe(`We added 1 new course for Priyanka: ${COURSE_TITLE}`);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    await ctx.close();
+  }, 120_000);
+
+  test("a Tavily key saved without picking the service is recognised; another key without a service is refused in plain words", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const tvly = await ctx.app.inject({ method: "PUT", url: "/api/admin/research", ...as(admin), payload: { searchKey: "tvly-no-provider" } });
+    expect(tvly.statusCode).toBe(200);
+    expect(tvly.json().settings).toMatchObject({ configured: true, effectiveProvider: "tavily" });
+    const other = await ctx.app.inject({ method: "PUT", url: "/api/admin/research", ...as(admin), payload: { provider: null, searchKey: "brave-or-serper-key" } });
+    expect(other.statusCode).toBe(400);
+    expect(other.json().error.message).toBe("Pick which search service this key is for (Tavily, Brave Search or Serper), then save again.");
+    await ctx.close();
+  }, 60_000);
+});
+
+describe("v4.5 P0: each failure has its own state", () => {
+  test("a rejected key blocks with its own words; saving the settings wakes it and it finishes", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const { ai } = aiStub(ctx);
+    const rahul = await learner(ctx, admin, "Rahul");
+    await build(ctx, rahul.id, ai);
+    await worker(ctx, ai, failingSearch("key_rejected")).drain();
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the web search key was rejected", attempts: 0 });
+    expect(generated(ctx)).toHaveLength(0);
+    const path = await myPath(ctx, rahul.session);
+    expect(path.setupNeeded).toBe("We couldn't create the course because the web search key was rejected. We'll finish automatically after the key is fixed.");
+    expect(codeReviewItem(path)).toMatchObject({ creating: "waiting_setup", problem: "the web search key was rejected" });
+    const next = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${rahul.id}/next-action`, ...as(admin) });
+    expect(next.json().facts.courses).toMatchObject({ waitingSetup: 1, problem: "the web search key was rejected" });
+
+    await connectResearch(ctx, admin);
+    expect(courseJobs(ctx)[0].status).toBe("queued");
+    await worker(ctx, ai).drain();
+    expect(courseJobs(ctx)[0].status).toBe("done");
+    await ctx.close();
+  }, 120_000);
+
+  test("a used-up quota blocks with its own words", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const { ai } = aiStub(ctx);
+    const rahul = await learner(ctx, admin, "Rahul");
+    await build(ctx, rahul.id, ai);
+    await worker(ctx, ai, failingSearch("quota")).drain();
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the web search has used up its quota" });
+    expect((await myPath(ctx, rahul.session)).setupNeeded).toBe(
+      "We couldn't create the course because the web search has used up its quota. We'll finish automatically when the quota resets or is raised.",
+    );
+    await ctx.close();
+  }, 120_000);
+
+  test("a network failure is retried with backoff, fails after 5 tries with 'Failed: …', and Retry puts it back", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const { ai } = aiStub(ctx);
+    const rahul = await learner(ctx, admin, "Rahul");
+    await build(ctx, rahul.id, ai);
+    const flaky = worker(ctx, ai, failingSearch("unreachable"));
+    const [queued] = courseJobs(ctx);
+    expect(queued.maxAttempts).toBe(5);
+
+    const delays: number[] = [];
+    for (let attempt = 1; attempt <= 5; attempt += 1) {
+      ctx.db.update(schema.jobs).set({ runAfter: 0 }).where(eq(schema.jobs.id, queued.id)).run();
+      const before = Date.now();
+      await flaky.drain();
+      const job = courseJobs(ctx)[0];
+      expect(job.attempts).toBe(attempt);
+      expect(job.lastError).toBe("our server can't reach the web search");
+      if (attempt < 5) {
+        expect(job.status).toBe("queued");
+        delays.push(job.runAfter - before);
+      } else {
+        expect(job.status).toBe("failed");
+      }
+    }
+    // Backoff grows: 30 s, 1 min, 2 min, 4 min.
+    expect(delays[0]).toBeGreaterThanOrEqual(29_000);
+    expect(delays[3]).toBeGreaterThan(delays[0] * 7);
+
+    const path = await myPath(ctx, rahul.session);
+    expect(codeReviewItem(path)).toMatchObject({ creating: "failed", problem: "our server can't reach the web search", retryJobId: queued.id });
+    expect(path.failedCourses).toBe(1);
+    const next = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${rahul.id}/next-action`, ...as(admin) });
+    expect(next.json().facts.courses).toMatchObject({ failed: 1, failedProblem: "our server can't reach the web search" });
+
+    const retry = await ctx.app.inject({ method: "POST", url: `/api/admin/course-jobs/${queued.id}/retry`, ...as(admin) });
+    expect(retry.statusCode).toBe(202);
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "queued", attempts: 0, lastError: null });
+    const twice = await ctx.app.inject({ method: "POST", url: `/api/admin/course-jobs/${queued.id}/retry`, ...as(admin) });
+    expect(twice.statusCode).toBe(409);
+    await worker(ctx, ai).drain();
+    expect(courseJobs(ctx)[0].status).toBe("done");
+    await ctx.close();
+  }, 120_000);
+});
+
+describe("v4.5 P0: the 10-minute re-check and Test", () => {
+  test("blocked courses whose setup is now complete are woken by the re-check; nothing blocked means nothing to do", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const { ai } = aiStub(ctx);
+    const rahul = await learner(ctx, admin, "Rahul");
+    await build(ctx, rahul.id, ai, notConnected);
+    expect(courseJobs(ctx)[0].status).toBe("waiting_setup");
+    // Still not set up: stays blocked, with today's reason.
+    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: notConnected })).toBe(0);
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the web search isn't set up" });
+    // Set up (by any route): the next re-check wakes it, and one queue tick makes it.
+    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: connected })).toBe(1);
+    await worker(ctx, ai).drain();
+    expect(courseJobs(ctx)[0].status).toBe("done");
+    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: connected })).toBe(0);
+    await ctx.close();
+  }, 120_000);
+
+  test("after a rejected key the re-check proves it with a real test search before waking", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const { ai } = aiStub(ctx);
+    const rahul = await learner(ctx, admin, "Rahul");
+    await build(ctx, rahul.id, ai);
+    await worker(ctx, ai, failingSearch("key_rejected")).drain();
+    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: failingSearch("key_rejected") })).toBe(0);
+    expect(courseJobs(ctx)[0].status).toBe("waiting_setup");
+    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: connected })).toBe(1);
+    await ctx.close();
+  }, 120_000);
+
+  test("Test runs a real search from the server and says what happened in plain words", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const notSet = await ctx.app.inject({ method: "POST", url: "/api/admin/research/test", ...as(admin) });
+    expect(notSet.json().check).toMatchObject({ state: "not_set_up", message: "Not set up: No search service is picked and no key is saved." });
+
+    await ctx.app.inject({ method: "PUT", url: "/api/admin/research", ...as(admin), payload: { provider: "tavily", searchKey: "tvly-good" } });
+    stubTavily(5);
+    try {
+      const ok = await ctx.app.inject({ method: "POST", url: "/api/admin/research/test", ...as(admin) });
+      expect(ok.statusCode).toBe(200);
+      expect(ok.json().check).toMatchObject({ state: "ready", results: 5, videos: "missing" });
+      expect(ok.json().check.message).toBe("Connected ✓ — test search returned 5 results. No YouTube key is saved, so new lessons won't have a video.");
+      // Kept for the page and the inbox.
+      const read = await ctx.app.inject({ method: "GET", url: "/api/admin/research", ...as(admin) });
+      expect(read.json().settings.lastCheck).toMatchObject({ state: "ready", results: 5 });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    stubTavily(0, 401);
+    try {
+      const bad = await ctx.app.inject({ method: "POST", url: "/api/admin/research/test", ...as(admin) });
+      expect(bad.json().check).toMatchObject({ state: "key_rejected" });
+      expect(bad.json().check.message).toBe("Tavily rejected the key. Check it was copied in full and is a Tavily key, then save it again.");
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    await ctx.close();
+  }, 60_000);
+});
+
+describe("v4.5 P0: after an assessment, missing courses are queued with no admin click", () => {
+  test("evaluation → path build → a course.generate job for the missing course; the status line says Test done", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const priyanka = await learner(ctx, admin, "Priyanka");
+    ctx.db.update(schema.users).set({ displayName: "Priyanka Patel" }).where(eq(schema.users.id, priyanka.id)).run();
+    const assessmentId = newId();
+    ctx.db
+      .insert(schema.assessments)
+      .values({
+        id: assessmentId,
+        userId: priyanka.id,
+        status: "in_progress",
+        attemptNo: 1,
+        createdAt: Date.now(),
+        startedAt: Date.now() - 60_000,
+        deadlineAt: Date.now() + 3_600_000,
+        config: { format: "v4", departmentId: "engineering", assessmentFormat: "coding" },
+      } as typeof schema.assessments.$inferInsert)
+      .run();
+    const mcq = (n: number) =>
+      bankItemSchema.parse({
+        id: `m-${n}-${newId().toLowerCase()}`,
+        departmentId: "engineering",
+        skillId: "eng-code-review",
+        type: "mcq",
+        difficulty: 2,
+        estMinutes: 1,
+        prompt: `What should a review comment do ${n}?`,
+        mcq: { options: ["Say what and why", "Just say no", "Rewrite the code"], correctIndex: 0, explanation: "Say what and why." },
+        tags: [],
+      });
+    storeItems(ctx.db, assessmentId, [1, 2].map((n) => ({ item: mcq(n), skillId: "eng-code-review", skillName: "Code review", group: "focus" as const, origin: "bank" as const, bankItemId: null })));
+    for (const row of itemsOf(ctx.db, assessmentId)) {
+      const key = (row.key as { mcq: { correctIndex: number } }).mcq.correctIndex;
+      await submitItem({ db: ctx.db, sandbox: null as never, piston: null }, row, { choice: (key + 1) % 3 });
+    }
+    ctx.db.update(schema.assessments).set({ status: "submitted", submittedAt: Date.now() }).where(eq(schema.assessments.id, assessmentId)).run();
+    await evaluateV4({ db: ctx.db, ai: ctx.ai, content: ctx.content, sandbox: null as never, piston: null }, assessmentId);
+
+    // No admin click: the evaluation queued the path build, which asked for the missing course.
+    await ctx.drainJobs();
+    const jobs = courseJobs(ctx).filter((job) => (job.payload as { userId?: string }).userId === priyanka.id);
+    expect(jobs).toHaveLength(1);
+    expect((jobs[0].payload as { skillId?: string }).skillId).toBe("eng-code-review");
+
+    // The header and the bar agree with the path banner (no research is set up in the harness).
+    const next = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${priyanka.id}/next-action`, ...as(admin) });
+    const { action, facts } = next.json() as { action: NextAction; facts: NextActionFacts };
+    expect(action.kind).toBe("courses-waiting");
+    expect(action.title).toBe("Test done · 1 new course blocked: the web search isn't set up. We'll finish it on our own after it's set up.");
+    expect(testStatusLabel(facts.assessment?.status ?? null, facts.courses)).toBe("Test done · 1 course blocked");
+    const gaps = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${priyanka.id}/gaps`, ...as(admin) });
+    const path = gaps.json().path as LearningPathView;
+    expect(path.setupNeeded).toBe("We couldn't create the course because the web search isn't set up. We'll finish automatically after it's set up.");
+    // The coverage rule: the goal was measured by the test, so the row is never "not assessed".
+    expect(gaps.json().coverage.levels).toHaveProperty("eng-code-review");
+    await ctx.close();
+  }, 120_000);
 });

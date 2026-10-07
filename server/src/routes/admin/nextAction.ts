@@ -1,8 +1,10 @@
-import { and, count, desc, eq, inArray, isNotNull, isNull, max } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNotNull, isNull, like, max } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
+import { NEW_COURSE_ITEM_PREFIX } from "../../../../shared/builder";
 import { nextAction, type NextAction, type NextActionFacts } from "../../../../shared/nextAction";
+import { creatingInfo } from "../../builder/repo";
 import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema, type Db } from "../../db";
 import { notFound, parseOrThrow } from "../../lib/errors";
@@ -83,13 +85,7 @@ export function nextActionFacts(db: Db, userId: string, nowMs = Date.now()): Nex
     .from(schema.reviewRequests)
     .where(and(eq(schema.reviewRequests.userId, userId), eq(schema.reviewRequests.status, "open")))
     .get();
-  const courseJobs = db
-    .select({ status: schema.jobs.status, payload: schema.jobs.payload, lastError: schema.jobs.lastError })
-    .from(schema.jobs)
-    .where(and(eq(schema.jobs.type, "course.generate"), inArray(schema.jobs.status, ["queued", "running", "waiting_setup"])))
-    .all()
-    .filter((j) => (j.payload as { userId?: string } | null)?.userId === userId);
-  const waiting = courseJobs.filter((j) => j.status === "waiting_setup");
+  const courses = pathCourseFacts(db, path?.id ?? null);
 
   const changed = [goals?.at ?? null, settings?.at ?? null].filter((v): v is number => typeof v === "number");
 
@@ -109,8 +105,37 @@ export function nextActionFacts(db: Db, userId: string, nowMs = Date.now()): Nex
     name: user.displayName,
     speakToListen: assessment ? speakToListen(db, assessment.id) : 0,
     openReviews: reviews?.n ?? 0,
-    courses: { creating: courseJobs.length - waiting.length, waitingSetup: waiting.length, problem: waiting[0]?.lastError ?? null },
+    courses,
   };
+}
+
+/**
+ * v4.5 P0: the new courses on this path, counted the way the path banners count them (one per
+ * course being made, whoever's job it is), so the status line and the banners always agree.
+ */
+export function pathCourseFacts(db: Db, pathId: string | null): NonNullable<NextActionFacts["courses"]> {
+  const facts = { creating: 0, waitingSetup: 0, problem: null as string | null, failed: 0, failedProblem: null as string | null };
+  if (!pathId) return facts;
+  const keys = new Set(
+    db
+      .select({ moduleId: schema.pathItems.moduleId })
+      .from(schema.pathItems)
+      .where(and(eq(schema.pathItems.pathId, pathId), like(schema.pathItems.moduleId, `${NEW_COURSE_ITEM_PREFIX}%`)))
+      .all()
+      .map((row) => row.moduleId!.slice(NEW_COURSE_ITEM_PREFIX.length)),
+  );
+  for (const key of keys) {
+    const info = creatingInfo(db, key);
+    if (info.state === "working") facts.creating += 1;
+    else if (info.state === "waiting_setup") {
+      facts.waitingSetup += 1;
+      facts.problem ??= info.problem;
+    } else if (info.state === "failed") {
+      facts.failed += 1;
+      facts.failedProblem ??= info.problem;
+    }
+  }
+  return facts;
 }
 
 /** v4.3 Phase 6: the learner page's top bar — the next action, computed from DB state. */

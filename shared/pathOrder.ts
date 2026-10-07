@@ -1,4 +1,5 @@
 import { SLIDER_LABELS, type Slider } from "./setup";
+import { goalLevelReason, goalPhrase, missingLinkReason, movedUpReason, nextStepReason } from "./pathReasons";
 import { ancestorsClosure, descendantsClosure, findCycle, prerequisiteChain, topologicalOrder, type SkillEdge } from "./skillGraph";
 
 /**
@@ -366,20 +367,22 @@ export function orderPath(input: PathOrderInput): PathOrderResult {
     const at = m == null ? "not measured yet" : `${m}/5`;
     const blockedBy = nearest(id);
     let reason: string;
+    // v4.5 P0: the goal's label goes after a colon, first letter lowered ("shared/pathReasons.ts").
     if (node.kind === "missing-link") {
       const dep = mainDependent(id);
-      const goal = dep ? goalName(dep) : "your goals";
-      reason = `Before ${goal} because ${goal} needs ${name(id)}, which you're missing (${at}; it needs ${node.needed}/5).`;
+      reason = dep
+        ? missingLinkReason(goalName(dep), name(id), at, node.needed)
+        : `Comes before your goals. They need ${name(id)}, which you're missing (${at}; it needs ${node.needed}/5).`;
     } else if (node.kind === "must-have") {
       const what = node.flag?.label ?? name(id);
       reason = `Moved up: the evaluation found ${what} weak (${at}), and ${node.flag?.why ?? "it matters for this role"}.`;
     } else if (rank.get(id)! > node.own) {
       const dep = mainDependent(id);
-      reason = `Moved up: ${dep ? goalName(dep) : "a more urgent goal"} needs ${name(id)} first.`;
+      reason = movedUpReason(dep ? goalName(dep) : null, name(id));
     } else if (blockedBy.length > 0) {
-      reason = `Next for your ${goalName(id)} goal, after ${blockedBy.map(name).join(" and ")}.`;
+      reason = nextStepReason(goalName(id));
     } else {
-      reason = `${label(node.own)} goal ${goalName(id)}: you're at ${at} and it needs ${node.needed}/5.`;
+      reason = goalLevelReason(label(node.own), goalName(id), at, node.needed);
     }
     return { skillId: id, priority: label(node.labelValue), kind: node.kind, reason, blockedBy, neededLevel: node.needed, mastery: m, rank: rank.get(id)! };
   });
@@ -433,7 +436,7 @@ function continuation(
             skillId: id,
             priority: label(t.slider),
             kind: "continuation",
-            reason: `Next after ${name(from)}: you've met your ${t.goalLabel ?? name(t.skillId)} goal, so this continues it.`,
+            reason: `Next after ${name(from)}. You've met your goal (${goalPhrase(t.goalLabel ?? name(t.skillId))}), so this continues it.`,
             blockedBy: needs.filter((n) => chosen.has(n)),
             neededLevel: t.goalLevel,
             mastery: Object.prototype.hasOwnProperty.call(input.mastery, id) ? input.mastery[id] : null,

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { afterFixWords, stateOfLine } from "./connection";
+
 import {
   DEFAULT_DAYS_PER_WEEK,
   DEFAULT_HOURS_PER_WEEK,
@@ -307,10 +309,17 @@ export function coursesAddedMessage(learnerName: string, titles: readonly string
   return `${head} ${n === 1 ? "It's" : "They're"} also available to everyone now.`;
 }
 
-/** The notice shown while a new course waits for the AI or web search to be connected. */
+/** The notice shown while a new course waits for the AI or web search (v4.5: worded per state). */
 export function setupNeededMessage(problem: string, count = 1): string {
   const what = count === 1 ? "the course" : `${count} courses`;
-  return `We couldn't create ${what} because ${problem}. We'll finish automatically after it's set up.`;
+  return `We couldn't create ${what} because ${problem}. We'll finish automatically ${afterFixWords(stateOfLine(problem))}.`;
+}
+
+/** v4.5 P0: the path banner once new courses are made: "We added 1 new course for Priyanka: <title>". */
+export function addedCoursesLine(learnerName: string, titles: readonly string[]): string {
+  const first = learnerName.trim().split(/\s+/)[0] || learnerName;
+  const n = titles.length;
+  return `We added ${n} new course${n === 1 ? "" : "s"} for ${first}: ${titles.join(", ")}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -402,6 +411,15 @@ export interface PathItemView {
   goalAchieved?: boolean;
   /** v4.4: set while this item's course is still being made (see `NEW_COURSE_ITEM_PREFIX`). */
   creating?: CreatingState | null;
+  /** v4.5: why it waits (`waiting_setup`) or why it failed (`failed`), one plain clause. */
+  problem?: string | null;
+  /** v4.5: the failed job behind a `failed` item, for the admin's Retry. */
+  retryJobId?: string | null;
+  /**
+   * v4.5: what this item builds on that is already scheduled earlier in the path. A course appears
+   * once; a second mention becomes "Needs: React Fundamentals (earlier in your path)" here.
+   */
+  needs?: { title: string; itemId: string }[];
 }
 
 export interface LearningPathView {
@@ -418,6 +436,12 @@ export interface LearningPathView {
   notice: string | null;
   /** v4.4: set while a new course waits for the AI or web search to be connected (one plain line). */
   setupNeeded?: string | null;
+  /** v4.5: new courses made for this path and published ("We added 1 new course for …"). */
+  added?: { courseId: string; title: string }[];
+  /** v4.5: the banner for `added`, already worded with the learner's first name. */
+  addedLine?: string | null;
+  /** v4.5: new courses for this path that failed 5 times ("Failed: …" with Retry). */
+  failedCourses?: number;
   createdAt: number;
   completedAt: number | null;
   items: PathItemView[];

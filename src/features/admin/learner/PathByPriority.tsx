@@ -3,6 +3,8 @@ import { ChevronDown, CircleAlert, Plus, RotateCw } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { PART_LABELS, type LearningPathView, type PathItemView, type SkillGapView } from "@shared/builder";
+import { failedLine } from "@shared/connection";
+import { coverageView, laterGroupLabel, laterLabel, needsLine, splitPath, type PathCoverage } from "@shared/pathView";
 import { SLIDER_LABELS, type Slider } from "@shared/setup";
 
 import { Badge } from "@/components/ui/badge";
@@ -59,9 +61,13 @@ export interface PathByPriorityProps {
   /** Sends a suggestion to the Setup tab, pre-selected at Medium. */
   onPromote: (skill: string) => void;
   onOpenSetup: () => void;
+  /** v4.5: what the test measured per skill, or that a goal came after it. */
+  coverage?: PathCoverage | null;
+  /** v4.5: Retry on a new course that failed 5 times. */
+  onRetry?: (jobId: string) => void;
 }
 
-export function PathByPriority({ path, grouped, busy, building, onRebuild, onPromote, onOpenSetup }: PathByPriorityProps) {
+export function PathByPriority({ path, grouped, busy, building, onRebuild, onPromote, onOpenSetup, coverage, onRetry }: PathByPriorityProps) {
   const { groups, others, suggestions } = grouped;
 
   return (
@@ -79,7 +85,7 @@ export function PathByPriority({ path, grouped, busy, building, onRebuild, onPro
         <ol className="space-y-3" aria-label="Path by priority">
           {groups.map((group) => (
             <li key={group.priority.skillId}>
-              <PriorityRow group={group} path={path} busy={busy} building={building} onRebuild={onRebuild} />
+              <PriorityRow group={group} path={path} busy={busy} building={building} onRebuild={onRebuild} coverage={coverage} onRetry={onRetry} />
             </li>
           ))}
         </ol>
@@ -93,7 +99,7 @@ export function PathByPriority({ path, grouped, busy, building, onRebuild, onPro
           <ul className="divide-y">
             {others.map((item) => (
               <li key={item.id} className="px-4 py-3">
-                <CourseLine item={item} busy={busy} />
+                <CourseLine item={item} busy={busy} onRetry={onRetry} />
               </li>
             ))}
           </ul>
@@ -111,17 +117,23 @@ function PriorityRow({
   busy,
   building,
   onRebuild,
+  coverage,
+  onRetry,
 }: {
   group: PriorityGroup;
   path: LearningPathView | null;
   busy: boolean;
   building: boolean;
   onRebuild: () => void;
+  coverage?: PathCoverage | null;
+  onRetry?: (jobId: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const { priority, course, refreshers, gap } = group;
   const tone = PRIORITY_TONE[priority.slider];
-  const level = assessedLevel(gap);
+  // v4.5: never "not assessed": measured, still being marked, or added after the test.
+  const covered = coverageView(priority.skillId, coverage, course?.startLevel, assessedLevel(gap));
+  const level = covered.kind === "level" ? covered.level : null;
   const reason = course?.reason ?? "";
   const shortReason = truncateWords(reason);
   const truncated = shortReason !== reason.trim().split(/\s+/).filter(Boolean).join(" ");
@@ -138,9 +150,11 @@ function PriorityRow({
         {level !== null ? (
           <LevelBar level={level} bar={tone.bar} />
         ) : (
-          <span className="font-mono text-[11px] text-muted-foreground">not assessed</span>
+          <span className="font-mono text-[11px] text-muted-foreground" data-testid="coverage-note">
+            {covered.kind === "level" ? null : covered.text}
+          </span>
         )}
-        {course?.startLevel && (
+        {course?.startLevel && level !== null && (
           <span className="font-mono text-[11px] text-muted-foreground">starts {START_LABELS[course.startLevel]}</span>
         )}
         {hasEvidence && (
@@ -176,7 +190,7 @@ function PriorityRow({
       <div className="divide-y border-t">
         {course ? (
           <div className="px-4 py-3">
-            <CourseLine item={course} busy={busy} />
+            <CourseLine item={course} busy={busy} onRetry={onRetry} />
           </div>
         ) : (
           <NoCourse path={path} busy={busy} building={building} onRebuild={onRebuild} />
@@ -184,9 +198,9 @@ function PriorityRow({
 
         {refreshers.map((item) => (
           <div key={item.id} className="px-4 py-2.5 pl-8">
-            <p className="font-mono text-[11px] text-muted-foreground">Must know first</p>
+            <p className="font-mono text-[11px] text-muted-foreground">Learn first</p>
             <div className="mt-1">
-              <CourseLine item={item} busy={busy} compact />
+              <CourseLine item={item} busy={busy} compact onRetry={onRetry} />
             </div>
           </div>
         ))}
@@ -245,8 +259,9 @@ function NoCourse({
 }
 
 /** One course, its state, and its reason. Never more than a line and a half. */
-function CourseLine({ item, busy, compact }: { item: PathItemView; busy: boolean; compact?: boolean }) {
+function CourseLine({ item, busy, compact, onRetry }: { item: PathItemView; busy: boolean; compact?: boolean; onRetry?: (jobId: string) => void }) {
   const state = courseState(item, busy);
+  const needs = needsLine(item);
   // v4.3: a goal's capstone: achieved once the learner passes it (or an admin marks it on Setup).
   if (item.goalId) {
     return (
@@ -293,10 +308,19 @@ function CourseLine({ item, busy, compact }: { item: PathItemView; busy: boolean
             Review
           </Link>
         )}
+        {state === "not_made" && item.retryJobId && onRetry && (
+          <Button size="sm" variant="outline" className="h-7" onClick={() => onRetry(item.retryJobId!)}>
+            <RotateCw aria-hidden="true" />
+            Retry
+          </Button>
+        )}
         <span className="ml-auto font-mono text-[11px] text-muted-foreground tabular">
           {item.completedCount}/{item.topicCount} done
         </span>
       </div>
+      {state === "not_made" && <p className="mt-1 text-sm text-destructive">{failedLine(item.problem)}</p>}
+      {state === "waiting_setup" && item.problem && <p className="mt-1 text-sm text-muted-foreground">Blocked: {item.problem}.</p>}
+      {needs && <p className="mt-1 font-mono text-[11px] text-muted-foreground">{needs}</p>}
       {item.reason && <p className="mt-1 text-sm text-muted-foreground">{truncateWords(item.reason)}</p>}
     </>
   );
@@ -366,9 +390,12 @@ function AlsoSuggested({ suggestions, onPromote }: { suggestions: readonly Skill
  */
 export function PathInOrder({ path }: { path: LearningPathView | null }) {
   const [open, setOpen] = useState(false);
+  const [laterOpen, setLaterOpen] = useState(false);
   const items = [...(path?.items ?? [])].sort((a, b) => (a.partNumber ?? 0) - (b.partNumber ?? 0) || a.position - b.position);
   if (items.length === 0) return null;
   const listId = "path-in-order";
+  // v4.5: a long path shows its first steps; the rest fold under "Later (N more)", grouped by goal.
+  const split = splitPath(items);
   return (
     <section className="rounded-md border" aria-label="The path in order">
       <button
@@ -382,8 +409,9 @@ export function PathInOrder({ path }: { path: LearningPathView | null }) {
         In the order they walk it ({items.length} step{items.length === 1 ? "" : "s"})
       </button>
       {open && (
+        <>
         <ol id={listId} className="divide-y border-t">
-          {items.map((item, index) => (
+          {split.first.map((item, index) => (
             <li key={item.id} className="flex gap-3 px-4 py-2.5">
               <span className="w-6 shrink-0 pt-0.5 text-right font-mono text-[11px] text-muted-foreground tabular">{index + 1}</span>
               <div className="min-w-0 flex-1">
@@ -399,11 +427,39 @@ export function PathInOrder({ path }: { path: LearningPathView | null }) {
                     </Badge>
                   )}
                 </p>
+                {needsLine(item) && <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">{needsLine(item)}</p>}
                 {item.reason && <p className="mt-0.5 text-xs text-muted-foreground">{item.reason}</p>}
               </div>
             </li>
           ))}
         </ol>
+        {split.laterCount > 0 && (
+          <div className="border-t">
+            <button
+              type="button"
+              onClick={() => setLaterOpen((v) => !v)}
+              aria-expanded={laterOpen}
+              className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm font-medium hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+            >
+              <ChevronDown className={cn("size-4 transition-transform motion-reduce:transition-none", laterOpen && "rotate-180")} aria-hidden="true" />
+              {laterLabel(split.laterCount)}
+            </button>
+            {laterOpen &&
+              split.later.map((group) => (
+                <section key={group.goal ?? "other"} className="border-t px-4 py-2.5" aria-label={laterGroupLabel(group.goal)}>
+                  <h4 className="font-mono text-[11px] text-muted-foreground">{laterGroupLabel(group.goal)}</h4>
+                  <ul className="mt-1 space-y-1">
+                    {group.items.map((item) => (
+                      <li key={item.id} className="text-sm">
+                        {item.courseTitle}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+          </div>
+        )}
+        </>
       )}
     </section>
   );

@@ -73,7 +73,7 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] 9.2 Heuristic review → `UX_REVIEW.md`; fix high/medium
 - [x] 9.3 Click counts before/after
 - [x] 9.4 `ui_v5` on by default; "Use previous design" for 2 weeks (logged)
-- [ ] 9.5 Deploy + smoke (Abhishek runs it)
+- [x] 9.5 Deploy + smoke (Abhishek ran it, 2026-10-06; v5.0.1 pushed after)
 - [x] 9.6 RESULTS.md + chat summary; tag `v5.0.0`
 
 ## Needs Abhishek

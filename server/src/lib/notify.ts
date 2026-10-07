@@ -16,6 +16,8 @@ export interface NotificationInput {
   title: string;
   body: string;
   link?: string | null;
+  /** When it happened (default: now). Scheduled jobs pass their own clock. */
+  at?: number;
 }
 
 export function notify(db: Db, input: NotificationInput): string {
@@ -28,7 +30,7 @@ export function notify(db: Db, input: NotificationInput): string {
       title: input.title,
       body: input.body,
       link: input.link ?? null,
-      createdAt: now(),
+      createdAt: input.at ?? now(),
     })
     .run();
   return id;

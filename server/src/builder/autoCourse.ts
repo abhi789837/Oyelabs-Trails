@@ -18,7 +18,9 @@ import { schema, type Db } from "../db";
 import type { Env } from "../env";
 import { newId, now } from "../lib/ids";
 import { notify, staffIds } from "../lib/notify";
-import { enqueue, JobWaitingSetupError, wakeWaitingJobs, type Job } from "../jobs/queue";
+import { COURSE_JOB_MAX_ATTEMPTS, enqueue, JobWaitingSetupError, wakeWaitingJobs, type Job } from "../jobs/queue";
+import { isBlockingProblem, problemLine } from "../../../shared/connection";
+import { getAIProvider, watchSearch } from "./connection";
 import { buildCourse, rebuildTopic, reviewCourse, type BuildDeps } from "./pipeline";
 import type { SearchClient, VideoClient } from "./providers";
 import {
@@ -33,7 +35,7 @@ import {
 } from "./repo";
 import type { ResearchDeps } from "./research";
 import { normaliseSkill } from "./scoring";
-import { researchClients } from "./settings";
+import { getResearchProvider, type ResearchProviderResult } from "./settings";
 
 /**
  * v4.4 Phase 5: a course nobody has written yet is made, checked and put in the shared library
@@ -89,7 +91,7 @@ export function courseKey(input: { skillId?: string | null; caseId?: string | nu
 
 export const markerFor = (key: string): string => `${NEW_COURSE_ITEM_PREFIX}${key}`;
 
-export type ResearchClientsResult = ReturnType<typeof researchClients>;
+export type ResearchClientsResult = ResearchProviderResult;
 
 export interface SetupDeps {
   db: Db;
@@ -100,14 +102,15 @@ export interface SetupDeps {
 }
 
 function clientsOf(deps: SetupDeps): ResearchClientsResult {
-  return deps.clients ? deps.clients() : researchClients(deps.db, deps.env);
+  return deps.clients ? deps.clients() : getResearchProvider(deps.db, deps.env);
 }
 
 /** What is missing before a course can be written, in plain words, or null when nothing is. */
 export function setupProblem(deps: SetupDeps): string | null {
-  if (!deps.ai.isConfigured()) return "the AI isn't connected";
-  if (!clientsOf(deps).ok) return "the web search isn't connected";
-  return null;
+  const ai = getAIProvider(deps.ai);
+  if (!ai.ok) return ai.reason;
+  const research = clientsOf(deps);
+  return research.ok ? null : research.reason;
 }
 
 const STOP_WORDS = new Set(["and", "the", "for", "with", "of", "to", "in", "on", "a", "an", "your", "basics", "fundamentals", "intro", "introduction"]);
@@ -232,7 +235,7 @@ export function requestCourse(deps: SetupDeps, input: CourseRequest): CourseRequ
     targetRole: input.targetRole,
     level: input.level,
   };
-  const jobId = enqueue(db, { type: "course.generate", payload });
+  const jobId = enqueue(db, { type: "course.generate", payload, maxAttempts: COURSE_JOB_MAX_ATTEMPTS });
   const problem = setupProblem(deps);
   if (problem) db.update(schema.jobs).set({ status: "waiting_setup", lastError: problem }).where(eq(schema.jobs.id, jobId)).run();
   return { kind: "pending", marker: markerFor(key), joined: false, waitingSetup: problem };
@@ -243,7 +246,7 @@ export function wakeWaitingCourses(db: Db): number {
   return wakeWaitingJobs(db, "course.generate");
 }
 
-/** The periodic check: wakes waiting courses once setup is complete (e.g. a key arrived by env). */
+/** Wakes waiting courses when the settings look complete. The 10-minute re-check is `recheckBlocked`. */
 export function wakeIfReady(deps: SetupDeps): number {
   return setupProblem(deps) ? 0 : wakeWaitingCourses(deps.db);
 }
@@ -434,13 +437,33 @@ function buildDeps(deps: CourseJobDeps, clients: { search: SearchClient; video: 
 export function courseGenerateHandler(deps: CourseJobDeps) {
   return async (job: Job): Promise<void> => {
     const payload = payloadSchema.parse(job.payload);
-    const problem = setupProblem(deps);
-    if (problem) throw new JobWaitingSetupError(problem);
-    const clients = clientsOf(deps);
-    if (!clients.ok) throw new JobWaitingSetupError("the web search isn't connected");
+    // v4.5 P0: read fresh, every run, from the one source (`getAIProvider` / `getResearchProvider`).
+    const ai = getAIProvider(deps.ai);
+    if (!ai.ok) throw new JobWaitingSetupError(ai.reason);
+    const research = clientsOf(deps);
+    if (!research.ok) throw new JobWaitingSetupError(research.reason);
+    const watched = watchSearch(research.search);
+    const clients = { search: watched.client, video: research.video };
+    /* A search service that rejected the key or ran out of quota blocks the job (woken by saving,
+       a passing Test or the 10-minute re-check); a network or temporary error is retried with
+       backoff and fails after COURSE_JOB_MAX_ATTEMPTS. Never "not connected" for either. */
+    const raiseProviderProblem = () => {
+      const problem = watched.problem();
+      if (!problem) return;
+      const line = problemLine("search", problem.state);
+      deps.log?.(`course job ${job.id}: ${line} (${problem.message})`);
+      if (isBlockingProblem(problem.state)) throw new JobWaitingSetupError(line);
+      throw new Error(line);
+    };
 
     if (payload.mode === "fix") {
-      await fixCourse(deps, clients, payload);
+      try {
+        await fixCourse(deps, clients, payload);
+      } catch (error) {
+        raiseProviderProblem();
+        throw error;
+      }
+      raiseProviderProblem();
       return;
     }
 
@@ -465,6 +488,8 @@ export function courseGenerateHandler(deps: CourseJobDeps) {
     };
     const courseId = newId();
     const built = await buildCourse(gap, { targetRole: payload.targetRole ?? "", level: payload.level ?? 2 }, buildDeps(deps, clients, { subjectUserId: payload.userId, courseId }));
+    // Every search failed: say why (and keep nothing written from no sources).
+    raiseProviderProblem();
     if (!built.ok) {
       auditStep(db, { pathId: null, step: "generate", detail: { skill: payload.skill, failed: built.kind, reason: built.reason } });
       throw new Error(built.reason);
@@ -586,7 +611,7 @@ export function requestFix(deps: SetupDeps, courseId: string): { jobId: string; 
   if (existing) return { jobId: existing.id, waitingSetup: existing.status === "waiting_setup" ? existing.lastError : null };
 
   const payload: CourseJobPayload = { mode: "fix", key: `fix:${courseId}`, skill: row.skill, userId: row.userId ?? "system", courseId };
-  const jobId = enqueue(db, { type: "course.generate", payload });
+  const jobId = enqueue(db, { type: "course.generate", payload, maxAttempts: COURSE_JOB_MAX_ATTEMPTS });
   const problem = setupProblem(deps);
   if (problem) db.update(schema.jobs).set({ status: "waiting_setup", lastError: problem }).where(eq(schema.jobs.id, jobId)).run();
   return { jobId, waitingSetup: problem };

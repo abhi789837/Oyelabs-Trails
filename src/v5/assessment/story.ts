@@ -71,6 +71,13 @@ export function plainReason(reason: string): string {
   if (m) return m[1];
   m = /^Next for your (.+?) goal, after (.+)$/.exec(r);
   if (m) return `it comes next for your ${m[1]} goal, after ${m[2]}`;
+  // v4.5 P0: the natural reason forms (shared/pathReasons.ts).
+  m = /^Next step towards your goal: (.+)$/.exec(r);
+  if (m) return `it's the next step towards your goal: ${m[1]}`;
+  m = /^[A-Z][a-z-]* goal: (.+?)\. You're at (not measured yet|\d\/5) and it needs (\d)\/5$/.exec(r);
+  if (m) return `your goal (${m[1]}) needs level ${m[3]}, and ${nowWords(m[2])}`;
+  m = /^Comes before your goal: (.+?)\. It needs (.+?), which you're missing \((not measured yet|\d\/5); it needs (\d)\/5\)$/.exec(r);
+  if (m) return `your goal (${m[1]}) needs ${m[2]} first. It needs level ${m[4]}, and ${nowWords(m[3])}`;
   return lowerFirst(r);
 }
 

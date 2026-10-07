@@ -27,7 +27,7 @@
  *    superadmin empties one soft skill's course list in the catalog (a real admin edit), so that
  *    skill has no course. The plan card lists it under new courses, and the path shows it as being
  *    made. In this e2e the web search is not connected and the mock AI cannot write courses, so it
- *    waits ("We couldn't create the course because the web search isn't connected…"); publishing and
+ *    waits ("We couldn't create the course because the web search isn't set up…"); publishing and
  *    the "We added N new course(s)…" notice are covered by server/src/builder/autoCourse.test.ts.
  * 6. Review: the learner requests a review on a Not-yet topic test answer; the admin gives Full marks
  *    in one click on Review requests; the learner sees it in their notifications.
@@ -724,7 +724,7 @@ async function checkPath(admin: Page, userId: string, c: Checks): Promise<void> 
   c.ok(uncovered.length > 0 && uncovered.every((i) => i.creating), `${UNCOVERED_SKILL} is on the path as a course being made (${uncovered.map((i) => i.creating).join(", ") || "not on the path"})`);
   const otherMissing = items.filter((i) => !i.creating && !i.moduleId && !i.courseTitle);
   c.ok(otherMissing.length === 0, "every other path item has a course");
-  c.ok(/web search isn[’']t connected/i.test(p.setupNeeded ?? ""), `the path says why it waits: "${p.setupNeeded ?? ""}"`);
+  c.ok(/web search isn[’']t (connected|set up)/i.test(p.setupNeeded ?? ""), `the path says why it waits: "${p.setupNeeded ?? ""}"`);
   facts.autoCourses = `${made.length} requested (${[...new Set(made.map((i) => `${i.skillId}: ${i.creating}`))].join(", ")}); 0 published in this e2e (no web search, mock AI)`;
 
   await admin.goto(`${BASE}/admin/people/${userId}?tab=path`, { waitUntil: "networkidle" });

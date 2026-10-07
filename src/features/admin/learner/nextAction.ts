@@ -11,7 +11,7 @@ export const nextActionApi = {
 };
 
 /** Kinds that change on their own (a background job), so the bar re-reads them. */
-export const POLLED_KINDS: readonly NextAction["kind"][] = ["writing", "evaluating", "review-evaluation", "courses-creating", "courses-waiting"];
+export const POLLED_KINDS: readonly NextAction["kind"][] = ["writing", "evaluating", "review-evaluation", "courses-creating", "courses-waiting", "courses-failed"];
 
 /** The bar's accent per tone, in brand tokens: amber to do, green done, muted waiting, red blocked. */
 export const TONE_CLASS: Record<NextActionTone, { bar: string; dot: string; label: string }> = {

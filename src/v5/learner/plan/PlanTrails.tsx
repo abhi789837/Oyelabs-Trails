@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Check, Flag, Mountain } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Check, ChevronDown, Flag, Mountain } from "lucide-react";
 import { m } from "motion/react";
 
 import { computeTrail, estimateLabelHeight, type TrailGeometry, type TrailWaypoint } from "@/features/plan/trailGeometry";
@@ -15,6 +15,7 @@ import type { PlanLane, WeekItemView, WeekView } from "@shared/weeklyPlan";
 import { formatMinutes } from "../me/page";
 import { PART_TONE, currentMilestone, milestoneDone, planOrder, sortMilestones } from "./planLogic";
 import { plainTitle } from "@shared/plainTitle";
+import { laterGroupLabel, laterLabel, needsLine, splitPath } from "@shared/pathView";
 
 /**
  * The v5 trails, drawn from the v4.3 pure geometry (`features/plan/trailGeometry`). Same rule as
@@ -183,7 +184,11 @@ export function LaneLegend({ week }: { week: WeekView }) {
 
 export function OverviewTrail({ path, week }: { path: LearningPathView; week: WeekView | null }) {
   const [ref, width] = useElementWidth<HTMLDivElement>();
-  const milestones = useMemo(() => sortMilestones(path.items), [path.items]);
+  const all = useMemo(() => sortMilestones(path.items), [path.items]);
+  /* v4.5: a long path (48 courses) draws its first weeks; the rest fold under "Later (N more)",
+     grouped by goal. The weekly plan still pulls from the whole path in order. */
+  const split = useMemo(() => splitPath(all, currentMilestone(all, week) + 3), [all, week]);
+  const milestones = split.first;
   const geometry = useMemo(() => {
     if (width <= 0) return null;
     return computeTrail({
@@ -202,6 +207,7 @@ export function OverviewTrail({ path, week }: { path: LearningPathView; week: We
   const current = currentMilestone(milestones, week);
 
   return (
+    <>
     <div ref={ref} className="relative w-full" style={{ height: geometry?.height ?? 240 }}>
       {geometry ? (
         <>
@@ -212,8 +218,50 @@ export function OverviewTrail({ path, week }: { path: LearningPathView; week: We
               <Milestone key={ms.id} item={ms} waypoint={geometry.waypoints[i + 1]} current={i === current} weekNumber={week?.weekNumber ?? null} />
             ))}
           </ol>
-          <Endpoint waypoint={geometry.waypoints[geometry.waypoints.length - 1]} title="Summit" end done={geometry.summitReached} />
+          <Endpoint
+            waypoint={geometry.waypoints[geometry.waypoints.length - 1]}
+            title={split.laterCount > 0 ? laterLabel(split.laterCount) : "Summit"}
+            end={split.laterCount === 0}
+            done={geometry.summitReached && split.laterCount === 0}
+          />
         </>
+      ) : null}
+    </div>
+    {split.laterCount > 0 ? <LaterSteps split={split} /> : null}
+    </>
+  );
+}
+
+/** v4.5: the rest of a long path, collapsed, one group per goal. */
+function LaterSteps({ split }: { split: ReturnType<typeof splitPath> }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-3 rounded-card border border-line-1 bg-surface-1" data-testid="path-later">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className="flex min-h-11 w-full items-center gap-2 px-4 text-left text-small font-semibold text-fg-1 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus"
+      >
+        <ChevronDown className={cn("size-4 transition-transform motion-reduce:transition-none", open && "rotate-180")} aria-hidden="true" />
+        {laterLabel(split.laterCount)}
+      </button>
+      {open ? (
+        <div className="divide-y divide-line-1 border-t border-line-1">
+          {split.later.map((group) => (
+            <section key={group.goal ?? "other"} className="px-4 py-3" aria-label={laterGroupLabel(group.goal)}>
+              <h3 className="text-caption font-semibold text-fg-2">{laterGroupLabel(group.goal)}</h3>
+              <ul className="mt-1 space-y-0.5">
+                {group.items.map((item) => (
+                  <li key={item.id} className="text-small text-fg-1">
+                    {item.courseTitle}
+                    <span className="text-caption text-fg-2">{` · ${item.completedCount}/${item.topicCount} lessons`}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
       ) : null}
     </div>
   );
@@ -240,6 +288,7 @@ function Milestone({ item, waypoint, current, weekNumber }: { item: PathItemView
           {item.completedCount}/{item.topicCount} lessons{done ? ", done" : ""}
           {current && weekNumber !== null ? <span className="font-semibold text-brand-fg">{` · Week ${weekNumber} is here`}</span> : null}
         </span>
+        {needsLine(item) ? <span className="block text-caption text-fg-2">{needsLine(item)}</span> : null}
         {item.reason ? <span className="block text-caption text-fg-2">{item.reason}</span> : null}
       </span>
     </li>

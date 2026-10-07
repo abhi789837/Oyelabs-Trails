@@ -82,7 +82,10 @@ export function completeJob(db: Db, id: string): void {
  */
 export function failJob(db: Db, job: Job, error: string): { willRetry: boolean } {
   const willRetry = job.attempts < job.maxAttempts;
-  const backoff = 5_000 * 2 ** (job.attempts - 1);
+  // v4.5 P0: a new course is minutes of provider calls; a provider blip deserves a longer pause
+  // (30 s, 1, 2, 4 min) than a quick job (5, 10, 20 s).
+  const base = job.type === "course.generate" ? 30_000 : 5_000;
+  const backoff = base * 2 ** (job.attempts - 1);
 
   db.update(schema.jobs)
     .set({
@@ -184,4 +187,20 @@ export function wakeWaitingJobs(db: Db, type: JobType): number {
     .where(and(eq(schema.jobs.type, type), eq(schema.jobs.status, "waiting_setup")))
     .run();
   return result.changes ?? 0;
+}
+
+/** v4.5 P0: how many tries a new course gets before it shows "Failed: … Retry". */
+export const COURSE_JOB_MAX_ATTEMPTS = 5;
+
+/**
+ * v4.5 P0: the admin's Retry on a failed job: back in the queue now, with a fresh set of tries.
+ * Returns false when the job isn't failed (already running again, or done).
+ */
+export function retryJob(db: Db, id: string): boolean {
+  const result = db
+    .update(schema.jobs)
+    .set({ status: "queued", attempts: 0, runAfter: now(), lastError: null, lockedAt: null, finishedAt: null })
+    .where(and(eq(schema.jobs.id, id), eq(schema.jobs.status, "failed")))
+    .run();
+  return (result.changes ?? 0) > 0;
 }

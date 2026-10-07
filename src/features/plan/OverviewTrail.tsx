@@ -3,6 +3,7 @@ import { Check, Flag, Signpost } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { PART_LABELS, type LearningPathView, type PartType, type PathItemView } from "@shared/builder";
+import { laterGroupLabel, laterLabel, needsLine, splitPath } from "@shared/pathView";
 import type { WeekHistoryEntry, WeekView } from "@shared/weeklyPlan";
 
 import { useElementWidth } from "@/hooks/useElementWidth";
@@ -57,7 +58,10 @@ export function currentMilestoneIndex(milestones: readonly PathItemView[], week:
 
 export function OverviewTrail({ path, week, history }: { path: LearningPathView; week: WeekView; history: WeekHistoryEntry[] }) {
   const [ref, width] = useElementWidth<HTMLDivElement>();
-  const milestones = useMemo(() => sortPathItems(path.items), [path.items]);
+  const all = useMemo(() => sortPathItems(path.items), [path.items]);
+  /* v4.5: a long path draws its first weeks; the rest fold under "Later (N more)", by goal. */
+  const split = useMemo(() => splitPath(all, currentMilestoneIndex(all, week) + 3), [all, week]);
+  const milestones = split.first;
 
   const geometry = useMemo(() => {
     if (width <= 0) return null;
@@ -81,6 +85,7 @@ export function OverviewTrail({ path, week, history }: { path: LearningPathView;
   const past = history.filter((entry) => entry.id !== week.id && entry.weekNumber < week.weekNumber).sort((a, b) => a.weekNumber - b.weekNumber);
 
   return (
+    <>
     <div ref={ref} className="relative w-full" style={{ height: geometry ? geometry.height : 240 }}>
       {geometry && (
         <>
@@ -156,6 +161,26 @@ export function OverviewTrail({ path, week, history }: { path: LearningPathView;
         </>
       )}
     </div>
+    {split.laterCount > 0 && (
+      <details className="mt-3 rounded-md border" data-testid="path-later">
+        <summary className="cursor-pointer px-4 py-2.5 text-sm font-medium focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark">
+          {laterLabel(split.laterCount)}
+        </summary>
+        <div className="divide-y border-t">
+          {split.later.map((group) => (
+            <section key={group.goal ?? "other"} className="px-4 py-2.5" aria-label={laterGroupLabel(group.goal)}>
+              <h3 className="font-mono text-[11px] text-muted-foreground">{laterGroupLabel(group.goal)}</h3>
+              <ul className="mt-1 space-y-0.5 text-sm">
+                {group.items.map((item) => (
+                  <li key={item.id}>{item.courseTitle}</li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </details>
+    )}
+    </>
   );
 }
 
@@ -237,6 +262,7 @@ function Milestone({
           {item.goalId ? (item.goalAchieved ? "Goal achieved" : "Pass it to achieve the goal") : `${item.completedCount}/${item.topicCount} lessons`}
           {current && <span className="sr-only">, week {weekNumber} is working on this</span>}
         </p>
+        {needsLine(item) && <p className="text-[11px] leading-snug text-muted-foreground">{needsLine(item)}</p>}
         {item.reason && <p className="text-[11px] leading-snug text-muted-foreground">{item.reason}</p>}
       </div>
     </li>

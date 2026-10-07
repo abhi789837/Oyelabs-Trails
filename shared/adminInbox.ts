@@ -41,6 +41,8 @@ export type InboxAction =
   | { kind: "full-marks"; label: string; reviewId: string }
   | { kind: "fix-course"; label: string; courseId: string }
   | { kind: "publish-course"; label: string; courseId: string }
+  /** v4.5 P0: a new course that failed 5 times goes back in the queue. */
+  | { kind: "retry-course"; label: string; jobId: string }
   | { kind: "resolve-problem"; label: string; problemId: string }
   | { kind: "nudge"; label: string; userId: string }
   | { kind: "dismiss"; label: string; key: string }

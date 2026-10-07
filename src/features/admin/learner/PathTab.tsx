@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import { isPathBusy, type LearningPathView, type SkillGapView } from "@shared/builder";
 import type { IntentCoverageLine } from "@shared/intents";
+import type { PathCoverage } from "@shared/pathView";
 import type { LearnerSetup } from "@shared/setup";
 
 import { PlainError } from "@/components/form/PlainError";
@@ -45,6 +46,7 @@ export function PathTab({
   const [gaps, setGaps] = useState<SkillGapView[]>([]);
   const [path, setPath] = useState<LearningPathView | null>(null);
   const [intents, setIntents] = useState<IntentCoverageLine[]>([]);
+  const [coverage, setCoverage] = useState<PathCoverage | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [loaded, setLoaded] = useState(false);
   const [building, setBuilding] = useState(false);
@@ -58,6 +60,7 @@ export function PathTab({
         setGaps(g.gaps);
         setPath(g.path);
         setIntents(g.intents ?? []);
+        setCoverage(g.coverage ?? null);
         setError(null);
       } catch (err) {
         if (err instanceof DOMException && err.name === "AbortError") return;
@@ -96,6 +99,27 @@ export function PathTab({
     }
   }, [userId, load]);
 
+  /* v4.5: courses still being made (or blocked) change on their own, so keep reading while any are. */
+  const creating = path?.items.some((item) => item.creating === "working" || item.creating === "waiting_setup") ?? false;
+  useEffect(() => {
+    if (!creating || busy) return;
+    const timer = setInterval(() => void load(), 15_000);
+    return () => clearInterval(timer);
+  }, [creating, busy, load]);
+
+  const retry = useCallback(
+    async (jobId: string) => {
+      try {
+        await builderApi.retryCourseJob(jobId);
+        notify.success("Trying again now.");
+        await load();
+      } catch (err) {
+        setError(err);
+      }
+    },
+    [load],
+  );
+
   const grouped = useMemo(
     () => groupPath(path, setup?.priorities ?? [], gaps, setup?.skip.map((s) => s.skillName) ?? []),
     [path, setup, gaps],
@@ -132,6 +156,8 @@ export function PathTab({
             onRebuild={() => void build()}
             onPromote={onPromote}
             onOpenSetup={onOpenSetup}
+            coverage={coverage}
+            onRetry={(jobId) => void retry(jobId)}
           />
           <AskedFor lines={intents} />
           <PathInOrder path={path} />
@@ -187,12 +213,19 @@ function StatusLine({ path, busy }: { path: LearningPathView | null; busy: boole
         <span className="font-medium">Path built {shortDate(path.completedAt ?? path.createdAt)}</span>
         <span className="text-muted-foreground"> · {parts.join(" · ")}</span>
       </p>
+      {path.addedLine && (
+        <p className="rounded-md border border-summit/40 bg-summit/[0.06] px-4 py-2.5 text-sm" role="status" data-testid="path-added-line">
+          {path.addedLine}
+        </p>
+      )}
       {path.notice && (
         <p className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-2.5 text-sm">
           <span className="min-w-0 flex-1">{path.notice}</span>
-          <Link to="/admin/ai" className="shrink-0 font-medium underline decoration-trailmark decoration-2 underline-offset-4">
-            Set up
-          </Link>
+          {path.setupNeeded && (
+            <Link to="/admin/ai" className="shrink-0 font-medium underline decoration-trailmark decoration-2 underline-offset-4">
+              Check the connection
+            </Link>
+          )}
         </p>
       )}
     </div>

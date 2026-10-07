@@ -32,8 +32,8 @@ export const COURSE_STATE_LABELS: Record<CourseState, string> = {
   generated: "generated",
   generating: "generating",
   needs_review: "needs review",
-  waiting_setup: "waiting for setup",
-  not_made: "couldn't be made",
+  waiting_setup: "blocked",
+  not_made: "failed",
 };
 
 /** v4: a curriculum module attached in place of a course. It has no course id, and that is fine. */

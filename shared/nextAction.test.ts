@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { nextAction, staleReason, type NextActionFacts } from "./nextAction";
+import { nextAction, staleReason, testStatusLabel, type NextActionFacts } from "./nextAction";
 
 const base: NextActionFacts = {
   role: "learner",
@@ -116,14 +116,37 @@ describe("v4.4 P6: plain status lines and the new kinds", () => {
     expect(at({ openReviews: 2, name: "Rahul" })).toMatchObject({ kind: "reviews", title: "Rahul asked us to check 2 answers again", button: { anchor: "review-requests" } });
   });
 
-  test("new courses being created, or waiting for setup with a Connect it button", () => {
-    expect(at({ courses: { creating: 2, waitingSetup: 0, problem: null } })).toMatchObject({ kind: "courses-creating", title: "2 new courses being created (about 6 min)", tone: "waiting", button: null });
-    expect(at({ courses: { creating: 1, waitingSetup: 1, problem: "the web search isn't connected" } })).toMatchObject({
+  test("new courses being created, or waiting for setup with a Set it up button (v4.5: says Test done)", () => {
+    expect(at({ courses: { creating: 2, waitingSetup: 0, problem: null } })).toMatchObject({ kind: "courses-creating", title: "Test done · 2 courses being created (about 6 min)", tone: "waiting", button: null });
+    expect(at({ courses: { creating: 1, waitingSetup: 1, problem: "the web search isn't set up" } })).toMatchObject({
       kind: "courses-waiting",
       tone: "blocked",
-      title: "1 new course waiting: the web search isn't connected. We'll finish them on our own after.",
-      button: { action: "link", label: "Connect it", to: "/admin/ai" },
+      title: "Test done · 1 new course blocked: the web search isn't set up. We'll finish it on our own after it's set up.",
+      button: { action: "link", label: "Set it up", to: "/admin/ai" },
     });
     expect(at({ courses: { creating: 0, waitingSetup: 0, problem: null } }).kind).toBe("on-track");
+  });
+
+  test("v4.5: each connection problem has its own line, and a failed course points at Retry", () => {
+    const waiting = (problem: string) => at({ courses: { creating: 0, waitingSetup: 2, problem } });
+    expect(waiting("the web search key was rejected").title).toBe("Test done · 2 new courses blocked: the web search key was rejected. We'll finish them on our own after the key is fixed.");
+    expect(waiting("the web search key was rejected").button).toMatchObject({ label: "Check the connection" });
+    expect(waiting("the web search has used up its quota").title).toBe("Test done · 2 new courses blocked: the web search has used up its quota. We'll finish them on our own when the quota resets or is raised.");
+    // An old stored line still reads as "not set up".
+    expect(waiting("the web search isn't connected").title).toContain("after it's set up");
+    expect(at({ courses: { creating: 0, waitingSetup: 0, problem: null, failed: 1, failedProblem: "our server can't reach the web search" } })).toMatchObject({
+      kind: "courses-failed",
+      tone: "blocked",
+      title: "Test done · 1 new course couldn't be made. Failed: our server can't reach the web search.",
+      button: { action: "open", tab: "path" },
+    });
+  });
+
+  test("v4.5: the header never says Completed while a course is blocked or being made", () => {
+    expect(testStatusLabel("completed", { creating: 1, waitingSetup: 0, problem: null })).toBe("Test done · 1 course being created");
+    expect(testStatusLabel("completed", { creating: 0, waitingSetup: 1, problem: "x" })).toBe("Test done · 1 course blocked");
+    expect(testStatusLabel("completed", { creating: 0, waitingSetup: 0, problem: null, failed: 2 })).toBe("Test done · 2 courses failed");
+    expect(testStatusLabel("completed", { creating: 0, waitingSetup: 0, problem: null })).toBe("Test done");
+    expect(testStatusLabel("in_progress", null)).toBeNull();
   });
 });

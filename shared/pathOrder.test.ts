@@ -71,7 +71,7 @@ describe("worked example: frontend developer with Git, Backend and AI goals", ()
     expect(step("ai-dev-fundamentals")).toMatchObject({ kind: "must-have", priority: "High" });
     expect(step("ai-dev-fundamentals").reason).toBe("Moved up: the evaluation found AI-driven skills weak (1/5), and they speed up your Backend work.");
     expect(step("async-js")).toMatchObject({ kind: "missing-link", priority: "Critical", neededLevel: 3 });
-    expect(step("async-js").reason).toBe("Before Backend because Backend needs async JavaScript, which you're missing (1/5; it needs 3/5).");
+    expect(step("async-js").reason).toBe("Comes before your goal: backend. It needs async JavaScript, which you're missing (1/5; it needs 3/5).");
     expect(step("node-express")).toMatchObject({ kind: "target", priority: "High", blockedBy: ["async-js"] });
     expect(step("ai-dev-advanced")).toMatchObject({ kind: "target", priority: "Medium", blockedBy: ["ai-dev-fundamentals"] });
     expect(missingLinks).toEqual([{ skillId: "async-js", mastery: 1, neededLevel: 3, blocks: ["node-express", "databases", "auth", "deployment"] }]);
@@ -170,7 +170,7 @@ describe("rules", () => {
       ["code-review", "continuation"],
       ["ci", "continuation"],
     ]);
-    expect(steps[0].reason).toBe("Next after Git: you've met your Git goal, so this continues it.");
+    expect(steps[0].reason).toBe("Next after Git. You've met your goal (Git), so this continues it.");
   });
 
   it("does not continue into a skill whose other prerequisites are missing", () => {

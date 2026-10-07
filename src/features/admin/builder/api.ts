@@ -1,5 +1,7 @@
 import type { LearnerPriorities, LearningPathView, SkillGapView } from "@shared/builder";
+import type { ResearchCheck } from "@shared/connection";
 import type { IntentCoverageLine } from "@shared/intents";
+import type { PathCoverage } from "@shared/pathView";
 
 import type { LearnerTarget, LearnerTrack, TargetsRequest } from "@shared/targets";
 
@@ -55,6 +57,11 @@ export interface ResearchSettings {
   budgetTokens: number;
   budgetSearches: number;
   configured: boolean;
+  /** v4.5: a YouTube key is saved (optional; without it lessons have no video). */
+  videosConfigured?: boolean;
+  effectiveProvider?: "tavily" | "brave" | "serper" | null;
+  /** v4.5: the last Test or 10-minute re-check. */
+  lastCheck?: ResearchCheck | null;
   updatedAt: number | null;
 }
 
@@ -89,7 +96,7 @@ export const builderApi = {
     api.put<{ focus: LearnerFocusView; weekNeedsRegeneration: boolean }>(`/api/admin/users/${userId}/targets`, body),
 
   gaps: (userId: string, signal?: AbortSignal) =>
-    api.get<{ gaps: SkillGapView[]; path: LearningPathView | null; intents?: IntentCoverageLine[] }>(`/api/admin/users/${userId}/gaps`, signal),
+    api.get<{ gaps: SkillGapView[]; path: LearningPathView | null; intents?: IntentCoverageLine[]; coverage?: PathCoverage }>(`/api/admin/users/${userId}/gaps`, signal),
 
   /** Runs the builder now rather than waiting for the next evaluation. */
   buildPath: (userId: string) => api.post<{ jobId: string }>(`/api/admin/users/${userId}/path`, {}),
@@ -115,4 +122,8 @@ export const builderApi = {
     budgetSearches?: number;
   }) => api.put<{ settings: ResearchSettings }>("/api/admin/research", body),
   checkLinks: () => api.post<{ jobId: string }>("/api/admin/research/check-links"),
+  /** v4.5: a real search from the server with the saved key. */
+  testResearch: () => api.post<{ check: ResearchCheck & { woken: number }; settings: ResearchSettings }>("/api/admin/research/test"),
+  /** v4.5: Retry on a new course that failed 5 times. */
+  retryCourseJob: (jobId: string) => api.post<{ jobId: string }>(`/api/admin/course-jobs/${jobId}/retry`),
 };

@@ -178,6 +178,8 @@ describe("results story", () => {
     );
     expect(plainReason("Moved up: Backend needs SQL first.")).toBe("Backend needs SQL first");
     expect(plainReasonSentence("Next for your Stand-ups goal, after Spoken English.")).toBe("It comes next for your Stand-ups goal, after Spoken English.");
+    // v4.5 P0: the natural reason forms.
+    expect(plainReasonSentence("Next step towards your goal: build a validated form in React.")).toBe("It's the next step towards your goal: build a validated form in React.");
     const story = buildStory({ strengths: [], focusFirst: [], mastery: [], missingLinks: [], firstSteps: [step("JavaScript Core", "Critical goal JavaScript fundamentals: you're at 0/5 and it needs 3/5.")] });
     expect(story.sentences[1]).toBe("We'll start with JavaScript Core because your JavaScript fundamentals goal needs level 3, and you're at level 0 now.");
   });

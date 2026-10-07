@@ -122,7 +122,7 @@ export function sendDueReminders(db: Db, content: ContentStore, appUrl: string, 
       const next = nextLesson(db, content, learner.id);
       const text = reminderText(firstNameOf(learner.displayName), next?.title ?? null);
       const link = next?.href ?? "/learn";
-      notify(db, { recipientId: learner.id, kind: REMINDER_KIND, title: text.title, body: text.body, link });
+      notify(db, { recipientId: learner.id, kind: REMINDER_KIND, title: text.title, body: text.body, link, at: nowMs });
       if (emailOn) {
         const mail = reminderEmail(text, `${appUrl.replace(/\/+$/, "")}${link}`, appUrl);
         db.insert(schema.emailOutbox)

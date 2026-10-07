@@ -8,6 +8,7 @@ import type { AssessmentSummary } from "@shared/assessment";
 import type { TopicProgressValue } from "@shared/content";
 import type { LearnerProfile } from "@shared/profile";
 import type { PlanResponse } from "@shared/plans";
+import { testStatusLabel, type NextActionFacts } from "@shared/nextAction";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
@@ -88,6 +89,7 @@ export default function AdminLearnerPage() {
   const [actionVersion, setActionVersion] = useState(0);
   const [pathVersion, setPathVersion] = useState(0);
   const [weekVersion, setWeekVersion] = useState(0);
+  const [barFacts, setBarFacts] = useState<NextActionFacts | null>(null);
   const bumpAction = useCallback(() => setActionVersion((v) => v + 1), []);
   const [visited, setVisited] = useState<Set<TabId>>(() => new Set<TabId>([active]));
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -239,6 +241,8 @@ export default function AdminLearnerPage() {
     );
   }
 
+  const headerStatus = barFacts && barFacts.assessment?.status === detail.user.assessmentStatus ? testStatusLabel(barFacts.assessment?.status ?? null, barFacts.courses) : null;
+
   return (
     <div className="px-4 py-8 sm:px-6">
       <Button asChild variant="ghost" size="sm" className="-ml-2">
@@ -269,7 +273,12 @@ export default function AdminLearnerPage() {
               {detail.user.hardWarnings} hard warning{detail.user.hardWarnings === 1 ? "" : "s"}
             </Badge>
           )}
-          {detail.user.assessmentStatus ? (
+          {headerStatus ? (
+            // v4.5: never "Completed" while a new course is blocked, being made or failed.
+            <Badge variant={/blocked|failed/.test(headerStatus) ? "danger" : /being created/.test(headerStatus) ? "progress" : "success"} data-testid="learner-test-status">
+              {headerStatus}
+            </Badge>
+          ) : detail.user.assessmentStatus ? (
             <StatusBadge kind="assessment" status={detail.user.assessmentStatus} />
           ) : (
             <Badge variant="outline">No assessment yet</Badge>
@@ -277,7 +286,7 @@ export default function AdminLearnerPage() {
         </div>
       </header>
 
-      <NextActionBar user={detail.user} refreshKey={`${actionVersion}:${active}`} onOpenTab={openFromBar} onChanged={handleBarChanged} />
+      <NextActionBar user={detail.user} refreshKey={`${actionVersion}:${active}`} onOpenTab={openFromBar} onChanged={handleBarChanged} onFacts={setBarFacts} />
 
       {error && (
         <div className="mt-6">

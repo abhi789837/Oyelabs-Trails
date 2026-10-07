@@ -1,5 +1,7 @@
 import { useEffect, useId, useState, type FormEvent } from "react";
-import { AlertTriangle, LinkIcon, Search } from "lucide-react";
+import { AlertTriangle, CheckCircle2, LinkIcon, PlugZap, Search } from "lucide-react";
+
+import type { ResearchCheck } from "@shared/connection";
 
 import { Field, TextField } from "@/components/form/Field";
 import { PlainError } from "@/components/form/PlainError";
@@ -40,6 +42,8 @@ export function ResearchSettings() {
   const [error, setError] = useState<unknown>(null);
   const [saving, setSaving] = useState(false);
   const [checking, setChecking] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const [check, setCheck] = useState<ResearchCheck | null>(null);
 
   const [provider, setProvider] = useState<Settings["provider"]>(null);
   const [searchKey, setSearchKey] = useState("");
@@ -51,7 +55,8 @@ export function ResearchSettings() {
       .research(controller.signal)
       .then((result) => {
         setSettings(result.settings);
-        setProvider(result.settings.provider);
+        setProvider(result.settings.provider ?? result.settings.effectiveProvider ?? null);
+        setCheck(result.settings.lastCheck ?? null);
       })
       .catch((err) => {
         if (err instanceof DOMException && err.name === "AbortError") return;
@@ -74,13 +79,33 @@ export function ResearchSettings() {
         ...(youtubeKey.trim() ? { youtubeKey: youtubeKey.trim() } : {}),
       });
       setSettings(result.settings);
+      const keyChanged = Boolean(searchKey.trim() || youtubeKey.trim());
       setSearchKey("");
       setYoutubeKey("");
-      notify.success(result.settings.configured ? "Research is set up. The builder can write courses." : "Saved.");
+      notify.success(result.settings.configured ? "Saved. Checking it with a real search now." : "Saved.");
+      // v4.5: a saved key is tested at once, so the admin sees whether it really works.
+      if (result.settings.configured && (keyChanged || !result.settings.lastCheck)) await test();
     } catch (err) {
       setError(err);
     } finally {
       setSaving(false);
+    }
+  };
+
+  /** v4.5: a real search from our server with the saved key; a pass starts every waiting course. */
+  const test = async () => {
+    setTesting(true);
+    try {
+      const result = await builderApi.testResearch();
+      setCheck(result.check);
+      setSettings(result.settings);
+      if (result.check.state === "ready" && result.check.woken > 0) {
+        notify.success(`${result.check.woken} waiting course${result.check.woken === 1 ? "" : "s"} started.`);
+      }
+    } catch (err) {
+      setError(err);
+    } finally {
+      setTesting(false);
     }
   };
 
@@ -124,10 +149,10 @@ export function ResearchSettings() {
         <div className="mt-4 flex gap-3 rounded-md border border-trailmark/50 bg-trailmark/[0.07] px-4 py-3 text-sm">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
           <p className="max-w-prose">
-            <span className="font-medium">Not set up, so no courses will be generated.</span>{" "}
+            <span className="font-medium">Not set up, so new courses wait.</span>{" "}
             <span className="text-muted-foreground">
-              Gap analysis still runs and existing courses are still unlocked — only writing a new
-              one needs these keys. Nothing is written from memory when they are missing.
+              Pick a search service and save its key. Existing courses still work, and waiting
+              courses start on their own once it works. Nothing is written from memory.
             </span>
           </p>
         </div>
@@ -205,7 +230,7 @@ export function ResearchSettings() {
           hint={
             settings.youtubeHint
               ? `One is stored (${settings.youtubeHint}). Leave this empty to keep it.`
-              : "From the Google Cloud console, with the YouTube Data API enabled. Used to check a video exists, is embeddable and is the right length."
+              : "Optional. From the Google Cloud console, with the YouTube Data API enabled. Without it, new lessons are written without a video."
           }
         >
           {({ id }) => (
@@ -225,8 +250,12 @@ export function ResearchSettings() {
           <Button type="submit" loading={saving}>
             Save research settings
           </Button>
-          {settings.configured && <Badge variant="success">Ready</Badge>}
+          <Button type="button" variant="outline" loading={testing} disabled={!settings.configured} onClick={() => void test()}>
+            <PlugZap aria-hidden="true" />
+            Test
+          </Button>
         </div>
+        <TestResult check={check} testing={testing} />
       </form>
 
       <BudgetFields settings={settings} onSaved={setSettings} />
@@ -350,6 +379,52 @@ function BudgetFields({ settings, onSaved }: { settings: Settings; onSaved: (set
       <Button variant="outline" size="sm" className="mt-3" loading={saving} onClick={() => void save()}>
         Save budget
       </Button>
+    </div>
+  );
+}
+
+const CHECK_TITLE: Record<ResearchCheck["state"], string> = {
+  ready: "Connected",
+  not_set_up: "Not set up",
+  key_rejected: "Key rejected",
+  quota: "Quota used up",
+  unreachable: "Can't reach it from our server",
+  temporary: "Temporary error, retrying",
+};
+
+/** v4.5: the last Test, in one plain line, with when it ran. */
+function TestResult({ check, testing }: { check: ResearchCheck | null; testing: boolean }) {
+  if (testing) {
+    return (
+      <p className="text-sm text-muted-foreground" role="status">
+        Running a test search from our server…
+      </p>
+    );
+  }
+  if (!check) return null;
+  const ok = check.state === "ready";
+  return (
+    <div
+      role="status"
+      data-testid="research-test-result"
+      data-state={check.state}
+      className={cn(
+        "flex gap-3 rounded-md border px-4 py-3 text-sm",
+        ok ? "border-summit/40 bg-summit/[0.06]" : "border-trailmark/50 bg-trailmark/[0.07]",
+      )}
+    >
+      {ok ? (
+        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-summit-strong" aria-hidden="true" />
+      ) : (
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+      )}
+      <p className="max-w-prose">
+        {!ok && <span className="font-medium">{CHECK_TITLE[check.state]}. </span>}
+        {check.message}
+        <span className="ml-1 text-xs text-muted-foreground">
+          (checked {new Date(check.checkedAt).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })})
+        </span>
+      </p>
     </div>
   );
 }

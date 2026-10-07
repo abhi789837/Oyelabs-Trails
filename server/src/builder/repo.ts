@@ -4,6 +4,7 @@ import {
   EMPTY_PRIORITIES,
   GOAL_ITEM_PREFIX,
   NEW_COURSE_ITEM_PREFIX,
+  addedCoursesLine,
   setupNeededMessage,
   type CreatingState,
   type LearnerPriorities,
@@ -14,6 +15,8 @@ import {
   type ScoredGap,
   type SkillGapView,
 } from "../../../shared/builder";
+import { problemLine } from "../../../shared/connection";
+import { naturalReason } from "../../../shared/pathReasons";
 import { schema, type Db } from "../db";
 import { newId, now } from "../lib/ids";
 import type { ContentStore } from "../content/store";
@@ -264,11 +267,13 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
   );
 
   const waitingProblems: string[] = [];
-  const views: PathItemView[] = items.map((item) => {
+  let failedCourses = 0;
+  const rawViews: PathItemView[] = items.map((item) => {
     // v4.4: a course still being made. Never openable, and never shows a held course's title.
     if (item.moduleId?.startsWith(NEW_COURSE_ITEM_PREFIX)) {
       const info = creatingInfo(db, item.moduleId.slice(NEW_COURSE_ITEM_PREFIX.length));
-      if (info.state === "waiting_setup") waitingProblems.push(info.problem ?? "the web search isn't connected");
+      if (info.state === "waiting_setup") waitingProblems.push(info.problem ?? problemLine("search", "not_set_up"));
+      if (info.state === "failed") failedCourses += 1;
       return {
         id: item.id,
         courseId: null,
@@ -287,6 +292,8 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
         skillId: item.skillId,
         href: null,
         creating: info.state,
+        problem: info.state === "waiting_setup" || info.state === "failed" ? info.problem : null,
+        retryJobId: info.state === "failed" ? info.jobId : null,
       };
     }
     // v4.3: a goal's capstone. Done once the goal is achieved (passing the capstone does that).
@@ -381,7 +388,11 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
     };
   });
 
+  // v4.5 P0: reasons read naturally (older stored ones rewritten), and each course appears once.
+  const views = onePerCourse(rawViews.map((view) => ({ ...view, reason: naturalReason(view.reason) })));
   const setupNeeded = waitingProblems.length > 0 ? setupNeededMessage(waitingProblems[0], waitingProblems.length) : null;
+  const added = addedCourses(db, items);
+  const learner = added.length > 0 ? db.select({ displayName: schema.users.displayName }).from(schema.users).where(eq(schema.users.id, userId)).get() : undefined;
   return {
     id: row.id,
     status: row.status,
@@ -389,10 +400,70 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
     failureReason: row.failureReason,
     notice: setupNeeded ?? row.notice,
     setupNeeded,
+    added,
+    addedLine: added.length > 0 ? addedCoursesLine(learner?.displayName ?? "them", added.map((course) => course.title)) : null,
+    failedCourses,
     createdAt: row.createdAt,
     completedAt: row.completedAt,
     items: views,
   };
+}
+
+/** What makes two path items the same course: the course, the module, the course being made, the goal. */
+function sameCourseKey(item: PathItemView): string {
+  if (item.goalId) return `goal:${item.goalId}`;
+  if (item.courseId) return `course:${item.courseId}`;
+  if (item.moduleId) return `module:${item.moduleId}`;
+  if (item.creating) return `new:${(item.skillId ?? item.courseTitle).toLowerCase()}`;
+  return `title:${item.courseTitle.trim().toLowerCase()}`;
+}
+
+/**
+ * v4.5 P0: a course appears once on the path. A later mention of a course already scheduled (a
+ * "learn first" for a second goal) is dropped, and the item it was for says "Needs: <course>
+ * (earlier in your path)" instead. Exported for the tests.
+ */
+export function onePerCourse(views: readonly PathItemView[]): PathItemView[] {
+  const first = new Map<string, PathItemView>();
+  const kept: PathItemView[] = [];
+  const pending: { title: string; itemId: string; targetSkill: string | null; index: number }[] = [];
+  for (const view of views) {
+    const key = sameCourseKey(view);
+    const earlier = first.get(key);
+    if (earlier) {
+      // A repeat inside the same goal is simply dropped; for another goal it becomes a "Needs".
+      if (earlier.targetSkill !== view.targetSkill) pending.push({ title: earlier.courseTitle, itemId: earlier.id, targetSkill: view.targetSkill, index: kept.length });
+      continue;
+    }
+    const copy = { ...view };
+    first.set(key, copy);
+    kept.push(copy);
+  }
+  for (const need of pending) {
+    // The item it was a "learn first" for: the next one serving the same goal, else the one before.
+    const sameGoal = (item: PathItemView) => item.targetSkill === need.targetSkill && item.id !== need.itemId;
+    const target = kept.slice(need.index).find(sameGoal) ?? [...kept.slice(0, need.index)].reverse().find(sameGoal);
+    if (!target) continue;
+    const needs = target.needs ?? [];
+    if (!needs.some((n) => n.itemId === need.itemId)) target.needs = [...needs, { title: need.title, itemId: need.itemId }];
+  }
+  return kept;
+}
+
+/** New courses made for this path and published, in path order. */
+function addedCourses(db: Db, items: readonly { courseId: string | null; source: string }[]): { courseId: string; title: string }[] {
+  const ids = [...new Set(items.filter((item) => item.source === "generated" && item.courseId).map((item) => item.courseId!))];
+  if (ids.length === 0) return [];
+  const rows = db
+    .select({ id: schema.courses.id, title: schema.courses.title })
+    .from(schema.courses)
+    .innerJoin(schema.generatedCourses, eq(schema.generatedCourses.courseId, schema.courses.id))
+    .where(and(inArray(schema.courses.id, ids), eq(schema.courses.published, true)))
+    .all();
+  return ids
+    .map((id) => rows.find((row) => row.id === id))
+    .filter((row): row is { id: string; title: string } => Boolean(row))
+    .map((row) => ({ courseId: row.id, title: row.title }));
 }
 
 /** The `course.generate` jobs still to finish (queued, running or waiting for setup). */
@@ -433,14 +504,14 @@ export function autoKeyOf(reviewDetail: unknown): string | null {
  * Where a course being made for this key is. A job still to finish wins; then a course held for a
  * look; then a job that gave up.
  */
-export function creatingInfo(db: Db, key: string): { state: CreatingState; skill: string | null; problem: string | null } {
+export function creatingInfo(db: Db, key: string): { state: CreatingState; skill: string | null; problem: string | null; jobId: string | null } {
   const jobs = courseJobs(db, key);
   const active = jobs.find((job) => (ACTIVE_JOB_STATUSES as readonly string[]).includes(job.status));
   const skill = (jobs[0]?.payload as CourseJobPayload | undefined)?.skill ?? null;
   if (active) {
     return active.status === "waiting_setup"
-      ? { state: "waiting_setup", skill, problem: active.lastError }
-      : { state: "working", skill, problem: null };
+      ? { state: "waiting_setup", skill, problem: active.lastError, jobId: active.id }
+      : { state: "working", skill, problem: null, jobId: active.id };
   }
   const held = db
     .select({ reviewDetail: schema.generatedCourses.reviewDetail, skill: schema.generatedCourses.skill })
@@ -448,8 +519,11 @@ export function creatingInfo(db: Db, key: string): { state: CreatingState; skill
     .where(inArray(schema.generatedCourses.status, ["needs_review", "pending_review"]))
     .all()
     .find((row) => autoKeyOf(row.reviewDetail) === key);
-  if (held) return { state: "held", skill: skill ?? held.skill, problem: null };
-  return { state: jobs.length > 0 ? "failed" : "working", skill, problem: null };
+  if (held) return { state: "held", skill: skill ?? held.skill, problem: null, jobId: null };
+  // v4.5: the newest job gave up (5 tries): its plain reason, and its id for the admin's Retry.
+  const failed = jobs.find((job) => job.status === "failed");
+  if (failed) return { state: "failed", skill, problem: failed.lastError, jobId: failed.id };
+  return { state: jobs.length > 0 ? "failed" : "working", skill, problem: null, jobId: null };
 }
 
 // ---------------------------------------------------------------------------

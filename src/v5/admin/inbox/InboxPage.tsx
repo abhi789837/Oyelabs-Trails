@@ -46,6 +46,8 @@ function doneMessage(item: InboxItem, action: InboxAction): string {
       return "Fixing it now. It comes back here if it still needs a look.";
     case "publish-course":
       return "Course published.";
+    case "retry-course":
+      return "Trying again now. It shows here again if it still fails.";
     case "resolve-problem":
       return "Marked fixed.";
     case "nudge":
@@ -69,6 +71,8 @@ async function send(action: InboxAction): Promise<unknown> {
       return v5AdminApi.fixCourse(action.courseId);
     case "publish-course":
       return v5AdminApi.publishCourse(action.courseId);
+    case "retry-course":
+      return v5AdminApi.retryCourseJob(action.jobId);
     case "resolve-problem":
       return v5AdminApi.resolveProblem(action.problemId);
     case "nudge":

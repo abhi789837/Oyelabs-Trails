@@ -4,7 +4,8 @@ import type { Env } from "../env";
 import { hint, open, seal } from "../crypto/secretBox";
 import { schema, type Db } from "../db";
 import { now } from "../lib/ids";
-import { makeSearchClient, makeVideoClient, type SearchClient, type VideoClient } from "./providers";
+import { problemLine, RESEARCH_CHECK_META_KEY, type ResearchCheck } from "../../../shared/connection";
+import { makeSearchClient, makeVideoClient, NO_VIDEO_CLIENT, type SearchClient, type VideoClient } from "./providers";
 import type { ResearchProviderId } from "./research";
 
 /**
@@ -28,17 +29,44 @@ export interface ResearchSettingsView {
   youtubeHint: string | null;
   budgetTokens: number;
   budgetSearches: number;
-  /** True when both a provider with a key and a YouTube key are present. */
+  /**
+   * True when a search service is picked (or clear from the key) and its key is saved. v4.5: the
+   * YouTube key is no longer required; `videosConfigured` says whether lessons get a video.
+   */
   configured: boolean;
+  videosConfigured: boolean;
+  /** The provider the saved key is used with (the saved one, or Tavily for a "tvly-" key). */
+  effectiveProvider: ResearchProviderId | null;
+  /** The last Test or re-check, if any. */
+  lastCheck: ResearchCheck | null;
   updatedAt: number | null;
+}
+
+export function readResearchCheck(db: Db): ResearchCheck | null {
+  const raw = db.select().from(schema.appMeta).where(eq(schema.appMeta.key, RESEARCH_CHECK_META_KEY)).get()?.value;
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as ResearchCheck;
+  } catch {
+    return null;
+  }
+}
+
+export function writeResearchCheck(db: Db, check: ResearchCheck): void {
+  const value = JSON.stringify(check);
+  db.insert(schema.appMeta)
+    .values({ key: RESEARCH_CHECK_META_KEY, value, updatedAt: check.checkedAt })
+    .onConflictDoUpdate({ target: schema.appMeta.key, set: { value, updatedAt: check.checkedAt } })
+    .run();
 }
 
 function row(db: Db) {
   return db.select().from(schema.researchSettings).where(eq(schema.researchSettings.id, SETTINGS_ROW)).get();
 }
 
-export function getResearchSettings(db: Db): ResearchSettingsView {
+export function getResearchSettings(db: Db, env?: Env): ResearchSettingsView {
   const found = row(db);
+  const lastCheck = readResearchCheck(db);
   if (!found) {
     return {
       provider: null,
@@ -47,16 +75,26 @@ export function getResearchSettings(db: Db): ResearchSettingsView {
       budgetTokens: 400_000,
       budgetSearches: 60,
       configured: false,
+      videosConfigured: false,
+      effectiveProvider: null,
+      lastCheck,
       updatedAt: null,
     };
   }
+  /* With the env, "configured" is exactly what the worker will decide (keys decrypted). Without it
+     (the inbox), it is read from what is stored, which is the same unless the master key changed. */
+  const live = env ? getResearchProvider(db, env) : null;
+  const effective = live?.ok ? live.provider : found.provider;
   return {
     provider: found.provider,
     searchHint: found.searchHint,
     youtubeHint: found.youtubeHint,
     budgetTokens: found.budgetTokens,
     budgetSearches: found.budgetSearches,
-    configured: Boolean(found.provider && found.searchCiphertext && found.youtubeCiphertext),
+    configured: live ? live.ok : Boolean(found.provider && found.searchCiphertext),
+    videosConfigured: Boolean(found.youtubeCiphertext),
+    effectiveProvider: effective,
+    lastCheck,
     updatedAt: found.updatedAt,
   };
 }
@@ -125,39 +163,70 @@ export function updateResearchSettings(db: Db, env: Env, input: UpdateResearchIn
   } else {
     db.insert(schema.researchSettings).values({ id: SETTINGS_ROW, ...values }).run();
   }
-  return getResearchSettings(db);
+  return getResearchSettings(db, env);
 }
 
+/** The saved provider, or the one a stored key clearly belongs to (Tavily keys start "tvly-"). */
+function effectiveProvider(found: NonNullable<ReturnType<typeof row>>, searchKey: string | null): ResearchProviderId | null {
+  if (found.provider) return found.provider;
+  if (searchKey?.trim().startsWith("tvly-")) return "tavily";
+  return null;
+}
+
+function openSealed(ciphertext: string | null, iv: string | null, tag: string | null, env: Env): { key: string | null; unreadable: boolean } {
+  if (!ciphertext || !iv || !tag) return { key: null, unreadable: false };
+  try {
+    return { key: open({ ciphertext, iv, tag }, env.masterKey), unreadable: false };
+  } catch {
+    // Saved under a different APP_MASTER_KEY: it can't be read here, so it has to be entered again.
+    return { key: null, unreadable: true };
+  }
+}
+
+export type ResearchProviderResult =
+  | { ok: true; provider: ResearchProviderId; search: SearchClient; video: VideoClient; videos: boolean }
+  | {
+      ok: false;
+      state: "not_set_up";
+      /** The plain clause the path and status lines use ("the web search isn't set up"). */
+      reason: string;
+      /** What exactly is missing, for the admin's AI connection page. */
+      detail: string;
+    };
+
 /**
- * Builds the two clients, or returns why it cannot.
+ * v4.5 P0: the ONE place that decides whether the web search can be used, read fresh from the
+ * database and decrypted on every call. The routes, the job worker, the banners and the path
+ * builder all go through it (they run in one process with one APP_MASTER_KEY, so there is no
+ * second copy of the settings anywhere to go stale).
  *
- * Returning a reason rather than throwing, because "no research key is set up" is a perfectly
- * ordinary state — the platform works without one, it simply cannot *generate* courses — and the
- * admin screen says so in words rather than showing an error.
+ * Only the search service and its key are required. The YouTube key is optional: without it, new
+ * lessons are written without a video. (Until v4.5 a missing YouTube key blocked every new course
+ * and was reported as "the web search isn't connected", which is the Phase 0 bug.)
  */
-export function researchClients(
-  db: Db,
-  env: Env,
-): { ok: true; search: SearchClient; video: VideoClient } | { ok: false; reason: string } {
+export function getResearchProvider(db: Db, env: Env): ResearchProviderResult {
+  const notSetUp = (detail: string): ResearchProviderResult => ({ ok: false, state: "not_set_up", reason: problemLine("search", "not_set_up"), detail });
   const found = row(db);
-  if (!found?.provider) {
-    return { ok: false, reason: "No research provider is set up. Add one under Admin → AI connection." };
-  }
-  if (!found.searchCiphertext || !found.searchIv || !found.searchTag) {
-    return { ok: false, reason: `No API key for ${found.provider}. Add one under Admin → AI connection.` };
-  }
-  if (!found.youtubeCiphertext || !found.youtubeIv || !found.youtubeTag) {
-    return { ok: false, reason: "No YouTube API key. Add one under Admin → AI connection." };
-  }
+  if (!found) return notSetUp("No search service is picked and no key is saved.");
+  const search = openSealed(found.searchCiphertext, found.searchIv, found.searchTag, env);
+  if (search.unreadable) return notSetUp("The saved search key can't be read on this server (the app's master key changed). Enter the key again.");
+  const provider = effectiveProvider(found, search.key);
+  if (!provider) return notSetUp(search.key ? "A search key is saved, but no search service is picked. Pick the one the key is for." : "No search service is picked.");
+  if (!search.key) return notSetUp(`No key for ${PROVIDER_NAMES[provider]} is saved.`);
 
-  const searchKey = open(
-    { ciphertext: found.searchCiphertext, iv: found.searchIv, tag: found.searchTag },
-    env.masterKey,
-  );
-  const youtubeKey = open(
-    { ciphertext: found.youtubeCiphertext, iv: found.youtubeIv, tag: found.youtubeTag },
-    env.masterKey,
-  );
+  const youtube = openSealed(found.youtubeCiphertext, found.youtubeIv, found.youtubeTag, env);
+  return {
+    ok: true,
+    provider,
+    search: makeSearchClient(provider, search.key),
+    video: youtube.key ? makeVideoClient(youtube.key) : NO_VIDEO_CLIENT,
+    videos: Boolean(youtube.key),
+  };
+}
 
-  return { ok: true, search: makeSearchClient(found.provider, searchKey), video: makeVideoClient(youtubeKey) };
+export const PROVIDER_NAMES: Record<ResearchProviderId, string> = { tavily: "Tavily", brave: "Brave Search", serper: "Serper" };
+
+/** Kept for older callers and tests: the same check as `getResearchProvider`. */
+export function researchClients(db: Db, env: Env): ResearchProviderResult {
+  return getResearchProvider(db, env);
 }

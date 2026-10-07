@@ -101,8 +101,8 @@ describe("the worked example (frontend developer: Git Critical, Backend High, AI
     // Each step carries the algorithm's one-line reason.
     const reasonOf = (id: string) => items.find((i) => i.skillId === id)!.reason;
     expect(reasonOf("eng-ai-prompting-for-code")).toBe("Moved up: the evaluation found AI-driven skills weak (1/5), and they speed up the rest of your path.");
-    expect(reasonOf("eng-js-async")).toBe("Before Backend because Backend needs Promises & async/await, which you're missing (1/5; it needs 3/5).");
-    expect(reasonOf("eng-node-runtime")).toMatch(/Backend/);
+    expect(reasonOf("eng-js-async")).toBe("Comes before your goal: backend. It needs Promises & async/await, which you're missing (1/5; it needs 3/5).");
+    expect(reasonOf("eng-node-runtime")).toMatch(/backend/i);
     // Parts are priority bands and never go backwards: Critical/High first, then the Medium AI goal.
     expect(items.every((item, i) => i === 0 || item.partNumber! >= items[i - 1].partNumber!)).toBe(true);
     expect(items.filter((i) => i.skillId === "eng-ai-reusable-skills").every((i) => i.partNumber === 2)).toBe(true);
@@ -178,7 +178,7 @@ describe("mastered goals, no gap, capstones", () => {
     const ordered = skillOrder(items);
     expect(ordered).toEqual(analysis.order.steps.map((s) => s.skillId));
     expect(outcome.waitingForResearch ?? 0).toBe(items.filter((i) => i.moduleId?.startsWith("newcourse:")).length);
-    expect(items[0].reason).toBe("Next after Git fundamentals: you've met your Git goal, so this continues it.");
+    expect(items[0].reason).toBe("Next after Git fundamentals. You've met your goal (Git), so this continues it.");
     await ctx.close();
   }, 60_000);
 

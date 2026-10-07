@@ -1,3 +1,4 @@
+import type { ConnectionProblem } from "../../../shared/connection";
 import type { ResearchProviderId, SearchHit, VideoHit } from "./research";
 
 /**
@@ -24,21 +25,82 @@ export interface VideoClient {
 /** Fifteen seconds: long enough for a slow provider, short enough not to stall a whole job. */
 const TIMEOUT_MS = 15_000;
 
-async function postJson(url: string, body: unknown, headers: Record<string, string>): Promise<unknown> {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json", ...headers },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-  });
-  if (!response.ok) throw new Error(`search provider returned ${response.status}`);
-  return response.json();
+/**
+ * v4.5 P0: a provider call that failed, with the reason in one of the plain connection states.
+ *
+ * Before this every failure was `new Error("search provider returned 401")`, the pipeline swallowed
+ * it per query, and a rejected key ended up looking exactly like "no sources found".
+ */
+export class ProviderError extends Error {
+  constructor(
+    readonly state: Exclude<ConnectionProblem, "not_set_up">,
+    readonly service: "search" | "youtube",
+    message: string,
+    readonly status: number | null = null,
+  ) {
+    super(message);
+    this.name = "ProviderError";
+  }
 }
 
-async function getJson(url: string, headers: Record<string, string> = {}): Promise<unknown> {
-  const response = await fetch(url, { headers, signal: AbortSignal.timeout(TIMEOUT_MS) });
-  if (!response.ok) throw new Error(`provider returned ${response.status}`);
-  return response.json();
+const QUOTA_WORDS = /quota|credit|limit exceeded|usage limit|plan limit|exceeded your|insufficient|payment required|upgrade/i;
+const KEY_WORDS = /api[ _-]?key|keyinvalid|key not valid|invalid key|unauthori[sz]ed|forbidden|authentication|access ?not ?configured|has not been used in project|disabled/i;
+
+/**
+ * An HTTP failure in plain states. Checked against each provider's documented codes:
+ * Tavily 401 bad key, 429 rate limit, 432 plan limit, 433 pay-as-you-go limit; Brave 401/403 bad key,
+ * 402/429 plan or rate limit; Serper 401/403 bad key, 400/403 "Not enough credits"; YouTube 400
+ * keyInvalid, 403 accessNotConfigured, 403 quotaExceeded/dailyLimitExceeded.
+ */
+export function classifyStatus(status: number, body: string): Exclude<ConnectionProblem, "not_set_up"> {
+  if (status === 402 || status === 432 || status === 433) return "quota";
+  if (status === 429) return QUOTA_WORDS.test(body) && !/rate/i.test(body) ? "quota" : "temporary";
+  if (status === 401) return "key_rejected";
+  if (status === 403) return QUOTA_WORDS.test(body) ? "quota" : "key_rejected";
+  if (status === 400) {
+    if (QUOTA_WORDS.test(body)) return "quota";
+    if (KEY_WORDS.test(body)) return "key_rejected";
+    return "temporary";
+  }
+  return "temporary";
+}
+
+/** A thrown fetch error (DNS, refused, reset, timeout) in plain states. */
+export function classifyThrown(error: unknown, service: "search" | "youtube"): ProviderError {
+  if (error instanceof ProviderError) return error;
+  const name = error instanceof Error ? error.name : "";
+  const cause = error instanceof Error ? (error as Error & { cause?: { code?: string } }).cause : undefined;
+  const text = `${error instanceof Error ? error.message : String(error)} ${cause?.code ?? ""}`;
+  if (name === "TimeoutError" || name === "AbortError" || /fetch failed|ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ECONNRESET|ETIMEDOUT|EHOSTUNREACH|ENETUNREACH|certificate|socket/i.test(text)) {
+    return new ProviderError("unreachable", service, `could not reach the provider: ${text.trim()}`.slice(0, 300));
+  }
+  return new ProviderError("temporary", service, text.trim().slice(0, 300) || "unknown error");
+}
+
+async function call(service: "search" | "youtube", url: string, init: RequestInit): Promise<unknown> {
+  let response: Response;
+  try {
+    response = await fetch(url, { ...init, signal: AbortSignal.timeout(TIMEOUT_MS) });
+  } catch (error) {
+    throw classifyThrown(error, service);
+  }
+  if (!response.ok) {
+    const body = await response.text().catch(() => "");
+    throw new ProviderError(classifyStatus(response.status, body), service, `provider returned ${response.status}: ${body.slice(0, 200)}`, response.status);
+  }
+  try {
+    return await response.json();
+  } catch (error) {
+    throw new ProviderError("temporary", service, `provider sent an unreadable answer: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+async function postJson(url: string, body: unknown, headers: Record<string, string>): Promise<unknown> {
+  return call("search", url, { method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(body) });
+}
+
+async function getJson(url: string, headers: Record<string, string> = {}, service: "search" | "youtube" = "search"): Promise<unknown> {
+  return call(service, url, { headers });
 }
 
 /** Narrows an unknown JSON value to a record, so the adapters can read it without casting twice. */
@@ -63,10 +125,12 @@ class TavilyClient implements SearchClient {
   constructor(private readonly key: string) {}
 
   async search(query: string, limit: number): Promise<SearchHit[]> {
+    // Bearer auth, as Tavily's API reference documents it (the old `api_key` body field is not
+    // in the current docs). At most 20 results per call.
     const body = await postJson(
       "https://api.tavily.com/search",
-      { api_key: this.key, query, max_results: limit, search_depth: "basic" },
-      {},
+      { query, max_results: Math.min(limit, 20), search_depth: "basic" },
+      { authorization: `Bearer ${this.key}` },
     );
     return asArray(asRecord(body).results)
       .map((raw) => {
@@ -87,7 +151,7 @@ class BraveClient implements SearchClient {
   constructor(private readonly key: string) {}
 
   async search(query: string, limit: number): Promise<SearchHit[]> {
-    const url = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=${limit}`;
+    const url = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=${Math.min(limit, 20)}`;
     const body = await getJson(url, { "X-Subscription-Token": this.key, accept: "application/json" });
     return asArray(asRecord(asRecord(body).web).results)
       .map((raw) => {
@@ -163,7 +227,7 @@ class YouTubeClient implements VideoClient {
     const searchUrl =
       `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoEmbeddable=true` +
       `&maxResults=${Math.min(limit, 25)}&q=${encodeURIComponent(query)}&key=${this.key}`;
-    const found = await getJson(searchUrl);
+    const found = await getJson(searchUrl, {}, "youtube");
     const ids = asArray(asRecord(found).items)
       .map((raw) => str(asRecord(asRecord(raw).id).videoId))
       .filter((id) => id.length > 0);
@@ -180,7 +244,7 @@ class YouTubeClient implements VideoClient {
     const detailUrl =
       `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics,status` +
       `&id=${ids.join(",")}&key=${this.key}`;
-    const body = await getJson(detailUrl);
+    const body = await getJson(detailUrl, {}, "youtube");
     const items = asArray(asRecord(body).items).map((raw) => asRecord(raw));
 
     const channelIds = [...new Set(items.map((item) => str(asRecord(item.snippet).channelId)).filter(Boolean))];
@@ -206,7 +270,7 @@ class YouTubeClient implements VideoClient {
     if (channelIds.length === 0) return new Map();
     try {
       const url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelIds.join(",")}&key=${this.key}`;
-      const body = await getJson(url);
+      const body = await getJson(url, {}, "youtube");
       return new Map(
         asArray(asRecord(body).items).map((raw) => {
           const item = asRecord(raw);
@@ -224,3 +288,13 @@ class YouTubeClient implements VideoClient {
 export function makeVideoClient(key: string): VideoClient {
   return new YouTubeClient(key);
 }
+
+/**
+ * v4.5 P0: used when no YouTube key is saved. A lesson then has no video, which the pipeline already
+ * handles (a failed video search costs the lesson its video, never the lesson). Before, a missing
+ * YouTube key blocked every new course and was reported as "the web search isn't connected".
+ */
+export const NO_VIDEO_CLIENT: VideoClient = {
+  search: async () => [],
+  lookup: async () => null,
+};

@@ -75,6 +75,8 @@ export const v5AdminApi = {
   fullMarks: (reviewId: string) => api.post(`/api/admin/review-requests/${reviewId}/decision`, { decision: "override", note: "" }),
   fixCourse: (courseId: string) => api.post(`/api/admin/generated-courses/${courseId}/fix`),
   publishCourse: (courseId: string) => api.post(`/api/admin/generated-courses/${courseId}/decision`, { decision: "approve" }),
+  /** v4.5 P0: Retry on a new course that failed 5 times. */
+  retryCourseJob: (jobId: string) => api.post(`/api/admin/course-jobs/${jobId}/retry`),
 
   // Built by the Lesson group (P3).
   problems: (status: "open" | "resolved" | "all", signal?: AbortSignal) => api.get<ProblemListResponse>(`/api/admin/v5/problems?status=${status}`, signal),

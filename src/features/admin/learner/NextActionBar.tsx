@@ -15,6 +15,7 @@ import { builderApi } from "../builder/api";
 import { describeIssued } from "../setup/issued";
 import { TemporaryPasswordNotice } from "../TemporaryPasswordNotice";
 import { nextActionApi, POLLED_KINDS, TONE_CLASS, type NextAction } from "./nextAction";
+import type { NextActionFacts } from "@shared/nextAction";
 
 const POLL_MS = 15_000;
 
@@ -27,8 +28,11 @@ export function NextActionBar({
   refreshKey,
   onOpenTab,
   onChanged,
+  onFacts,
 }: {
   user: UserSummary;
+  /** v4.5: the facts the bar decided from, so the page header can agree with it. */
+  onFacts?: (facts: NextActionFacts) => void;
   /** Changes after anything a tab changed (and on a tab switch), so the bar re-reads. */
   refreshKey: string | number;
   onOpenTab: (tab: "setup" | "assessment" | "path", anchor?: string) => void;
@@ -44,12 +48,14 @@ export function NextActionBar({
   const load = useCallback(
     async (signal?: AbortSignal) => {
       try {
-        setAction((await nextActionApi.get(user.id, signal)).action);
+        const result = await nextActionApi.get(user.id, signal);
+        setAction(result.action);
+        onFacts?.(result.facts);
       } catch {
         /* The bar is a convenience: the tabs still work without it. */
       }
     },
-    [user.id],
+    [user.id, onFacts],
   );
 
   useEffect(() => {

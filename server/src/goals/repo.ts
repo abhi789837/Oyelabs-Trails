@@ -50,6 +50,18 @@ function toGoal(row: GoalRow): LearnerGoal {
   };
 }
 
+/** v4.5 P0: when each goal was first added, kept across saves (a re-save no longer resets it). */
+function goalCreatedAt(db: Db, userId: string): Map<string, number> {
+  return new Map(
+    db
+      .select({ id: schema.learnerGoals.id, createdAt: schema.learnerGoals.createdAt })
+      .from(schema.learnerGoals)
+      .where(eq(schema.learnerGoals.userId, userId))
+      .all()
+      .map((row) => [row.id, row.createdAt] as const),
+  );
+}
+
 export function listGoals(db: Db, userId: string): LearnerGoal[] {
   return db.select().from(schema.learnerGoals).where(eq(schema.learnerGoals.userId, userId)).orderBy(asc(schema.learnerGoals.position)).all().map(toGoal);
 }
@@ -141,6 +153,7 @@ export function saveGoals(
   const goals = validateGoals(db, departmentId, inputs);
   const at = now();
   const existing = new Map(listGoals(db, userId).map((g) => [g.id, g]));
+  const createdAt = goalCreatedAt(db, userId);
   db.transaction((tx) => {
     tx.delete(schema.learnerGoals).where(eq(schema.learnerGoals.userId, userId)).run();
     goals.forEach((goal, position) => {
@@ -162,7 +175,8 @@ export function saveGoals(
           achievedAt: same ? before.achievedAt : null,
           source: before?.source ?? options.source ?? "admin",
           intentId: goal.intentId ?? null,
-          createdAt: at,
+          // v4.5 P0: kept across saves, so "added after the test" can be told from "edited after it".
+          createdAt: (before && createdAt.get(before.id)) ?? at,
           updatedAt: at,
         })
         .run();
@@ -183,6 +197,7 @@ export function syncSkillGoalsFromPriorities(db: Db, userId: string, priorities:
   const covered = new Set(others.flatMap((g) => g.skillIds));
   const bySkill = new Map(current.filter((g) => g.type === "skill" && g.skillIds.length === 1).map((g) => [g.skillIds[0], g]));
   const at = now();
+  const createdAt = goalCreatedAt(db, userId);
   const skillGoals = sortPriorities(priorities).filter((p) => !covered.has(p.skillId));
   db.transaction((tx) => {
     tx.delete(schema.learnerGoals).where(and(eq(schema.learnerGoals.userId, userId), eq(schema.learnerGoals.type, "skill"))).run();
@@ -198,7 +213,7 @@ export function syncSkillGoalsFromPriorities(db: Db, userId: string, priorities:
           status: before?.status ?? "active",
           achievedAt: before?.achievedAt ?? null,
           source: before?.source ?? "admin",
-          createdAt: at,
+          createdAt: (before && createdAt.get(before.id)) ?? at,
           updatedAt: at,
         })
         .run();
