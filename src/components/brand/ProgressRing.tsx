@@ -1,4 +1,5 @@
-import { MARK_OUTER, MARK_OUTER_WIDTH, MARK_VIEWBOX, RING_RADIUS, cx, progressRingGeometry } from "./brandAssets";
+import { MARK_OUTER, MARK_OUTER_WIDTH, MARK_VIEWBOX, RING_RADIUS, cx } from "./brandAssets";
+import { progressRingGeometry } from "./ringGeometry";
 
 export interface ProgressRingProps {
   /** 0–100. */

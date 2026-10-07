@@ -16,13 +16,13 @@ Runs alongside v4.5 (`docs/v4.5/PROGRESS.md`); phases that touch the same files 
 - [ ] 1.6 Gates + commit `feat(brand-p1)`
 
 ## Phase 2: Favicons, PWA, metadata
-- [ ] 2.1 Favicon set + PWA icons + manifest + head links + theme-color
-- [ ] 2.2 Titles "<Page> · Oyelearn", meta description, OG/Twitter (og-image-blue)
+- [x] 2.1 Favicon set + PWA icons + manifest + head links + theme-color
+- [x] 2.2 Titles "<Page> · Oyelearn", meta description, OG/Twitter (og-image-blue)
 - [ ] 2.3 Gates + commit `feat(brand-p2)`
 
 ## Phase 3: Auth screens
-- [ ] 3.1 Sign-in split screen (desktop), mobile single column, dark mode
-- [ ] 3.2 Forgot/reset, first password, consent/proctoring header, error/404, logout; BrandLoader for full-page loading
+- [x] 3.1 Sign-in split screen (desktop), mobile single column, dark mode
+- [x] 3.2 Forgot/reset, first password, consent/proctoring header, error/404, logout; BrandLoader for full-page loading
 - [ ] 3.3 Gates + commit `feat(brand-p3)`
 
 ## Phase 4: Shells and every screen (after v4.5 lands)

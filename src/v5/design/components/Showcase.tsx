@@ -2,7 +2,8 @@ import { Award, Mountain, X } from "lucide-react";
 import { AnimatePresence, m } from "motion/react";
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
 
-import { Logo as BrandLogo, Mark } from "@/components/brand";
+import { Logo as BrandLogo } from "@/components/brand/Logo";
+import { Mark } from "@/components/brand/Mark";
 
 import { cn } from "../cn";
 

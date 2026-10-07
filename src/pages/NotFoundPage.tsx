@@ -1,29 +1,20 @@
 import { Link } from "react-router-dom";
 
+import { Mark } from "@/components/brand/Mark";
 import { Button } from "@/components/ui/button";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
+/** The previous design's 404, with the brand mark (rebrand Phase 3). */
 export default function NotFoundPage() {
-  useDocumentTitle("Off trail");
+  useDocumentTitle("Page not found");
 
   return (
     <div className="mx-auto flex max-w-xl flex-col items-start px-4 py-20 sm:px-8">
-      <svg viewBox="0 0 160 60" className="h-16 w-auto text-basalt" aria-hidden="true">
-        <path
-          d="M4 50 C 40 50, 40 14, 76 14 S 110 40, 124 30"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeDasharray="1 6"
-          strokeLinecap="round"
-        />
-        <circle cx="4" cy="50" r="4" fill="rgb(var(--summit))" />
-        <path d="M134 22 l12 12 M146 22 l-12 12" stroke="rgb(var(--trailmark))" strokeWidth="3" strokeLinecap="round" />
-      </svg>
+      <Mark size={56} decorative />
       <p className="mt-6 font-mono text-sm text-muted-foreground">404</p>
-      <h1 className="mt-1 text-2xl font-bold">You've wandered off the trail</h1>
+      <h1 className="mt-1 font-display text-2xl font-semibold">This page isn&apos;t here</h1>
       <p className="mt-3 max-w-prose text-muted-foreground">
-        This page doesn't exist. The link may be mistyped, or the topic may have moved.
+        The link may be mistyped, or the page may have moved. Learning never closes, so let&apos;s get you back to your plan.
       </p>
       <Button asChild className="mt-8">
         <Link to="/">Back to the dashboard</Link>

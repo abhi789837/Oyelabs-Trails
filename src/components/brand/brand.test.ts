@@ -12,20 +12,21 @@ import {
   MARK_DOT,
   MARK_INNER,
   MARK_OUTER,
-  RING_MAX_FRACTION,
   logoClearSpace,
   logoFallsBackToMark,
   logoSrc,
   logoWidth,
   markSrc,
-  progressRingGeometry,
   type LogoTheme,
   type LogoVariant,
 } from "./brandAssets";
+import { RING_MAX_FRACTION, progressRingGeometry } from "./ringGeometry";
+import { BrandBand } from "./BrandBand";
 import { BrandLoader } from "./BrandLoader";
 import { Logo } from "./Logo";
 import { Mark } from "./Mark";
 import { ProgressRing } from "./ProgressRing";
+import { RingDevice } from "./RingDevice";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../../..");
@@ -185,5 +186,20 @@ describe("ProgressRing", () => {
     const out = html(createElement(ProgressRing, { value: 0 }));
     expect(out).not.toContain("stroke-dasharray");
     expect(out).toContain('r="12.4"');
+  });
+});
+
+describe("RingDevice and BrandBand", () => {
+  test("the ring device is decorative and one colour", () => {
+    const out = html(createElement(RingDevice, { className: "text-white" }));
+    expect(out).toContain('aria-hidden="true"');
+    expect(out).not.toContain("accent-500");
+  });
+
+  test("the band carries the on-blue logo, and the dark one for dark mode", () => {
+    const out = html(createElement(BrandBand));
+    expect(out).toContain("/brand/logo/oyelearn-on-blue.svg");
+    expect(out).toContain("/brand/logo/oyelearn-dark.svg");
+    expect(out).toContain("bg-oyelabs-blue");
   });
 });

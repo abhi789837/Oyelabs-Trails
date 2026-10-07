@@ -1,5 +1,8 @@
-import { BrandLoader, Logo, Mark, ProgressRing } from "@/components/brand";
-import type { LogoTheme, LogoVariant } from "@/components/brand";
+import type { LogoTheme, LogoVariant } from "@/components/brand/brandAssets";
+import { BrandLoader } from "@/components/brand/BrandLoader";
+import { Logo } from "@/components/brand/Logo";
+import { Mark } from "@/components/brand/Mark";
+import { ProgressRing } from "@/components/brand/ProgressRing";
 
 import { Demo, Preview } from "./scaffold";
 

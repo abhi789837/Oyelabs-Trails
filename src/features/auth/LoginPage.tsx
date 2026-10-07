@@ -16,6 +16,8 @@ export default function LoginPage() {
   const { user, loading, signIn } = useAuth();
   const location = useLocation();
   const caps = useCapsLock();
+  /* Set by the account menu's "Sign out" (UserMenu). */
+  const signedOut = Boolean((location.state as { signedOut?: boolean } | null)?.signedOut);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -56,24 +58,16 @@ export default function LoginPage() {
 
   return (
     <AuthLayout
-      eyebrow="Internal training"
-      title="Sign in"
-      description="Accounts are created by your administrator. There is no sign-up."
-      aside={
-        <>
-          {/* Styled like a heading, but not one: the card's "Sign in" is the page's `h1`, and an
-              `h2` above it in the DOM would put the outline out of order for no benefit. */}
-          <p className="text-balance font-brand text-2xl font-bold">Your plan, laid out as a trail.</p>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            A placement assessment and your team lead's notes decide where you start. What comes
-            back is a route through the curriculum — camps to reach, waypoints to clear, and a
-            graded challenge at each one. Progress saves as you go, so you can stop anywhere.
-          </p>
-        </>
-      }
-      footer="Forgotten your password? Ask your administrator to reset it — there is no self-service reset."
+      title="Welcome back"
+      description="Sign in to continue your plan."
+      footer="Accounts are created by your administrator, and there is no sign-up. Forgotten your password? Ask your administrator to reset it."
     >
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+        {signedOut && !error ? (
+          <p role="status" className="rounded-md border bg-surface px-3 py-2 text-sm text-muted-foreground">
+            You&apos;re signed out. See you next time.
+          </p>
+        ) : null}
         <AuthFormAlert message={error} attempt={attempt} />
 
         <TextField

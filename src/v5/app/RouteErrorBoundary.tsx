@@ -1,6 +1,7 @@
 import { Component, useEffect, useRef, type ErrorInfo, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import { Mark } from "@/components/brand/Mark";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { Button } from "@/v5/design/components/Button";
 import { useV5Root } from "@/v5/design/useV5Root";
@@ -107,6 +108,7 @@ function ErrorScreen({ error, onRetry, fullPage }: { error: unknown; onRetry: ()
   return (
     <div className={fullPage ? "flex min-h-dvh items-center justify-center bg-surface-0 px-4 text-fg-1" : "flex min-h-[50vh] items-center justify-center px-4 py-10 text-fg-1"}>
       <div role="alert" className="flex w-full max-w-md flex-col items-center rounded-card border border-line-1 bg-surface-1 px-6 py-10 text-center">
+        <Mark size={48} decorative className="mb-5" />
         <h1 ref={heading} tabIndex={-1} className="font-display text-h3 font-semibold text-fg-1 outline-none focus-visible:outline-none">
           Something went wrong on this page.
         </h1>

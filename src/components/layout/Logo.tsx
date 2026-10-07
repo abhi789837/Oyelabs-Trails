@@ -1,4 +1,5 @@
-import { Logo as BrandLogo, Mark } from "@/components/brand";
+import { Logo as BrandLogo } from "@/components/brand/Logo";
+import { Mark } from "@/components/brand/Mark";
 
 type Variant = "horizontal" | "mark" | "stacked";
 

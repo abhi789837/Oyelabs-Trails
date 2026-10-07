@@ -9,7 +9,7 @@ import { useAuth } from "@/features/auth/AuthProvider";
 import { PreFlight } from "@/features/proctor/PreFlight";
 import type { CalibrationPose } from "@/features/proctor/types";
 import { useProctor } from "@/features/proctor/useProctor";
-import { Logo } from "@/v5/design/components/Showcase";
+import { BrandBand } from "@/components/brand/BrandBand";
 
 import { TestSheet, type FinishReason } from "./Sheet";
 
@@ -54,9 +54,7 @@ export default function Sitting({
   if (!taking) {
     return (
       <div className="min-h-dvh bg-surface-0 text-fg-1">
-        <div className="mx-auto flex max-w-2xl justify-center px-4 pt-8">
-          <Logo className="h-8" />
-        </div>
+        <BrandBand />
         <main>
           <PreFlight
             assessmentId={assessment.id}

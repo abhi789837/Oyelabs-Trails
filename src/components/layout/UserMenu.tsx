@@ -45,7 +45,7 @@ export function UserMenu({ context = "learner" }: { context?: "learner" | "admin
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/login", { replace: true });
+    navigate("/login", { replace: true, state: { signedOut: true } });
   };
 
   return (

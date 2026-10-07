@@ -1,68 +1,77 @@
-import { lazy, Suspense, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { motion } from "motion/react";
 
-import { Logo } from "@/components/layout/Logo";
-import { ShineBorder } from "@/components/ui/shine-border";
-import { fadeUp, stagger } from "@/lib/motion";
-
-/**
- * Decoration, in its own chunk. The sign-in form is the first thing anybody downloads on this
- * app and it should not wait on a background effect; `Suspense` falls back to nothing, so on a
- * slow connection the page simply renders without it and gains it a moment later.
- */
-const AuthBackdrop = lazy(() => import("./AuthBackdrop"));
+import { Logo } from "@/components/brand/Logo";
+import { RingDevice } from "@/components/brand/RingDevice";
+import { fadeUp } from "@/lib/motion";
 
 export interface AuthLayoutProps {
-  /** The mono line under the logo — "Internal training", or the signed-in username. */
-  eyebrow: string;
-  /** Left-column copy. Desktop only: on a phone the form is the whole point of the screen. */
-  aside: ReactNode;
+  /** A small line above the title: the signed-in username on the password screen. */
+  eyebrow?: string;
   title: string;
   description: ReactNode;
-  /** A closing note under a rule inside the card. */
+  /** A closing note under a rule, below the form. */
   footer?: ReactNode;
   children: ReactNode;
 }
 
 /**
- * The shell both auth screens sit in: brand on the left, a single card on the right, one
- * background effect behind the pair.
+ * The branded frame of every auth screen (rebrand Phase 3, kit 05-web/signin-page-mockup).
  *
- * It is a two-column grid from `lg` up and one column below it, which is what makes 375px work —
- * the aside is not shrunk to fit, it is dropped, and what remains is a logo, a card and the
- * gutters. There is one motion moment on the page: the two columns rise together on mount, and
- * nothing else moves until the person does something.
+ * - Desktop (lg+): a split screen. Left, about 45%: Oyelabs Blue with the ring device, the `on-blue`
+ *   logo top-left and "Learning never closes." at the bottom. Right: Cloud, the primary logo, the
+ *   title and the form.
+ * - Phone: one column. A slim blue band with the ring device at the top, the endorsed logo, the form.
+ * - Dark: the panel is Night with Sky rings and the `dark` logo; the form side is Night Navy.
+ *
+ * The left panel is decoration and brand copy only, so it is an `aside` the form never depends on.
+ * One motion moment: the form column rises on mount (reduced motion flattens it). The logos skip
+ * their computed clear space: the panel's padding and the gaps under them are wider than it.
  */
-export function AuthLayout({ eyebrow, aside, title, description, footer, children }: AuthLayoutProps) {
+export function AuthLayout({ eyebrow, title, description, footer, children }: AuthLayoutProps) {
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-background">
-      <Suspense fallback={null}>
-        <AuthBackdrop />
-      </Suspense>
-
-      <motion.div
-        variants={stagger(0.05)}
-        initial="hidden"
-        animate="visible"
-        className="relative mx-auto grid min-h-dvh w-full max-w-6xl content-center gap-10 px-5 py-12 lg:grid-cols-[minmax(0,1fr)_28rem] lg:items-center lg:gap-20 lg:px-10"
+    <div className="min-h-dvh bg-cloud text-foreground lg:grid lg:grid-cols-[45%_minmax(0,1fr)] dark:bg-night-navy">
+      <aside
+        aria-label="Oyelearn"
+        className="relative hidden overflow-hidden bg-oyelabs-blue px-16 py-14 text-white lg:flex lg:min-h-dvh lg:flex-col lg:justify-between dark:bg-night"
+        data-testid="auth-brand-panel"
       >
-        <motion.div variants={fadeUp}>
-          <Logo variant="stacked" height={72} />
-          <p className="mt-3 font-mono text-xs text-muted-foreground">{eyebrow}</p>
-          <div className="mt-10 hidden max-w-md lg:block">{aside}</div>
-        </motion.div>
+        <RingDevice className="absolute -right-[22%] top-[-6%] h-[112%] w-auto text-white opacity-[0.14] dark:text-sky dark:opacity-25" />
+        <div className="relative">
+          {/* Visibility on wrappers: a display class on the logo itself would fight its inline-flex. */}
+          <div className="dark:hidden">
+            <Logo theme="on-blue" size={44} clearSpace={false} />
+          </div>
+          <div className="hidden dark:block">
+            <Logo theme="dark" size={44} clearSpace={false} />
+          </div>
+        </div>
+        <div className="relative max-w-lg">
+          <p className="font-display text-[clamp(2.5rem,1rem+2.6vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-balance">Learning never closes.</p>
+          <p className="mt-4 text-lg text-white/90">Your plan, your pace — built for the Oyelabs team.</p>
+        </div>
+      </aside>
 
-        <motion.div variants={fadeUp}>
-          <ShineBorder innerClassName="p-6 sm:p-8">
-            <h1 className="text-xl font-bold">{title}</h1>
-            <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-            <div className="mt-6">{children}</div>
-            {footer && (
-              <div className="mt-6 border-t pt-4 text-xs text-muted-foreground">{footer}</div>
-            )}
-          </ShineBorder>
+      <main className="flex min-h-dvh flex-col lg:min-h-0">
+        <div className="relative h-16 overflow-hidden bg-oyelabs-blue lg:hidden dark:bg-night" aria-hidden="true" data-testid="auth-brand-band">
+          <RingDevice className="absolute -right-6 -top-10 h-36 w-auto text-white opacity-[0.16] dark:text-sky dark:opacity-30" />
+        </div>
+        <motion.div variants={fadeUp} initial="hidden" animate="visible" className="flex flex-1 items-center justify-center px-5 py-10 sm:px-10">
+          <div className="w-full max-w-[25rem]">
+            <div className="mb-8 lg:hidden">
+              <Logo variant="endorsed" size={48} clearSpace={false} />
+            </div>
+            <div className="mb-10 hidden lg:block">
+              <Logo variant="primary" size={44} clearSpace={false} />
+            </div>
+            {eyebrow ? <p className="mb-2 font-mono text-xs text-muted-foreground">{eyebrow}</p> : null}
+            <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.02em] text-foreground">{title}</h1>
+            <p className="mt-2 text-base text-muted-foreground">{description}</p>
+            <div className="mt-8">{children}</div>
+            {footer ? <div className="mt-8 border-t pt-4 text-sm text-muted-foreground">{footer}</div> : null}
+          </div>
         </motion.div>
-      </motion.div>
+      </main>
     </div>
   );
 }

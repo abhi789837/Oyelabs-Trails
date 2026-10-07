@@ -1,17 +1,18 @@
 import type { ReactNode } from "react";
-import { LoaderCircle } from "lucide-react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import type { Role } from "@shared/enums";
 
+import { BrandLoader } from "@/components/brand/BrandLoader";
+
 import { useAuth } from "./AuthProvider";
 import { landingPathFor } from "./routing";
 
+/** Checking the session before an auth redirect: the full-page brand loader. */
 function Pending() {
   return (
-    <div className="flex min-h-dvh items-center justify-center" role="status" aria-live="polite">
-      <LoaderCircle className="h-5 w-5 animate-spin text-muted-foreground" aria-hidden="true" />
-      <span className="sr-only">Loading</span>
+    <div className="flex min-h-dvh items-center justify-center bg-background">
+      <BrandLoader size={44} />
     </div>
   );
 }

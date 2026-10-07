@@ -12,8 +12,8 @@ import { landingPathFor } from "./routing";
 import { useCapsLock } from "./useCapsLock";
 
 export default function ChangePasswordPage() {
-  useDocumentTitle("Change your password");
   const { user, loading, changePassword } = useAuth();
+  useDocumentTitle(user?.mustChangePassword ? "Set your password" : "Change your password");
   const navigate = useNavigate();
 
   // One per field: the warning belongs under the input being typed into, not above the form.
@@ -71,17 +71,6 @@ export default function ChangePasswordPage() {
         forced
           ? "You are signed in with a temporary password. Choose your own before you continue."
           : "Changing your password signs out every other device."
-      }
-      aside={
-        <>
-          {/* Deliberately a `<p>`, not an `<h2>` — see `LoginPage` for why. */}
-          <p className="text-balance font-brand text-2xl font-bold">A password only you know.</p>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            The one you were given was typed into a chat message or read out loud, so it is not
-            yours yet. The checklist beside the new password is the server's own rule set — clear
-            all of it and the change will be accepted.
-          </p>
-        </>
       }
     >
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>

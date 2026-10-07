@@ -113,3 +113,67 @@ Celebration (summit): the dot pops and the ring completes for a moment, then ope
 - **/design** has a new first section, "Brand": every lockup on its allowed backgrounds, theme auto in light
   and dark, clear space and minimum size, the mark at 16–72 px, BrandLoader, ProgressRing and the don'ts.
   The Colour section adds the eight kit colours and the amber scale; the type table is Outfit's scale.
+
+## Phase 2: Favicons, PWA, metadata
+
+- **Files.** `public/`: favicon.ico, favicon.svg (switches to Sky in dark), favicon-16/32/48 PNGs,
+  apple-touch-icon.png (kit 04-favicon); icon-192/512/maskable-512 (kit 03-app/pwa); og-image.png
+  (= og-image-blue) and og-image-dark.png (the dark variant, available for Phase 6's per-page OG).
+- **Manifest** keeps the v5 PWA settings (id and start_url `/learn`, scope `/`, standalone) with the kit's
+  name, theme #2067D3, background #FFFFFF and the three PNG icons. The kit's favicon.svg isn't listed as
+  an icon: v5-pwa.ts checks every icon is a PNG of its stated size, and the PNGs cover installs.
+- **Cache-busting.** index.html links the favicons, apple-touch icon and OG image with `?v=2`, and the
+  manifest's icon URLs carry it too. The manifest link has no query: it is always sent no-cache, and
+  v5-pwa.ts checks the exact `href="/site.webmanifest"`. The service worker matches precached files by path, so the
+  query doesn't break offline. Its `PUBLIC_PRECACHE` adds the 16/32 favicons.
+- **Caching.** The server still sends the manifest and sw.js `no-cache`. Favicons, app icons, OG images
+  and `/brand/*` now get `public, max-age=86400, stale-while-revalidate=604800`
+  (server/src/lib/brandIcons.ts, used in app.ts `onSend`), instead of @fastify/static's `max-age=0`.
+- **theme-color** #2067D3 (light) and #0A1428 (dark) by media query; `application-name` and
+  `apple-mobile-web-app-title` are "Oyelearn".
+- **OG/Twitter.** Absolute URLs on https://learn.oyegen.com (crawlers need them), 1200×630, alt text
+  "Oyelearn: learning never closes."; description "Learning never closes. The internal learning
+  platform for the Oyelabs team."
+- **Titles.** "<Page> · Oyelearn" (was "<Page> | Oyelearn"; v5 admin was "<Page> · Oyelearn admin"),
+  one helper in src/lib/pageTitle.ts. Pages that name themselves still do (`useDocumentTitle`, v5
+  `PageHeader`); every other route (most v5 learner screens set none) gets a title from its path via
+  `RouteTitle` in App.tsx, which never overrides a page that set its own.
+- **No mobile wrapper** (no Capacitor, Expo or Cordova in the repo), so the kit's iOS/Android icon
+  sets in 03-app aren't used.
+
+## Phase 3: Auth screens
+
+- **One frame for every auth screen** (src/features/auth/AuthLayout.tsx), after
+  05-web/signin-page-mockup: desktop (lg+) split 45/55. The left panel is Oyelabs Blue with the ring
+  device (the mark's own paths, white at 14%, `RingDevice`), the `on-blue` logo top-left, and "Learning
+  never closes." / "Your plan, your pace — built for the Oyelabs team." at the bottom. The right side is
+  Cloud with the primary logo, the title, the form and a full-width primary blue button. On a phone it
+  is one column: a 64 px blue band with the ring device, the endorsed logo, then the form. In dark mode
+  the panel and band are Night with Sky rings and the `dark` logo, and the form side is Night Navy.
+  The left panel is an `aside` labelled "Oyelearn"; the decorative band is `aria-hidden`.
+- **Copy.** The sign-in title is "Welcome back", with "Sign in to continue your plan." under it. The old
+  trail copy in the left column is gone. The no-sign-up / ask-your-admin note moved to the footer.
+  Every field label, name, autocomplete, test id and button name is unchanged (the e2e `signIn` helpers
+  find Username, Password, Sign in, Temporary/Current/New/Confirm password and Save password).
+- **First-time password and change password** use the same frame ("Set your password" when forced,
+  with that page title). **There is no forgot/reset password screen**: accounts and resets are
+  admin-only, which the sign-in footer says.
+- **Sign out** goes to the branded sign-in with "You're signed out. See you next time." (UserMenu
+  passes `state.signedOut`, which both designs share).
+- **Assessment pre-flight** (consent and proctoring checks), old and v5: a slim brand header
+  (`BrandBand`: Oyelabs Blue + ring device + `on-blue` logo; Night + `dark` logo in dark mode) above
+  the checks. It is a plain `div`, because PreFlight has its own `<header>` and two banners would be
+  an axe finding.
+- **Error and 404.** The old 404 shows the mark ("This page isn't here"); v5 has no 404 (unknown paths
+  redirect), and its route error screen shows the mark above the message.
+- **BrandLoader** replaces the spinner for full-page loading: the route fallback (lazy chunks), the
+  auth guard's session check (before every auth redirect), and the in-shell screen fallback. Content
+  skeletons are unchanged.
+- **Bundle.** The brand components are imported from their own files, not the `@/components/brand`
+  barrel: Rolldown made the barrel one shared chunk, which put ProgressRing and the auth band on the
+  lesson route. ProgressRing's maths lives in `ringGeometry.ts`. With that, lesson is 199.6 KB, the
+  entry 95.2 KB (below Phase 1's) and /design 229.6 KB, all under budget.
+- **scripts/e2e/brand-auth.ts** (port 8966): favicons, icons, OG images and manifest all 200 with the
+  right type and size, manifest valid with the v5 PWA settings, icon cache header; /login at 1440 and
+  390 in light and dark (logo files per surface, panel or band, panel colour and width, Outfit, no
+  horizontal scroll, axe 0 serious, a screenshot each); the forced first password on the same frame.

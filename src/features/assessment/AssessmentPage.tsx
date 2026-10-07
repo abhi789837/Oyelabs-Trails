@@ -8,6 +8,7 @@ import { api, ApiRequestError } from "@/api/client";
 import { SkillReport } from "@/components/assessment/SkillReport";
 import { FormAlert } from "@/components/form/Field";
 import { useConfirm } from "@/components/overlays";
+import { BrandBand } from "@/components/brand/BrandBand";
 import { Logo } from "@/components/layout/Logo";
 import { Contours } from "@/components/trail/Contours";
 import { Button } from "@/components/ui/button";
@@ -216,38 +217,41 @@ export default function AssessmentPage() {
 
   if (phase === "preflight") {
     return (
-      <PreFlight
-        assessmentId={assessment.id}
-        needsMicrophone={Boolean(assessment.hasSpeak)}
-        busy={starting}
-        error={startError}
-        onCancel={() => navigate("/plan")}
-        onReady={async (pose, mediaStream, permissions) => {
-          if (starting) return;
-          setCalibration(pose);
-          setStream(mediaStream);
-          setStarting(true);
-          setStartError(null);
-          try {
-            /* **Consent first, and awaited.** This call was missing entirely, which is why every
-               learner hit "Consent is required before starting" — the server records consent here
-               and `start` reads it back. The payload also goes inline on `start` below, so even a
-               failure between the two calls cannot strand somebody on this screen. */
-            await assessmentApi.consent(assessment.id, permissions);
-            await assessmentApi.start(assessment.id, permissions);
-            setPhase("taking");
-          } catch (err) {
-            /* Stays on the pre-flight screen rather than dropping to the error phase: the stream
-               and the calibration are still good, so the learner presses the button again instead
-               of walking through the camera check a second time. */
-            setStartError(
-              err instanceof ApiRequestError ? err.message : "The assessment could not be started. Try again.",
-            );
-          } finally {
-            setStarting(false);
-          }
-        }}
-      />
+      <div className="min-h-dvh">
+        <BrandBand />
+        <PreFlight
+          assessmentId={assessment.id}
+          needsMicrophone={Boolean(assessment.hasSpeak)}
+          busy={starting}
+          error={startError}
+          onCancel={() => navigate("/plan")}
+          onReady={async (pose, mediaStream, permissions) => {
+            if (starting) return;
+            setCalibration(pose);
+            setStream(mediaStream);
+            setStarting(true);
+            setStartError(null);
+            try {
+              /* **Consent first, and awaited.** This call was missing entirely, which is why every
+                 learner hit "Consent is required before starting" — the server records consent here
+                 and `start` reads it back. The payload also goes inline on `start` below, so even a
+                 failure between the two calls cannot strand somebody on this screen. */
+              await assessmentApi.consent(assessment.id, permissions);
+              await assessmentApi.start(assessment.id, permissions);
+              setPhase("taking");
+            } catch (err) {
+              /* Stays on the pre-flight screen rather than dropping to the error phase: the stream
+                 and the calibration are still good, so the learner presses the button again instead
+                 of walking through the camera check a second time. */
+              setStartError(
+                err instanceof ApiRequestError ? err.message : "The assessment could not be started. Try again.",
+              );
+            } finally {
+              setStarting(false);
+            }
+          }}
+        />
+      </div>
     );
   }
 
