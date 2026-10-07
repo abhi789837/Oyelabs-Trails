@@ -7,7 +7,7 @@ import type { PlanLane } from "@shared/weeklyPlan";
 
 import { transitions } from "../motion";
 import { buildTrail, type TrailStop } from "../trail";
-import { LANE_CLASSES, v5LaneColor } from "./LaneChip";
+import { LANE_CLASSES } from "./LaneChip";
 
 export interface WaypointProps {
   title: string;
@@ -19,19 +19,26 @@ export interface WaypointProps {
   size?: number;
 }
 
-/** The marker on its own: a filled tick when done, a ringed dot for "you are here", a lane dot otherwise. */
+/**
+ * The marker on its own: a filled tick when done, the mark's amber dot for "you are here" (with a
+ * soft pulse that reduced motion stills), a lane dot otherwise.
+ */
 export function Waypoint({ title, meta, lane = "must_know", done, here, onSelect, size = 28 }: WaypointProps) {
   const label = `${title}${meta ? `, ${meta}` : ""}${done ? ", done" : here ? ", you are here" : ""}`;
   const marker = (
     <span
       className={cn(
         "relative grid place-items-center rounded-full border-2 transition-transform duration-120",
-        done ? "border-success bg-success text-on-success" : here ? "border-brand bg-surface-1" : "border-line-2 bg-surface-1",
+        done ? "border-success bg-success text-on-success" : here ? "border-progress bg-surface-1" : "border-line-2 bg-surface-1",
       )}
       style={{ width: size, height: size }}
     >
-      {done ? <Check className="size-3.5" strokeWidth={3} aria-hidden="true" /> : <span className={cn("size-2.5 rounded-full", LANE_CLASSES[lane].dot)} aria-hidden="true" />}
-      {here && !done ? <span className="absolute -inset-1.5 rounded-full border-2 border-brand/40 motion-safe:animate-waypoint-pulse" aria-hidden="true" /> : null}
+      {done ? (
+        <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
+      ) : (
+        <span className={cn("rounded-full", here ? "size-3 bg-progress" : cn("size-2.5", LANE_CLASSES[lane].dot))} aria-hidden="true" />
+      )}
+      {here && !done ? <span className="absolute -inset-1.5 rounded-full border-2 border-progress/40 motion-safe:animate-waypoint-pulse" aria-hidden="true" /> : null}
     </span>
   );
   if (!onSelect) return <span aria-hidden="true">{marker}</span>;
@@ -92,7 +99,7 @@ export function Trail({ stops, label, startLabel = "Start", summitLabel = "Summi
               <m.path
                 d={geometry.progressD}
                 fill="none"
-                stroke={geometry.summitReached ? "rgb(var(--v5-success))" : v5LaneColor("must_know")}
+                stroke="rgb(var(--v5-progress))"
                 strokeWidth={4}
                 strokeLinecap="round"
                 initial={{ pathLength: 0 }}
@@ -135,7 +142,7 @@ export function Trail({ stops, label, startLabel = "Start", summitLabel = "Summi
                       <>
                         <span className={cn("block font-display font-semibold leading-snug text-fg-1", compact ? "text-small" : "text-body")}>{stop.title}</span>
                         {stop.meta ? <span className="block font-mono text-caption text-fg-2">{stop.meta}</span> : null}
-                        {here ? <span className="block text-caption font-semibold text-brand-fg">You are here</span> : null}
+                        {here ? <span className="block text-caption font-semibold text-progress-fg">You are here</span> : null}
                         {stop.done ? <span className="sr-only">Done</span> : null}
                       </>
                     ) : (

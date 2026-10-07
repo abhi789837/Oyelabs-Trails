@@ -2,7 +2,9 @@ import { Suspense, useState } from "react";
 import { BookMarked, BookOpen, CalendarRange, Inbox, ShieldCheck, LayoutDashboard, Library, Repeat, Sun, UserPlus, Users, UserRound, BarChart3, type LucideIcon } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
-import { Logo } from "@/components/layout/Logo";
+// Each brand component from its own file, not the barrel (the lesson route's budget).
+import { Logo } from "@/components/brand/Logo";
+import { Mark } from "@/components/brand/Mark";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { isStaffRole } from "@shared/uiFlag";
 import { cn } from "@/lib/utils";
@@ -80,7 +82,7 @@ function SideNavLink({ item }: { item: NavItem }) {
         cn(
           "flex min-h-10 items-center gap-3 rounded-md px-3 text-sm font-medium",
           focusRing,
-          isActive ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+          isActive ? "bg-brand-soft text-brand-fg" : "text-muted-foreground hover:bg-accent hover:text-foreground",
         )
       }
     >
@@ -121,8 +123,13 @@ export function LearnerShell() {
     <div className="flex min-h-dvh flex-col bg-background text-foreground">
       <SkipLink />
       <header className="sticky top-0 z-30 flex h-14 items-center border-b bg-background/95 px-4 backdrop-blur sm:px-6">
-        <NavLink to="/learn" className={cn("rounded-md", focusRing)} aria-label="Oyelearn, Today">
-          <Logo variant="horizontal" height={24} decorative />
+        {/* The full logo from md up (24 px tall = 102 px wide, over the 96 px minimum); the mark on a phone. */}
+        <NavLink to="/learn" className={cn("flex items-center rounded-md", focusRing)} aria-label="Oyelearn, Today">
+          <Mark size={28} decorative className="md:hidden" />
+          {/* A wrapper carries the breakpoint: the logo's own inline-flex would beat "hidden". */}
+          <span className="hidden md:block">
+            <Logo theme="auto" size={24} decorative />
+          </span>
         </NavLink>
       </header>
       <div className="flex flex-1">
@@ -153,7 +160,7 @@ export function LearnerShell() {
           </RouteErrorBoundary>
         </main>
       </div>
-      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-30 border-t bg-background md:hidden">
+      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
         <ul className="grid grid-cols-5">
           {LEARNER_NAV.map((item) => {
             const Icon = item.icon;
@@ -164,13 +171,16 @@ export function LearnerShell() {
                   end={item.end}
                   className={({ isActive }) =>
                     cn(
-                      "flex min-h-14 flex-col items-center justify-center gap-1 text-[11px] font-medium",
+                      "group flex min-h-14 flex-col items-center justify-center gap-1 text-[11px] font-medium",
                       focusRing,
-                      isActive ? "text-foreground" : "text-muted-foreground",
+                      isActive ? "text-brand-fg" : "text-muted-foreground",
                     )
                   }
                 >
-                  <Icon className="h-5 w-5" aria-hidden="true" />
+                  {/* The active page's icon sits on a Mist pill, as in the admin's bottom bar. */}
+                  <span className="grid h-7 w-12 place-items-center rounded-full transition-colors duration-200 group-aria-[current=page]:bg-brand-soft">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
                   {item.label}
                 </NavLink>
               </li>
@@ -190,9 +200,9 @@ export function AdminShell() {
       <SkipLink />
       <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur sm:px-6">
         <NavLink to="/admin" className={cn("rounded-md", focusRing)} aria-label="Oyelearn admin, Inbox">
-          <Logo variant="horizontal" height={24} decorative />
+          <Logo theme="auto" size={24} decorative />
         </NavLink>
-        <span className="font-mono text-xs text-muted-foreground">Admin</span>
+        <span className="rounded-sm bg-brand-soft px-1.5 py-0.5 text-xs font-medium text-brand-fg">Admin</span>
         <div className="ml-auto flex items-center gap-1">
           <NavLink to="/learn" className={cn("flex min-h-9 items-center rounded-md px-3 text-sm text-muted-foreground hover:bg-accent hover:text-foreground", focusRing)}>
             Learner view

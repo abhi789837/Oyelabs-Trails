@@ -176,7 +176,7 @@ function Chip({ pressed, onClick, children }: { pressed: boolean; onClick: () =>
       aria-pressed={pressed}
       onClick={onClick}
       className={cn(
-        "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark",
+        "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
         pressed ? "border-primary bg-primary text-primary-foreground" : "bg-surface text-foreground hover:bg-accent",
       )}
     >
@@ -194,7 +194,7 @@ function TermList({ terms, current, search }: { terms: GlossaryTerm[]; current?:
             to={`/glossary/${term.id}${search}`}
             aria-current={term.id === current ? "page" : undefined}
             className={cn(
-              "-mx-2 block rounded-md px-2 py-2 transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark",
+              "-mx-2 block rounded-md px-2 py-2 transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
               term.id === current && "bg-accent",
             )}
           >
@@ -378,7 +378,7 @@ function TermLinks({ ids, nameOf, href }: { ids: string[]; nameOf: (id: string) 
         <li key={id}>
           <Link
             to={href(id)}
-            className="inline-block rounded-sm border bg-surface px-2 py-0.5 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+            className="inline-block rounded-sm border bg-surface px-2 py-0.5 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
           >
             {nameOf(id)}
           </Link>

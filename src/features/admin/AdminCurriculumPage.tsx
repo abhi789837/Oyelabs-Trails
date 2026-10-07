@@ -197,7 +197,7 @@ export default function AdminCurriculumPage() {
         <h1 className="font-display text-2xl font-bold">Curriculum</h1>
         <Link
           to="/admin/curriculum/test-items"
-          className="inline-flex h-8 items-center rounded-md border px-3 text-sm font-medium hover:bg-surface-sunken focus-visible:outline-2 focus-visible:outline-trailmark"
+          className="inline-flex h-8 items-center rounded-md border px-3 text-sm font-medium hover:bg-surface-sunken focus-visible:outline-2 focus-visible:outline-primary-strong"
         >
           Test items
         </Link>

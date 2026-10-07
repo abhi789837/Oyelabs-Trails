@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 
 import { Button } from "@/v5/design/components/Button";
 import { Dialog } from "@/v5/design/components/Overlays";
-import { Logo } from "@/v5/design/components/Showcase";
+import { Logo } from "@/components/brand/Logo";
 import { ContourBackground } from "@/v5/design/components/States";
 import { cn } from "@/v5/design/cn";
 
@@ -13,9 +13,9 @@ import { cn } from "@/v5/design/cn";
 export function CalmPage({ title, children, actions, wide }: { title?: ReactNode; children?: ReactNode; actions?: ReactNode; wide?: boolean }) {
   return (
     <main className="relative isolate flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-surface-0 px-4 py-12 text-fg-1">
-      <ContourBackground seed={7} className="-z-10 opacity-60" />
+      <ContourBackground seed={7} className="-z-10" />
       <div className={cn("flex w-full flex-col items-center text-center", wide ? "max-w-3xl" : "max-w-xl")}>
-        <Logo variant="stacked" className="mb-8 h-16" />
+        <Logo variant="endorsed" theme="auto" size={64} clearSpace={false} className="mb-8" />
         {title ? <h1 className="font-display text-h2 font-semibold text-fg-1">{title}</h1> : null}
         {children ? <div className="mt-3 w-full text-body text-fg-2">{children}</div> : null}
         {actions ? <div className="mt-8 flex flex-wrap justify-center gap-3">{actions}</div> : null}

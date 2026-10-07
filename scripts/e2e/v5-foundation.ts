@@ -341,7 +341,7 @@ async function main(): Promise<void> {
     const anonPage = await anon.newPage();
     await anonPage.goto(`${BASE}/verify/x`, { waitUntil: "networkidle", timeout: WAIT });
     ok(new URL(anonPage.url()).pathname === "/verify/x", `stays on /verify/x (${new URL(anonPage.url()).pathname})`);
-    ok(await seesHeading(anonPage, "Check a certificate"), "verify page renders");
+    ok(await seesHeading(anonPage, "Verify a certificate"), "verify page renders");
     await anon.close();
     await adminCtx.close();
   } finally {

@@ -15,7 +15,7 @@ import TrackPage from "@/pages/TrackPage";
 import { useMyAssessmentStore } from "@/store/assessmentStore";
 import { AssessmentBanner } from "./AssessmentBanner";
 import { CompletionWatcher } from "./CompletionWatcher";
-import { Logo } from "./Logo";
+import { Logo } from "@/components/brand/Logo";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import CoursePage from "@/pages/CoursePage";
@@ -94,10 +94,8 @@ function SiteFooter() {
   return (
     <footer className="mt-auto border-t">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-4 sm:px-6">
-        <Logo variant="mark" height={18} decorative />
-        <p className="font-mono text-xs text-muted-foreground">
-          Oyelearn <span aria-hidden="true">&middot;</span> by Oyelabs
-        </p>
+        {/* The endorsed lockup says "by Oyelabs" itself; 28 px tall is 102 px wide (over the 96 px minimum). */}
+        <Logo variant="endorsed" theme="auto" size={28} clearSpace={false} />
       </div>
     </footer>
   );

@@ -43,6 +43,9 @@
   --v5-brand-fg: 24 86 180;
   --v5-on-brand: 255 255 255;
   --v5-brand-soft: 225 235 250;
+  /* Charts: series 1 is --v5-brand, series 2 Night Navy (#0B2347); amber only for a target line or
+     the learner's own highlight. */
+  --v5-chart-2: 11 35 71;
 
   /* Amber: progress and achievement only. The fill is #CD7006 in light (3:1 on white, Cloud and the
      track; #F59E0B is 2.15:1 on white); amber text is #B45309. */
@@ -106,6 +109,8 @@
   --v5-brand-fg: 148 187 244;
   --v5-on-brand: 10 20 40;
   --v5-brand-soft: 20 40 76;
+  /* Navy disappears on Night, so the second series is the light Sky tint (brand-200). */
+  --v5-chart-2: 194 216 250;
 
   --v5-progress: 245 158 11;
   --v5-progress-fg: 251 191 36;

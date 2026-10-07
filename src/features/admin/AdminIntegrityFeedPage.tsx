@@ -126,7 +126,7 @@ export default function AdminIntegrityFeedPage() {
           <Link
             to={`/admin/people/${row.original.userId}`}
             onClick={(e) => e.stopPropagation()}
-            className="text-sm underline decoration-trailmark decoration-2 underline-offset-4"
+            className="text-sm underline decoration-primary decoration-2 underline-offset-4"
           >
             {row.original.displayName}
           </Link>
@@ -262,7 +262,7 @@ function EventDetail({ event }: { event: FeedEvent }) {
       <p>
         <Link
           to={`/admin/people/${event.userId}`}
-          className="underline decoration-trailmark decoration-2 underline-offset-4"
+          className="underline decoration-primary decoration-2 underline-offset-4"
         >
           {event.displayName}
         </Link>{" "}

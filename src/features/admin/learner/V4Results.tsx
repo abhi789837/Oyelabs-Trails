@@ -177,7 +177,7 @@ export function V4Results({
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls={listId}
-            className="flex w-full items-center gap-2 rounded-md px-4 py-3 text-left text-sm font-medium hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+            className="flex w-full items-center gap-2 rounded-md px-4 py-3 text-left text-sm font-medium hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong"
           >
             {open ? "Hide questions and answers" : `Show all ${sorted.length} questions and answers`}
             <ChevronDown className={cn("ml-auto size-4 text-muted-foreground transition-transform", open && "rotate-180")} aria-hidden="true" />

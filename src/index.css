@@ -480,6 +480,28 @@
   stroke-dasharray: 308;
   animation: brand-loader-draw 1.4s ease-in-out infinite;
 }
+/* ProgressRing: the amber arc draws up to the learner's progress once, then the dot lands at its tip. */
+@keyframes brand-ring-fill {
+  from {
+    stroke-dasharray: 0 400;
+  }
+}
+@keyframes brand-ring-dot {
+  0%,
+  60% {
+    opacity: 0;
+  }
+}
+.brand-ring-fill {
+  animation: brand-ring-fill 0.7s cubic-bezier(0.2, 0, 0, 1);
+}
+.brand-ring-dot {
+  animation: brand-ring-dot 0.7s ease-out;
+}
+[data-motion="reduce"] .brand-ring-fill,
+[data-motion="reduce"] .brand-ring-dot {
+  animation: none !important;
+}
 /* Reduced motion (the OS, or Me → Settings in v5): a still, three-quarter ring. */
 @media (prefers-reduced-motion: reduce) {
   :root:not([data-reduced-motion="off"]) .brand-loader-spin,

@@ -47,6 +47,7 @@ export default function ComponentsCore() {
               <Trash2 aria-hidden="true" /> Remove
             </Button>
             <Button variant="success">Mark as done</Button>
+            <Button variant="achievement">Claim certificate</Button>
             <Button variant="link">See all</Button>
             <Button variant="primary" loading>
               Saving

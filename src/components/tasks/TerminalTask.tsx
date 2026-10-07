@@ -117,7 +117,7 @@ export function TerminalTask({ task, value, onChange, readOnly, answer, idPrefix
                   document.getElementById(tabId(next))?.focus();
                 }}
                 className={cn(
-                  "px-3 py-1.5 font-mono text-xs focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark",
+                  "px-3 py-1.5 font-mono text-xs focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong",
                   i === activeFile ? "bg-surface font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -138,7 +138,7 @@ export function TerminalTask({ task, value, onChange, readOnly, answer, idPrefix
               autoCorrect="off"
               rows={Math.min(18, Math.max(6, fileContent(file.path).split("\n").length + 1))}
               onChange={(e) => emit({ files: { ...edited, [file.path]: e.target.value.slice(0, 4000) } })}
-              className="block w-full resize-y bg-editor px-3 py-2 font-mono text-[13px] leading-relaxed text-editor-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+              className="block w-full resize-y bg-editor px-3 py-2 font-mono text-[13px] leading-relaxed text-editor-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong"
             />
           </div>
         </div>
@@ -184,7 +184,7 @@ export function TerminalTask({ task, value, onChange, readOnly, answer, idPrefix
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck={false}
-            className="min-w-0 flex-1 bg-transparent text-editor-foreground outline-none placeholder:opacity-50 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+            className="min-w-0 flex-1 bg-transparent text-editor-foreground outline-none placeholder:opacity-50 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
             placeholder={readOnly ? "" : "type a command"}
           />
         </div>

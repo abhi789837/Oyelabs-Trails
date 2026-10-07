@@ -95,6 +95,8 @@ export interface CelebrationProps {
   title: string;
   detail?: ReactNode;
   icon?: ReactNode;
+  /** Replaces the round icon badge entirely (the weekly summit's animated ring). */
+  badge?: ReactNode;
   /** Capped at 2000 ms. */
   durationMs?: number;
   confetti?: boolean;
@@ -105,7 +107,7 @@ export interface CelebrationProps {
  * the button, Escape or a click, and static under reduced motion (no confetti, no movement).
  * canvas-confetti loads only when a celebration actually runs.
  */
-export function Celebration({ open, onDone, title, detail, icon, durationMs = 1800, confetti = true }: CelebrationProps) {
+export function Celebration({ open, onDone, title, detail, icon, badge, durationMs = 1800, confetti = true }: CelebrationProps) {
   const reduce = usePrefersReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const done = useCallback(() => onDone(), [onDone]);
@@ -160,9 +162,16 @@ export function Celebration({ open, onDone, title, detail, icon, durationMs = 18
             transition={springs.gentle}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-3 grid size-14 place-items-center rounded-full bg-success-soft text-success-fg [&_svg]:size-7" aria-hidden="true">
-              {icon ?? <Mountain />}
-            </div>
+            {/* Amber celebrates (brand kit p6): a win's badge is on the amber tint. */}
+            {badge ? (
+              <div className="mb-3" aria-hidden="true">
+                {badge}
+              </div>
+            ) : (
+              <div className="mb-3 grid size-14 place-items-center rounded-full bg-progress-soft text-progress-fg [&_svg]:size-7" aria-hidden="true">
+                {icon ?? <Mountain />}
+              </div>
+            )}
             <p className="font-display text-h3 font-semibold text-fg-1">{title}</p>
             {detail ? <p className="mt-1 text-small text-fg-2">{detail}</p> : null}
             <button type="button" onClick={done} className="mt-4 inline-flex min-h-8 items-center gap-1 rounded-control px-3 text-small font-medium text-fg-2 hover:bg-sunken hover:text-fg-1">

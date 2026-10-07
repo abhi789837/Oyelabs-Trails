@@ -14,7 +14,7 @@ import { Dialog } from "@/v5/design/components/Overlays";
 import { Badge } from "@/v5/design/components/Primitives";
 import { SkillMeter } from "@/v5/design/components/Stats";
 import { ContourBackground, ErrorState } from "@/v5/design/components/States";
-import { Logo } from "@/v5/design/components/Showcase";
+import { Logo } from "@/components/brand/Logo";
 import { cn } from "@/v5/design/cn";
 import { usePrefersReducedMotion } from "@/v5/design/hooks";
 
@@ -69,9 +69,9 @@ export default function Results() {
 function Page({ children }: { children: React.ReactNode }) {
   return (
     <main className="relative isolate min-h-dvh overflow-hidden bg-surface-0 text-fg-1">
-      <ContourBackground seed={11} className="-z-10 h-[28rem] opacity-70" />
+      <ContourBackground seed={11} className="-z-10 h-[28rem]" />
       <div className="mx-auto flex w-full max-w-4xl flex-col px-4 pb-20 pt-8 sm:px-6 md:pt-12">
-        <Logo className="mb-10 h-8" />
+        <Logo theme="auto" size={32} clearSpace={false} className="mb-10" />
         {children}
       </div>
     </main>

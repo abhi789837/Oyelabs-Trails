@@ -15,6 +15,7 @@ import { motivationApi } from "./api";
 import { subscribeMotivation, type MotivationCommand } from "./celebrate";
 import { claimOnce, celebrationKey, digestEvents, toPending, type PendingCelebration } from "./logic";
 import { NotificationBell } from "./NotificationBell";
+import { SummitRing } from "./SummitRing";
 import { TeamBoard, WeeklyGoalField } from "./ProgressPanel";
 import { Welcome } from "./Welcome";
 
@@ -247,7 +248,7 @@ export default function HostImpl() {
       <Welcome open={welcomeOpen} onClose={closeWelcome} />
 
       {current && mode === "animated" ? (
-        <Celebration key={current.key} open onDone={finish} title={current.title} detail={current.detail} icon={ICONS[current.kind]} durationMs={current.durationMs} confetti={current.confetti} />
+        <Celebration key={current.key} open onDone={finish} title={current.title} detail={current.detail} icon={ICONS[current.kind]} badge={current.kind === "weekly_summit" ? <SummitRing /> : undefined} durationMs={current.durationMs} confetti={current.confetti} />
       ) : current && mode === "static" ? (
         <StaticCelebration key={current.key} item={current} onDone={finish} />
       ) : null}
@@ -271,9 +272,15 @@ function StaticCelebration({ item, onDone }: { item: PendingCelebration; onDone:
   return (
     <div className="pointer-events-none fixed inset-x-0 top-16 z-[60] flex justify-center px-4" data-testid="celebration-static">
       <div role="status" aria-live="polite" className="pointer-events-auto flex items-center gap-3 rounded-card border border-line-1 bg-surface-3 py-2.5 pl-3 pr-2 shadow-e3">
-        <span className={cn("grid size-9 place-items-center rounded-full bg-success-soft text-success-fg [&_svg]:size-5")} aria-hidden="true">
-          {ICONS[item.kind]}
-        </span>
+        {item.kind === "weekly_summit" ? (
+          <span className="grid size-9 place-items-center" aria-hidden="true">
+            <SummitRing size={36} still />
+          </span>
+        ) : (
+          <span className={cn("grid size-9 place-items-center rounded-full bg-progress-soft text-progress-fg [&_svg]:size-5")} aria-hidden="true">
+            {ICONS[item.kind]}
+          </span>
+        )}
         <span className="min-w-0">
           <span className="block text-small font-semibold text-fg-1">{item.title}</span>
           {item.detail ? <span className="block text-caption text-fg-2">{item.detail}</span> : null}

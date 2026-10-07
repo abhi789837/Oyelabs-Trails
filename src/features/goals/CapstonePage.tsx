@@ -39,7 +39,7 @@ export default function CapstonePage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8">
-      <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark">
+      <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong">
         <ArrowLeft className="size-4" aria-hidden="true" />
         Dashboard
       </Link>

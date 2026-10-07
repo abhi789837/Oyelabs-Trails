@@ -12,7 +12,7 @@ export default function ClassifyPage() {
       <p className="mt-2 max-w-prose text-sm text-muted-foreground">
         Answer a few questions about the client&rsquo;s request to see what it is, how it is usually billed, and what to do
         next. Unsure of a word? Look it up in the{" "}
-        <Link to="/glossary" className="font-medium text-foreground underline decoration-trailmark decoration-2 underline-offset-4">
+        <Link to="/glossary" className="font-medium text-foreground underline decoration-primary decoration-2 underline-offset-4">
           glossary
         </Link>
         .

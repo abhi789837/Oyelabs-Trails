@@ -18,7 +18,7 @@ import type { ProctorController } from "@/features/proctor/useProctor";
 import { Button } from "@/v5/design/components/Button";
 import { Sheet as SideSheet } from "@/v5/design/components/Overlays";
 import { Badge, Kbd } from "@/v5/design/components/Primitives";
-import { Logo } from "@/v5/design/components/Showcase";
+import { Mark } from "@/components/brand/Mark";
 import { cn } from "@/v5/design/cn";
 
 import { useCalmConfirm, Spinner } from "./Frame";
@@ -359,7 +359,7 @@ export function TestSheet({
     <div className="relative min-h-dvh bg-surface-0 text-fg-1">
       <header className="sticky top-0 z-30 border-b border-line-1 bg-surface-1/95 shadow-e1 backdrop-blur-sm">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5 sm:px-6">
-          <Logo variant="mark" className="hidden h-7 sm:inline-flex" />
+          <Mark size={28} className="hidden sm:inline-flex" />
           <Button variant="secondary" size="sm" className="lg:hidden" onClick={() => setNavOpen(true)} aria-haspopup="dialog">
             <LayoutGrid aria-hidden="true" />
             Questions

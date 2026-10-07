@@ -274,7 +274,7 @@ function LiveCard({
           <div className="flex flex-wrap items-center gap-2">
             <Link
               to={`/admin/people/${row.userId}`}
-              className="truncate font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+              className="truncate font-medium underline decoration-primary decoration-2 underline-offset-4"
             >
               {row.displayName}
             </Link>

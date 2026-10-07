@@ -22,7 +22,9 @@ export { Field, Input, Textarea, type FieldProps } from "./components/Field";
 export { Avatar, Badge, Kbd, Tabs, TabsContent, TabsList, TabsTrigger, badgeVariants, initialsOf } from "./components/Primitives";
 export { Tooltip, TooltipProvider } from "./components/Tooltip";
 export { Card, CardHeader, type CardProps } from "./components/Card";
-export { ProgressBar, ProgressRing, type ProgressRingProps, type ProgressBarProps } from "./components/Progress";
+export { ProgressBar, type ProgressBarProps, type ProgressTone } from "./components/Progress";
+// The goal ring is the brand's own (the mark's rings and the "you are here" dot).
+export { ProgressRing, type ProgressRingProps } from "@/components/brand/ProgressRing";
 export { SkillMeter, StatTile, StreakFlame, XPCounter, type StatTileProps, type StreakFlameProps } from "./components/Stats";
 export { LANES, LANE_CLASSES, LaneChip, v5LaneColor } from "./components/LaneChip";
 export { Trail, Waypoint, type TrailProps, type WaypointProps } from "./components/Trail";

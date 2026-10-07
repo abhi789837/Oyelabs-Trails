@@ -92,7 +92,7 @@ function KnownTermLink({ term, text }: { term: GlossaryTerm; text: string }) {
           }}
           className={cn(
             "inline cursor-help rounded-[2px] p-0 text-left font-[inherit] text-inherit underline decoration-dotted decoration-[1.5px] underline-offset-[3px]",
-            "decoration-foreground/50 hover:decoration-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark",
+            "decoration-foreground/50 hover:decoration-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
           )}
         >
           {text}
@@ -142,7 +142,7 @@ export function TermCardBody({ term }: { term: GlossaryTerm }) {
       </div>
       <Link
         to={`/glossary/${term.id}`}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
       >
         <BookOpenText className="size-4" aria-hidden="true" />
         Open in glossary

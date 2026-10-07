@@ -40,7 +40,7 @@ export function UploadButton({ kind, label, accept, disabled, onUploaded }: { ki
           <span className="text-caption text-fg-2">
             Uploading {progress.name}… {Math.round(progress.share * 100)}%
           </span>
-          <ProgressBar value={Math.round(progress.share * 100)} label={`Uploading ${progress.name}`} size="sm" />
+          <ProgressBar value={Math.round(progress.share * 100)} tone="brand" label={`Uploading ${progress.name}`} size="sm" />
         </div>
       ) : null}
       {error ? (

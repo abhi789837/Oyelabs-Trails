@@ -2,11 +2,11 @@ import { Award, ChevronRight, Compass, Pin, Snowflake, Trophy, TrendingUp } from
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { ProgressRing } from "@/components/brand/ProgressRing";
 import type { AnnouncementView, TodayGoal, TodayResponse, TodayStreak, TodayUpNextItem, TodayWeek, TodayWin } from "@shared/today";
 import { Button } from "@/v5/design/components/Button";
 import { Card, CardHeader } from "@/v5/design/components/Card";
 import { LANE_CLASSES } from "@/v5/design/components/LaneChip";
-import { ProgressRing } from "@/v5/design/components/Progress";
 import { EmptyState, ErrorState } from "@/v5/design/components/States";
 import { StreakFlame } from "@/v5/design/components/Stats";
 import { Trail } from "@/v5/design/components/Trail";
@@ -27,14 +27,16 @@ export function GoalRing({ goal }: { goal: TodayGoal }) {
   const label = byHours ? `Weekly goal: ${hoursLabel(goal.loggedMinutes)} of ${hoursLabel(goal.goalMinutes!)} hours` : `Weekly goal: ${goal.steps} of 3 steps`;
   return (
     <div className="flex items-center gap-4">
-      <ProgressRing value={value} max={max} label={label} tone={goal.met ? "success" : "brand"} size={88}>
-        <span className="flex flex-col items-center leading-tight">
-          <span className="text-h4">{byHours ? `${hoursLabel(goal.loggedMinutes)} h` : goal.steps}</span>
-          <span className="font-sans text-caption font-normal text-fg-2">of {byHours ? `${hoursLabel(goal.goalMinutes!)} h` : "3 steps"}</span>
-        </span>
+      {/* The brand's ring: amber fills to the week's progress with the dot at its tip. It never
+          fully closes, even when the goal is met (there's always a next week). */}
+      <ProgressRing value={max > 0 ? (value / max) * 100 : 0} label={label} size={96}>
+        <span className="font-display text-body font-semibold tabular-nums leading-none text-fg-1">{byHours ? `${hoursLabel(goal.loggedMinutes)}h` : goal.steps}</span>
       </ProgressRing>
       <div className="min-w-0">
         <p className="font-display text-h4 font-semibold text-fg-1">Weekly goal</p>
+        <p className="text-small font-medium tabular-nums text-fg-1">
+          {byHours ? `${hoursLabel(goal.loggedMinutes)} of ${hoursLabel(goal.goalMinutes!)} hours` : `${goal.steps} of 3 steps`}
+        </p>
         <p className="text-small text-fg-2">
           {goal.met
             ? "Goal met. Nice work."

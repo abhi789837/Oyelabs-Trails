@@ -25,7 +25,8 @@ import { useCurrentUser } from "@/features/auth/AuthProvider";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 import { CommandPalette } from "@/components/layout/CommandPalette";
-import { Logo } from "@/components/layout/Logo";
+import { Logo } from "@/components/brand/Logo";
+import { Mark } from "@/components/brand/Mark";
 import { NotificationCentre } from "@/components/layout/NotificationCentre";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { spring } from "@/lib/motion";
@@ -135,9 +136,11 @@ export function AdminLayout() {
 
       <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-sm">
         <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
-          <Logo variant="mark" height={24} decorative className="sm:hidden" />
-          <Logo variant="horizontal" height={22} decorative className="hidden sm:block" />
-          <span className="truncate border-l pl-3 font-mono text-[11px] leading-none text-muted-foreground">
+          <Mark size={26} decorative className="sm:hidden" />
+          <span className="hidden sm:block">
+            <Logo theme="auto" size={24} decorative clearSpace={false} />
+          </span>
+          <span className="truncate rounded-sm bg-brand-50 px-1.5 py-0.5 text-xs font-medium leading-none text-primary-strong dark:bg-brand-900/60 dark:text-brand-300">
             Admin console
           </span>
 

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/v5/design/components/Button";
 import { Input } from "@/v5/design/components/Field";
 import { Badge } from "@/v5/design/components/Primitives";
-import { ProgressBar } from "@/v5/design/components/Progress";
+import { ProgressRing } from "@/components/brand/ProgressRing";
 import { EmptyState, ErrorState } from "@/v5/design/components/States";
 import { cn } from "@/v5/design/cn";
 import { transitions } from "@/v5/design/motion";
@@ -235,7 +235,19 @@ function CourseCard({ item }: { item: LibraryItem }) {
         </span>
         <FormatChip format={item.format} />
       </div>
-      {started && !finished ? <ProgressBar value={item.doneCount} max={item.lessonCount} label="Lessons done" showValue={`${item.doneCount} of ${item.lessonCount}`} size="sm" /> : null}
+      {started && !finished ? <LessonsDone done={item.doneCount} total={item.lessonCount} size={32} /> : null}
     </article>
+  );
+}
+
+/** A course's progress in the brand's ring (amber arc, the dot at its tip), with the count beside it. */
+export function LessonsDone({ done, total, size }: { done: number; total: number; size: number }) {
+  return (
+    <div className="flex items-center gap-2.5 text-small">
+      <ProgressRing value={total > 0 ? (done / total) * 100 : 0} size={size} label="Lessons done" />
+      <span className="tabular-nums text-fg-1">
+        {done} of {total} lessons done
+      </span>
+    </div>
   );
 }

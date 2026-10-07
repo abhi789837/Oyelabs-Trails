@@ -140,7 +140,7 @@ function QuestionStep({
                 key={option.value}
                 className={cn(
                   "flex min-h-14 cursor-pointer items-center gap-3 rounded-md border px-4 py-3 text-[0.95rem] transition-colors",
-                  "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-trailmark",
+                  "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary-strong",
                   checked ? "border-primary bg-primary/8" : "bg-surface hover:bg-accent",
                 )}
               >

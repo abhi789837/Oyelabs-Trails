@@ -514,7 +514,7 @@ export default function AdminPeoplePage() {
                       <a
                         href={adminApi.exportUserUrl(u.id)}
                         download
-                        className="inline-flex shrink-0 items-center gap-1 rounded-sm text-xs font-medium text-foreground underline decoration-trailmark decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+                        className="inline-flex shrink-0 items-center gap-1 rounded-sm text-xs font-medium text-foreground underline decoration-primary decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
                       >
                         <Download className="size-3" aria-hidden="true" />
                         Export data
@@ -594,7 +594,7 @@ export default function AdminPeoplePage() {
                       { push: true },
                     )
                   }
-                  className="rounded-sm underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+                  className="rounded-sm underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
                 >
                   {archivedCount} archived
                 </button>
@@ -745,7 +745,7 @@ function PersonCell({ user }: { user: UserSummary }) {
           <Link
             to={`/admin/people/${user.id}`}
             onClick={(event) => event.stopPropagation()}
-            className="block truncate font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+            className="block truncate font-medium underline decoration-primary decoration-2 underline-offset-4"
           >
             {user.displayName}
           </Link>

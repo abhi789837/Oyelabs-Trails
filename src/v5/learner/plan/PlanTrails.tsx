@@ -22,7 +22,8 @@ import { OYELABS_BADGE_TEXT as OYELABS_BADGE } from "@shared/oyelabsCore";
  * The v5 trails, drawn from the v4.3 pure geometry (`features/plan/trailGeometry`). Same rule as
  * before: the route is ONE `<path>` with one `M` (`data-testid="week-trail-path"` /
  * `"overview-trail-path"`), and the walked part is a prefix of that same path, drawn over it.
- * Lane colours come from the v5 lane tokens.
+ * Lane colours come from the v5 lane tokens. The walked part is amber (progress, brand kit p6) and
+ * "You are here" is the mark's amber dot, sitting just ahead of the current stop.
  */
 
 const toneColor = (tone: string, alpha = 1) =>
@@ -51,6 +52,19 @@ function Endpoint({ waypoint, title, hint, end, done }: { waypoint: TrailWaypoin
   );
 }
 
+/**
+ * "You are here": the mark's amber dot, just ahead of the current stop (where the mark's dot sits
+ * ahead of its inner ring), with a soft pulse that reduced motion stills.
+ */
+export function HereDot() {
+  return (
+    <span aria-hidden="true" className="pointer-events-none absolute -right-2 -top-2 grid size-3.5 place-items-center">
+      <span className="absolute inset-0 rounded-full bg-progress/40 motion-safe:animate-waypoint-pulse" />
+      <span className="relative size-3.5 rounded-full border-2 border-surface-0 bg-progress" />
+    </span>
+  );
+}
+
 function TrailSvg({ geometry, testId, progressTestId, compact }: { geometry: TrailGeometry; testId: string; progressTestId: string; compact?: boolean }) {
   const reduce = usePrefersReducedMotion();
   return (
@@ -65,7 +79,7 @@ function TrailSvg({ geometry, testId, progressTestId, compact }: { geometry: Tra
           data-testid={progressTestId}
           d={geometry.progressD}
           fill="none"
-          stroke={geometry.summitReached ? "rgb(var(--v5-success))" : "rgb(var(--v5-brand))"}
+          stroke="rgb(var(--v5-progress))"
           strokeWidth={4}
           strokeLinecap="round"
           initial={reduce ? false : { pathLength: 0 }}
@@ -135,7 +149,7 @@ export function WeekTrail({ week, selectedId, onSelect, hereId = null }: { week:
                     )}
                     style={{ left: wp.point.x, top: wp.point.y }}
                   >
-                    {here && !done ? <span aria-hidden="true" className="absolute -inset-1.5 -z-10 rounded-full border-2 border-brand/40 motion-safe:animate-waypoint-pulse" /> : null}
+                    {here && !done ? <HereDot /> : null}
                     {done ? <Check className="size-4" strokeWidth={3} aria-hidden="true" /> : <span aria-hidden="true">{i + 1}</span>}
                   </button>
                   <span
@@ -149,7 +163,7 @@ export function WeekTrail({ week, selectedId, onSelect, hereId = null }: { week:
                       {"   "}
                       {formatMinutes(item.minutes)}
                     </span>
-                    {here && !done ? <span className="block text-caption font-semibold text-brand-fg">You are here</span> : null}
+                    {here && !done ? <span className="block text-caption font-semibold text-progress-fg">You are here</span> : null}
                   </span>
                 </li>
               );
@@ -173,7 +187,7 @@ export function LaneLegend({ week }: { week: WeekView }) {
         </li>
       ))}
       <li className="inline-flex items-center gap-1.5">
-        <span className="h-1 w-4 shrink-0 rounded-full bg-brand" aria-hidden="true" /> Walked
+        <span className="h-1 w-4 shrink-0 rounded-full bg-progress" aria-hidden="true" /> Walked
       </li>
     </ul>
   );
@@ -277,11 +291,12 @@ function Milestone({ item, waypoint, current, weekNumber }: { item: PathItemView
         aria-hidden="true"
         className={cn(
           "absolute grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2",
-          done ? "border-success bg-success text-on-success" : current ? "border-brand bg-surface-1" : "border-line-2 bg-surface-1",
+          done ? "border-success bg-success text-on-success" : current ? "border-progress bg-surface-1" : "border-line-2 bg-surface-1",
         )}
         style={{ left: waypoint.point.x, top: waypoint.point.y }}
       >
         {done ? <Check className="size-3.5" strokeWidth={3} /> : <span className={cn("size-2.5 rounded-full", LANE_CLASSES[tone].dot)} />}
+        {current && !done ? <HereDot /> : null}
       </span>
       <span className={cn("absolute -translate-y-1/2", waypoint.label.side === "left" ? "text-right" : "text-left")} style={{ left: waypoint.label.left, top: waypoint.point.y, width: waypoint.label.width }}>
         <span className="block font-display text-small font-semibold leading-snug text-fg-1">
@@ -290,7 +305,7 @@ function Milestone({ item, waypoint, current, weekNumber }: { item: PathItemView
         </span>
         <span className="block text-caption text-fg-2">
           {item.completedCount}/{item.topicCount} lessons{done ? ", done" : ""}
-          {current && weekNumber !== null ? <span className="font-semibold text-brand-fg">{` · Week ${weekNumber} is here`}</span> : null}
+          {current && weekNumber !== null ? <span className="font-semibold text-progress-fg">{` · Week ${weekNumber} is here`}</span> : null}
         </span>
         {needsLine(item) ? <span className="block text-caption text-fg-2">{needsLine(item)}</span> : null}
         {item.reason ? <span className="block text-caption text-fg-2">{item.reason}</span> : null}

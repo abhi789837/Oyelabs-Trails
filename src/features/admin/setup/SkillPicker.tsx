@@ -114,7 +114,7 @@ export function SkillPicker({
                 className="text-muted-foreground"
               >
                 <Plus aria-hidden="true" />
-                <span className="underline decoration-trailmark decoration-2 underline-offset-4">
+                <span className="underline decoration-primary decoration-2 underline-offset-4">
                   Can't find it? Request a skill
                 </span>
               </CommandItem>

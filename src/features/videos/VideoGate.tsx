@@ -35,7 +35,7 @@ export function VideoGate({
             <button
               type="button"
               onClick={() => onWatch(v.key)}
-              className="text-left font-medium underline decoration-trailmark decoration-2 underline-offset-4 hover:decoration-trailmark-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+              className="text-left font-medium underline decoration-primary decoration-2 underline-offset-4 hover:decoration-primary-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
             >
               {v.order}. {v.title}
             </button>

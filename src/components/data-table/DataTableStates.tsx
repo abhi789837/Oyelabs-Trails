@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { motion } from "motion/react";
 import { FilterX, Inbox, TriangleAlert } from "lucide-react";
 
+import { RingDevice } from "@/components/brand/RingDevice";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -43,8 +44,10 @@ export function EmptyState({ copy, icon }: { copy: EmptyStateCopy; icon?: ReactN
       variants={fadeUp}
       initial="hidden"
       animate="visible"
-      className="flex flex-col items-center px-6 py-14 text-center"
+      className="relative isolate flex flex-col items-center overflow-hidden px-6 py-14 text-center"
     >
+      {/* The brand's ring device, large and faint, instead of an illustration. */}
+      <RingDevice className="absolute -right-16 -top-24 -z-10 size-72 text-primary opacity-[0.07]" />
       <span className="mb-3 flex size-11 items-center justify-center rounded-full bg-surface-sunken text-muted-foreground [&_svg]:size-5">
         {icon ?? <Inbox aria-hidden="true" />}
       </span>
@@ -89,8 +92,10 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
       initial="hidden"
       animate="visible"
       role="alert"
-      className="flex flex-col items-center px-6 py-14 text-center"
+      className="relative isolate flex flex-col items-center overflow-hidden px-6 py-14 text-center"
     >
+      {/* The brand's ring device, large and faint, instead of an illustration. */}
+      <RingDevice className="absolute -right-16 -top-24 -z-10 size-72 text-primary opacity-[0.07]" />
       <span className="mb-3 flex size-11 items-center justify-center rounded-full bg-destructive/10 text-destructive [&_svg]:size-5">
         <TriangleAlert aria-hidden="true" />
       </span>

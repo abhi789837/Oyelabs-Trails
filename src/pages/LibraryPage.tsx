@@ -131,7 +131,7 @@ export default function LibraryPage() {
         <div className="relative mx-auto max-w-5xl px-4 pb-10 pt-12 sm:px-8">
           <Link
             to="/plan"
-            className="inline-flex items-center gap-1.5 rounded-md font-mono text-xs text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+            className="inline-flex items-center gap-1.5 rounded-md font-mono text-xs text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             My plan

@@ -146,7 +146,7 @@ export function AiCallsTable() {
             <Link
               to={`/admin/people/${row.original.subjectUserId}`}
               onClick={(e) => e.stopPropagation()}
-              className="text-sm underline decoration-trailmark decoration-2 underline-offset-4"
+              className="text-sm underline decoration-primary decoration-2 underline-offset-4"
             >
               {row.original.subjectName ?? row.original.subjectUsername}
             </Link>
@@ -248,7 +248,7 @@ function CallDetail({ call }: { call: AiCall }) {
         <p>
           <Link
             to={`/admin/people/${call.subjectUserId}`}
-            className="underline decoration-trailmark decoration-2 underline-offset-4"
+            className="underline decoration-primary decoration-2 underline-offset-4"
           >
             {call.subjectName ?? call.subjectUsername}
           </Link>{" "}

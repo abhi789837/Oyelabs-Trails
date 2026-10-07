@@ -11,7 +11,6 @@ import { useAuth } from "@/features/auth/AuthProvider";
 import { Button } from "@/v5/design/components/Button";
 import { Card } from "@/v5/design/components/Card";
 import { Badge } from "@/v5/design/components/Primitives";
-import { ProgressBar } from "@/v5/design/components/Progress";
 import { EmptyState, ErrorState } from "@/v5/design/components/States";
 import { transitions } from "@/v5/design/motion";
 import type { CourseDetail } from "@shared/me";
@@ -19,7 +18,7 @@ import type { CourseDetail } from "@shared/me";
 import { CourseSkeleton } from "../skeletons";
 import { PageFrame, V5Screen, formatMinutes, useApiData, useDelayed } from "../me/page";
 import { previewCourseDetail } from "./coursePreview";
-import { FormatChip, OyelabsBadge, RecommendedBadge } from "./LibraryPage";
+import { FormatChip, LessonsDone, OyelabsBadge, RecommendedBadge } from "./LibraryPage";
 import { LEVEL_LABELS } from "./libraryLogic";
 
 /**
@@ -79,6 +78,8 @@ function CourseScreen() {
   const lessons = c.syllabus.flatMap((s) => s.lessons);
   // Principle 3 (small and finishable): once started, say how much is left, not only the total.
   const minutesLeftIn = lessons.filter((l) => !l.done).reduce((sum, l) => sum + l.minutes, 0);
+  // "You are here": the lesson "Continue" opens (else the first open one) gets the mark's amber dot.
+  const hereId = started && !finished ? ((lessons.find((l) => !l.done && l.href === c.nextLessonHref) ?? lessons.find((l) => !l.done))?.id ?? null) : null;
 
   return (
     <PageFrame title={c.title} lead={c.summary || undefined} back={back}>
@@ -160,7 +161,21 @@ function CourseScreen() {
                           to={l.href}
                           className="flex min-h-(--v5-row-h) items-center gap-3 rounded-control border border-line-1 bg-surface-1 px-3 py-2 hover:bg-sunken focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                         >
-                          {l.done ? <><Check className="size-4 shrink-0 text-success-fg" aria-hidden="true" /><span className="sr-only">Done: </span></> : <CircleDashed className="size-4 shrink-0 text-fg-3" aria-hidden="true" />}
+                          {l.done ? (
+                            <>
+                              <Check className="size-4 shrink-0 text-success-fg" aria-hidden="true" />
+                              <span className="sr-only">Done: </span>
+                            </>
+                          ) : l.id === hereId ? (
+                            <>
+                              <span className="grid size-4 shrink-0 place-items-center" aria-hidden="true">
+                                <span className="size-2.5 rounded-full bg-progress" />
+                              </span>
+                              <span className="sr-only">You are here: </span>
+                            </>
+                          ) : (
+                            <CircleDashed className="size-4 shrink-0 text-fg-3" aria-hidden="true" />
+                          )}
                           <span className="min-w-0 flex-1 text-body">{l.title}</span>
                           {l.hasVideo ? <Film className="size-4 shrink-0 text-fg-3" aria-hidden="true" /> : <Text className="size-4 shrink-0 text-fg-3" aria-hidden="true" />}
                           <span className="sr-only">{l.hasVideo ? "Video lesson," : "Reading lesson,"}</span>
@@ -212,7 +227,7 @@ function CourseScreen() {
                 </>
               ) : null}
             </dl>
-            {started ? <ProgressBar value={c.doneCount} max={c.lessonCount} label="Lessons done" showValue={`${c.doneCount} of ${c.lessonCount}`} size="sm" /> : null}
+            {started ? <LessonsDone done={c.doneCount} total={c.lessonCount} size={44} /> : null}
             {c.nextLessonHref ? (
               <Button asChild variant="primary" size="lg">
                 <Link to={c.nextLessonHref}>{finished ? "Review it again" : started ? "Continue" : "Start"}</Link>

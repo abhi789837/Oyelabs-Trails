@@ -117,7 +117,7 @@ export default function RoleplayPracticePage() {
                   aria-checked={s.id === scenarioId}
                   onClick={() => setScenarioId(s.id)}
                   className={cn(
-                    "rounded-lg border px-4 py-3 text-left transition-colors hover:border-foreground/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark",
+                    "rounded-lg border px-4 py-3 text-left transition-colors hover:border-foreground/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
                     s.id === scenarioId ? "border-ridge bg-ridge/[0.06]" : "bg-card",
                   )}
                 >

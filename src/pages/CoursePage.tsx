@@ -214,7 +214,7 @@ function Lesson({
                 href={link.url}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex items-center gap-1.5 text-sm underline decoration-trailmark decoration-2 underline-offset-4"
+                className="inline-flex items-center gap-1.5 text-sm underline decoration-primary decoration-2 underline-offset-4"
               >
                 <Link2 className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
                 {link.label}

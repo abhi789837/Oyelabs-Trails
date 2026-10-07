@@ -177,7 +177,7 @@ export default function AdminGeneratedPage() {
             <Link
               to={`/admin/courses/${row.original.courseId}`}
               onClick={(event) => event.stopPropagation()}
-              className="block truncate font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+              className="block truncate font-medium underline decoration-primary decoration-2 underline-offset-4"
             >
               {row.original.title}
             </Link>

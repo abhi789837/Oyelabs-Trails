@@ -1,6 +1,7 @@
 import { MessagesSquare, Split } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { Logo } from "@/components/brand/Logo";
 import { Contours } from "@/components/trail/Contours";
 import { ElevationProfile } from "@/components/trail/ElevationProfile";
 import { StatusDot } from "@/components/trail/StatusDot";
@@ -36,8 +37,11 @@ export default function DashboardPage() {
       <section className="relative overflow-hidden border-b">
         <Contours className="text-foreground/[0.07]" seed={2} />
         <div className="relative mx-auto max-w-6xl px-4 pb-10 pt-12 sm:px-8 sm:pt-20">
-          <h1 className="text-2xl font-bold sm:text-3xl">Oyelearn</h1>
-          <p className="mt-3 max-w-prose text-lg text-muted-foreground">
+          {/* The tagline lockup is the heading; its alt text keeps the heading's name "Oyelearn". */}
+          <h1>
+            <Logo variant="tagline" theme="auto" size={44} clearSpace={false} />
+          </h1>
+          <p className="mt-5 max-w-prose text-lg text-muted-foreground">
             Four long trails through the stack Oyelabs ships with, deep enough for your first year and your tenth. Watch,
             read, then prove it on interview-level challenges, camp by camp.
           </p>
@@ -82,7 +86,7 @@ function ClassifyCard() {
     <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-8">
       <Link
         to="/tools/classify"
-        className="flex items-start gap-4 rounded-lg border bg-card px-5 py-4 transition-colors hover:border-foreground/30 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+        className="flex items-start gap-4 rounded-lg border bg-card px-5 py-4 transition-colors hover:border-foreground/30 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
       >
         <Split className="mt-0.5 size-6 shrink-0 text-primary" aria-hidden="true" />
         <span>
@@ -102,7 +106,7 @@ function RoleplayCard() {
     <div className="mx-auto max-w-6xl px-4 pt-3 sm:px-8">
       <Link
         to="/practice/roleplay"
-        className="flex items-start gap-4 rounded-lg border bg-card px-5 py-4 transition-colors hover:border-foreground/30 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+        className="flex items-start gap-4 rounded-lg border bg-card px-5 py-4 transition-colors hover:border-foreground/30 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
       >
         <MessagesSquare className="mt-0.5 size-6 shrink-0 text-ridge-strong" aria-hidden="true" />
         <span>
@@ -125,7 +129,7 @@ function ResumeLink({ progress }: { progress: Record<string, TopicProgress> }) {
   return (
     <p className="mt-6 text-sm">
       <span className="text-muted-foreground">Pick up where you left off: </span>
-      <Link to={topicPath(found.topic)} className="font-medium underline decoration-trailmark decoration-2 underline-offset-4">
+      <Link to={topicPath(found.topic)} className="font-medium underline decoration-primary decoration-2 underline-offset-4">
         {found.topic.title}
       </Link>
       <span className="text-muted-foreground"> in {found.module.name}</span>

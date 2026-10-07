@@ -222,7 +222,7 @@ function StatusLine({ path, busy }: { path: LearningPathView | null; busy: boole
         <p className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-2.5 text-sm">
           <span className="min-w-0 flex-1">{path.notice}</span>
           {path.setupNeeded && (
-            <Link to="/admin/ai" className="shrink-0 font-medium underline decoration-trailmark decoration-2 underline-offset-4">
+            <Link to="/admin/ai" className="shrink-0 font-medium underline decoration-primary decoration-2 underline-offset-4">
               Check the connection
             </Link>
           )}

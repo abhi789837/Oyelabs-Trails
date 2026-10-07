@@ -309,7 +309,7 @@ function WeekHeader({
 
         <Link
           to="/library"
-          className="mt-4 inline-flex items-center gap-1.5 rounded-md font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-md font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
         >
           <BookMarked className="h-3.5 w-3.5" aria-hidden="true" />
           {week.libraryLessonCount} lessons unlocked in your library
@@ -505,7 +505,7 @@ function WeekHistory({ week, history }: { week: WeekView; history: WeekResponse[
                   onClick={() => show(entry.id)}
                   aria-expanded={isOpen}
                   aria-controls={`past-week-${entry.id}`}
-                  className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2.5 text-left transition-colors duration-[120ms] hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+                  className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2.5 text-left transition-colors duration-[120ms] hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong"
                 >
                   <span className="font-medium">Week {entry.weekNumber}</span>
                   <span className="font-mono text-[11px] text-muted-foreground tabular">
@@ -574,7 +574,7 @@ function Disclosure({
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={`${id}-panel`}
-        className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 px-4 py-3 text-left transition-colors duration-[120ms] hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+        className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 px-4 py-3 text-left transition-colors duration-[120ms] hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong"
       >
         {icon}
         <span className="font-display font-semibold">{label}</span>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
 
+import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { TrackNav } from "./TrackNav";
@@ -17,7 +18,10 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" closeLabel="Close menu" className="flex flex-col p-0">
         <div className="border-b px-4 py-4">
-          <SheetTitle>Oyelearn</SheetTitle>
+          {/* The logo is the visible title; its alt text ("Oyelearn") names the dialog. */}
+          <SheetTitle>
+            <Logo theme="auto" size={24} clearSpace={false} />
+          </SheetTitle>
           <SheetDescription className="sr-only">Navigate between the dashboard and the four learning trails.</SheetDescription>
         </div>
         <div className="flex-1 overflow-y-auto px-3 py-4">

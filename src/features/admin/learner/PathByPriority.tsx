@@ -284,14 +284,14 @@ function CourseLine({ item, busy, compact, onRetry }: { item: PathItemView; busy
           // A curriculum module opens where the learner reads it: there is no course editor for it.
           <Link
             to={item.href}
-            className={cn("font-medium underline decoration-trailmark decoration-2 underline-offset-4", compact && "text-sm")}
+            className={cn("font-medium underline decoration-primary decoration-2 underline-offset-4", compact && "text-sm")}
           >
             {item.courseTitle}
           </Link>
         ) : item.courseId ? (
           <Link
             to={`/admin/courses/${item.courseId}`}
-            className={cn("font-medium underline decoration-trailmark decoration-2 underline-offset-4", compact && "text-sm")}
+            className={cn("font-medium underline decoration-primary decoration-2 underline-offset-4", compact && "text-sm")}
           >
             {item.courseTitle}
           </Link>
@@ -309,7 +309,7 @@ function CourseLine({ item, busy, compact, onRetry }: { item: PathItemView; busy
         {state === "needs_review" && (
           <Link
             to="/admin/generated"
-            className="text-xs font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+            className="text-xs font-medium underline decoration-primary decoration-2 underline-offset-4"
           >
             Review
           </Link>
@@ -409,7 +409,7 @@ export function PathInOrder({ path }: { path: LearningPathView | null }) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={listId}
-        className="flex w-full items-center gap-2 rounded-md px-4 py-3 text-left text-sm font-medium hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+        className="flex w-full items-center gap-2 rounded-md px-4 py-3 text-left text-sm font-medium hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong"
       >
         <ChevronDown className={cn("size-4 transition-transform motion-reduce:transition-none", open && "rotate-180")} aria-hidden="true" />
         In the order they walk it ({items.length} step{items.length === 1 ? "" : "s"})
@@ -450,7 +450,7 @@ export function PathInOrder({ path }: { path: LearningPathView | null }) {
               type="button"
               onClick={() => setLaterOpen((v) => !v)}
               aria-expanded={laterOpen}
-              className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm font-medium hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+              className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm font-medium hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong"
             >
               <ChevronDown className={cn("size-4 transition-transform motion-reduce:transition-none", laterOpen && "rotate-180")} aria-hidden="true" />
               {laterLabel(split.laterCount)}

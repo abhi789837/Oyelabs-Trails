@@ -304,7 +304,7 @@ const Playlist = forwardRef<VideoPlaylistHandle, { topicId: string; data: TopicV
                   </p>
                 )}
                 <div className="mt-4 flex justify-center gap-2">
-                  <Button ref={playNowRef} size="sm" onClick={() => dispatch({ type: "playNow" })} className="bg-trailmark text-trailmark-foreground hover:bg-trailmark/90">
+                  <Button ref={playNowRef} size="sm" onClick={() => dispatch({ type: "playNow" })}>
                     <Play aria-hidden="true" />
                     Play now
                   </Button>
@@ -408,7 +408,7 @@ const PlaylistItem = forwardRef<
       onClick={onSelect}
       aria-current={current ? "true" : undefined}
       className={cn(
-        "flex w-full gap-2.5 rounded-md border p-1.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark",
+        "flex w-full gap-2.5 rounded-md border p-1.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
         current ? "border-trailmark/70 bg-trailmark/10" : "border-transparent hover:border-foreground/20 hover:bg-surface",
       )}
     >
@@ -457,7 +457,7 @@ function AutoplayToggle({ checked, onChange }: { checked: boolean; onChange: (va
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-1 py-0.5 text-xs text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+      className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-1 py-0.5 text-xs text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
     >
       <span
         aria-hidden="true"

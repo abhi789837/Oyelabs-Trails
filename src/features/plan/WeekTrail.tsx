@@ -250,7 +250,7 @@ function Summit({
   nextStarts: string;
 }) {
   const linkClass =
-    "inline-flex items-center rounded-sm font-mono text-[11px] font-medium text-primary-strong underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark";
+    "inline-flex items-center rounded-sm font-mono text-[11px] font-medium text-primary-strong underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong";
 
   return (
     <>
@@ -408,7 +408,7 @@ function Waypoint({
       whileTap={reduceMotion ? undefined : { scale: 0.95 }}
       className={cn(
         "absolute z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center font-mono text-[11px] font-semibold",
-        "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-trailmark",
+        "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-strong",
         camp ? "rounded-md" : "rounded-full",
         done ? "bg-summit text-summit-foreground" : meta.solid,
         "ring-2 ring-offset-2 ring-offset-background",

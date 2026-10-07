@@ -68,7 +68,7 @@ export function GoalsCard() {
                 {link && (
                   <Link
                     to={link}
-                    className="shrink-0 text-sm font-medium underline decoration-trailmark decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+                    className="shrink-0 text-sm font-medium underline decoration-primary decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
                   >
                     Do the capstone<span className="sr-only">: {goal.capstone?.title}</span>
                   </Link>

@@ -211,7 +211,7 @@ export function PlaylistSidebar({ entries, currentId, onSelect, label = "Videos 
                   {e.thumbnail ? <img src={e.thumbnail} alt="" className="size-full object-cover" loading="lazy" /> : null}
                   {e.progress && !e.watched ? (
                     <span className="absolute inset-x-0 bottom-0 h-1 bg-black/30">
-                      <span className="block h-full bg-brand" style={{ width: `${Math.round(e.progress * 100)}%` }} />
+                      <span className="block h-full bg-progress" style={{ width: `${Math.round(e.progress * 100)}%` }} />
                     </span>
                   ) : null}
                 </span>

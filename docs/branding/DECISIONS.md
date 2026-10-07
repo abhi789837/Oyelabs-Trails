@@ -286,13 +286,21 @@ Celebration (summit): the dot pops and the ring completes for a moment, then ope
 - **Charts.** Recharts (admin overview and reports) take series from `SERIES`: Oyelabs Blue, then
   `--v5-chart-2` (Night Navy; a light Sky tint in dark, where navy disappears). Amber only as an
   optional dashed `target` line. Me's XP bars are blue with this week, the learner's own, in amber.
-- **Bundle.** Lesson 199.55 KB (was 199.6: EmptyState's contours swap for the ring device and the
-  shells drop the old logo wrapper), /design 229.7 of 230 KB, plan 197.5, entry 95.3.
+- **Bundle.** On top of Phases 5 and 6: lesson 198.5 KB, /design 228.3 of 230, plan 196.4, course page
+  193.5, admin 221.4, entry 93.8. EmptyState swaps the contours for the ring device at no cost, and the
+  shells import the brand files directly instead of the old logo wrapper.
 - **Checked** in light and dark at 390, 768 and 1440 px with v5-visual on a private snapshot (HEAD + this
   phase's files, since the certificate and email agents' work in progress didn't build). Every screen
-  differs from the old baselines (fonts and colours since Phase 1), so the baselines were re-shot.
-- **Shared file.** `src/v5/learner/me/MePage.tsx` also carries the certificate agent's Phase 5 edits;
-  this phase's part is only the XP chart's colours.
+  differs from the old baselines (fonts and colours since Phase 1), so the baselines were re-shot
+  (`v5-visual.ts --update`). Gates: tsc, eslint, 2917 unit tests, build and size green; v5-today,
+  v5-lesson, v5-learner-pages, v5-admin, v5-mobile-learner, v5-mobile-admin, v5-a11y, v5-design and
+  v4-departments (UI_V5_DEFAULT=off) pass. v5-foundation fails one check, "verify page renders": it
+  looks for the heading "Check a certificate", which Phase 5's verify page renamed "Verify a
+  certificate" (not a Phase 4 change; the script needs the new name).
+- **Old UI badge contrast.** The old `Badge` `progress` tone's #B45309 text on its amber tint is
+  4.49:1 (axe, v5-mobile-admin on an old learner page); light mode now uses amber-800 #92400E.
+- **Shared file.** This phase's change to `src/v5/learner/me/MePage.tsx` (the XP chart's colours) went
+  in with the Phase 5 commit, which edited the same file.
 
 
 ## Phase 5: Certificates

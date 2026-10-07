@@ -21,8 +21,8 @@ export interface PasswordInputProps extends Omit<InputProps, "type" | "trailing"
 const TONES = [
   { bar: "bg-destructive", text: "text-destructive" },
   { bar: "bg-destructive", text: "text-destructive" },
-  { bar: "bg-trailmark", text: "text-trailmark-strong" },
-  { bar: "bg-trailmark", text: "text-trailmark-strong" },
+  { bar: "bg-warning", text: "text-warning-strong" },
+  { bar: "bg-warning", text: "text-warning-strong" },
   { bar: "bg-summit", text: "text-summit-strong" },
 ] as const;
 

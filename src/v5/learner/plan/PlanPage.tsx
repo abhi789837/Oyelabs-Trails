@@ -132,7 +132,7 @@ function PlanScreen() {
               <BookMarked className="size-4" aria-hidden="true" /> {w.libraryLessonCount} lessons in your library
             </Link>
           </div>
-          <ProgressBar value={stats.pct} label={`This week: ${stats.pct}% done`} tone={stats.pct === 100 ? "success" : "brand"} />
+          <ProgressBar value={stats.pct} label={`This week: ${stats.pct}% done`} />
           {next ? <NextStep item={next} started={resumed || stats.done > 0} step={resumed ? (resume.data?.step ?? null) : null} /> : null}
           {isWeekComplete(w.items) ? (
             <div className="flex flex-wrap items-center gap-3 rounded-control bg-success-soft p-3">

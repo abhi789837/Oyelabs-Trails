@@ -4,7 +4,7 @@ import type { ComponentType, ReactNode } from "react";
 import { cn } from "../cn";
 
 import { Kbd } from "./Primitives";
-import { Logo } from "./Showcase";
+import { Logo } from "@/components/brand/Logo";
 import { SkipLink } from "./SkipLink";
 
 export interface NavItem {
@@ -58,7 +58,7 @@ export function AppShell({ nav, sidebarExtra, topRight, onSearch, link: L = Anch
       {preview ? null : <SkipLink target="v5-main" />}
       <Header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-line-1 bg-surface-1/90 px-4 backdrop-blur">
         <L href={homeHref} className="flex h-7 items-center rounded-control" aria-label="Oyelearn home">
-          <Logo className="h-7" />
+          <Logo theme="auto" size={28} clearSpace={false} />
         </L>
         <div className="flex-1" />
         {onSearch ? (

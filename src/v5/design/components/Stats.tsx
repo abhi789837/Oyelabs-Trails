@@ -80,7 +80,7 @@ export function SkillMeter({ level, label, target, className }: { level: number;
               t !== undefined && i + 1 <= t && state === "empty" && "outline outline-1 -outline-offset-1 outline-line-2",
             )}
           >
-            {state !== "empty" ? <span className={cn("absolute inset-y-0 left-0 rounded-full bg-brand", state === "full" ? "w-full" : "w-1/2")} /> : null}
+            {state !== "empty" ? <span className={cn("absolute inset-y-0 left-0 rounded-full bg-progress", state === "full" ? "w-full" : "w-1/2")} /> : null}
           </span>
         ))}
       </div>

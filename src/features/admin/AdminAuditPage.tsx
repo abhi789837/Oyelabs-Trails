@@ -153,7 +153,7 @@ export default function AdminAuditPage() {
                 <Link
                   to={`/admin/people/${row.original.targetId}`}
                   onClick={(e) => e.stopPropagation()}
-                  className="underline decoration-trailmark decoration-2 underline-offset-4"
+                  className="underline decoration-primary decoration-2 underline-offset-4"
                 >
                   {row.original.targetId}
                 </Link>

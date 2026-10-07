@@ -2,7 +2,9 @@ import { useState } from "react";
 
 import { Button } from "../components/Button";
 import { LANES, LaneChip } from "../components/LaneChip";
-import { ProgressBar, ProgressRing } from "../components/Progress";
+import { ProgressRing } from "@/components/brand/ProgressRing";
+
+import { ProgressBar } from "../components/Progress";
 import { SkillMeter, StreakFlame, XPCounter } from "../components/Stats";
 import { Trail } from "../components/Trail";
 import type { TrailStop } from "../trail";
@@ -49,16 +51,18 @@ function XpDemo() {
 export default function ComponentsProgress() {
   return (
     <>
-      <Demo id="c-progress" name="ProgressRing and ProgressBar" use="The ring is for one goal (this week's hours). The bar is for a count (3 of 8 videos). Both announce their value; the fill animates once.">
+      <Demo id="c-progress" name="ProgressRing and ProgressBar" use="Amber, in the brand's dot motif: the ring is the mark's own (blue outer ring, amber arc, the dot at its tip) for one goal; the bar is for a count, with the dot just ahead of the fill. Both announce their value; the fill animates once. Blue (tone brand) is for the app's own work, such as an upload.">
         <Preview>
           <div className="flex flex-wrap items-center gap-6 pt-4">
-            <ProgressRing value={70} label="Weekly goal" />
-            <ProgressRing value={100} tone="success" size={72} stroke={6} label="Module done">
-              <span className="text-small">Done</span>
+            <ProgressRing value={70} size={96} label="Weekly goal">
+              <span className="font-display text-body font-semibold text-fg-1">70%</span>
             </ProgressRing>
+            <ProgressRing value={100} size={72} label="Module done" />
+            <ProgressRing value={30} size={40} label="Course progress" />
             <div className="flex min-w-48 flex-1 flex-col gap-3">
               <ProgressBar value={3} max={8} label="Videos watched" showValue="3 of 8" />
               <ProgressBar value={45} tone="warning" label="Test time used" showValue size="sm" />
+              <ProgressBar value={60} tone="brand" label="Uploading video.mp4" showValue size="sm" />
             </div>
           </div>
         </Preview>

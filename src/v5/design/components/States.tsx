@@ -1,24 +1,33 @@
 import { CloudOff, RotateCw } from "lucide-react";
-import { useMemo, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import { contourPaths } from "@/lib/contours";
+import { RingDevice } from "@/components/brand/RingDevice";
 import { cn } from "../cn";
 
 import { Button } from "./Button";
 
 // ---------------------------------------------------------------------------
-// ContourBackground — the trail identity's topographic lines
+// ContourBackground — now the brand's ring device
 // ---------------------------------------------------------------------------
 
-/** Faint contour rings behind a hero or an empty state. Decorative; deterministic per seed. */
+/** Where the device sits, by seed: always large and partly off the edge, never rotated. */
+const DEVICE_SPOTS = [
+  "-right-[18%] -top-[30%] w-[70%]",
+  "-bottom-[35%] -left-[15%] w-[65%]",
+  "-right-[12%] -bottom-[40%] w-[60%]",
+] as const;
+
+/**
+ * The large, faint ring device behind a hero or an empty state (rebrand Phase 4; it replaced the
+ * trail's topographic contours, and keeps their name so callers didn't change). The mark's own
+ * rings in Oyelabs Blue (Sky in dark) at 8% opacity; a caller's opacity class fades it further.
+ * Decorative; `seed` picks one of a few placements.
+ */
 export function ContourBackground({ seed = 3, className }: { seed?: number; className?: string }) {
-  const paths = useMemo(() => contourPaths({ cx: 300, cy: 160, rings: 9, seed, spacing: 26 }), [seed]);
   return (
-    <svg className={cn("pointer-events-none absolute inset-0 size-full", className)} viewBox="0 0 600 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      {paths.map((d, i) => (
-        <path key={i} d={d} fill="none" className="stroke-brand" strokeOpacity={0.07 + (i % 3) * 0.02} strokeWidth={1} />
-      ))}
-    </svg>
+    <span className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden="true" data-testid="ring-device-bg">
+      <RingDevice className={cn("absolute aspect-square max-w-[28rem] text-brand opacity-[0.08]", DEVICE_SPOTS[Math.abs(Math.round(seed)) % DEVICE_SPOTS.length])} />
+    </span>
   );
 }
 

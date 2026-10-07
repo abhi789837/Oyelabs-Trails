@@ -19,7 +19,8 @@ const badgeVariants = cva(
       variant: {
         default: "border-transparent bg-foreground/10 text-foreground",
         outline: "border-border text-muted-foreground",
-        progress: "border-trailmark/40 bg-trailmark/10 text-trailmark-strong",
+        // Light: amber-800 text; #B45309 on the amber tint is only 4.49:1 (axe, rebrand Phase 4).
+        progress: "border-trailmark/40 bg-trailmark/10 text-accent-800 dark:text-trailmark-strong",
         success: "border-summit/40 bg-summit/10 text-summit-strong",
         danger: "border-destructive/40 bg-destructive/10 text-destructive",
         brand: "border-primary/40 bg-primary/10 text-primary-strong",

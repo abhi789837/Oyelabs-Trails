@@ -142,7 +142,7 @@ export function OverviewTrail({ path, week, history }: { path: LearningPathView;
               <a
                 href="#week-heading"
                 data-testid="overview-current-week"
-                className="absolute z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-trailmark px-2.5 py-0.5 font-mono text-[11px] font-semibold text-trailmark-foreground shadow-sm ring-2 ring-background hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+                className="absolute z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-trailmark px-2.5 py-0.5 font-mono text-[11px] font-semibold text-trailmark-foreground shadow-sm ring-2 ring-background hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
                 style={{ left: point.x, top: point.y }}
               >
                 Week {week.weekNumber}
@@ -163,7 +163,7 @@ export function OverviewTrail({ path, week, history }: { path: LearningPathView;
     </div>
     {split.laterCount > 0 && (
       <details className="mt-3 rounded-md border" data-testid="path-later">
-        <summary className="cursor-pointer px-4 py-2.5 text-sm font-medium focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark">
+        <summary className="cursor-pointer px-4 py-2.5 text-sm font-medium focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong">
           {laterLabel(split.laterCount)}
         </summary>
         <div className="divide-y border-t">
@@ -248,7 +248,7 @@ function Milestone({
           <Link
             to={href}
             className={cn(
-              "rounded-sm font-display text-[13px] font-semibold leading-snug hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark",
+              "rounded-sm font-display text-[13px] font-semibold leading-snug hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
               done && "text-muted-foreground",
             )}
           >

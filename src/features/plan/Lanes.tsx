@@ -79,7 +79,7 @@ function Lane({ lane, items }: { lane: PlanLane; items: WeekItemView[] }) {
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls={`${headingId}-items`}
-            className="ml-auto inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[11px] text-muted-foreground hover:bg-foreground/5 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+            className="ml-auto inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[11px] text-muted-foreground hover:bg-foreground/5 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
           >
             {open ? "Hide" : "Show"}
             <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-200", open && "rotate-180")} aria-hidden="true" />

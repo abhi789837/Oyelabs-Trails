@@ -34,7 +34,7 @@ export default function FlashcardsPage() {
               aria-pressed={pressed}
               onClick={() => setParams(c ? { category: c } : {}, { replace: true })}
               className={cn(
-                "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark",
+                "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
                 pressed ? "border-primary bg-primary text-primary-foreground" : "bg-surface hover:bg-accent",
               )}
             >

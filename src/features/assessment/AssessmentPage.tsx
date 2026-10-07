@@ -9,7 +9,7 @@ import { SkillReport } from "@/components/assessment/SkillReport";
 import { FormAlert } from "@/components/form/Field";
 import { useConfirm } from "@/components/overlays";
 import { BrandBand } from "@/components/brand/BrandBand";
-import { Logo } from "@/components/layout/Logo";
+import { Logo } from "@/components/brand/Logo";
 import { Contours } from "@/components/trail/Contours";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -530,7 +530,7 @@ function CompleteScreen({ onContinue }: { onContinue: () => void }) {
     <div className="relative min-h-dvh overflow-hidden px-4 py-12">
       <Contours className="text-basalt/12" seed={7} rings={14} />
       <div className="relative mx-auto max-w-3xl">
-        <Logo variant="stacked" height={56} className="mx-auto mb-8" />
+        <Logo variant="endorsed" theme="auto" size={56} clearSpace={false} className="mx-auto mb-8" />
         <h1 className="text-center text-2xl font-bold">Your assessment is done</h1>
         <p className="mx-auto mt-3 max-w-prose text-center text-muted-foreground">
           {evaluation?.learnerSummary ?? "Here is where you are, and where your path starts."}
@@ -559,7 +559,7 @@ function Shell({ children }: { children: React.ReactNode }) {
     <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-4 py-12 text-center">
       <Contours className="text-basalt/12" seed={7} rings={14} />
       <div className="relative flex flex-col items-center">
-        <Logo variant="stacked" height={64} className="mb-8" />
+        <Logo variant="endorsed" theme="auto" size={64} clearSpace={false} className="mb-8" />
         {children}
       </div>
     </div>

@@ -4,72 +4,25 @@ import type { ReactNode } from "react";
 import { cn } from "../cn";
 
 import { transitions } from "../motion";
-import { clampPct, ringGeometry } from "../progress";
+import { clampPct } from "../progress";
 
-export type ProgressTone = "brand" | "success" | "warning" | "danger";
+/**
+ * `progress` (amber, the default) is the learner's own progress: lessons done, the week, reading.
+ * `brand` is for work the app is doing (an upload); the others are for status.
+ */
+export type ProgressTone = "progress" | "brand" | "success" | "warning" | "danger";
 
-const STROKE: Record<ProgressTone, string> = {
-  brand: "stroke-brand",
-  success: "stroke-success",
-  warning: "stroke-warning",
-  danger: "stroke-danger",
-};
 const FILL: Record<ProgressTone, string> = {
+  progress: "bg-progress",
   brand: "bg-brand",
   success: "bg-success",
   warning: "bg-warning",
   danger: "bg-danger",
 };
 
-export interface ProgressRingProps {
-  value: number;
-  max?: number;
-  size?: number;
-  stroke?: number;
-  tone?: ProgressTone;
-  /** What is being measured, read by screen readers: "Weekly goal". */
-  label: string;
-  /** Centre content; defaults to the percentage. */
-  children?: ReactNode;
-  className?: string;
-}
-
-/** A goal ring. The track is a 3:1-visible line; the fill animates once on mount (story duration). */
-export function ProgressRing({ value, max = 100, size = 96, stroke = 8, tone = "brand", label, children, className }: ProgressRingProps) {
-  const pct = clampPct(value, max);
-  const { radius, circumference, offset, center } = ringGeometry(size, stroke, pct);
-  return (
-    <div
-      className={cn("relative inline-grid shrink-0 place-items-center", className)}
-      style={{ width: size, height: size }}
-      role="progressbar"
-      aria-label={label}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={pct}
-    >
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90" aria-hidden="true">
-        <circle cx={center} cy={center} r={radius} fill="none" strokeWidth={stroke} className="stroke-sunken" />
-        <m.circle
-          cx={center}
-          cy={center}
-          r={radius}
-          fill="none"
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          className={STROKE[tone]}
-          strokeDasharray={circumference}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: offset }}
-          transition={transitions.story}
-        />
-      </svg>
-      <span className="absolute inset-0 grid place-items-center text-center font-display text-h4 font-semibold tabular-nums text-fg-1">
-        {children ?? `${pct}%`}
-      </span>
-    </div>
-  );
-}
+// The goal ring is the brand's own ProgressRing (src/components/brand/ProgressRing): the mark's blue
+// outer ring with the amber arc and the "you are here" dot. It lives in its own file so routes that
+// only show a bar don't carry it.
 
 export interface ProgressBarProps {
   value: number;
@@ -82,8 +35,15 @@ export interface ProgressBarProps {
   className?: string;
 }
 
-export function ProgressBar({ value, max = 100, tone = "brand", label, showValue, size = "md", className }: ProgressBarProps) {
+/**
+ * A bar in the brand's dot motif: the fill, a small gap, and the "you are here" dot just ahead of
+ * it (the mark's inner ring and dot, unrolled). No dot at 0 or 100%.
+ */
+export function ProgressBar({ value, max = 100, tone = "progress", label, showValue, size = "md", className }: ProgressBarProps) {
   const pct = clampPct(value, max);
+  const dot = pct > 0 && pct < 100;
+  const d = size === "sm" ? 6 : 10;
+  const gap = size === "sm" ? 3 : 4;
   return (
     <div className={cn("w-full", className)}>
       {showValue ? (
@@ -98,14 +58,27 @@ export function ProgressBar({ value, max = 100, tone = "brand", label, showValue
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={pct}
-        className={cn("overflow-hidden rounded-full bg-sunken", size === "sm" ? "h-1.5" : "h-2.5")}
+        className={cn("relative overflow-hidden rounded-full bg-sunken", size === "sm" ? "h-1.5" : "h-2.5")}
       >
+        {/* The fill stops a small gap short of the value; the dot's right edge sits on it. */}
         <m.div
           className={cn("h-full origin-left rounded-full", FILL[tone])}
+          style={{ width: dot ? `calc(${pct}% - ${d + gap}px)` : "100%" }}
           initial={{ scaleX: 0 }}
-          animate={{ scaleX: pct / 100 }}
+          animate={{ scaleX: dot ? 1 : pct / 100 }}
           transition={transitions.calm}
         />
+        {dot ? (
+          <m.span
+            aria-hidden="true"
+            data-progress-dot=""
+            className={cn("absolute inset-y-0 rounded-full", FILL[tone])}
+            style={{ left: `max(0px, ${pct}% - ${d}px)`, width: d }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ ...transitions.calm, delay: 0.2 }}
+          />
+        ) : null}
       </div>
     </div>
   );

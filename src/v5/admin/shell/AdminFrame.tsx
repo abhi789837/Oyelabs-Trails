@@ -3,12 +3,14 @@ import { useEffect, useId, useState, type ComponentType, type ReactNode } from "
 import { Link, useLocation } from "react-router-dom";
 
 // Direct imports, not the `@/v5/design` barrel: the barrel loads every design module (Phase 9 performance).
+// Each brand component from its own file, not the `@/components/brand` barrel.
+import { Logo } from "@/components/brand/Logo";
+import { Mark } from "@/components/brand/Mark";
 import { ThemeToggle } from "@/v5/app/ThemeToggle";
 import { cn } from "@/v5/design/cn";
 import { useMediaQuery } from "@/v5/design/hooks";
 import { Sheet } from "@/v5/design/components/Overlays";
 import { Kbd } from "@/v5/design/components/Primitives";
-import { Logo } from "@/v5/design/components/Showcase";
 import { SkipLink } from "@/v5/design/components/SkipLink";
 import { Tooltip } from "@/v5/design/components/Tooltip";
 
@@ -81,8 +83,20 @@ export function AdminFrame({ main, more, older, topRight, onSearch, children }: 
     <div className="relative flex min-h-dvh flex-col bg-surface-0 text-fg-1">
       <SkipLink target="v5-main" />
       <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-line-1 bg-surface-1/90 px-4 backdrop-blur">
-        <Link to="/admin" className="flex h-7 items-center rounded-control" aria-label="Oyelearn home">
-          <Logo className="h-7" />
+        {/* With the full sidebar, the full logo (24 px tall = 102 px wide, over the 96 px minimum); with the
+            icon rail or on a phone, the mark. A small "Admin" label says which console this is. */}
+        <Link to="/admin" className="flex items-center gap-2 rounded-control" aria-label="Oyelearn admin, Inbox" data-testid="admin-home">
+          {expanded ? (
+            <>
+              <Mark size={26} decorative className="md:hidden" />
+              <span className="hidden md:block">
+                <Logo theme="auto" size={24} decorative clearSpace={false} />
+              </span>
+            </>
+          ) : (
+            <Mark size={26} decorative />
+          )}
+          <span className="rounded-sm bg-brand-soft px-1.5 py-0.5 text-caption font-medium leading-none text-brand-fg">Admin</span>
         </Link>
         <div className="flex-1" />
         <button

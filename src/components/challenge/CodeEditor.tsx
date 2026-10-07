@@ -68,7 +68,7 @@ export const CodeEditor = forwardRef<HTMLTextAreaElement, CodeEditorProps>(funct
   return (
     <div
       {...editorScopeProps()}
-      className="overflow-hidden rounded-md border border-editor-gutter bg-editor text-editor-foreground focus-within:outline-solid focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-trailmark-strong"
+      className="overflow-hidden rounded-md border border-editor-gutter bg-editor text-editor-foreground focus-within:outline-solid focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary-strong"
     >
       <div className="flex items-center justify-between border-b border-white/10 bg-editor-gutter px-3 py-1.5 font-mono text-xs text-editor-foreground/60">
         <span>{fileName}</span>

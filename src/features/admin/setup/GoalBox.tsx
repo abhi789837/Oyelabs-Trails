@@ -151,7 +151,7 @@ export function GoalBox({ departmentId, skills, skillNames, track, rows, skip, o
                   disabled={disabled || full}
                   title={e.reason}
                   onClick={() => onChange(addSuggestedGoal(rows, e))}
-                  className="inline-flex h-7 items-center gap-1 rounded-md border bg-surface px-2 text-sm transition-colors hover:border-foreground/30 hover:bg-surface-sunken/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark disabled:opacity-50"
+                  className="inline-flex h-7 items-center gap-1 rounded-md border bg-surface px-2 text-sm transition-colors hover:border-foreground/30 hover:bg-surface-sunken/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong disabled:opacity-50"
                 >
                   <Plus className="size-3.5" aria-hidden="true" />
                   <span>{e.caseId || e.type === "text" ? e.originalText : (skillNames.get(e.skillIds[0]) ?? e.originalText)}</span>
@@ -282,7 +282,7 @@ function GoalPicker({
                   className="text-muted-foreground"
                 >
                   <Plus aria-hidden="true" />
-                  <span className="underline decoration-trailmark decoration-2 underline-offset-4">Can't find a skill? Request one</span>
+                  <span className="underline decoration-primary decoration-2 underline-offset-4">Can't find a skill? Request one</span>
                 </CommandItem>
               </CommandGroup>
             )}

@@ -357,7 +357,7 @@ function IntegritySection({ data }: { data: Overview }) {
               )}
               <Link
                 to={`/admin/people/${event.userId}`}
-                className="shrink-0 underline decoration-trailmark decoration-2 underline-offset-4"
+                className="shrink-0 underline decoration-primary decoration-2 underline-offset-4"
               >
                 {event.displayName}
               </Link>

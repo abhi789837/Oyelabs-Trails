@@ -176,14 +176,14 @@ function PathOrder({ path }: { path: LearningPathView }) {
                 {item.moduleId && item.href ? (
                   <Link
                     to={item.href}
-                    className="font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+                    className="font-medium underline decoration-primary decoration-2 underline-offset-4"
                   >
                     {item.courseTitle}
                   </Link>
                 ) : item.available && item.courseId ? (
                   <Link
                     to={`/courses/${item.courseId}`}
-                    className="font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+                    className="font-medium underline decoration-primary decoration-2 underline-offset-4"
                   >
                     {item.courseTitle}
                   </Link>

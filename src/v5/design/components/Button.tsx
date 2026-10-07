@@ -21,6 +21,8 @@ export const buttonVariants = cva(
         ghost: "text-fg-1 hover:bg-sunken",
         danger: "bg-danger text-on-danger hover:bg-danger/90",
         success: "bg-success text-on-success hover:bg-success/90",
+        /** Amber, for an achievement only ("Claim certificate", "Level up"). Never a screen's main action. */
+        achievement: "bg-progress text-on-progress shadow-e1 hover:bg-progress/90",
         link: "h-auto px-0 text-brand-fg underline-offset-4 hover:underline",
       },
       size: {
