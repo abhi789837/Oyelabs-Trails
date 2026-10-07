@@ -55,11 +55,45 @@ export interface GenerateJsonResult<T> {
   model: string;
 }
 
+/**
+ * v4.5.1: one web search through the AI provider's own search tool (Anthropic's server-side
+ * `web_search`, the Claude Code CLI's WebSearch tool, OpenAI's Responses `web_search`).
+ *
+ * Used by the course builder when no separate search service (Tavily/Brave/Serper) is saved. The
+ * hits are only candidates: the builder still opens every URL from our server before a lesson may
+ * cite it, exactly as it does with a search service's results.
+ */
+export interface WebSearchRequest {
+  query: string;
+  limit: number;
+  model?: string;
+  maxOutputTokens?: number;
+  timeoutMs?: number;
+}
+
+export interface WebSearchHit {
+  url: string;
+  title: string;
+  snippet: string;
+  publishedAt: string | null;
+}
+
+export interface WebSearchResult {
+  hits: WebSearchHit[];
+  usage: { input: number; output: number; cacheRead?: number; cacheWrite?: number };
+  /** How many searches the provider ran (and bills for, on the Anthropic API). */
+  searches: number;
+  latencyMs: number;
+  model: string;
+}
+
 export interface AiProvider {
   id: ProviderId;
   /** The model used when a request does not name one. */
   defaultModel(purpose: AiPurpose): string;
   generateJson<T>(request: GenerateJsonRequest<T>): Promise<GenerateJsonResult<T>>;
+  /** v4.5.1: present only on providers with a built-in web search tool. */
+  webSearch?(request: WebSearchRequest): Promise<WebSearchResult>;
   /** A tiny structured call, to prove the credential works. Throws on failure. */
   verify(): Promise<void>;
 }

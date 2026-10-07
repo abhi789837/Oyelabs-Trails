@@ -551,3 +551,111 @@ Most were already there per builder.
 - Both come from the rebrand agent's in-progress edits to shared entry files, not from v4.5: `App.tsx`, `RouteFallback`, `RouteErrorBoundary`, `useDocumentTitle` and the `/design` brand section.
 - Phase 5's front-end changes touch only the old admin pages and the v5 People sheet, which are not in those chunks.
 - Recheck after the rebrand phases land.
+
+## AI-only course research (v4.5.1)
+
+### The problem
+A learner's Path showed "3 targets still need a generated course. No research provider is set up. Add one under Admin → AI connection." The admin had a working AI credential (Claude Code CLI, verified) and no Tavily/Brave/Serper key, and expected new courses to be made on their own.
+
+Two causes:
+- **That exact line is a stored `learning_paths.notice` written by builds before v4.4** (`3c951ca`, removed in `24ba96c`). Those builds queued no `course.generate` job for the waiting targets, and `currentPath` still showed `row.notice` whenever no job was blocked. So the line outlived every fix, and nothing would ever make those courses.
+- **Since v4.4/P0, `setupProblem` required a search service.** With only an AI credential, every new course was parked in `waiting_setup` with "the web search isn't set up".
+
+### The rule now
+Only the AI credential is required. Research uses, in this order:
+1. **A saved search service** (Tavily/Brave/Serper), as before.
+2. **The AI connection's own web search** (`ai_web_search`), when the active credential has one:
+   - **Anthropic API:** the server-side tool `web_search_20250305` with `max_uses: 1`. This is the basic version: no code execution needed, and every current model takes it. The SDK (0.128) also has `web_search_20260209`/`20260318`, which add dynamic filtering through code execution; a plain "find sources" call doesn't need them. URLs are read only from `web_search_tool_result` blocks, never from the model's prose. If the organisation has web search turned off in the Console, the call fails and the job falls back to mode 3.
+   - **Claude Code CLI:** `claude -p --output-format json --model M --strict-mcp-config --tools WebSearch --allowedTools WebSearch` (flags checked against `claude --help`, CLI 2.1.x). WebSearch is the only tool the session has: no Bash, no file tools, and no WebFetch, because our server opens every page itself. It is pre-approved because `-p` can't ask anyone. The reply is a JSON list, validated with zod.
+   - **OpenAI API:** Responses API `tools: [{ type: "web_search" }]` with `include: ["web_search_call.action.sources"]`. URLs come from the `url_citation` annotations and the call's sources.
+   - **Codex CLI:** no web search, so it uses mode 3.
+3. **AI-only** (`ai_only`): candidates are, in this order:
+   - the shared resources list (live sources the library's courses cite);
+   - the curriculum's verified references: module `refs`, plus the topic `webRefs` of the 3 best-matching modules;
+   - official-docs URLs the AI proposes (a `course_research` call; the prompt says each URL is opened and dropped if it doesn't load).
+   - Matching is by words: 2 shared words, or half the query.
+   - Videos are optional: the YouTube key is still used when saved (`getVideoClient`), otherwise lessons have no video.
+
+Everything else is unchanged:
+- **Every candidate in every mode goes through `verifyLinks`**, which now uses the SSRF-safe `safeFetch` (`oyelabs/media`). Private, loopback and metadata addresses are refused at every redirect hop, with a 1 MB cap. Unverifiable links are dropped.
+- **The same quality gates apply:** `enforceCitations` (a lesson may cite only verified sources), `citationsSufficient`, the review, and the publish/hold rules.
+- A candidate without a snippet takes the page's own `<meta name="description">`.
+
+**Where the pieces live:**
+- `server/src/builder/aiResearch.ts`: `makeAiResearchClient`, `withAiFallback`, `knownSources`. `libraryResources` moved here and is re-exported from `autoCourse.ts`.
+- The adapters' `webSearch` (`server/src/ai/adapters/*`), plus `adapters/webSearch.ts`.
+- `AiService.webSearch`, `webSearchAvailable` and `activeProviderId`.
+
+**Fallbacks inside one job:**
+- An AI web search that fails once is not tried again in that job; the rest of the course uses mode 3.
+- A saved search service that fails (rejected key, used-up quota or unreachable) hands the rest of the job to the AI research client.
+  - It no longer parks the job.
+  - The failure is stored as `research.last_check` with "… Until then, new courses are researched with the AI connection instead." The AI page shows it.
+- The AI research client never throws. A lesson with no verified source is skipped as before, and a course with none fails with "No lesson could be backed…", then retries 5 times with backoff, then shows Failed with Retry.
+
+### Blocking
+- `setupProblem` checks only `getAIProvider`. The only blocked line left is "the AI isn't connected" (or the AI's own key/quota states).
+- `setupNeededMessage` for it: "We couldn't create the course because the AI isn't connected. Connect an AI credential under Admin → AI connection. We'll finish automatically after that."
+- The next-action title says "… Connect an AI credential under Admin → AI connection."
+- The fallback wording for an unknown blocked line is now "the AI isn't connected" instead of "the web search isn't set up". This applies to the generated-courses page, the inbox and the next action.
+- The v5 inbox no longer shows "Web search for new courses isn't set up".
+
+### Waking what was blocked
+`recheckBlocked` runs at boot and every 10 minutes.
+- **No working AI credential:** the blocked lines are rewritten to "the AI isn't connected".
+- **Otherwise:**
+  - every `waiting_setup` course job is woken, whatever its old line ("the web search isn't set up", "…key was rejected", the legacy "isn't connected");
+  - `rebuildLegacyBlockedPaths` queues one `path.build` per current path whose stored notice is a pre-v4.4 research notice (`isLegacyResearchNotice`), unless one is already queued or running, and clears the notice so this happens once. The rebuild asks for the missing courses through `requestCourse`, which now makes them.
+- `currentPath` never shows a legacy notice, even before the re-check runs.
+- Path banners, status lines and the inbox are worked out from the jobs, so they clear on their own.
+- The P0 "prove a rejected key with a test search before waking" step is gone, because a rejected key no longer blocks.
+
+### "Course needs updating" (extend vs reuse)
+- v4.4 Phase 5 decided **not** to extend a library course with new sections, because it would change a course under learners who are part-way through it. Similar courses are reused instead: same key, same skill, the `course_match` AI match, or a word overlap of at least 0.6.
+- That logic runs in `requestCourse` before any research, so it works the same in every research mode. Tested with no search service: an existing "Code reviews for engineers" course is reused, and no plan or research call is made.
+- Extending is still not done. It needs its own design (versioning, progress on added sections, and notifying learners).
+
+### AI connection page
+`GET/PUT /api/admin/research` and Test now return `mode` and `modeLine` (`researchModeLine`, `shared/connection.ts`). `ResearchSettings.tsx` shows them in a status box instead of the old amber "Not set up, so new courses wait":
+- "Web search for new courses: using Claude's built-in web search (no extra setup needed)." (for Anthropic API and Claude Code CLI; OpenAI shows "OpenAI's");
+- "Web search for new courses: this AI connection has no built-in web search, so new courses are written from the AI's own knowledge and cite only links our server has opened and checked (no extra setup needed).";
+- "Web search for new courses: using Tavily.";
+- amber only with no AI credential: "New courses wait until an AI credential works. Connect an AI credential under Admin → AI connection."
+
+The search service section is labelled "(optional)" with a one-line "Optional upgrade" note. The old admin Path tab ("Waiting for a research provider…") now shows the server's notice.
+
+### Costs
+Research calls go through the AI router as task `course_research` (purpose `course_research`, default Haiku 4.5, 1,500 output tokens, not urgent, so they pause at the monthly budget). They are logged in `ai_calls` with the learner and course. `recordCall` gained `extraCostMicros`, so the Anthropic web search fee ($10 per 1,000 searches, which is 10,000 micro-dollars each, from `usage.server_tool_use.web_search_requests`) is included in the cost.
+
+Expected research cost per new course, on top of the existing plan, write and review calls (a typical plan is 6–10 lessons with 2–3 searches each, about 20 searches, within the default 60-search budget):
+
+| Mode | Per search | Per course (about 20 searches) |
+|---|---|---|
+| Search service (unchanged) | the provider's price | the provider's price |
+| Anthropic API web search (Haiku) | $0.01 fee + about 5–8k input tokens of results ($0.006–0.008) + a short reply, about **$0.017** | **about $0.30–0.40** |
+| AI-only proposals (Haiku) | about 400 tokens in and 400 out, about **$0.0025** | **about $0.05** |
+| Claude Code CLI | Billed to the subscription. Logged at Sonnet-equivalent token cost (the CLI isn't model-routed, so it uses the generation model). | about $0.10–0.30 equivalent |
+| OpenAI web search | Tokens are logged at $0, as for all OpenAI calls today. OpenAI bills its own per-call search fee. | not logged |
+
+### Tests
+- `server/src/builder/autoCourse.test.ts`, new block "v4.5.1: no search service, only the AI credential":
+  - mode 3 makes and publishes a course; a bogus proposed URL is fetched, dropped and cited nowhere;
+  - mode 2 with a mocked web search tool, without proposals;
+  - a failing web search falls back to mode 3;
+  - only a missing AI credential blocks, with the exact words, and a re-check wakes it once an AI credential is set up;
+  - old "web search isn't set up" jobs are woken and succeed, and the banner and next action clear;
+  - a pre-v4.4 notice is hidden and its path is rebuilt once;
+  - an existing course is reused instead of making a near-copy, with no search service.
+- The P0 "rejected key / quota blocks" tests now expect a fallback and a finished course; the 5-tries test now fails on "No lesson could be backed…".
+- `server/src/builder/aiResearch.test.ts` (new):
+  - Anthropic `web_search_tool_result` parsing with a mocked SDK response (prose URLs ignored, http(s) only, de-duplicated), and the error result;
+  - the CLI flags;
+  - `AiService.webSearch` logged as `course_research` with the search fee;
+  - the mode lines through the route (AI web search, provider, AI-only, none);
+  - `knownSources`, the never-throw rule, a one-time fallback, `isLegacyResearchNotice` and `descriptionOf`.
+- `run.goals.test.ts` and `run.pm.test.ts` expect `creating`, not `waitingForResearch`.
+- The test harness's `course.generate` link check is offline (every URL returns 404), so suites that drain jobs never reach the network.
+- `scripts/e2e/v44-reference-case.ts` now expects the uncovered skill to be "being made" with no "not set up" banner, and a next action that isn't `courses-waiting`.
+
+### Schema
+No schema change and no migration. `course_research` is a new value in `aiPurposeSchema` and `AI_TASKS`; `ai_calls.purpose` is free text.

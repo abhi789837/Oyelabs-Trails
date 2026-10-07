@@ -42,6 +42,7 @@ export const AI_TASKS = [
   "module_test_relevance",
   "module_test_answer",
   "course_skill_suggest",
+  "course_research",
 ] as const;
 export const aiTaskSchema = z.enum(AI_TASKS);
 export type AiTask = z.infer<typeof aiTaskSchema>;
@@ -92,6 +93,7 @@ export const TASK_DEFAULTS: Record<AiTask, TaskDefault> = {
   module_test_relevance: { label: "Oyelabs courses: does the cited passage support the key", model: HAIKU, maxTokens: 2000, urgent: false, batch: false, note: "One call per module checked" },
   module_test_answer: { label: "Oyelabs courses: answering module items blind (with and without the material)", model: HAIKU, maxTokens: 800, urgent: false, batch: false, note: "Two calls per module checked" },
   course_skill_suggest: { label: "Oyelabs courses: suggesting skills in the editor", model: HAIKU, maxTokens: 600, urgent: true, batch: false, note: "One small call per Suggest; the catalog prompt is cached" },
+  course_research: { label: "New courses: finding sources with the AI's web search (or proposing official docs)", model: HAIKU, maxTokens: 1500, urgent: false, batch: false, note: "Only when no search service is saved. One call per lesson search; web search costs $10 per 1,000 searches on the Anthropic API" },
 };
 
 /** Calls that predate task types are routed by their purpose. */
@@ -146,6 +148,8 @@ export function taskForPurpose(purpose: AiPurpose): AiTask {
       return "module_test_relevance";
     case "course_skill_suggest":
       return "course_skill_suggest";
+    case "course_research":
+      return "course_research";
   }
 }
 

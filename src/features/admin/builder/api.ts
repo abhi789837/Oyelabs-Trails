@@ -1,5 +1,5 @@
 import type { LearnerPriorities, LearningPathView, SkillGapView } from "@shared/builder";
-import type { ResearchCheck } from "@shared/connection";
+import type { ResearchCheck, ResearchMode } from "@shared/connection";
 import type { IntentCoverageLine } from "@shared/intents";
 import type { PathCoverage } from "@shared/pathView";
 
@@ -63,6 +63,9 @@ export interface ResearchSettings {
   /** v4.5: the last Test or 10-minute re-check. */
   lastCheck?: ResearchCheck | null;
   updatedAt: number | null;
+  /** v4.5.1: how new courses find sources now, and that in one plain line. */
+  mode?: ResearchMode;
+  modeLine?: string;
 }
 
 /** The AI course builder, from the admin console. */

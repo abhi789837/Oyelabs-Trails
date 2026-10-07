@@ -96,9 +96,11 @@ describe("PM paths after an assessment (v4.2)", () => {
     const terms = items.filter((i) => i.skillId === "pm-proc-terms");
     expect(terms.map((i) => i.moduleId)).toEqual(["pmp-c01", "pmp-c02"]);
     expect(terms.every((i) => i.startLevel === "intermediate")).toBe(true);
-    // Lifecycle before terminology. (AI has no camp in the stand-in curriculum, so it waits for a generated course.)
+    // Lifecycle before terminology. (AI has no camp in the stand-in curriculum, so a course is made for it;
+    // v4.5.1: with an AI credential that never waits for a search service.)
     expect(items.findIndex((i) => i.skillId === "pm-proc-custom")).toBeLessThan(items.findIndex((i) => i.skillId === "pm-proc-terms"));
-    expect(outcome.waitingForResearch).toBeGreaterThanOrEqual(1);
+    expect(outcome.creating).toBeGreaterThanOrEqual(1);
+    expect(outcome.waitingForResearch ?? 0).toBe(0);
 
     const plan = latestPublishedPlan(ctx.db, learner.id)!.topicIds;
     expect(plan).toEqual(expect.arrayContaining(["pmp-a01-advanced", "pmp-a01-expert", "pmp-a02-advanced", "pmp-a02-expert", "pmp-c01-intermediate", "pmp-c01-advanced"]));

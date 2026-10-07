@@ -6,6 +6,7 @@ import {
   NEW_COURSE_ITEM_PREFIX,
   addedCoursesLine,
   setupNeededMessage,
+  isLegacyResearchNotice,
   type CreatingState,
   type LearnerPriorities,
   type PartType,
@@ -400,7 +401,8 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
     status: row.status,
     progressNote: row.progressNote,
     failureReason: row.failureReason,
-    notice: setupNeeded ?? row.notice,
+    // v4.5.1: a pre-v4.4 "no research provider" notice is never shown (the re-check rebuilds that path).
+    notice: setupNeeded ?? (isLegacyResearchNotice(row.notice) ? null : row.notice),
     setupNeeded,
     added,
     addedLine: added.length > 0 ? addedCoursesLine(learner?.displayName ?? "them", added.map((course) => course.title)) : null,

@@ -1,23 +1,23 @@
-import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 import { api } from "@/api/client";
 import { cn } from "@/lib/utils";
-import { applyTheme, themeFromDocument } from "@/v5/learner/me/settings";
+import { useUiStore } from "@/store/uiStore";
+import { applyTheme } from "@/v5/learner/me/settings";
 
 /**
  * One-press light/dark switch for the sidebars (learner and admin). The full choice, including
  * "Match my device", stays in Me → Settings. The new theme applies at once, and it's saved in
  * the background like the Settings switch; a failed save keeps the local choice (uiStore).
+ * It reads the theme from uiStore, so a change made in the account menu or on Me shows here too.
  */
 export function ThemeToggle({ compact = false, className }: { compact?: boolean; className?: string }) {
-  const [theme, setTheme] = useState<"light" | "dark">(() => themeFromDocument());
+  const theme = useUiStore((s) => s.theme);
   const next = theme === "dark" ? "light" : "dark";
   const label = theme === "dark" ? "Light mode" : "Dark mode";
 
   const flip = () => {
     applyTheme(next);
-    setTheme(next);
     void api.put("/api/v5/me/settings", { theme: next }).catch(() => undefined);
   };
 

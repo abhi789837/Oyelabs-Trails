@@ -12,6 +12,8 @@
  */
 
 export type ResearchProviderId = "tavily" | "brave" | "serper";
+/** v4.5.1: a search client is a saved service, or the AI connection's own research. */
+export type SearchClientId = ResearchProviderId | "ai-web-search" | "ai-knowledge";
 
 export interface SearchHit {
   url: string;
@@ -160,6 +162,17 @@ export function extractPublishedAt(html: string): string | null {
   return null;
 }
 
+/**
+ * v4.5.1: the page's own description, for candidates that came without a snippet (the AI's web
+ * search returns titles and URLs only). The writer is told what each source covers either way.
+ */
+export function descriptionOf(html: string): string {
+  const match =
+    /<meta[^>]+(?:name|property)=["'](?:description|og:description)["'][^>]+content=["']([^"']{10,600})["']/i.exec(html) ??
+    /<meta[^>]+content=["']([^"']{10,600})["'][^>]+(?:name|property)=["'](?:description|og:description)["']/i.exec(html);
+  return match?.[1]?.trim() ?? "";
+}
+
 function titleOf(html: string, fallback: string): string {
   const match = /<title[^>]*>([^<]{3,200})<\/title>/i.exec(html);
   return match?.[1]?.trim() ?? fallback;
@@ -201,7 +214,7 @@ export async function verifyLinks(
       verified.push({
         url: candidate.url,
         title: candidate.title || titleOf(html, candidate.url),
-        snippet: candidate.snippet,
+        snippet: candidate.snippet || descriptionOf(html),
         httpStatus: response.status,
         publishedAt: candidate.publishedAt ?? extractPublishedAt(html),
       });

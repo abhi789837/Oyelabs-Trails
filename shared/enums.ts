@@ -102,6 +102,8 @@ export const aiPurposeSchema = z.enum([
   "module_test_check",
   /** v4.5: suggesting catalog skills for an Oyelabs course in the editor. */
   "course_skill_suggest",
+  /** v4.5.1: finding sources for a new course with the AI's own web search, or proposing official docs. */
+  "course_research",
 ]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 

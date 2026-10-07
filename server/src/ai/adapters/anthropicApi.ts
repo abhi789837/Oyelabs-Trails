@@ -11,7 +11,17 @@ import {
   type AiProvider,
   type GenerateJsonRequest,
   type GenerateJsonResult,
+  type WebSearchRequest,
+  type WebSearchResult,
 } from "../types";
+import { isoOrNull, normaliseHits, searchInstruction } from "./webSearch";
+
+/**
+ * v4.5.1: the server-side web search tool. `web_search_20250305` is the basic version: no code
+ * execution needed, and every current Claude model accepts it. (The 2026 versions add dynamic
+ * filtering through code execution, which a plain "find me sources" call doesn't need.)
+ */
+export const ANTHROPIC_WEB_SEARCH_TOOL = "web_search_20250305" as const;
 
 /**
  * The recommended adapter (brief §8.1): a company Console API key with a spending cap.
@@ -115,6 +125,53 @@ export class AnthropicApiProvider implements AiProvider {
     }
     const result = request.schema.safeParse(value);
     return result.success ? { ok: true, data: result.data } : { ok: false, issues: describeIssues(result.error) };
+  }
+
+  /**
+   * v4.5.1: one search with Anthropic's server-side web search tool. The results come back as
+   * `web_search_tool_result` blocks (URL, title, page age); the model's own text is ignored, so a
+   * URL can only come from the search itself. An organisation that has web search turned off in
+   * the Console gets a 400 here, which the builder treats as "no web search" and carries on.
+   */
+  async webSearch(request: WebSearchRequest): Promise<WebSearchResult> {
+    const model = request.model ?? this.defaultModel("course_research");
+    const started = Date.now();
+    let response: Anthropic.Message;
+    try {
+      response = await this.client.messages.create(
+        {
+          model,
+          max_tokens: request.maxOutputTokens ?? 1500,
+          system: "You find sources for a training course. Search once, then answer in one short line.",
+          messages: [{ role: "user", content: searchInstruction(request.query, request.limit) }],
+          tools: [{ type: ANTHROPIC_WEB_SEARCH_TOOL, name: "web_search", max_uses: 1 }],
+        },
+        { timeout: request.timeoutMs ?? 120_000 },
+      );
+    } catch (error) {
+      throw toProviderError(error);
+    }
+    const raw: { url: string; title: string; snippet: string; publishedAt: string | null }[] = [];
+    for (const block of response.content) {
+      if (block.type !== "web_search_tool_result") continue;
+      if (!Array.isArray(block.content)) {
+        const code = block.content.error_code;
+        throw new AiProviderError(`web search failed: ${code}`, undefined, code === "too_many_requests" || code === "unavailable");
+      }
+      for (const result of block.content) raw.push({ url: result.url, title: result.title, snippet: "", publishedAt: isoOrNull(result.page_age) });
+    }
+    return {
+      hits: normaliseHits(raw, request.limit),
+      usage: {
+        input: response.usage.input_tokens,
+        output: response.usage.output_tokens,
+        cacheRead: response.usage.cache_read_input_tokens ?? 0,
+        cacheWrite: response.usage.cache_creation_input_tokens ?? 0,
+      },
+      searches: response.usage.server_tool_use?.web_search_requests ?? 0,
+      latencyMs: Date.now() - started,
+      model,
+    };
   }
 
   /** Model ids this key can use, from the Models API. */

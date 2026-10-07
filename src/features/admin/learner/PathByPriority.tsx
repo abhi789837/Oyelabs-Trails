@@ -233,8 +233,9 @@ function NoCourse({
     message = path.status === "failed" ? "The last build failed before reaching this." : "The last build hit its budget first.";
     action = "retry";
   } else if (path.notice) {
-    message = "Waiting for a research provider to write a course.";
-    action = "ai";
+    // v4.5.1: only a missing AI credential holds a new course now; the server words it.
+    message = path.notice;
+    action = path.setupNeeded ? "ai" : "build";
   } else {
     message = "The last build attached no course.";
   }

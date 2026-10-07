@@ -13,6 +13,9 @@
  * 6. Reports: Download CSV gives a file with the summary and the day rows.
  * 7. axe (WCAG 2.2 AA + best practice): 0 serious/critical at 768 and 1440 in light and dark on every
  *    v5 admin route, plus the inbox and the people sheet at 390.
+ * 8. The account menu (docs/v5/PARITY.md), at 390 and 1440: it opens from the top bar, lists the
+ *    account items, the palette finds Sign out and the older pages, the phone's Menu sheet has the
+ *    account items, and Sign out lands on the sign-in page with the session gone.
  * Screenshots: %TEMP%/claude/e2e-shots-v5-admin.
  *
  * Throwaway DATA_DIR under %TEMP%, port 8824, the deterministic mock AI (NODE_ENV=development).
@@ -554,6 +557,69 @@ async function axeSweep(browser: Browser, storage: string, s: Seeded): Promise<v
   }
 }
 
+async function accountJourney(browser: Browser): Promise<void> {
+  for (const width of [390, 1440]) {
+    step(`account menu and Sign out at ${width}`);
+    // A session of its own: signing out ends only this one.
+    const ctx = await browser.newContext({ viewport: { width, height: width < 768 ? 844 : 900 }, ...(width < 768 ? { isMobile: true, hasTouch: true } : {}) });
+    try {
+      await sendJson(ctx.request, "post", "/api/auth/login", { username: SUPER_USER, password: SUPER_NEW });
+      const page = await ctx.newPage();
+      await visit(page, "/admin");
+
+      if (width >= 768) {
+        // The palette has the account items and the older pages.
+        await page.keyboard.press("Control+K");
+        const input = page.getByPlaceholder(/Type a name/);
+        await input.waitFor({ timeout: WAIT });
+        for (const [query, name] of [["sign", "Sign out"], ["password", "Change password"], ["depart", "Departments"], ["question", "Question library"], ["curric", "Curriculum"], ["activity", "Activity log"], ["AI conn", "AI connection"], ["role-play", "Client role-play"]] as const) {
+          await input.fill(query);
+          const option = page.getByRole("option", { name: new RegExp(`^${name}`) }).first();
+          ok(await option.waitFor({ timeout: 5000 }).then(() => true, () => false), `${width}: the palette finds ${name} for "${query}"`);
+        }
+        await page.keyboard.press("Escape");
+        await input.waitFor({ state: "hidden", timeout: WAIT }).catch(() => undefined);
+      } else {
+        // The phone's Menu sheet carries the same account items.
+        await page.getByRole("navigation", { name: "Main" }).getByRole("button", { name: "Menu" }).tap();
+        const sheet = page.getByRole("dialog", { name: "All pages" });
+        await sheet.waitFor({ timeout: WAIT });
+        for (const name of ["Sign out", "Use previous design", "Keyboard shortcuts"]) {
+          ok(await sheet.getByRole("button", { name }).isVisible().catch(() => false), `${width}: the Menu sheet has ${name}`);
+        }
+        for (const name of ["Learner view", "Change password", "Departments", "Question library", "Curriculum"]) {
+          ok(await sheet.getByRole("link", { name, exact: true }).isVisible().catch(() => false), `${width}: the Menu sheet has ${name}`);
+        }
+        await page.keyboard.press("Escape");
+        await sheet.waitFor({ state: "hidden", timeout: WAIT }).catch(() => undefined);
+      }
+
+      const button = page.getByTestId("v5-account-button");
+      await button.waitFor({ timeout: WAIT });
+      const box = await button.boundingBox();
+      ok(box && box.y < 56 && box.x + box.width <= width, `${width}: the account button is in the top bar`);
+      await button.click();
+      const menu = page.getByTestId("v5-account-menu");
+      await menu.waitFor({ timeout: WAIT });
+      for (const name of ["Learner view", "Change password", "Keyboard shortcuts", "Help: how Oyelearn works", "Use previous design", "Sign out"]) {
+        ok(await menu.getByRole("menuitem", { name }).isVisible().catch(() => false), `${width}: the menu has ${name}`);
+      }
+      ok((await menu.getByRole("menuitemradio").count()) === 3, `${width}: the menu has the three theme choices`);
+      ok(await menu.getByText("Superadmin").isVisible().catch(() => false), `${width}: the menu names the role`);
+      await axe(page, `account menu ${width}`);
+      await shot(page, `account-menu-${width}`);
+      await menu.getByRole("menuitem", { name: "Sign out" }).click();
+      await page.waitForURL((u) => u.pathname === "/login", { timeout: WAIT }).catch(() => undefined);
+      ok(new URL(page.url()).pathname === "/login", `${width}: Sign out lands on the sign-in page (${new URL(page.url()).pathname})`);
+      ok(await page.getByText("You're signed out").waitFor({ timeout: WAIT }).then(() => true, () => false), `${width}: the sign-in page says you're signed out`);
+      const me = await getJson<{ user: unknown }>(ctx.request, "/api/auth/me");
+      ok(me.user === null, `${width}: the session has ended`);
+    } finally {
+      await ctx.close();
+    }
+  }
+}
+
 async function main(): Promise<void> {
   fs.rmSync(SHOTS, { recursive: true, force: true });
   fs.mkdirSync(SHOTS, { recursive: true });
@@ -582,6 +648,7 @@ async function main(): Promise<void> {
     await shot(page, "overview-1440-light");
 
     await axeSweep(browser, storage, s);
+    await accountJourney(browser);
     console.log(`\nClick counts: give full marks 1 (baseline 2) · onboard + send ${onboardClicks} (baseline 3)`);
   } finally {
     await context?.close().catch(() => undefined);

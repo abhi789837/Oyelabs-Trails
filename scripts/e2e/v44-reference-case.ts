@@ -26,9 +26,11 @@
  *    soft-skills courses; the first 8 items are reported. Auto courses: before onboarding the
  *    superadmin empties one soft skill's course list in the catalog (a real admin edit), so that
  *    skill has no course. The plan card lists it under new courses, and the path shows it as being
- *    made. In this e2e the web search is not connected and the mock AI cannot write courses, so it
- *    waits ("We couldn't create the course because the web search isn't set up…"); publishing and
- *    the "We added N new course(s)…" notice are covered by server/src/builder/autoCourse.test.ts.
+ *    made. v4.5.1: no search service is saved in this e2e, and that no longer blocks anything: with
+ *    only the AI credential the course is researched by the AI (here the mock, which has no web
+ *    search, so AI-only mode) and is shown as being made, never "isn't set up". The mock can't write
+ *    a real course, so it isn't published here; publishing and the "We added N new course(s)…"
+ *    notice are covered by server/src/builder/autoCourse.test.ts.
  * 6. Review: the learner requests a review on a Not-yet topic test answer; the admin gives Full marks
  *    in one click on Review requests; the learner sees it in their notifications.
  * 7. Copy: the visible text of the admin pages visited has none of COPY_GUIDE.md's banned words.
@@ -722,17 +724,19 @@ async function checkPath(admin: Page, userId: string, c: Checks): Promise<void> 
   const made = items.filter((i) => i.creating);
   const uncovered = items.filter((i) => i.skillId === UNCOVERED_SKILL);
   c.ok(uncovered.length > 0 && uncovered.every((i) => i.creating), `${UNCOVERED_SKILL} is on the path as a course being made (${uncovered.map((i) => i.creating).join(", ") || "not on the path"})`);
+  c.ok(uncovered.every((i) => i.creating !== "waiting_setup"), `with only the AI credential it is not blocked (${uncovered.map((i) => i.creating).join(", ")})`);
   const otherMissing = items.filter((i) => !i.creating && !i.moduleId && !i.courseTitle);
   c.ok(otherMissing.length === 0, "every other path item has a course");
-  c.ok(/web search isn[’']t (connected|set up)/i.test(p.setupNeeded ?? ""), `the path says why it waits: "${p.setupNeeded ?? ""}"`);
-  facts.autoCourses = `${made.length} requested (${[...new Set(made.map((i) => `${i.skillId}: ${i.creating}`))].join(", ")}); 0 published in this e2e (no web search, mock AI)`;
+  c.ok(!p.setupNeeded && !/research provider|web search isn[’']t/i.test(p.notice ?? ""), `no "not set up" banner without a search service (setupNeeded: "${p.setupNeeded ?? ""}", notice: "${p.notice ?? ""}")`);
+  facts.autoCourses = `${made.length} requested (${[...new Set(made.map((i) => `${i.skillId}: ${i.creating}`))].join(", ")}); made automatically with only the AI credential (AI-only research; mock AI, so not published in this e2e)`;
 
   await admin.goto(`${BASE}/admin/people/${userId}?tab=path`, { waitUntil: "networkidle" });
   const bar = admin.getByRole("region", { name: "Next action" });
   await bar.waitFor({ timeout: 20_000 });
   const kind = await bar.getAttribute("data-next-action");
   c.fact(`next action on the learner page: ${kind} — "${oneLine(await bar.innerText()).slice(0, 200)}"`);
-  c.ok(kind === "courses-waiting" || kind === "listen" || kind === "reviews", `the next action points at what blocks (${kind})`);
+  c.ok(kind !== "courses-waiting", `nothing is blocked on setup (${kind})`);
+  c.ok(kind === "courses-creating" || kind === "courses-failed" || kind === "listen" || kind === "reviews", `the next action points at what's next (${kind})`);
   await scanCopy(admin, "learner page, path tab", c);
   await shot(admin, "06-admin-path");
 }

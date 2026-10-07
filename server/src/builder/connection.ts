@@ -1,20 +1,15 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
-import {
-  connectedLine,
-  isBlockingProblem,
-  problemLine,
-  stateOfLine,
-  type ConnectionProblem,
-  type ResearchCheck,
-} from "../../../shared/connection";
+import { isLegacyResearchNotice } from "../../../shared/builder";
+import { connectedLine, problemLine, type ResearchCheck } from "../../../shared/connection";
 import type { AiService } from "../ai/service";
 import { schema, type Db } from "../db";
 import type { Env } from "../env";
-import { wakeWaitingJobs } from "../jobs/queue";
+import { enqueue, wakeWaitingJobs } from "../jobs/queue";
 import { now } from "../lib/ids";
 import { classifyThrown, ProviderError, type SearchClient } from "./providers";
 import { getResearchProvider, PROVIDER_NAMES, writeResearchCheck, type ResearchProviderResult } from "./settings";
+import type { ResearchProviderId } from "./research";
 
 /**
  * v4.5 Phase 0: "is it connected?", answered in one place.
@@ -140,31 +135,64 @@ function relabel(db: Db, line: string): void {
 }
 
 /**
- * The scheduled re-check (every 10 minutes, and once at boot). With nothing blocked it does
- * nothing. Otherwise it reads the settings fresh: still not set up → the blocked lines are updated
- * to today's reason; set up, and the jobs were blocked by a rejected key or a used-up quota → a real
- * test search first (one search, only while something waits); otherwise → wake them all. A woken
- * job checks again as it runs, so a wrong guess costs one parked job, never a lost one.
+ * v4.5.1: a saved search service failed during a course job and the job carried on with the AI's
+ * own research. The failure is stored as the last check (shown on the AI connection page and in
+ * the inbox), so the admin learns the key needs a look while new courses keep being made.
+ */
+export function noteProviderFallback(db: Db, provider: ResearchProviderId, failure: ProviderError): void {
+  const message = `${failureMessage(failure, PROVIDER_NAMES[provider])} Until then, new courses are researched with the AI connection instead.`;
+  writeResearchCheck(db, { state: failure.state, message, results: null, videos: null, checkedAt: now() });
+}
+
+/**
+ * v4.5.1: current paths still carrying a pre-v4.4 research notice get one fresh `path.build` each
+ * (unless one is already queued or running) and the notice is cleared, so it can't fire twice.
+ * The rebuild asks for the missing courses through `requestCourse`, which now makes them with the
+ * AI connection alone. Returns how many paths were queued.
+ */
+export function rebuildLegacyBlockedPaths(db: Db): number {
+  const paths = db
+    .select({ id: schema.learningPaths.id, userId: schema.learningPaths.userId, notice: schema.learningPaths.notice })
+    .from(schema.learningPaths)
+    .where(eq(schema.learningPaths.current, true))
+    .all()
+    .filter((path) => isLegacyResearchNotice(path.notice));
+  if (paths.length === 0) return 0;
+  const busy = new Set(
+    db
+      .select({ payload: schema.jobs.payload })
+      .from(schema.jobs)
+      .where(and(eq(schema.jobs.type, "path.build"), inArray(schema.jobs.status, ["queued", "running"])))
+      .all()
+      .map((job) => (job.payload as { userId?: string }).userId),
+  );
+  let queued = 0;
+  for (const path of paths) {
+    db.update(schema.learningPaths).set({ notice: null }).where(eq(schema.learningPaths.id, path.id)).run();
+    if (busy.has(path.userId)) continue;
+    enqueue(db, { type: "path.build", payload: { userId: path.userId } });
+    busy.add(path.userId);
+    queued += 1;
+  }
+  return queued;
+}
+
+/**
+ * The scheduled re-check (every 10 minutes, and once at boot).
+ *
+ * v4.5.1: only the AI credential can block a new course now. With no working AI credential the
+ * blocked lines are rewritten to say so; with one, every blocked course is woken (each one researches
+ * with the search service, the AI's web search or the AI's own knowledge as it runs), and paths
+ * built before v4.4 with a "no research provider" notice are built again. A woken job checks the AI
+ * again as it runs, so a wrong guess costs one parked job, never a lost one.
  */
 export async function recheckBlocked(deps: { db: Db; env: Env; ai: Pick<AiService, "isConfigured">; clients?: () => ResearchProviderResult }): Promise<number> {
-  const blocked = blockedJobs(deps.db);
-  if (blocked.length === 0) return 0;
   const ai = getAIProvider(deps.ai);
   if (!ai.ok) {
     relabel(deps.db, ai.reason);
     return 0;
   }
-  const research = deps.clients ? deps.clients() : getResearchProvider(deps.db, deps.env);
-  if (!research.ok) {
-    relabel(deps.db, research.reason);
-    return 0;
-  }
-  const states = blocked.map((job) => stateOfLine(job.lastError));
-  const needsProof = states.some((state) => state === "key_rejected" || state === "quota");
-  if (needsProof) {
-    const check = await testResearch({ db: deps.db, env: deps.env, clients: () => research });
-    if (check.state !== "ready" && isBlockingProblem(check.state)) relabel(deps.db, problemLine("search", check.state as ConnectionProblem));
-    return check.woken;
-  }
+  rebuildLegacyBlockedPaths(deps.db);
+  if (blockedJobs(deps.db).length === 0) return 0;
   return wakeWaitingJobs(deps.db, "course.generate");
 }

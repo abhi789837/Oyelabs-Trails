@@ -1,10 +1,11 @@
 import { lazy, Suspense, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { Award, BookMarked, Download, ExternalLink, Image as ImageIcon, NotebookPen, RotateCcw, Search, ShieldCheck, Trophy } from "lucide-react";
+import { Award, BookMarked, Download, ExternalLink, Image as ImageIcon, KeyRound, Layers, ListChecks, LogOut, MessagesSquare, NotebookPen, RotateCcw, Search, ShieldCheck, Trophy, type LucideIcon } from "lucide-react";
 import { m } from "motion/react";
 import { Link } from "react-router-dom";
 
 import { api, ApiRequestError } from "@/api/client";
 import { useAuth } from "@/features/auth/AuthProvider";
+import { CHANGE_PASSWORD_PATH, PRACTICE_LINKS, roleLabel, useSignOut } from "@/v5/app/account";
 import { chooseDesign } from "@/v5/app/designFlag";
 import { isStaffRole } from "@shared/uiFlag";
 import { Button } from "@/v5/design/components/Button";
@@ -19,6 +20,7 @@ import type { CertificateView, MeProfile, NoteView, Settings } from "@shared/me"
 import { linkedInAddUrl, searchNotes } from "@shared/meCore";
 import { certificateFileName, linkedInCredentialName } from "@shared/certificates";
 
+import { GoalsCard, TrailCertificates } from "./MoreCards";
 import { PageFrame, V5Screen, useApiData, useDelayed, type ApiData } from "./page";
 import { applyTheme } from "./settings";
 import { plainTitle } from "@shared/plainTitle";
@@ -48,19 +50,34 @@ function initialTab(): Tab {
   return TABS.includes(t as Tab) ? (t as Tab) : "progress";
 }
 
-/** On phones the bottom bar is full, so the sidebar's extra links live here (hidden from md up). */
+const PRACTICE_ICONS: Record<string, LucideIcon> = {
+  "/glossary": BookMarked,
+  "/glossary/practice": Layers,
+  "/tools/classify": ListChecks,
+  "/practice/roleplay": MessagesSquare,
+};
+
+/**
+ * On phones the bottom bar is full, so the sidebar's extra links live here (hidden from md up):
+ * the handbook and practice pages, and the admin console for staff.
+ */
 function MoreLinks() {
   const { user } = useAuth();
   const staff = user ? isStaffRole(user.role) : false;
-  const link = "flex min-h-11 flex-1 items-center justify-center gap-2 rounded-card border border-line-1 bg-surface-1 px-3 text-small font-medium text-fg-1 hover:bg-sunken";
+  const link = "flex min-h-11 items-center justify-center gap-2 rounded-card border border-line-1 bg-surface-1 px-3 text-center text-small font-medium text-fg-1 hover:bg-sunken";
   return (
-    <nav aria-label="More" className="mb-4 flex gap-2 md:hidden">
-      <Link to="/glossary" className={link}>
-        <BookMarked className="size-4" aria-hidden="true" /> Handbook
-      </Link>
+    <nav aria-label="More" className="mb-4 grid grid-cols-2 gap-2 md:hidden">
+      {PRACTICE_LINKS.map((l) => {
+        const Icon = PRACTICE_ICONS[l.to] ?? BookMarked;
+        return (
+          <Link key={l.to} to={l.to} className={link}>
+            <Icon className="size-4 shrink-0" aria-hidden="true" /> {l.label}
+          </Link>
+        );
+      })}
       {staff ? (
         <Link to="/admin" className={link}>
-          <ShieldCheck className="size-4" aria-hidden="true" /> Admin
+          <ShieldCheck className="size-4 shrink-0" aria-hidden="true" /> Admin
         </Link>
       ) : null}
     </nav>
@@ -184,6 +201,8 @@ function ProgressTab({ profile }: { profile: MeProfile }) {
         )}
       </Card>
 
+      <GoalsCard />
+
       <Card id="certificates" className="scroll-mt-20">
         <CardHeader title="Certificates" description="Download them, or add them to your LinkedIn profile." />
         {profile.certificates.length ? (
@@ -195,6 +214,7 @@ function ProgressTab({ profile }: { profile: MeProfile }) {
         ) : (
           <p className="text-body text-fg-2">You'll get one when you finish a track or a course.</p>
         )}
+        <TrailCertificates />
       </Card>
     </m.div>
   );
@@ -438,7 +458,40 @@ function SettingsTab({ settings }: { settings: ApiData<{ settings: Settings; ema
         </div>
         <p className="text-small text-fg-2">The previous design stays available for two more weeks. Your progress is the same in both.</p>
       </Card>
+
+      <AccountCard />
     </div>
+  );
+}
+
+/** Who you're signed in as, Change password and Sign out: the account menu's items, on every screen size. */
+function AccountCard() {
+  const { user } = useAuth();
+  const signOut = useSignOut();
+  const [leaving, setLeaving] = useState(false);
+  if (!user) return null;
+  return (
+    <Card className="flex flex-col gap-3" data-testid="me-account">
+      <CardHeader title="Your account" description={`Signed in as ${user.displayName} (${user.username}), ${roleLabel(user.role).toLowerCase()}.`} className="mb-0" />
+      <div className="flex flex-wrap items-center gap-3">
+        <Button asChild variant="secondary">
+          <Link to={CHANGE_PASSWORD_PATH}>
+            <KeyRound aria-hidden="true" /> Change password
+          </Link>
+        </Button>
+        <Button
+          variant="secondary"
+          loading={leaving}
+          onClick={() => {
+            setLeaving(true);
+            void signOut();
+          }}
+        >
+          <LogOut aria-hidden="true" /> Sign out
+        </Button>
+      </div>
+      <p className="text-small text-fg-2">Changing your password signs you out on your other devices.</p>
+    </Card>
   );
 }
 

@@ -28,11 +28,11 @@ const PROVIDERS = [
 /**
  * Where the facts come from.
  *
- * Lives on the AI page beside the model credential, because an admin setting one up is thinking
- * about the same thing — but they answer different questions. The credential decides *who writes*;
- * this decides *what they are allowed to write from*. Without it the builder will not generate a
- * course at all, and that is deliberate: the alternative is a course written from the model's
- * recollection of the internet, with URLs that look right and do not resolve.
+ * Lives on the AI page beside the model credential. v4.5.1: the AI credential alone is enough to
+ * make new courses. Without a search service the builder uses the AI's own web search (Claude,
+ * OpenAI), or writes from the AI's own knowledge and cites only links our server opened. A search
+ * service below is an optional upgrade. Whatever finds a link, our server opens it before a lesson
+ * may cite it, so a URL that looks right but doesn't resolve never reaches a learner.
  *
  * Superadmin-only, like the credential, and for the same reason — it is shared by every learner on
  * the deployment and it reaches outside it.
@@ -138,25 +138,13 @@ export function ResearchSettings() {
         Research
       </h2>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Where the AI course builder finds its sources. It searches the web and YouTube, fetches every
-        result, and writes only from what actually resolved — so a generated course never cites a URL
-        that was invented.
+        Where the AI course builder finds its sources. Whatever finds a link, our server opens it
+        before a lesson may cite it, so a generated course never cites a URL that doesn't work.
       </p>
 
       <AutoPublishSetting />
 
-      {!settings.configured && (
-        <div className="mt-4 flex gap-3 rounded-md border border-trailmark/50 bg-trailmark/[0.07] px-4 py-3 text-sm">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-strong" aria-hidden="true" />
-          <p className="max-w-prose">
-            <span className="font-medium">Not set up, so new courses wait.</span>{" "}
-            <span className="text-muted-foreground">
-              Pick a search service and save its key. Existing courses still work, and waiting
-              courses start on their own once it works. Nothing is written from memory.
-            </span>
-          </p>
-        </div>
-      )}
+      <ResearchModeLine settings={settings} />
 
       {error != null && (
         <div className="mt-4">
@@ -165,7 +153,11 @@ export function ResearchSettings() {
       )}
 
       <form onSubmit={save} className="mt-5 max-w-2xl space-y-5" noValidate>
-        <Field label="Search provider">
+        <p className="max-w-prose text-sm text-muted-foreground">
+          Optional upgrade: a search service gives the course builder more results per search. New
+          courses are made without one.
+        </p>
+        <Field label="Search provider (optional)">
           {({ id }) => (
             <div id={id} className="grid gap-2 sm:grid-cols-3">
               {PROVIDERS.map((option) => (
@@ -273,6 +265,33 @@ export function ResearchSettings() {
         </Button>
       </div>
     </section>
+  );
+}
+
+/**
+ * v4.5.1: what new courses search with right now, in one plain line from the server. Amber only
+ * when nothing works (no AI credential); every other mode needs no setup.
+ */
+function ResearchModeLine({ settings }: { settings: Settings }) {
+  if (!settings.modeLine) return null;
+  const blocked = settings.mode === "none";
+  return (
+    <div
+      role="status"
+      data-testid="research-mode"
+      data-mode={settings.mode}
+      className={cn(
+        "mt-4 flex max-w-2xl gap-3 rounded-md border px-4 py-3 text-sm",
+        blocked ? "border-trailmark/50 bg-trailmark/[0.07]" : "border-summit/40 bg-summit/[0.06]",
+      )}
+    >
+      {blocked ? (
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-strong" aria-hidden="true" />
+      ) : (
+        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-summit-strong" aria-hidden="true" />
+      )}
+      <p className="max-w-prose">{settings.modeLine}</p>
+    </div>
   );
 }
 

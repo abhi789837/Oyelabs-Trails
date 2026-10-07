@@ -4,7 +4,7 @@ import type { Env } from "../env";
 import { hint, open, seal } from "../crypto/secretBox";
 import { schema, type Db } from "../db";
 import { now } from "../lib/ids";
-import { problemLine, RESEARCH_CHECK_META_KEY, type ResearchCheck } from "../../../shared/connection";
+import { problemLine, RESEARCH_CHECK_META_KEY, researchModeLine, type ResearchCheck, type ResearchMode } from "../../../shared/connection";
 import { makeSearchClient, makeVideoClient, NO_VIDEO_CLIENT, type SearchClient, type VideoClient } from "./providers";
 import type { ResearchProviderId } from "./research";
 
@@ -40,6 +40,27 @@ export interface ResearchSettingsView {
   /** The last Test or re-check, if any. */
   lastCheck: ResearchCheck | null;
   updatedAt: number | null;
+  /**
+   * v4.5.1: how new courses find sources right now (search service, the AI's own web search, the
+   * AI's own knowledge, or nothing without an AI credential), and that in one plain line. Present
+   * when the caller passed the AI connection.
+   */
+  mode?: ResearchMode;
+  modeLine?: string;
+}
+
+/** v4.5.1: what `getResearchSettings` needs to know about the AI connection to name the mode. */
+export interface AiResearchProbe {
+  isConfigured(): boolean;
+  webSearchAvailable?(): boolean;
+  activeProviderId?(): string | null;
+}
+
+/** v4.5.1: the research mode, in priority order. The search service counts only once it's usable. */
+export function researchModeOf(providerReady: boolean, ai: AiResearchProbe): ResearchMode {
+  if (!ai.isConfigured()) return "none";
+  if (providerReady) return "provider";
+  return ai.webSearchAvailable?.() ? "ai_web_search" : "ai_only";
 }
 
 export function readResearchCheck(db: Db): ResearchCheck | null {
@@ -64,7 +85,15 @@ function row(db: Db) {
   return db.select().from(schema.researchSettings).where(eq(schema.researchSettings.id, SETTINGS_ROW)).get();
 }
 
-export function getResearchSettings(db: Db, env?: Env): ResearchSettingsView {
+export function getResearchSettings(db: Db, env?: Env, ai?: AiResearchProbe): ResearchSettingsView {
+  const view = researchSettingsView(db, env);
+  if (!ai) return view;
+  const mode = researchModeOf(view.configured, ai);
+  const providerName = view.effectiveProvider ? PROVIDER_NAMES[view.effectiveProvider] : null;
+  return { ...view, mode, modeLine: researchModeLine(mode, { provider: providerName, ai: ai.activeProviderId?.() ?? null }) };
+}
+
+function researchSettingsView(db: Db, env?: Env): ResearchSettingsView {
   const found = row(db);
   const lastCheck = readResearchCheck(db);
   if (!found) {
@@ -225,6 +254,16 @@ export function getResearchProvider(db: Db, env: Env): ResearchProviderResult {
 }
 
 export const PROVIDER_NAMES: Record<ResearchProviderId, string> = { tavily: "Tavily", brave: "Brave Search", serper: "Serper" };
+
+/**
+ * v4.5.1: the YouTube client on its own. A YouTube key is useful without a search service (the AI
+ * research modes still look for a lesson video with it); without one, lessons have no video.
+ */
+export function getVideoClient(db: Db, env: Env): { video: VideoClient; videos: boolean } {
+  const found = row(db);
+  const youtube = found ? openSealed(found.youtubeCiphertext, found.youtubeIv, found.youtubeTag, env) : { key: null };
+  return youtube.key ? { video: makeVideoClient(youtube.key), videos: true } : { video: NO_VIDEO_CLIENT, videos: false };
+}
 
 /** Kept for older callers and tests: the same check as `getResearchProvider`. */
 export function researchClients(db: Db, env: Env): ResearchProviderResult {

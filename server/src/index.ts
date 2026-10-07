@@ -85,7 +85,7 @@ async function main(): Promise<void> {
       }),
       "assessment.evaluate": evaluateHandler({ db, ai, content, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "path.build": buildPathHandler({ db, env, ai, content, log: (m) => console.log(`[oyelearn] ${m}`) }),
-      "course.generate": courseGenerateHandler({ db, env, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "course.generate": courseGenerateHandler({ db, env, ai, content, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "links.check": checkLinksHandler({ db, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "week.refine": refineWeekHandler({ db, content, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "bank.fill": bankFillHandler({ db, ai, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),

@@ -37,7 +37,7 @@ const isLearnerPath = (path: string) => path === "/learn" || path.startsWith("/l
 /**
  * The motivation host (lazy, mounted once by V5App through `MotivationHost`). It owns:
  * - the learner top bar's XP button ("+30 XP" when an award arrives) and notification bell,
- *   placed over the shell header's right end so no shell had to change;
+ *   placed over the shell header's right end, just left of the account menu;
  * - celebrations, from `celebrate()` calls and from milestone XP it notices on its own;
  * - the first-run welcome and the "Your progress" panel (weekly goal, opt-in team board).
  */
@@ -204,7 +204,8 @@ export default function HostImpl() {
   return (
     <V5MotionProvider reducedMotion={summary?.prefs.reducedMotion ?? "system"}>
       {onLearner && summary ? (
-        <aside aria-label="Your progress and notifications" className="fixed right-2 top-0 z-30 flex h-14 items-center gap-1 sm:right-4" data-testid="v5-topbar-motivation">
+        // Left of the shell's account menu (a 40 px button inside the header's 16/24 px padding).
+        <aside aria-label="Your progress and notifications" className="fixed right-[3.75rem] top-0 z-30 flex h-14 items-center gap-1 sm:right-[4.25rem]" data-testid="v5-topbar-motivation">
           <span aria-live="polite" className="text-caption font-semibold text-success-fg">
             {gained ? (
               <span key={gained.id} className="rounded-full bg-success-soft px-2 py-0.5" data-testid="xp-gained">

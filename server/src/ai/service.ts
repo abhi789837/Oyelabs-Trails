@@ -14,7 +14,10 @@ import { getSettings, listCredentials, revealSecret, type StoredCredential } fro
 import { openAiEmbedder } from "../oyelabs/assign/embed";
 import { AiBudgetPausedError, budgetStatus, isRoutable, routeFor, storeAvailableModels, warnOnBudget } from "./router";
 import { costMicros, taskForPurpose, type AiTask } from "../../../shared/aiRouting";
-import { AiOutputError, AiProviderError, type AiProvider, type GenerateJsonRequest, type GenerateJsonResult } from "./types";
+import { AiOutputError, AiProviderError, type AiProvider, type GenerateJsonRequest, type GenerateJsonResult, type WebSearchHit } from "./types";
+
+/** v4.5.1: the Anthropic API bills $10 per 1,000 web searches on top of tokens (10,000 micro-dollars each). */
+export const WEB_SEARCH_MICROS = 10_000;
 
 /**
  * Limits how many provider calls are in flight at once (brief §8.2).
@@ -74,6 +77,82 @@ export class AiService {
     if (this.options.mock) return true;
     const settings = getSettings(this.db);
     return Boolean(settings.activeCredentialId);
+  }
+
+  /**
+   * v4.5.1: which provider the active credential is, or null with none. The mock reports "mock".
+   * Never throws: a broken credential row reads as "none".
+   */
+  activeProviderId(): ProviderId | null {
+    try {
+      return this.activeProvider().provider.id;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * v4.5.1: whether the active credential has a built-in web search the course builder can use
+   * when no search service is saved (Anthropic API, Claude Code CLI, OpenAI API; not Codex CLI).
+   */
+  webSearchAvailable(): boolean {
+    try {
+      return typeof this.activeProvider().provider.webSearch === "function";
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * v4.5.1: one web search through the active provider's own search tool, logged in `ai_calls`
+   * (purpose `course_research`) with the search fee included in the cost. Same concurrency cap
+   * and budget pause as `generateJson`; not retried here (the builder falls back on a failure).
+   */
+  async webSearch(query: string, limit: number, meta: GenerateJsonRequest<unknown>["meta"]): Promise<WebSearchHit[]> {
+    const { provider, credentialId } = this.activeProvider();
+    if (!provider.webSearch) throw new AiProviderError("This AI connection has no built-in web search.");
+    const task: AiTask = "course_research";
+    const route = routeFor(this.db, task);
+    if (!route.urgent && budgetStatus(this.db).paused) throw new AiBudgetPausedError();
+    const model = isRoutable(provider.id) ? route.model : undefined;
+    return this.semaphore.run(async () => {
+      const started = Date.now();
+      try {
+        const result = await provider.webSearch!({ query, limit, model, maxOutputTokens: route.maxTokens });
+        this.recordCall({
+          credentialId,
+          provider: provider.id,
+          model: result.model,
+          purpose: "course_research",
+          task,
+          meta,
+          inputTokens: result.usage.input,
+          outputTokens: result.usage.output,
+          cacheReadTokens: result.usage.cacheRead ?? 0,
+          cacheWriteTokens: result.usage.cacheWrite ?? 0,
+          extraCostMicros: provider.id === "anthropic-api" ? result.searches * WEB_SEARCH_MICROS : 0,
+          latencyMs: result.latencyMs,
+          ok: true,
+        });
+        warnOnBudget(this.db);
+        return result.hits;
+      } catch (error) {
+        this.recordCall({
+          credentialId,
+          provider: provider.id,
+          model: model ?? provider.defaultModel("course_research"),
+          purpose: "course_research",
+          task,
+          meta,
+          inputTokens: 0,
+          outputTokens: 0,
+          latencyMs: Date.now() - started,
+          ok: false,
+          error: errorMessage(error),
+        });
+        throw error;
+      }
+    });
   }
 
   /**
@@ -295,6 +374,8 @@ export class AiService {
     outputTokens: number;
     cacheReadTokens?: number;
     cacheWriteTokens?: number;
+    /** v4.5.1: fees on top of tokens (the Anthropic web search's per-search price). */
+    extraCostMicros?: number;
     batch?: boolean;
     latencyMs: number;
     ok: boolean;
@@ -315,7 +396,9 @@ export class AiService {
         task: entry.task ?? null,
         cacheReadTokens: entry.cacheReadTokens ?? 0,
         cacheWriteTokens: entry.cacheWriteTokens ?? 0,
-        costMicros: costMicros(entry.model, { input: entry.inputTokens, output: entry.outputTokens, cacheRead: entry.cacheReadTokens, cacheWrite: entry.cacheWriteTokens }, entry.batch),
+        costMicros:
+          costMicros(entry.model, { input: entry.inputTokens, output: entry.outputTokens, cacheRead: entry.cacheReadTokens, cacheWrite: entry.cacheWriteTokens }, entry.batch) +
+          (entry.extraCostMicros ?? 0),
         courseId: entry.meta.courseId ?? null,
         batch: entry.batch ?? false,
         latencyMs: entry.latencyMs,

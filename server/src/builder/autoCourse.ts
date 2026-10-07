@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, isNotNull } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -20,7 +20,10 @@ import { newId, now } from "../lib/ids";
 import { notify, staffIds } from "../lib/notify";
 import { COURSE_JOB_MAX_ATTEMPTS, enqueue, JobWaitingSetupError, wakeWaitingJobs, type Job } from "../jobs/queue";
 import { isBlockingProblem, problemLine } from "../../../shared/connection";
-import { getAIProvider, watchSearch } from "./connection";
+import type { ContentStore } from "../content/store";
+import { safeFetch } from "../oyelabs/media/safeFetch";
+import { makeAiResearchClient, withAiFallback } from "./aiResearch";
+import { getAIProvider, noteProviderFallback, watchSearch } from "./connection";
 import { buildCourse, rebuildTopic, reviewCourse, type BuildDeps } from "./pipeline";
 import type { SearchClient, VideoClient } from "./providers";
 import {
@@ -35,7 +38,7 @@ import {
 } from "./repo";
 import type { ResearchDeps } from "./research";
 import { normaliseSkill } from "./scoring";
-import { getResearchProvider, type ResearchProviderResult } from "./settings";
+import { getResearchProvider, getVideoClient, type ResearchProviderResult } from "./settings";
 
 /**
  * v4.4 Phase 5: a course nobody has written yet is made, checked and put in the shared library
@@ -105,12 +108,16 @@ function clientsOf(deps: SetupDeps): ResearchClientsResult {
   return deps.clients ? deps.clients() : getResearchProvider(deps.db, deps.env);
 }
 
-/** What is missing before a course can be written, in plain words, or null when nothing is. */
-export function setupProblem(deps: SetupDeps): string | null {
+/**
+ * What is missing before a course can be written, in plain words, or null when nothing is.
+ *
+ * v4.5.1: only the AI credential. Without a search service the course is researched with the AI's
+ * own web search, or written from its own knowledge with links our server has checked
+ * (`aiResearch.ts`), so "no search service" never blocks a course any more.
+ */
+export function setupProblem(deps: Pick<SetupDeps, "ai">): string | null {
   const ai = getAIProvider(deps.ai);
-  if (!ai.ok) return ai.reason;
-  const research = clientsOf(deps);
-  return research.ok ? null : research.reason;
+  return ai.ok ? null : ai.reason;
 }
 
 const STOP_WORDS = new Set(["and", "the", "for", "with", "of", "to", "in", "on", "a", "an", "your", "basics", "fundamentals", "intro", "introduction"]);
@@ -386,19 +393,22 @@ function notifyWaitingApproval(db: Db, title: string, userId: string): void {
 // The job
 // ---------------------------------------------------------------------------
 
+/**
+ * The link check every candidate goes through before a lesson may cite it. v4.5.1: through the
+ * SSRF-safe fetch (private, loopback and metadata addresses refused at every redirect hop, 1 MB
+ * cap), because candidates can now be URLs an AI proposed, not only a search service's results.
+ */
 export const DEFAULT_FETCH: ResearchDeps = {
   fetchUrl: async (url) => {
-    const response = await fetch(url, {
-      redirect: "follow",
-      signal: AbortSignal.timeout(12_000),
-      headers: { "user-agent": "Oyelearn course builder (link check)" },
-    });
-    return { status: response.status, headers: response.headers, text: () => response.text() };
+    const response = await safeFetch(url, { timeoutMs: 12_000, headers: { accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.5" } });
+    return { status: response.status, headers: response.headers, text: async () => response.body.toString("utf8") };
   },
 };
 
 export interface CourseJobDeps extends SetupDeps {
   ai: AiService;
+  /** v4.5.1: the curriculum, whose verified references are candidates in the AI research modes. */
+  content?: ContentStore;
   /** The link fetcher; replaced in tests. */
   research?: ResearchDeps;
   log?: (message: string) => void;
@@ -440,13 +450,28 @@ export function courseGenerateHandler(deps: CourseJobDeps) {
     // v4.5 P0: read fresh, every run, from the one source (`getAIProvider` / `getResearchProvider`).
     const ai = getAIProvider(deps.ai);
     if (!ai.ok) throw new JobWaitingSetupError(ai.reason);
+    /* v4.5.1: the saved search service when there is one; otherwise (and as soon as it fails) the
+       AI connection's own research: its web search when it has one, else its own knowledge with
+       known and proposed links. Every candidate is still opened by our server before it is cited. */
+    const aiResearch = makeAiResearchClient({
+      ai: deps.ai,
+      db: deps.db,
+      content: deps.content,
+      meta: { subjectUserId: payload.userId, ...(payload.courseId ? { courseId: payload.courseId } : {}) },
+      webSearch: typeof deps.ai.webSearchAvailable === "function" ? deps.ai.webSearchAvailable() : false,
+      log: (line) => deps.log?.(`course job ${job.id}: ${line}`),
+    });
     const research = clientsOf(deps);
-    if (!research.ok) throw new JobWaitingSetupError(research.reason);
-    const watched = watchSearch(research.search);
-    const clients = { search: watched.client, video: research.video };
-    /* A search service that rejected the key or ran out of quota blocks the job (woken by saving,
-       a passing Test or the 10-minute re-check); a network or temporary error is retried with
-       backoff and fails after COURSE_JOB_MAX_ATTEMPTS. Never "not connected" for either. */
+    const primary = research.ok
+      ? withAiFallback(research.search, aiResearch, (failure) => {
+          deps.log?.(`course job ${job.id}: ${problemLine("search", failure.state)} (${failure.message}); researching with the AI instead`);
+          noteProviderFallback(deps.db, research.provider, failure);
+        })
+      : aiResearch;
+    const watched = watchSearch(primary);
+    const clients = { search: watched.client, video: research.ok ? research.video : getVideoClient(deps.db, deps.env).video };
+    /* Only reachable if every search failed, the AI's included: a rejected AI key or used-up AI
+       quota blocks the job (woken by the 10-minute re-check); anything else is retried. */
     const raiseProviderProblem = () => {
       const problem = watched.problem();
       if (!problem) return;
@@ -621,26 +646,5 @@ export function requestFix(deps: SetupDeps, courseId: string): { jobId: string; 
 // The shared resources list
 // ---------------------------------------------------------------------------
 
-/** Every source the library's courses cite, once each: the shared resources list. */
-export function libraryResources(db: Db) {
-  const rows = db
-    .select({
-      url: schema.courseSources.url,
-      title: schema.courseSources.title,
-      kind: schema.courseSources.kind,
-      courseId: schema.courses.id,
-      courseTitle: schema.courses.title,
-      skill: schema.generatedCourses.skill,
-      departmentId: schema.generatedCourses.departmentId,
-      deadSince: schema.courseSources.deadSince,
-    })
-    .from(schema.courseSources)
-    .innerJoin(schema.courses, eq(schema.courses.id, schema.courseSources.courseId))
-    .innerJoin(schema.generatedCourses, eq(schema.generatedCourses.courseId, schema.courses.id))
-    .where(and(eq(schema.generatedCourses.library, true), eq(schema.courses.published, true), isNotNull(schema.courseSources.url)))
-    .all();
-  const seen = new Set<string>();
-  return rows
-    .filter((row) => row.deadSince == null && !seen.has(row.url) && Boolean(seen.add(row.url)))
-    .map(({ deadSince: _dead, ...row }) => row);
-}
+/** Every source the library's courses cite, once each (moved to aiResearch.ts in v4.5.1). */
+export { libraryResources } from "./aiResearch";

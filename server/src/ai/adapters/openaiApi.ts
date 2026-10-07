@@ -11,7 +11,11 @@ import {
   type AiProvider,
   type GenerateJsonRequest,
   type GenerateJsonResult,
+  type WebSearchHit,
+  type WebSearchRequest,
+  type WebSearchResult,
 } from "../types";
+import { normaliseHits, searchInstruction } from "./webSearch";
 
 /**
  * OpenAI API key adapter (brief §8.1), using Chat Completions with a strict JSON schema.
@@ -108,6 +112,55 @@ export class OpenAiApiProvider implements AiProvider {
     }
     const result = request.schema.safeParse(value);
     return result.success ? { ok: true, data: result.data } : { ok: false, issues: describeIssues(result.error) };
+  }
+
+  /**
+   * v4.5.1: one search with the Responses API's `web_search` tool. URLs are read from the answer's
+   * `url_citation` annotations and from the search call's own sources, never from the prose.
+   */
+  async webSearch(request: WebSearchRequest): Promise<WebSearchResult> {
+    const model = request.model ?? this.defaultModel("course_research");
+    const started = Date.now();
+    let response: Awaited<ReturnType<OpenAI["responses"]["create"]>>;
+    try {
+      response = await this.client.responses.create(
+        {
+          model,
+          tools: [{ type: "web_search" }],
+          include: ["web_search_call.action.sources"],
+          input: searchInstruction(request.query, request.limit),
+          max_output_tokens: request.maxOutputTokens ?? 1500,
+        },
+        { timeout: request.timeoutMs ?? 120_000 },
+      );
+    } catch (error) {
+      throw toProviderError(error);
+    }
+    const raw: Partial<WebSearchHit>[] = [];
+    const record = (value: unknown): Record<string, unknown> => (typeof value === "object" && value !== null ? (value as Record<string, unknown>) : {});
+    const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
+    const text = (value: unknown): string => (typeof value === "string" ? value : "");
+    for (const item of list(record(response).output)) {
+      const entry = record(item);
+      if (entry.type === "message") {
+        for (const part of list(entry.content)) {
+          for (const note of list(record(part).annotations)) {
+            const citation = record(note);
+            if (citation.type === "url_citation") raw.push({ url: text(citation.url), title: text(citation.title) });
+          }
+        }
+      } else if (entry.type === "web_search_call") {
+        for (const source of list(record(entry.action).sources)) raw.push({ url: text(record(source).url), title: "" });
+      }
+    }
+    const usage = record(record(response).usage);
+    return {
+      hits: normaliseHits(raw, request.limit),
+      usage: { input: Number(usage.input_tokens) || 0, output: Number(usage.output_tokens) || 0 },
+      searches: 1,
+      latencyMs: Date.now() - started,
+      model,
+    };
   }
 
   async verify(): Promise<void> {

@@ -1,5 +1,5 @@
 import type { ConnectionProblem } from "../../../shared/connection";
-import type { ResearchProviderId, SearchHit, VideoHit } from "./research";
+import type { ResearchProviderId, SearchClientId, SearchHit, VideoHit } from "./research";
 
 /**
  * The outside world: three search providers and the YouTube Data API.
@@ -12,7 +12,7 @@ import type { ResearchProviderId, SearchHit, VideoHit } from "./research";
  */
 
 export interface SearchClient {
-  readonly id: ResearchProviderId;
+  readonly id: SearchClientId;
   search(query: string, limit: number): Promise<SearchHit[]>;
 }
 

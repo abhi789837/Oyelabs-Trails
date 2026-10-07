@@ -60,6 +60,8 @@ describe("GET /api/admin/v5/inbox", () => {
     ctx.db.insert(schema.problemReports).values({ id: "p1", userId: asha, topicId: topicIds(1)[0]!, step: "watch", message: "The video doesn't play", status: "open", createdAt: Date.now() }).run();
     seedPlan(asha, { publishedDaysAgo: 20, activityDaysAgo: 9 }); // stuck
     seedPlan(rahul, { publishedDaysAgo: 2 }); // plan is new: not stuck yet
+    // v4.5.1: only an AI problem blocks a new course now; one blocked course is the setup item.
+    ctx.db.insert(schema.jobs).values({ id: "blocked-course", type: "course.generate", payload: { key: "name:x", skill: "X", userId: rahul }, status: "waiting_setup", attempts: 0, maxAttempts: 5, runAfter: Date.now(), lastError: "the AI isn't connected", createdAt: Date.now() }).run();
 
     const first = await inbox();
     const groups = first.groups.map((g) => g.id);
@@ -71,7 +73,9 @@ describe("GET /api/admin/v5/inbox", () => {
     expect(stuck).toHaveLength(1);
     expect(stuck[0]).toMatchObject({ userId: asha, action: { kind: "nudge" }, secondary: { kind: "dismiss", key: `stuck:${asha}` } });
     expect(stuck[0]!.title).toContain("9 days");
-    expect(first.groups.find((g) => g.id === "setup")!.items.map((i) => i.id)).toContain("setup:research");
+    const setupItem = first.groups.find((g) => g.id === "setup")!.items.find((i) => i.id === "setup:research")!;
+    expect(setupItem.title).toBe("1 new course blocked: the AI isn't connected");
+    expect(setupItem.detail).toContain("Connect an AI credential under Admin → AI connection.");
 
     // "Give full marks" goes through the existing review decision endpoint and the item leaves.
     const decided = await ctx.app.inject({ method: "POST", url: `/api/admin/review-requests/${reviewId}/decision`, ...as(admin), payload: { decision: "override" } });

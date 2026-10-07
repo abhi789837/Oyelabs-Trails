@@ -201,7 +201,7 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
       .all();
     // v4.4: new courses that wait for the AI or web search, for the page's "Set up" notice.
     const waiting = waitingForSetup(app.db);
-    const waitingSetup = waiting.count > 0 ? { count: waiting.count, problem: waiting.problem ?? "the web search isn't set up" } : null;
+    const waitingSetup = waiting.count > 0 ? { count: waiting.count, problem: waiting.problem ?? "the AI isn't connected" } : null;
     if (rows.length === 0) return { courses: [], waitingSetup };
 
     const dead = coursesWithDeadLinks(app.db);
@@ -392,7 +392,7 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
 
   app.get("/api/admin/research", async (request) => {
     requireSuperadmin(request);
-    return { settings: getResearchSettings(app.db, app.env) };
+    return { settings: getResearchSettings(app.db, app.env, app.ai) };
   });
 
   app.put("/api/admin/research", async (request) => {
@@ -426,7 +426,7 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
       // Which provider and whether keys are now present — never the keys, not even a hint.
       details: { provider: settings.provider, hasSearchKey: Boolean(settings.searchHint), hasYoutubeKey: Boolean(settings.youtubeHint) },
     });
-    return { settings };
+    return { settings: getResearchSettings(app.db, app.env, app.ai) };
   });
 
   /**
@@ -438,7 +438,7 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
     const actor = requireSuperadmin(request);
     const check = await testResearch({ db: app.db, env: app.env });
     writeAudit(app.db, { actorId: actor.id, action: "research.tested", targetType: "research", targetId: "singleton", details: { state: check.state, results: check.results, videos: check.videos, woken: check.woken } });
-    return { check, settings: getResearchSettings(app.db, app.env) };
+    return { check, settings: getResearchSettings(app.db, app.env, app.ai) };
   });
 
   /** v4.5 P0: Retry on a new course that failed 5 times. Back in the queue now, with 5 fresh tries. */

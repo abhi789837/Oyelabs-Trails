@@ -174,10 +174,11 @@ describe("mastered goals, no gap, capstones", () => {
     const outcome = await runBuilder({ userId: learner.id, assessmentId: null, evaluation, adminNotes: "" }, { db: ctx.db, env: ctx.env, ai: ctx.ai, content: ctx.content });
     const items = pathItems(ctx, outcome.pathId);
     // In the continuation's order. v4.4: a step with no curriculum module (code review) is on the path
-    // as a course being made, waiting here because the web search isn't connected in tests.
+    // as a course being made. v4.5.1: with an AI credential it never waits for a search service.
     const ordered = skillOrder(items);
     expect(ordered).toEqual(analysis.order.steps.map((s) => s.skillId));
-    expect(outcome.waitingForResearch ?? 0).toBe(items.filter((i) => i.moduleId?.startsWith("newcourse:")).length);
+    expect(outcome.waitingForResearch ?? 0).toBe(0);
+    expect(outcome.creating ?? 0).toBe(items.filter((i) => i.moduleId?.startsWith("newcourse:")).length);
     expect(items[0].reason).toBe("Next after Git fundamentals. You've met your goal (Git), so this continues it.");
     await ctx.close();
   }, 60_000);

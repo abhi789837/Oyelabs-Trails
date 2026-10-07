@@ -46,20 +46,42 @@ const video: VideoClient = {
   ]),
   lookup: vi.fn(async () => null),
 };
-const fetcher = { fetchUrl: vi.fn(async () => ({ status: 200, headers: new Headers({ "content-type": "text/html" }), text: async () => "<html><head><title>Real page</title></head><body>content</body></html>" })) };
+/** v4.5.1: what the AI proposes in AI-only mode: two real pages and one that doesn't exist. */
+const BOGUS_URL = "https://docs.example-invented.dev/code-review/made-up-page";
+const PROPOSED = [URLS[0], URLS[1], BOGUS_URL];
+const fetcher = {
+  fetchUrl: vi.fn(async (url: string) =>
+    url === BOGUS_URL
+      ? { status: 404, headers: new Headers({ "content-type": "text/html" }), text: async () => "Not found" }
+      : {
+          status: 200,
+          headers: new Headers({ "content-type": "text/html" }),
+          text: async () => '<html><head><title>Real page</title><meta name="description" content="How to review a change well."></head><body>content</body></html>',
+        },
+  ),
+};
 
 const connected = (): ResearchClientsResult => ({ ok: true, provider: "tavily", search, video, videos: true });
 const notConnected = (): ResearchClientsResult => ({ ok: false, state: "not_set_up", reason: "the web search isn't set up", detail: "No search service is picked." });
 
-/** A model stub for the course calls; anything else goes to the test app's mock. `reviews` are used in turn. */
-function aiStub(ctx: TestContext, reviews: { score: number; weak?: string[] }[] = [{ score: 5 }]) {
+/**
+ * A model stub for the course calls; anything else goes to the test app's mock. `reviews` are used
+ * in turn. v4.5.1: `options.webSearch` gives it a built-in web search (mode 2); without it the
+ * builder asks it to propose official docs (mode 3). `options.configured: false` = no AI credential.
+ */
+function aiStub(ctx: TestContext, reviews: { score: number; weak?: string[] }[] = [{ score: 5 }], options: { webSearch?: boolean; configured?: boolean } = {}) {
   let reviewCall = 0;
   const calls: string[] = [];
+  const searches: string[] = [];
+  let configured = options.configured ?? true;
   const generateJson = vi.fn(async (request: { purpose: string; user: string }) => {
     calls.push(request.purpose);
     const usage = { input: 100, output: 50 };
     const reply = (data: unknown) => ({ data, usage, latencyMs: 1, model: "stub" });
     if (request.purpose === "course_match") return reply({ courseId: null, confidence: 0, reason: "" });
+    if (request.purpose === "course_research") {
+      return reply({ results: PROPOSED.map((url, i) => ({ url, title: `Official page ${i}`, snippet: "What a good review looks like." })) });
+    }
     if (request.purpose === "course_plan") {
       return reply({
         title: COURSE_TITLE,
@@ -103,7 +125,19 @@ function aiStub(ctx: TestContext, reviews: { score: number; weak?: string[] }[] 
     }
     return ctx.ai.generateJson(request as Parameters<AiService["generateJson"]>[0]);
   });
-  return { ai: { generateJson, isConfigured: () => true } as unknown as AiService, calls };
+  /* Mode 2: the provider's web search tool, answered as the adapter hands it back (URL and title,
+     no snippet: the page's own description is read when the link is checked). */
+  const webSearch = vi.fn(async (query: string) => {
+    searches.push(query);
+    return URLS.map((url, i) => ({ url, title: `Search result ${i}`, snippet: "", publishedAt: null }));
+  });
+  const ai = {
+    generateJson,
+    isConfigured: () => configured,
+    webSearchAvailable: () => Boolean(options.webSearch),
+    ...(options.webSearch ? { webSearch } : {}),
+  } as unknown as AiService;
+  return { ai, calls, searches, setConfigured: (on: boolean) => void (configured = on) };
 }
 
 const goal = (skillIds: string[], slider = 5): GoalInput => ({ type: "text", originalText: "Review code", outcome: "Can review code at work.", skillIds, targetLevel: 3, caseId: null, slider });
@@ -299,56 +333,176 @@ describe("a course that fails the quality check", () => {
   }, 120_000);
 });
 
-describe("when the web search isn't set up", () => {
-  test("the course waits in waiting_setup and is made as soon as the settings are saved", async () => {
+describe("v4.5.1: no search service, only the AI credential", () => {
+  test("mode 3 (AI-only): the course is made from the AI's own knowledge, citing only proposed links our server opened", async () => {
     const ctx = await createTestApp();
     const admin = await adminSession(ctx);
-    const { ai } = aiStub(ctx);
+    const { ai, calls } = aiStub(ctx);
     const rahul = await learner(ctx, admin, "Rahul");
+    fetcher.fetchUrl.mockClear();
     const outcome = await build(ctx, rahul.id, ai, notConnected);
     expect(outcome.status).toBe("ready");
+    expect(outcome.waitingForResearch ?? 0).toBe(0);
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "queued", lastError: null });
+
+    // Never "not set up" while the AI works: no banner, no blocked item.
+    const before = await myPath(ctx, rahul.session);
+    expect(before.setupNeeded ?? null).toBeNull();
+    expect(before.notice ?? null).toBeNull();
+    expect(codeReviewItem(before)).toMatchObject({ creating: "working" });
+
+    await worker(ctx, ai, notConnected).drain();
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "done", lastError: null });
+    expect(calls).toContain("course_research");
+    const [row] = generated(ctx);
+    expect(row).toMatchObject({ status: "published", library: true });
+
+    // Every proposal was opened; the one that doesn't exist was dropped and is cited nowhere.
+    const fetched = fetcher.fetchUrl.mock.calls.map(([url]) => url);
+    expect(fetched).toContain(BOGUS_URL);
+    const sources = ctx.db.select().from(schema.courseSources).where(eq(schema.courseSources.courseId, row.courseId)).all().map((source) => source.url);
+    expect(sources).toEqual(expect.arrayContaining([URLS[0], URLS[1]]));
+    expect(sources).not.toContain(BOGUS_URL);
+
+    const after = await myPath(ctx, rahul.session);
+    expect(after.setupNeeded ?? null).toBeNull();
+    expect(codeReviewItem(after)).toMatchObject({ courseId: row.courseId, available: true });
+    await ctx.close();
+  }, 120_000);
+
+  test("mode 2 (the AI's web search): sources come from its search tool and are still opened by our server", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const { ai, calls, searches } = aiStub(ctx, [{ score: 5 }], { webSearch: true });
+    const rahul = await learner(ctx, admin, "Rahul");
+    fetcher.fetchUrl.mockClear();
+    await build(ctx, rahul.id, ai, notConnected);
+    await worker(ctx, ai, notConnected).drain();
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "done", lastError: null });
+    expect(searches).toEqual(["how to review a pull request"]);
+    // The search answered, so nothing was proposed from memory.
+    expect(calls).not.toContain("course_research");
+    const fetched = fetcher.fetchUrl.mock.calls.map(([url]) => url);
+    expect(fetched).toEqual(expect.arrayContaining(URLS));
+    const [row] = generated(ctx);
+    expect(row).toMatchObject({ status: "published", library: true });
+    const sources = ctx.db.select().from(schema.courseSources).where(eq(schema.courseSources.courseId, row.courseId)).all();
+    expect(sources.length).toBeGreaterThan(0);
+    await ctx.close();
+  }, 120_000);
+
+  test("a failing web search falls back to the AI's own knowledge for the rest of the course", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const stub = aiStub(ctx, [{ score: 5 }], { webSearch: true });
+    (stub.ai as unknown as { webSearch: () => Promise<never> }).webSearch = vi.fn(async () => {
+      throw new Error("web search is not enabled for this organization");
+    });
+    const rahul = await learner(ctx, admin, "Rahul");
+    await build(ctx, rahul.id, stub.ai, notConnected);
+    await worker(ctx, stub.ai, notConnected).drain();
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "done", lastError: null });
+    expect(stub.calls).toContain("course_research");
+    expect(generated(ctx)[0]).toMatchObject({ status: "published" });
+    await ctx.close();
+  }, 120_000);
+
+  test("only a missing AI credential blocks, says exactly that, and the course is made once one works", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const stub = aiStub(ctx, [{ score: 5 }], { configured: false });
+    const rahul = await learner(ctx, admin, "Rahul");
+    const outcome = await build(ctx, rahul.id, stub.ai, notConnected);
     expect(outcome.waitingForResearch).toBe(1);
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the AI isn't connected" });
 
-    const [job] = courseJobs(ctx);
-    expect(job.status).toBe("waiting_setup");
-    expect(job.lastError).toBe("the web search isn't set up");
-
-    // The admin's learner page says so in plain words.
     const gaps = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${rahul.id}/gaps`, ...as(admin) });
     const path = gaps.json().path as LearningPathView;
-    expect(path.setupNeeded).toBe("We couldn't create the course because the web search isn't set up. We'll finish automatically after it's set up.");
-    expect(path.setupNeeded).toBe(setupNeededMessage("the web search isn't set up"));
+    expect(path.setupNeeded).toBe(
+      "We couldn't create the course because the AI isn't connected. Connect an AI credential under Admin → AI connection. We'll finish automatically after that.",
+    );
     expect(path.notice).toBe(path.setupNeeded);
-    expect(codeReviewItem(path)).toMatchObject({ creating: "waiting_setup" });
     const page = await ctx.app.inject({ method: "GET", url: "/api/admin/generated-courses", ...as(admin) });
-    expect(page.json().waitingSetup).toEqual({ count: 1, problem: "the web search isn't set up" });
+    expect(page.json().waitingSetup).toEqual({ count: 1, problem: "the AI isn't connected" });
 
-    // The worker never claims it while it waits.
-    expect(await worker(ctx, ai, notConnected).drain()).toBe(0);
+    // The worker parks it again while there is no AI, and the re-check leaves it.
+    ctx.db.update(schema.jobs).set({ status: "queued" }).run();
+    await worker(ctx, stub.ai, notConnected).drain();
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the AI isn't connected", attempts: 0 });
+    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai: stub.ai, clients: notConnected })).toBe(0);
 
-    // Saving the research settings wakes it; it runs with no rebuild.
-    const saved = await ctx.app.inject({ method: "PUT", url: "/api/admin/research", ...as(admin), payload: { provider: "tavily", searchKey: "tvly-test-1234", youtubeKey: "yt-test-5678" } });
-    expect(saved.statusCode).toBe(200);
-    expect(courseJobs(ctx)[0].status).toBe("queued");
-    await worker(ctx, ai).drain();
-
+    // An AI credential arrives: the re-check wakes it and it is made with no search service.
+    stub.setConfigured(true);
+    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai: stub.ai, clients: notConnected })).toBe(1);
+    await worker(ctx, stub.ai, notConnected).drain();
     expect(courseJobs(ctx)[0].status).toBe("done");
-    expect(generated(ctx)[0]).toMatchObject({ status: "published", library: true });
     const after = await myPath(ctx, rahul.session);
     expect(after.setupNeeded ?? null).toBeNull();
     expect(codeReviewItem(after).available).toBe(true);
     await ctx.close();
   }, 120_000);
 
-  test("a woken job that still lacks setup goes back to waiting", async () => {
+  test("jobs blocked by older builds on the web search are woken by the re-check and succeed; the banners clear", async () => {
     const ctx = await createTestApp();
     const admin = await adminSession(ctx);
     const { ai } = aiStub(ctx);
     const rahul = await learner(ctx, admin, "Rahul");
     await build(ctx, rahul.id, ai, notConnected);
-    ctx.db.update(schema.jobs).set({ status: "queued" }).run();
+    // What production has: parked by the old rule, with the old line.
+    ctx.db.update(schema.jobs).set({ status: "waiting_setup", lastError: "the web search isn't set up" }).where(eq(schema.jobs.type, "course.generate")).run();
+    expect((await myPath(ctx, rahul.session)).setupNeeded).toContain("the web search isn't set up");
+
+    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: notConnected })).toBe(1);
     await worker(ctx, ai, notConnected).drain();
-    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the web search isn't set up", attempts: 0 });
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "done", lastError: null });
+    const after = await myPath(ctx, rahul.session);
+    expect(after.setupNeeded ?? null).toBeNull();
+    expect(after.notice ?? null).toBeNull();
+    const next = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${rahul.id}/next-action`, ...as(admin) });
+    expect(next.json().facts.courses).toMatchObject({ waitingSetup: 0 });
+    expect(next.json().action.kind).not.toBe("courses-waiting");
+    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: notConnected })).toBe(0);
+    await ctx.close();
+  }, 120_000);
+
+  test("a path built before v4.4 with 'No research provider is set up' stops showing it and is built again", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const { ai } = aiStub(ctx);
+    const rahul = await learner(ctx, admin, "Rahul");
+    const outcome = await build(ctx, rahul.id, ai, notConnected);
+    ctx.db.delete(schema.jobs).run();
+    const legacy = "3 targets still need a generated course. No research provider is set up. Add one under Admin → AI connection.";
+    ctx.db.update(schema.learningPaths).set({ notice: legacy }).where(eq(schema.learningPaths.id, outcome.pathId)).run();
+
+    // Never shown again, even before the re-check runs.
+    expect((await myPath(ctx, rahul.session)).notice ?? null).toBeNull();
+
+    await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: notConnected });
+    const builds = ctx.db.select().from(schema.jobs).where(eq(schema.jobs.type, "path.build")).all();
+    expect(builds).toHaveLength(1);
+    expect(builds[0].payload).toMatchObject({ userId: rahul.id });
+    expect(ctx.db.select().from(schema.learningPaths).where(eq(schema.learningPaths.id, outcome.pathId)).get()!.notice).toBeNull();
+    // Once only.
+    await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: notConnected });
+    expect(ctx.db.select().from(schema.jobs).where(eq(schema.jobs.type, "path.build")).all()).toHaveLength(1);
+    await ctx.close();
+  }, 120_000);
+
+  test("course needs updating: a library course that covers the skill is reused (never a near-copy), with no search service", async () => {
+    const ctx = await createTestApp();
+    const admin = await adminSession(ctx);
+    const { ai, calls } = aiStub(ctx);
+    const at = Date.now();
+    ctx.db.insert(schema.courses).values({ id: "lib-2", title: "Code reviews for engineers", summary: "", audience: "everyone", published: true, origin: "generated", createdAt: at, updatedAt: at }).run();
+    ctx.db.insert(schema.generatedCourses).values({ courseId: "lib-2", skill: "Code reviews", status: "published", scope: "global", library: true, departmentId: "engineering", createdAt: at }).run();
+    const rahul = await learner(ctx, admin, "Rahul");
+    const outcome = await build(ctx, rahul.id, ai, notConnected);
+    expect(outcome.creating ?? 0).toBe(0);
+    expect(courseJobs(ctx)).toHaveLength(0);
+    expect(calls).not.toContain("course_plan");
+    expect(calls).not.toContain("course_research");
+    expect(codeReviewItem(await myPath(ctx, rahul.session))).toMatchObject({ courseId: "lib-2", source: "reuse" });
     await ctx.close();
   }, 60_000);
 });
@@ -416,7 +570,10 @@ describe("plain words", () => {
     expect(coursesAddedMessage("Rahul", ["Spoken English for Developers", "Node.js & Express Basics", "Writing Clear Work Emails"])).toBe(
       "We added 3 new courses to the library for Rahul: Spoken English for Developers, Node.js & Express Basics, Writing Clear Work Emails. They're also available to everyone now.",
     );
-    expect(setupNeededMessage("the AI isn't connected", 2)).toBe("We couldn't create 2 courses because the AI isn't connected. We'll finish automatically after it's set up.");
+    expect(setupNeededMessage("the AI isn't connected", 2)).toBe(
+      "We couldn't create 2 courses because the AI isn't connected. Connect an AI credential under Admin → AI connection. We'll finish automatically after that.",
+    );
+    expect(setupNeededMessage("the AI key was rejected")).toBe("We couldn't create the course because the AI key was rejected. We'll finish automatically after the key is fixed.");
   });
 
   test("names that say the same thing count as the same course", () => {
@@ -507,52 +664,51 @@ describe("v4.5 P0: the root cause — a saved search key without a YouTube key",
   }, 60_000);
 });
 
-describe("v4.5 P0: each failure has its own state", () => {
-  test("a rejected key blocks with its own words; saving the settings wakes it and it finishes", async () => {
+describe("v4.5.1: a saved search service that fails never blocks a course", () => {
+  test("a rejected key: the course is researched with the AI instead, and the AI page says the key needs a look", async () => {
     const ctx = await createTestApp();
     const admin = await adminSession(ctx);
-    const { ai } = aiStub(ctx);
+    const { ai, calls } = aiStub(ctx);
     const rahul = await learner(ctx, admin, "Rahul");
     await build(ctx, rahul.id, ai);
     await worker(ctx, ai, failingSearch("key_rejected")).drain();
-    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the web search key was rejected", attempts: 0 });
-    expect(generated(ctx)).toHaveLength(0);
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "done", lastError: null });
+    expect(calls).toContain("course_research");
+    expect(generated(ctx)[0]).toMatchObject({ status: "published", library: true });
     const path = await myPath(ctx, rahul.session);
-    expect(path.setupNeeded).toBe("We couldn't create the course because the web search key was rejected. We'll finish automatically after the key is fixed.");
-    expect(codeReviewItem(path)).toMatchObject({ creating: "waiting_setup", problem: "the web search key was rejected" });
-    const next = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${rahul.id}/next-action`, ...as(admin) });
-    expect(next.json().facts.courses).toMatchObject({ waitingSetup: 1, problem: "the web search key was rejected" });
-
-    await connectResearch(ctx, admin);
-    expect(courseJobs(ctx)[0].status).toBe("queued");
-    await worker(ctx, ai).drain();
-    expect(courseJobs(ctx)[0].status).toBe("done");
+    expect(path.setupNeeded ?? null).toBeNull();
+    const read = await ctx.app.inject({ method: "GET", url: "/api/admin/research", ...as(admin) });
+    expect(read.json().settings.lastCheck).toMatchObject({ state: "key_rejected" });
+    expect(read.json().settings.lastCheck.message).toBe(
+      "Tavily rejected the key. Check it was copied in full and is a Tavily key, then save it again. Until then, new courses are researched with the AI connection instead.",
+    );
     await ctx.close();
   }, 120_000);
 
-  test("a used-up quota blocks with its own words", async () => {
+  test("a used-up quota: the course is still made", async () => {
     const ctx = await createTestApp();
     const admin = await adminSession(ctx);
     const { ai } = aiStub(ctx);
     const rahul = await learner(ctx, admin, "Rahul");
     await build(ctx, rahul.id, ai);
     await worker(ctx, ai, failingSearch("quota")).drain();
-    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the web search has used up its quota" });
-    expect((await myPath(ctx, rahul.session)).setupNeeded).toBe(
-      "We couldn't create the course because the web search has used up its quota. We'll finish automatically when the quota resets or is raised.",
-    );
+    expect(courseJobs(ctx)[0]).toMatchObject({ status: "done", lastError: null });
+    expect((await myPath(ctx, rahul.session)).setupNeeded ?? null).toBeNull();
     await ctx.close();
   }, 120_000);
 
-  test("a network failure is retried with backoff, fails after 5 tries with 'Failed: …', and Retry puts it back", async () => {
+  test("a course nothing can back is retried with backoff, fails after 5 tries with 'Failed: …', and Retry puts it back", async () => {
     const ctx = await createTestApp();
     const admin = await adminSession(ctx);
     const { ai } = aiStub(ctx);
     const rahul = await learner(ctx, admin, "Rahul");
     await build(ctx, rahul.id, ai);
-    const flaky = worker(ctx, ai, failingSearch("unreachable"));
+    // Every link check fails (the server is offline): no lesson has a source, so nothing is written.
+    const offline = { fetchUrl: vi.fn(async () => Promise.reject(new Error("fetch failed"))) };
+    const flaky = new JobWorker({ db: ctx.db, handlers: { "course.generate": courseGenerateHandler({ db: ctx.db, env: ctx.env, ai, clients: failingSearch("unreachable"), research: offline }) } });
     const [queued] = courseJobs(ctx);
     expect(queued.maxAttempts).toBe(5);
+    const line = "No lesson could be backed by a source that actually resolved. Nothing was written.";
 
     const delays: number[] = [];
     for (let attempt = 1; attempt <= 5; attempt += 1) {
@@ -561,7 +717,7 @@ describe("v4.5 P0: each failure has its own state", () => {
       await flaky.drain();
       const job = courseJobs(ctx)[0];
       expect(job.attempts).toBe(attempt);
-      expect(job.lastError).toBe("our server can't reach the web search");
+      expect(job.lastError).toBe(line);
       if (attempt < 5) {
         expect(job.status).toBe("queued");
         delays.push(job.runAfter - before);
@@ -574,10 +730,10 @@ describe("v4.5 P0: each failure has its own state", () => {
     expect(delays[3]).toBeGreaterThan(delays[0] * 7);
 
     const path = await myPath(ctx, rahul.session);
-    expect(codeReviewItem(path)).toMatchObject({ creating: "failed", problem: "our server can't reach the web search", retryJobId: queued.id });
+    expect(codeReviewItem(path)).toMatchObject({ creating: "failed", problem: line, retryJobId: queued.id });
     expect(path.failedCourses).toBe(1);
     const next = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${rahul.id}/next-action`, ...as(admin) });
-    expect(next.json().facts.courses).toMatchObject({ failed: 1, failedProblem: "our server can't reach the web search" });
+    expect(next.json().facts.courses).toMatchObject({ failed: 1, failedProblem: line });
 
     const retry = await ctx.app.inject({ method: "POST", url: `/api/admin/course-jobs/${queued.id}/retry`, ...as(admin) });
     expect(retry.statusCode).toBe(202);
@@ -590,38 +746,7 @@ describe("v4.5 P0: each failure has its own state", () => {
   }, 120_000);
 });
 
-describe("v4.5 P0: the 10-minute re-check and Test", () => {
-  test("blocked courses whose setup is now complete are woken by the re-check; nothing blocked means nothing to do", async () => {
-    const ctx = await createTestApp();
-    const admin = await adminSession(ctx);
-    const { ai } = aiStub(ctx);
-    const rahul = await learner(ctx, admin, "Rahul");
-    await build(ctx, rahul.id, ai, notConnected);
-    expect(courseJobs(ctx)[0].status).toBe("waiting_setup");
-    // Still not set up: stays blocked, with today's reason.
-    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: notConnected })).toBe(0);
-    expect(courseJobs(ctx)[0]).toMatchObject({ status: "waiting_setup", lastError: "the web search isn't set up" });
-    // Set up (by any route): the next re-check wakes it, and one queue tick makes it.
-    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: connected })).toBe(1);
-    await worker(ctx, ai).drain();
-    expect(courseJobs(ctx)[0].status).toBe("done");
-    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: connected })).toBe(0);
-    await ctx.close();
-  }, 120_000);
-
-  test("after a rejected key the re-check proves it with a real test search before waking", async () => {
-    const ctx = await createTestApp();
-    const admin = await adminSession(ctx);
-    const { ai } = aiStub(ctx);
-    const rahul = await learner(ctx, admin, "Rahul");
-    await build(ctx, rahul.id, ai);
-    await worker(ctx, ai, failingSearch("key_rejected")).drain();
-    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: failingSearch("key_rejected") })).toBe(0);
-    expect(courseJobs(ctx)[0].status).toBe("waiting_setup");
-    expect(await recheckBlocked({ db: ctx.db, env: ctx.env, ai, clients: connected })).toBe(1);
-    await ctx.close();
-  }, 120_000);
-
+describe("v4.5 P0: Test", () => {
   test("Test runs a real search from the server and says what happened in plain words", async () => {
     const ctx = await createTestApp();
     const admin = await adminSession(ctx);
@@ -699,15 +824,17 @@ describe("v4.5 P0: after an assessment, missing courses are queued with no admin
     expect(jobs).toHaveLength(1);
     expect((jobs[0].payload as { skillId?: string }).skillId).toBe("eng-code-review");
 
-    // The header and the bar agree with the path banner (no research is set up in the harness).
+    /* v4.5.1: no search service is saved in the harness, but the AI works, so nothing is blocked:
+       the course is being made (the harness's link check is offline, so this one is retried). The
+       header and the bar agree with the path banner. */
     const next = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${priyanka.id}/next-action`, ...as(admin) });
     const { action, facts } = next.json() as { action: NextAction; facts: NextActionFacts };
-    expect(action.kind).toBe("courses-waiting");
-    expect(action.title).toBe("Test done · 1 new course blocked: the web search isn't set up. We'll finish it on our own after it's set up.");
-    expect(testStatusLabel(facts.assessment?.status ?? null, facts.courses)).toBe("Test done · 1 course blocked");
+    expect(action.kind).toBe("courses-creating");
+    expect(facts.courses).toMatchObject({ waitingSetup: 0, creating: 1 });
+    expect(testStatusLabel(facts.assessment?.status ?? null, facts.courses)).not.toContain("blocked");
     const gaps = await ctx.app.inject({ method: "GET", url: `/api/admin/users/${priyanka.id}/gaps`, ...as(admin) });
     const path = gaps.json().path as LearningPathView;
-    expect(path.setupNeeded).toBe("We couldn't create the course because the web search isn't set up. We'll finish automatically after it's set up.");
+    expect(path.setupNeeded ?? null).toBeNull();
     // The coverage rule: the goal was measured by the test, so the row is never "not assessed".
     expect(gaps.json().coverage.levels).toHaveProperty("eng-code-review");
     await ctx.close();

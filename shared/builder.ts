@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { afterFixWords, stateOfLine } from "./connection";
+import { afterFixWords, CONNECT_AI_LINE, problemLine, stateOfLine } from "./connection";
 
 import {
   DEFAULT_DAYS_PER_WEEK,
@@ -309,10 +309,25 @@ export function coursesAddedMessage(learnerName: string, titles: readonly string
   return `${head} ${n === 1 ? "It's" : "They're"} also available to everyone now.`;
 }
 
-/** The notice shown while a new course waits for the AI or web search (v4.5: worded per state). */
+/**
+ * The notice shown while a new course waits (v4.5: worded per state). v4.5.1: only the AI can block
+ * a new course now; with no working AI credential the notice says exactly what to do.
+ */
 export function setupNeededMessage(problem: string, count = 1): string {
   const what = count === 1 ? "the course" : `${count} courses`;
-  return `We couldn't create ${what} because ${problem}. We'll finish automatically ${afterFixWords(stateOfLine(problem))}.`;
+  const head = `We couldn't create ${what} because ${problem}.`;
+  if (problem.trim().replace(/\.$/, "") === problemLine("ai", "not_set_up")) return `${head} ${CONNECT_AI_LINE}. We'll finish automatically after that.`;
+  return `${head} We'll finish automatically ${afterFixWords(stateOfLine(problem))}.`;
+}
+
+/**
+ * v4.5.1: the path notice stored by builds before v4.4 ("3 targets still need a generated course.
+ * No research provider is set up. Add one under Admin → AI connection."). It is never shown any
+ * more: the re-check builds those paths again, and the live notice comes from the jobs.
+ */
+export function isLegacyResearchNotice(notice: string | null | undefined): boolean {
+  if (!notice) return false;
+  return /still needs? a generated course|no research provider|the web search isn't (?:connected|set up)|no api key for (?:tavily|brave|serper)/i.test(notice);
 }
 
 /** v4.5 P0: the path banner once new courses are made: "We added 1 new course for Priyanka: <title>". */

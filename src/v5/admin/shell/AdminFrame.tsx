@@ -43,6 +43,8 @@ export interface AdminFrameProps {
   more: FrameLink[];
   older: { href: string; label: string; active: boolean }[];
   topRight?: ReactNode;
+  /** The end of the phone's Menu sheet: the account items (sign out, theme, and so on). */
+  menuFooter?: ReactNode;
   onSearch: () => void;
   children: ReactNode;
 }
@@ -50,7 +52,7 @@ export interface AdminFrameProps {
 /** How many main pages sit in the phone's bottom bar; the rest are under Menu. */
 export const PHONE_BAR = 4;
 
-export function AdminFrame({ main, more, older, topRight, onSearch, children }: AdminFrameProps) {
+export function AdminFrame({ main, more, older, topRight, menuFooter, onSearch, children }: AdminFrameProps) {
   const wide = useMediaQuery("(min-width: 1280px)");
   const [pref, setPref] = useState<NavPref>(readNavPref);
   const expanded = navMode(pref, wide) === "full";
@@ -260,6 +262,7 @@ export function AdminFrame({ main, more, older, topRight, onSearch, children }: 
               ))}
             </ul>
           </section>
+          {menuFooter}
         </div>
       </Sheet>
     </div>

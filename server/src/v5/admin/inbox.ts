@@ -14,7 +14,6 @@ import { MAX_FIX_ATTEMPTS } from "../../../../shared/builder";
 import { getSettings, listCredentials } from "../../ai/credentials";
 import { listReviewRequests } from "../../assessment/reviews";
 import { failedLine } from "../../../../shared/connection";
-import { getResearchProvider } from "../../builder/settings";
 import type { ContentStore } from "../../content/store";
 import { schema, type Db } from "../../db";
 import type { Env } from "../../env";
@@ -282,17 +281,16 @@ export function buildInbox(deps: InboxDeps, actor: { role: string }, now = Date.
     if (!active) setup("ai", "AI isn't connected", "Tests, marking and new courses need it.");
     else if (active.status === "failed") setup("ai", "The AI connection stopped working", "Check the key. Tests and marking wait until it works.");
   }
-  // v4.5 P0: the same check the worker makes, read fresh, and the blocked courses in their own words.
-  const research = getResearchProvider(db, env);
+  /* v4.5 P0: the blocked courses in their own words. v4.5.1: only a missing or broken AI credential
+     blocks a new course (without a search service the AI researches it), so there is no "web search
+     isn't set up" item any more; a saved search service that failed shows on the AI page instead. */
   const blocked = blockedCourseLines(db);
   if (blocked.count > 0) {
     setup(
       "research",
       `${blocked.count} new course${blocked.count === 1 ? "" : "s"} blocked: ${blocked.line}`,
-      research.ok ? "Run Test on the AI connection page. A passing test starts them at once." : `${research.detail} They start on their own once it's set up.`,
+      "Connect an AI credential under Admin → AI connection. They start on their own once it works.",
     );
-  } else if (!research.ok) {
-    setup("research", "Web search for new courses isn't set up", "New courses wait until it is. Existing courses still work.");
   }
   if (env.isProduction && !env.sttBaseUrl) {
     setup("stt", "Spoken answers can't be marked on their own", "We'll ask you to listen to them instead.");
@@ -314,7 +312,7 @@ function blockedCourseLines(db: Db): { count: number; line: string } {
     .from(schema.jobs)
     .where(and(eq(schema.jobs.type, "course.generate"), eq(schema.jobs.status, "waiting_setup")))
     .all();
-  return { count: rows.length, line: rows[0]?.lastError ?? "the web search isn't set up" };
+  return { count: rows.length, line: rows[0]?.lastError ?? "the AI isn't connected" };
 }
 
 /** v4.5 P0: the newest job per course key, when it failed (an older failure retried since doesn't count). */

@@ -8,8 +8,21 @@ import {
   type AiProvider,
   type GenerateJsonRequest,
   type GenerateJsonResult,
+  type WebSearchRequest,
+  type WebSearchResult,
 } from "../types";
 import { redact, spawnJson } from "./spawnJson";
+import { cliSearchReplySchema, normaliseHits, searchInstruction } from "./webSearch";
+
+/**
+ * v4.5.1: the flags for a web search run. `--tools WebSearch` makes WebSearch the *only* tool the
+ * session has (no Bash, no file tools, no WebFetch: our server opens every page itself), and
+ * `--allowedTools WebSearch` pre-approves it, since `-p` can't ask anyone. `--strict-mcp-config`
+ * keeps any MCP servers configured on the host out of it.
+ */
+export function cliWebSearchArgs(model: string): string[] {
+  return ["-p", "--output-format", "json", "--model", model, "--strict-mcp-config", "--tools", "WebSearch", "--allowedTools", "WebSearch"];
+}
 
 /**
  * Claude Code CLI with a subscription OAuth token (brief §8.1).
@@ -98,6 +111,49 @@ export class ClaudeCliProvider implements AiProvider {
     }
 
     throw new AiOutputError("claude returned output that did not match the schema, twice.", second.issues, repaired.text.slice(0, 4000));
+  }
+
+  /**
+   * v4.5.1: one search with Claude Code's own WebSearch tool, for the course builder when no search
+   * service is saved. The reply is a JSON list of what the search returned; the builder then opens
+   * every URL from our server, so a URL the model made up is dropped like any dead link.
+   */
+  async webSearch(request: WebSearchRequest): Promise<WebSearchResult> {
+    const model = request.model ?? this.defaultModel("course_research");
+    const started = Date.now();
+    const prompt = [
+      searchInstruction(request.query, request.limit),
+      "",
+      "Reply with a single JSON document and nothing else, no prose and no code fence:",
+      '{"results": [{"url": "...", "title": "...", "snippet": "one sentence on what the page covers"}]}',
+    ].join("\n");
+    const result = await spawnJson({
+      command: this.command,
+      args: cliWebSearchArgs(model),
+      env: { CLAUDE_CODE_OAUTH_TOKEN: this.token },
+      input: prompt,
+      timeoutMs: request.timeoutMs ?? 180_000,
+    });
+    if (result.code !== 0) {
+      const message = redact(result.stderr || result.stdout || `exit code ${result.code}`, [this.token]).trim();
+      throw new AiProviderError(`claude web search exited with an error: ${message}`);
+    }
+    const { text, usage } = this.extractResult(result.stdout, [this.token]);
+    let value: unknown;
+    try {
+      value = JSON.parse(extractJson(text));
+    } catch (error) {
+      throw new AiOutputError("claude web search did not reply with JSON.", [error instanceof Error ? error.message : String(error)], text.slice(0, 2000));
+    }
+    const parsed = cliSearchReplySchema.safeParse(value);
+    if (!parsed.success) throw new AiOutputError("claude web search replied in the wrong shape.", describeIssues(parsed.error), text.slice(0, 2000));
+    return {
+      hits: normaliseHits(parsed.data.results.map((hit) => ({ ...hit, publishedAt: null })), request.limit),
+      usage,
+      searches: 1,
+      latencyMs: Date.now() - started,
+      model,
+    };
   }
 
   /** `--output-format json` wraps the reply in an envelope with usage; fall back to raw text. */

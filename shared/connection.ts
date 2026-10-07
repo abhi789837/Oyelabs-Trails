@@ -117,3 +117,48 @@ export const RESEARCH_CHECK_META_KEY = "research.last_check";
 export function connectedLine(results: number): string {
   return `Connected ✓ — test search returned ${results} result${results === 1 ? "" : "s"}`;
 }
+
+// ---------------------------------------------------------------------------
+// v4.5.1: where new courses find their sources
+// ---------------------------------------------------------------------------
+
+/**
+ * How the course builder researches a new course, in priority order:
+ * 1. `provider`: the saved search service (Tavily, Brave or Serper);
+ * 2. `ai_web_search`: the AI connection's own web search (Anthropic API, Claude Code CLI, OpenAI API);
+ * 3. `ai_only`: the AI writes from its own knowledge and cites only the shared resources list, the
+ *    curriculum's references and official docs it proposes, each opened by our server first.
+ * `none` only when no AI credential works; that is the one case where new courses wait.
+ */
+export const RESEARCH_MODES = ["provider", "ai_web_search", "ai_only", "none"] as const;
+export type ResearchMode = (typeof RESEARCH_MODES)[number];
+
+/** The one thing to do when nothing works. */
+export const CONNECT_AI_LINE = "Connect an AI credential under Admin → AI connection";
+
+/** Whose web search it is, from the active credential's provider id. */
+export function aiSearchName(providerId: string | null | undefined): string {
+  switch (providerId) {
+    case "anthropic-api":
+    case "claude-cli":
+      return "Claude";
+    case "openai-api":
+      return "OpenAI";
+    default:
+      return "the AI";
+  }
+}
+
+/** The plain line on Admin → AI connection: what new courses search with right now. */
+export function researchModeLine(mode: ResearchMode, names: { provider?: string | null; ai?: string | null } = {}): string {
+  switch (mode) {
+    case "provider":
+      return `Web search for new courses: using ${names.provider ?? "your search service"}.`;
+    case "ai_web_search":
+      return `Web search for new courses: using ${aiSearchName(names.ai)}'s built-in web search (no extra setup needed).`;
+    case "ai_only":
+      return "Web search for new courses: this AI connection has no built-in web search, so new courses are written from the AI's own knowledge and cite only links our server has opened and checked (no extra setup needed).";
+    case "none":
+      return `New courses wait until an AI credential works. ${CONNECT_AI_LINE}.`;
+  }
+}

@@ -3,12 +3,19 @@ import {
   BookOpen,
   BookOpenCheck,
   Bot,
+  Gauge,
+  PlugZap,
   CircleHelp,
+  Compass,
   FileWarning,
   GraduationCap,
   Inbox,
+  KeyRound,
+  Keyboard,
   LayoutDashboard,
+  LogOut,
   Megaphone,
+  MessagesSquare,
   PlusCircle,
   Undo2,
   UserPlus,
@@ -22,7 +29,10 @@ import type { UserSummary } from "@shared/admin";
 
 import { useAuth } from "@/features/auth/AuthProvider";
 import { adminApi } from "@/features/admin/api";
+import { CHANGE_PASSWORD_PATH, HELP_PATH, PRACTICE_LINKS, useSignOut } from "@/v5/app/account";
 import { chooseDesign } from "@/v5/app/designFlag";
+import { ThemeToggle } from "@/v5/app/ThemeToggle";
+import { UserMenu } from "@/v5/app/UserMenu";
 import { ScreenFallback } from "@/v5/app/RouteFallback";
 // Direct imports, not the `@/v5/design` barrel: the barrel loads every design module (Phase 9 performance).
 import { Button } from "@/v5/design/components/Button";
@@ -63,6 +73,7 @@ interface Page {
   icon: FrameLink["icon"];
   keywords?: string[];
   end?: boolean;
+  superadmin?: boolean;
 }
 
 /** Main nav, in order. The first four are the phone's bottom bar; the rest are under Menu. */
@@ -79,6 +90,9 @@ const MORE: Page[] = [
   { href: "/admin/announcements", label: "Announcements", icon: Megaphone, keywords: ["message", "news"] },
   { href: "/admin/problems", label: "Problems reported", icon: FileWarning, keywords: ["report", "bug"] },
   { href: "/admin/tutor-answers", label: "Tutor answers", icon: Bot, keywords: ["ai", "helpful", "thumbs"] },
+  // copy-ok: a hidden search keyword (people type "token" looking for the key), never shown.
+  { href: "/admin/ai", label: "AI connection", icon: PlugZap, keywords: ["ai", "key", "token", "research", "search", "settings"], superadmin: true },
+  { href: "/admin/ai-usage", label: "AI usage", icon: Gauge, keywords: ["ai", "cost", "spend"] },
 ];
 
 /** Older pages, shown unchanged inside this frame until each is replaced. */
@@ -95,9 +109,7 @@ const OLDER: { href: string; label: string; superadmin?: boolean }[] = [
   { href: "/admin/integrity", label: "Test warnings" },
   { href: "/admin/sop", label: "How-to guides" },
   { href: "/admin/handbook", label: "Handbook" },
-  { href: "/admin/ai-usage", label: "AI usage" },
   { href: "/admin/audit", label: "Activity log" },
-  { href: "/admin/ai", label: "AI settings", superadmin: true },
 ];
 
 const SHORTCUT_ROUTES: Record<string, string> = {
@@ -164,6 +176,7 @@ export function AdminShell() {
   }, [navigate]);
 
   const go = useCallback((href: string) => navigate(href), [navigate]);
+  const signOut = useSignOut();
 
   const groups = useMemo<CommandGroup[]>(() => {
     const actions: CommandGroup = {
@@ -180,7 +193,7 @@ export function AdminShell() {
     };
     const pages: CommandGroup = {
       heading: "Go to",
-      items: [...MAIN, ...MORE, ...OLDER.filter((p) => !p.superadmin || superadmin).map((p) => ({ ...p, icon: BookOpenCheck }))].map((p) => ({
+      items: [...MAIN, ...MORE.filter((p) => !p.superadmin || superadmin), ...OLDER.filter((p) => !p.superadmin || superadmin).map((p) => ({ ...p, icon: BookOpenCheck }))].map((p) => ({
         id: `go-${p.href}`,
         label: p.label,
         icon: <p.icon />,
@@ -188,7 +201,25 @@ export function AdminShell() {
         onSelect: () => go(p.href),
       })),
     };
-    const out = [actions, pages];
+    // The account menu's items, so a keyboard user never needs the mouse for them.
+    const account: CommandGroup = {
+      heading: "Your account",
+      items: [
+        { id: "acc-learner", label: "Learner view", icon: <Compass />, keywords: ["learn", "preview", "switch"], onSelect: () => go("/learn") },
+        { id: "acc-me", label: "Me", icon: <UserRound />, keywords: ["profile", "settings", "theme", "certificates"], onSelect: () => go("/learn/me") },
+        { id: "acc-password", label: "Change password", icon: <KeyRound />, keywords: ["account", "security"], onSelect: () => go(CHANGE_PASSWORD_PATH) },
+        { id: "acc-shortcuts", label: "Keyboard shortcuts", icon: <Keyboard />, keywords: ["keys", "help"], shortcut: ["?"], onSelect: () => setHelpOpen(true) },
+        { id: "acc-help", label: "Help: how Oyelearn works", icon: <CircleHelp />, keywords: ["welcome", "tour"], onSelect: () => go(HELP_PATH) },
+        { id: "acc-previous", label: "Use previous design", icon: <Undo2 />, keywords: ["old", "design", "switch"], onSelect: () => void chooseDesign(false, "/admin").catch(() => undefined) },
+        { id: "acc-signout", label: "Sign out", icon: <LogOut />, keywords: ["log out", "logout", "leave"], onSelect: () => void signOut() },
+      ],
+    };
+    // The handbook and practice pages every learner has (the previous design's palette had them too).
+    const practice: CommandGroup = {
+      heading: "Handbook and practice",
+      items: PRACTICE_LINKS.map((l) => ({ id: `practice-${l.to}`, label: l.label, icon: <MessagesSquare />, keywords: ["handbook", "glossary", "practice"], onSelect: () => go(l.to) })),
+    };
+    const out = [actions, pages, account, practice];
     if (people) {
       out.push({
         heading: "People",
@@ -203,7 +234,7 @@ export function AdminShell() {
       });
     }
     return out;
-  }, [people, go, superadmin]);
+  }, [people, go, superadmin, signOut]);
 
   const main: FrameLink[] = MAIN.map((p) => ({
     href: p.href,
@@ -212,7 +243,7 @@ export function AdminShell() {
     active: isActive(pathname, p),
     badge: p.href === "/admin" && inboxCount ? inboxCount : undefined,
   }));
-  const more: FrameLink[] = MORE.map((p) => ({ href: p.href, label: p.label, icon: p.icon, active: isActive(pathname, p) }));
+  const more: FrameLink[] = MORE.filter((p) => !p.superadmin || superadmin).map((p) => ({ href: p.href, label: p.label, icon: p.icon, active: isActive(pathname, p) }));
   const older = OLDER.filter((p) => !p.superadmin || superadmin).map((p) => ({ href: p.href, label: p.label, active: pathname === p.href }));
   const olderPage = isOlderPage(pathname);
 
@@ -221,7 +252,14 @@ export function AdminShell() {
   return (
     <V5MotionProvider>
     <ShellContext.Provider value={state}>
-      <AdminFrame main={main} more={more} older={older} onSearch={() => setPaletteOpen(true)} topRight={<TopRight onHelp={() => setHelpOpen(true)} />}>
+      <AdminFrame
+        main={main}
+        more={more}
+        older={older}
+        onSearch={() => setPaletteOpen(true)}
+        topRight={<TopRight onHelp={() => setHelpOpen(true)} />}
+        menuFooter={<MenuAccount onShortcuts={() => setHelpOpen(true)} />}
+      >
         {olderPage ? <BiggerScreenNote id="older-pages" className="mx-4 mt-4" /> : null}
         <Suspense fallback={<ScreenFallback />}>
           <Outlet />
@@ -268,36 +306,77 @@ export function AdminShell() {
 }
 
 function TopRight({ onHelp }: { onHelp: () => void }) {
-  const [busy, setBusy] = useState(false);
   return (
     <div className="flex items-center gap-1">
       <Tooltip content="Keyboard shortcuts (?)">
-        <Button variant="ghost" size="icon" aria-label="Keyboard shortcuts" onClick={onHelp}>
+        <Button variant="ghost" size="icon" aria-label="Keyboard shortcuts" onClick={onHelp} className="hidden sm:inline-flex">
           <CircleHelp aria-hidden="true" />
         </Button>
       </Tooltip>
       <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
         <Link to="/learn">Learner view</Link>
       </Button>
-      <Tooltip content="Use previous design">
-        <Button
-          variant="ghost"
-          size="icon"
-          // Icon only on smaller screens; the words show from 1280 px (UX review I3). Same name either way.
-          className="xl:w-auto xl:gap-1.5 xl:px-3"
-          aria-label="Use previous design"
-          loading={busy}
-          onClick={() => {
-            setBusy(true);
-            void chooseDesign(false, "/admin").catch(() => setBusy(false));
-          }}
-        >
-          <Undo2 aria-hidden="true" />
-          <span className="hidden xl:inline" aria-hidden="true">
-            Use previous design
-          </span>
-        </Button>
-      </Tooltip>
+      {/* Sign out, change password, theme, help and "Use previous design" live here, on every screen size. */}
+      <UserMenu context="admin" onShortcuts={onHelp} />
     </div>
+  );
+}
+
+/** The account part of the phone's Menu sheet: the same items as the account menu. */
+function MenuAccount({ onShortcuts }: { onShortcuts: () => void }) {
+  const { user } = useAuth();
+  const signOut = useSignOut();
+  const [busy, setBusy] = useState(false);
+  const base = "flex min-h-10 w-full items-center gap-3 rounded-control px-3 text-left text-small transition-colors duration-120 md:min-h-8";
+  const row = `${base} text-fg-2 hover:bg-sunken hover:text-fg-1`;
+  return (
+    <section aria-labelledby="menu-account" className="border-t border-line-1 pt-3">
+      <h3 id="menu-account" className="px-3 pb-1 text-caption font-medium text-fg-2">
+        Your account{user ? <span className="font-normal">: {user.displayName}</span> : null}
+      </h3>
+      <ul className="flex flex-col gap-0.5">
+        <li>
+          <Link to="/learn" className={row}>
+            <Compass className="size-4" aria-hidden="true" /> Learner view
+          </Link>
+        </li>
+        <li>
+          <Link to={CHANGE_PASSWORD_PATH} className={row}>
+            <KeyRound className="size-4" aria-hidden="true" /> Change password
+          </Link>
+        </li>
+        <li>
+          <ThemeToggle className="w-full" />
+        </li>
+        <li>
+          <button type="button" className={row} onClick={onShortcuts}>
+            <Keyboard className="size-4" aria-hidden="true" /> Keyboard shortcuts
+          </button>
+        </li>
+        <li>
+          <Link to={HELP_PATH} className={row}>
+            <CircleHelp className="size-4" aria-hidden="true" /> Help: how Oyelearn works
+          </Link>
+        </li>
+        <li>
+          <button
+            type="button"
+            className={row}
+            disabled={busy}
+            onClick={() => {
+              setBusy(true);
+              void chooseDesign(false, "/admin").catch(() => setBusy(false));
+            }}
+          >
+            <Undo2 className="size-4" aria-hidden="true" /> {busy ? "Opening the previous design…" : "Use previous design"}
+          </button>
+        </li>
+        <li>
+          <button type="button" className={`${base} text-danger-fg hover:bg-danger-soft`} onClick={() => void signOut()}>
+            <LogOut className="size-4" aria-hidden="true" /> Sign out
+          </button>
+        </li>
+      </ul>
+    </section>
   );
 }

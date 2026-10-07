@@ -213,11 +213,15 @@ export function nextAction(facts: NextActionFacts): NextAction {
      made or failed, words the reason in its own state, and agrees with the path banners. */
   const courses = facts.courses;
   if (courses && courses.waitingSetup > 0) {
-    const what = courses.problem ?? "the web search isn't set up";
+    // v4.5.1: only the AI can block a new course; a missing search service never does.
+    const what = courses.problem ?? "the AI isn't connected";
     const state = stateOfLine(what);
+    const aiMissing = what.trim().replace(/\.$/, "") === "the AI isn't connected";
     return {
       kind: "courses-waiting",
-      title: `Test done · ${plural(courses.waitingSetup, "new course")} blocked: ${what}. We'll finish ${courses.waitingSetup === 1 ? "it" : "them"} on our own ${afterFixWords(state)}.`,
+      title: aiMissing
+        ? `Test done · ${plural(courses.waitingSetup, "new course")} blocked: ${what}. Connect an AI credential under Admin → AI connection.`
+        : `Test done · ${plural(courses.waitingSetup, "new course")} blocked: ${what}. We'll finish ${courses.waitingSetup === 1 ? "it" : "them"} on our own ${afterFixWords(state)}.`,
       tone: "blocked",
       button: { action: "link", label: state === "not_set_up" ? "Set it up" : "Check the connection", to: CONNECT_SETUP_ROUTE },
     };

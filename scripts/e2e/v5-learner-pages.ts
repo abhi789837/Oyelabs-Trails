@@ -14,6 +14,9 @@
  *   and the due count drops.
  * - Me: levels, notes (search), settings (a change survives a reload).
  * - axe (WCAG 2.2 AA tags): no serious or critical violations on every page at 390 and 1440, light and dark.
+ * - The account menu (docs/v5/PARITY.md), at 390 and 1440: it opens from the top bar by mouse and by
+ *   keyboard, sits clear of the XP and bell, lists the account items, and Sign out lands on the
+ *   sign-in page with the session gone. Me → Settings has Sign out too.
  * Screenshots: %TEMP%/claude/e2e-shots-v5-learner. Port 8823, throwaway DATA_DIR, mock AI.
  */
 import { spawn, type ChildProcess } from "node:child_process";
@@ -430,6 +433,72 @@ async function sweep(browser: Browser, storage: string): Promise<void> {
   }
 }
 
+// ---------------------------------------------------------------------------
+// The account menu and Sign out (docs/v5/PARITY.md), at 390 and 1440
+// ---------------------------------------------------------------------------
+
+async function accountMenuFlow(browser: Browser): Promise<void> {
+  for (const width of [390, 1440]) {
+    step(`account menu and Sign out at ${width}`);
+    // A session of its own: signing out ends only this one, not the stored one the sweep uses.
+    const ctx = await browser.newContext({ viewport: { width, height: width < 768 ? 844 : 900 } });
+    try {
+      await call(ctx.request, "post", "/api/auth/login", { username: LEARNER, password: LEARNER_NEW });
+      await call(ctx.request, "put", "/api/v5/motivation/prefs", { welcomeDone: true });
+      const page = await ctx.newPage();
+      page.on("pageerror", (error) => note(`[pageerror account ${width}] ${error.message}`));
+
+      await go(page, "/learn/me?tab=settings", /./);
+      const card = page.getByTestId("me-account");
+      ok(await card.getByRole("button", { name: "Sign out" }).waitFor({ timeout: WAIT }).then(() => true, () => false), `${width}: Me → Settings has Sign out`);
+      ok(await card.getByRole("link", { name: "Change password" }).isVisible().catch(() => false), `${width}: Me → Settings has Change password`);
+      if (width < 768) {
+        const more = page.getByRole("navigation", { name: "More" });
+        for (const name of ["Handbook", "Flashcards", "Classify a request", "Client role-play"]) {
+          ok(await more.getByRole("link", { name }).isVisible().catch(() => false), `${width}: Me lists ${name}`);
+        }
+      }
+
+      const button = page.getByTestId("v5-account-button");
+      await button.waitFor({ timeout: WAIT });
+      const bar = page.getByTestId("v5-topbar-motivation");
+      await bar.waitFor({ timeout: WAIT }).catch(() => undefined);
+      const a = await button.boundingBox();
+      const b = await bar.boundingBox().catch(() => null);
+      ok(a && a.y < 56 && a.x + a.width <= width, `${width}: the account button is in the top bar`);
+      ok(!b || !a || b.x + b.width <= a.x + 1, `${width}: the XP and bell sit clear of the account button`);
+
+      // Mouse.
+      await button.click();
+      const menu = page.getByTestId("v5-account-menu");
+      await menu.waitFor({ timeout: WAIT });
+      for (const name of ["Me", "Change password", "Help: how Oyelearn works", "Use previous design", "Sign out"]) {
+        ok(await menu.getByRole("menuitem", { name }).isVisible().catch(() => false), `${width}: the menu has ${name}`);
+      }
+      ok((await menu.getByRole("menuitemradio").count()) === 3, `${width}: the menu has the three theme choices`);
+      ok(await menu.getByText("Priya Learner").isVisible().catch(() => false), `${width}: the menu names who is signed in`);
+      await axe(page, `account menu ${width}`);
+      await shot(page, `account-menu-${width}`);
+      await page.keyboard.press("Escape");
+      await menu.waitFor({ state: "hidden", timeout: WAIT });
+      ok(await button.evaluate((el) => el === document.activeElement), `${width}: Escape closes the menu and focus returns to the button`);
+
+      // Keyboard.
+      await page.keyboard.press("Enter");
+      await menu.waitFor({ timeout: WAIT });
+      ok(true, `${width}: Enter opens the menu`);
+      await menu.getByRole("menuitem", { name: "Sign out" }).click();
+      await page.waitForURL((u) => u.pathname === "/login", { timeout: WAIT }).catch(() => undefined);
+      ok(new URL(page.url()).pathname === "/login", `${width}: Sign out lands on the sign-in page (${new URL(page.url()).pathname})`);
+      ok(await page.getByText("You're signed out").waitFor({ timeout: WAIT }).then(() => true, () => false), `${width}: the sign-in page says you're signed out`);
+      const me = (await (await ctx.request.get(`${BASE}/api/auth/me`)).json()) as { user: unknown };
+      ok(me.user === null, `${width}: the session has ended (/api/auth/me has no user)`);
+    } finally {
+      await ctx.close();
+    }
+  }
+}
+
 async function main(): Promise<void> {
   fs.mkdirSync(SHOTS, { recursive: true });
   const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "oyelearn-e2e-v5l-"));
@@ -447,6 +516,7 @@ async function main(): Promise<void> {
       await page.context().close();
     }
     await sweep(browser, storage);
+    await accountMenuFlow(browser);
   } finally {
     await browser.close();
     stopServer();

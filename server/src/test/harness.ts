@@ -112,7 +112,9 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}, 
       "bank.revalidate": bankRevalidateHandler({ db, ai }),
       "assessment.personalise": personaliseHandler({ db, ai, sandbox, piston: app.piston }),
       "path.build": buildPathHandler({ db, env, ai, content }),
-      "course.generate": courseGenerateHandler({ db, env, ai }),
+      /* v4.5.1: new courses run with only the AI credential, so the link check must stay offline in
+         tests: every candidate reads as missing, and a course nothing can back is retried. */
+      "course.generate": courseGenerateHandler({ db, env, ai, content, research: { fetchUrl: async () => ({ status: 404, headers: new Headers(), text: async () => "" }) } }),
       "topic_tests.recheck": topicTestRecheckHandler({ db, ai, content, sandbox, batchDelayMs: 0 }),
       "topic_tests.fill": topicTestFillHandler({ db, ai, content, sandbox }),
       "speech.transcribe": transcribeHandler({ db, env, stt: options.stt }),
