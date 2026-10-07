@@ -147,9 +147,9 @@ describe("the weekly recap", () => {
     expect(mail.text).not.toContain("Fourth");
     expect(mail.text).toContain(encouragement(input));
     expect(mail.text).toContain("https://learn.oyelabs.com/learn/me?tab=settings");
-    expect(mail.html).toContain("The &lt;event&gt; loop");
-    expect(mail.html).not.toContain("<event>");
-    expect(mail.html).toContain('href="https://learn.oyelabs.com/learn"');
+    expect(mail.bodyHtml).toContain("The &lt;event&gt; loop");
+    expect(mail.bodyHtml).not.toContain("<event>");
+    expect(mail.bodyHtml).toContain('href="https://learn.oyelabs.com/learn"');
   });
 
   test("the kind line never guilt-trips", () => {

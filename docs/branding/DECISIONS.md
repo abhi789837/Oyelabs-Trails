@@ -177,3 +177,206 @@ Celebration (summit): the dot pops and the ring completes for a moment, then ope
   right type and size, manifest valid with the v5 PWA settings, icon cache header; /login at 1440 and
   390 in light and dark (logo files per surface, panel or band, panel colour and width, Outfit, no
   horizontal scroll, axe 0 serious, a screenshot each); the forced first password on the same frame.
+
+## Phase 6: Emails, notifications, sharing
+
+- **What email exists.** Four emails, all through `email_outbox` and `server/src/v5/email/sender.ts`, all off
+  unless SMTP is set up: the learner weekly recap and the reminder copy (notify/jobs.ts), the admin weekly
+  report (admin/weeklyEmail.ts) and send-to-laptop (lesson/sendToEmail.ts). There are no invite or
+  password-reset emails (accounts and resets are admin-only, Phase 3). A **certificate-earned** email is new
+  (below), because a hook already existed.
+- **One layout** (`server/src/v5/email/layout.ts`, `brandEmail(origin, body)`). Builders return only a body
+  (`EmailBody` in `shared/emailParts.ts`: subject, preheader, body HTML, text); the layout adds the frame, so
+  no email can skip it, and TypeScript rejects storing a bare body (the field is `bodyHtml`, the outbox
+  wants `html`). The kit's `08-email` has only a signature, no message template, so the frame follows the
+  05-web email headers and the signature's "logo + Role · Oyelabs" pattern:
+  - header: `email-header-light@600w.png` (`@1200w` as the 2x `srcset`), copied byte-for-byte from the
+    kit into `public/brand/email/`, linked absolutely on `PUBLIC_ORIGIN` with `?v=1`. The dark header sits
+    beside it, hidden, and a `prefers-color-scheme: dark` block swaps them (Apple Mail, iOS Mail, Outlook
+    for Mac); Outlook desktop never sees the dark copy (`<!--[if !mso]>`). Elsewhere the light header
+    shows, the kit's default. The same block turns Cloud/white/Night Navy into Night/navy surface/light text;
+  - Cloud page, white card with the theme border, Night Navy text, Slate secondary text, Oyelabs Blue
+    table-based ("bulletproof") buttons (white text 5.2:1) and links, Outfit then Arial;
+  - footer: the mark (`oyelearn-mark-light@64w.png` at 24 px, dark variant swapped the same way, `alt=""`
+    because the words follow) and "Oyelearn · by Oyelabs", then "Learning never closes." and the origin;
+  - `lang="en"`, `color-scheme` meta, `role="presentation"` on every layout table, alt on every image,
+    a hidden preheader, and the text part kept with the same footer after a `-- ` signature line;
+  - amber only for a win: the certificate email has a 4 px amber rule under the header.
+- **Builders moved to body parts.** `reminderEmail`, `buildWeeklyRecap`, `weeklyReportEmail` (now with an
+  "Open Reports" button when it knows the URL) and `continueOnLaptopEmail` use the shared parts; the old
+  palette (#1F5FBF, #F5F6F2, Inter) is gone from email. The weekly report reads the origin from
+  `PUBLIC_ORIGIN` (`publicOriginFromEnv`, same default as env.ts), so its callers didn't change.
+- **Certificate-earned email** (`server/src/v5/email/certificateEmail.ts`). The hook is the
+  `certificate.issued` notification that `issueCertificate` already sends: `lib/notify.ts` (whose comment
+  always said "adding a notifier means changing here") passes each notification to
+  `emailCopyOfNotification`, which acts only on that kind, finds the certificate from the link, and queues
+  one email per certificate (not for revoked ones, not for inactive users, nothing when email is off). It
+  never throws, so issuing can't fail because of email. The certificate code itself is unchanged.
+- **Serving the images.** `/brand/email/*` and the OG images get `Cross-Origin-Resource-Policy:
+  cross-origin` (helmet's default `same-site` would let a mail app's web view refuse them) and the brand
+  cache header; the brand path pattern now accepts `@` (and `%40`) in file names (lib/brandIcons.ts).
+- **Toasts.** The one sonner surface (`AppToaster`, which also renders `v5Toast`/`lessonToast`) was the
+  inverted popover (Night Navy in light); the outcome icons were tuned for a light surface and fell under
+  3:1 on it. It is now the brand card: surface, theme border, Night Navy text, Outfit title, semantic icon
+  colours, actions in Oyelabs Blue. The old UI's camp/summit `CompletionToast` uses the same card with a
+  4 px amber left edge (a win). Certificate and level-up celebrations were already amber (Phase 4 made
+  every celebration badge amber, animated and reduced-motion), so they weren't touched here.
+- **Bell.** The new-count badge is Oyelabs Blue (it was danger red, but an unread count isn't an error),
+  unread rows get a blue dot, and each row has a kind badge: certificates (`certificate.*`) and level-ups
+  (`*level_up*`) on the amber tint with an amber left edge, everything else a blue bell. Unknown kinds fall
+  back to the bell.
+- **Link previews per page type** (`server/src/lib/ogPages.ts`). Every page keeps index.html's default
+  (og-image-blue as `/og-image.png`). `GET /verify/:id` is now served by the server (when the build exists)
+  with its head rewritten: `<title>`, description, og:url/title/description/image/image:alt (and size)
+  and the twitter:* twins. A valid certificate shows "<Title>: certificate for <Holder> · Oyelearn" and
+  its own PNG, the certificate code's public `GET /api/v5/certificates/:id/preview.png` (1754 × 1240,
+  only while valid); revoked, changed or unknown codes get a plain preview with the default image and no
+  name. Only `<title>` and `<meta>` are touched, so index.html's inline scripts, and with them the CSP
+  hashes, are byte-for-byte the same (a test hashes both). Rate limited (120/min), `no-cache`, and on any
+  error it sends the default head. `ogDeps.certificateImage` is the one place that names the PNG URL.
+- **Not done.** No per-page OG for in-app pages (they need a session, so crawlers only ever see sign-in).
+  The From name is whatever `MAIL_FROM` says: under Needs Abhishek.
+
+## Phase 4: Shells and every screen
+
+- **Logo rule in the shells.** Learner (src/v5/app/shells.tsx), admin (src/v5/admin/shell/AdminFrame.tsx)
+  and the old UI (TopBar, AdminLayout, MobileNav, the footer) import `Logo`/`Mark` from their own files.
+  The full primary logo is 24 px tall (102 px wide, over the 96 px minimum); a phone header, and the
+  admin's icon rail (768–1279 px or "Collapse"), show the `Mark` instead. A breakpoint class on `<Logo>`
+  itself doesn't work (its own `inline-flex` beats `hidden`), so a wrapper span carries it; otherwise the
+  mark and the logo both showed, which reads as an extra "O". The learner header keeps the computed
+  clear space; the denser admin and old headers pass `clearSpace={false}` and keep the half-ring gap
+  with their own padding.
+- **Admin label.** A small Mist pill "Admin" (old UI: "Admin console") sits next to the logo/mark, inside
+  the home link ("Oyelearn admin, Inbox"). Nav actives are `bg-brand-soft text-brand-fg`; the learner's
+  bottom bar gets the admin's pill behind the active icon and the safe-area padding.
+- **Text logos replaced.** The old dashboard's `<h1>Oyelearn</h1>` is the tagline lockup (its alt keeps
+  the heading's name, which v5-foundation looks for); the old mobile sheet title is the logo; the
+  footer's mark + "Oyelearn · by Oyelabs" text is the endorsed lockup (the mark followed by "Oyelearn"
+  was the forbidden extra O). The v5 assessment frame, results and sheet, and /design's AppShell, use the
+  brand files directly. No old logo files or "Oyelabs Trails" strings remain in src. "Trails" is left
+  where it is the trail metaphor (the old sidebar's and palette's list of tracks, course content).
+- **Progress is amber, in the dot motif.** v5 `ProgressBar` gains a `progress` tone (now the default):
+  the fill stops a small gap short of the value and the dot sits at it (none at 0 or 100%). `brand`
+  stays for the app's own work (uploads). The goal ring, course cards (Library, course page) and /design
+  use the brand `ProgressRing`, which gained centre content and a one-off CSS draw-in (`brand-ring-fill`,
+  stilled by `data-motion="reduce"` and the OS setting). v5's old SVG ring is gone; the `@/v5/design`
+  barrel re-exports the brand one. Skill meters, the lesson playlist's watched bar, the plan week bar and
+  the walked part of every trail are amber; done ticks stay success green.
+- **"You are here".** The trail's current stop is the mark's amber dot: v5 `Waypoint` fills its marker
+  with the dot (amber border and pulse); the plan's week trail and route add `HereDot` just ahead of the
+  stop, where the mark's dot sits; the labels are `text-progress-fg`. The course page marks the lesson
+  "Continue" opens with the dot ("You are here:" for screen readers).
+- **Weekly summit.** `src/v5/motivation/SummitRing.tsx` draws the guideline's celebration from the kit's
+  geometry: the amber ring closes (70% → 100%) while the dot pops, then opens again, 1.6 s, once.
+  `Celebration` takes a `badge` that replaces its icon circle; the host passes the ring for
+  `weekly_summit`. Reduced motion (and the static celebration) shows the still mark. Other wins' icon
+  badges are on the amber tint, not success green.
+- **Empty states.** `ContourBackground` (same name and props, so callers didn't change) now draws the
+  ring device: the mark's rings in Oyelabs Blue/Sky at 8%, large and partly off the edge, placement by
+  `seed`. That covers every v5 `EmptyState`, the assessment frame and results, and the verify page.
+  The old data-table empty state gets the device at 7%. The topographic contours remain only in the old
+  dashboard hero and the certificate art (Phase 5).
+- **Buttons, links, focus.** v5 Button gains `achievement` (amber fill, Night text) for "Claim
+  certificate" / "Level up" only, shown on /design; nothing else is amber. In the old UI every
+  `outline-trailmark` focus ring is now `outline-primary-strong` and every amber link underline
+  (`decoration-trailmark`, the old Button's `link` variant) is blue; the playlist's amber "Play now"
+  is the primary button and the password-strength "fair" step uses the warning colour. Track accent
+  classes (src/lib/accent.ts) are unchanged.
+- **Charts.** Recharts (admin overview and reports) take series from `SERIES`: Oyelabs Blue, then
+  `--v5-chart-2` (Night Navy; a light Sky tint in dark, where navy disappears). Amber only as an
+  optional dashed `target` line. Me's XP bars are blue with this week, the learner's own, in amber.
+- **Bundle.** Lesson 199.55 KB (was 199.6: EmptyState's contours swap for the ring device and the
+  shells drop the old logo wrapper), /design 229.7 of 230 KB, plan 197.5, entry 95.3.
+- **Checked** in light and dark at 390, 768 and 1440 px with v5-visual on a private snapshot (HEAD + this
+  phase's files, since the certificate and email agents' work in progress didn't build). Every screen
+  differs from the old baselines (fonts and colours since Phase 1), so the baselines were re-shot.
+- **Shared file.** `src/v5/learner/me/MePage.tsx` also carries the certificate agent's Phase 5 edits;
+  this phase's part is only the XP chart's colours.
+
+
+## Phase 5: Certificates
+
+- **One template, drawn by the server.** `server/assets/certificates/certificate-template-a4.svg` is the
+  kit's `09-print` file byte for byte (a test compares them). `template.ts` parses it (the small SVG subset
+  the kit uses; anything else throws), keeps every element as it is (white page, the faint ring device off
+  the bottom-right corner, the Oyelabs Blue + Mist double border, the primary logo, the two signature
+  rules, the ring seal) and drops its ten outlined placeholder texts, which are set again in Outfit at the
+  kit's sizes, colours and centres (measured from the glyph outlines: heading 30/600 tracked 0.18em in
+  Slate, lead 28/400, name 84/600 Night Navy, title 48/600 Oyelabs Blue, date and signature 24/600 over
+  18/400 labels, verify 16/400 #8A98AD). The QR (error correction M, Night Navy) sits bottom left inside
+  the inner border, clear of the date block, since the kit leaves no slot for it.
+- **Renderer: `@napi-rs/canvas` (Skia), no new runtime dependency.** It is already a production
+  dependency (document extraction) with a prebuilt linux-x64-gnu binary for the Docker image, and its
+  `PDFDocument` is Skia's PDF backend, so one drawing function makes both files: a vector A4 landscape PDF
+  (text stays real, selectable text; the verify line and the QR are links) and a PNG on a raster canvas.
+  `@react-pdf/renderer` in Node was the alternative, but it would mean a second layout of the same
+  template. Loaded at run time like extraction (`runtimeImport`), so it is never bundled.
+- **Fonts.** Skia embeds a static TrueType font as a real subset font (`FontFile2`), but a variable font
+  only as Type3 outlines, and the app's `@fontsource-variable/outfit` is variable WOFF2. So the three
+  static weights (Outfit-Regular/Medium/SemiBold.ttf, 2021 The Outfit Project Authors, SIL OFL 1.1, with
+  `OFL.txt`) are committed under `server/assets/certificates/fonts/`, from the upstream
+  Outfitio/Outfit-Fonts repository. Nothing was installed. `scripts/build-server.mjs` copies
+  `server/assets/` next to the bundle (`dist-server/assets/`), which the Dockerfile already ships.
+  Outfit covers Latin; a name in another script would need a fallback font (none in the slim image).
+- **Sizes.** PDF: A4 landscape (Skia rounds to 842 × 595 pt). PNG: 2× the template, 3508 × 2480, for
+  download and sharing; a 1× 1754 × 1240 preview for the verify page and link previews (Phase 6's OG
+  tags use it).
+- **Long names and titles** shrink first, then wrap: name 84 → 52 on one line, then two lines 64 → 44,
+  then three 44 → 34; title 48 → 34, two lines 40 → 30, three 30 → 24 ("wraps at most twice"). Lines are
+  balanced (the narrowest width that keeps the line count), a word wider than a line breaks between
+  letters, the block below moves down and stays above the seal (tested), and only text that can't fit
+  three lines at the smallest size is cut with "…". Date and signature fit one line in 300 px.
+- **Wording by kind.** Course: "has completed" (the kit's words). Track (a path): "has completed the
+  path". Goal: "has reached the goal". "Course, path or level": a level-up has no certificate of its own
+  today; the kinds stay course, track (path) and goal, issued by the existing `syncCertificates`.
+- **Files and idempotence.** `files.ts` keeps `DATA_DIR/certificates/<id>.<key>.{pdf,png,preview.png}`;
+  the key hashes everything printed (the record's hash, so the holder's name and title; the signature;
+  the public origin in the QR; `TEMPLATE_VERSION`). Requests serve from disk; a corrected name, a new
+  signature or a template change gives a new key, the next request draws it again and the old files are
+  deleted. Concurrent requests share one draw; writes go through a temp file and a rename. On issue and
+  on a name correction the routes draw all three straight away (`onCertificateChanged`, off the request;
+  skipped in unit tests). No migration: the files live on the volume and the signature in `app_meta`.
+- **Ids.** The first v5 codes were 40 bits (`OYL-XXXX-XXXX`). New ones are 80 bits
+  (`OYL-XXXX-XXXX-XXXX-XXXX`, Crockford base32), since the code alone unlocks a public page and a public
+  image. Old codes (and the older browser `OYL-FE-…` ones) still match `CERTIFICATE_ID_RE` and verify.
+- **Routes.** Learner: `GET /api/v5/certificates/:id/file.pdf|file.png[?download=1]` (own only, 410 once
+  revoked). Public, rate limited: `/:id/public` (unchanged, minimal data) and `/:id/preview.png` (valid
+  only; 410 when revoked or changed, `public, max-age=300`). Staff: `GET /api/admin/v5/certificates`
+  (now with the signature), `/:id/file.pdf|png`, `POST /:id/regenerate` (audited), `GET|PUT /signature`
+  (audited), `GET /report.pdf`. `MyCertificate` and the Me profile carry `verifyUrl` on PUBLIC_ORIGIN, so
+  the QR, "Copy verify link" and LinkedIn all use the configured origin, not the browser's.
+- **Learner.** `/learn/certificate/:id`: the ring seal next to the heading plays the summit moment once per
+  browser (the amber ring closes, the dot pops, the ring opens again; the still mark under reduced motion,
+  the system's or the learner's setting), plus the existing v5 `celebrate("certificate")`. Shells and
+  progress components untouched. The preview card is the server's PNG with Download PDF, Download image,
+  Copy verify link, Add to LinkedIn ("Oyelearn – <Course>", Oyelabs, issue month/year, credential URL and
+  id) and the check page. The name form stays (it redraws every current certificate). Me → Certificates
+  (`#certificates`) lists them with the same PDF/image downloads and LinkedIn. The browser no longer draws
+  certificates: v5's `CertificateArt`, `art.ts`, `pdf.tsx`, `qr.ts`, `shareImage.ts` and the old UI's
+  `components/certificate/*` and `lib/certificate.ts` are deleted. The old `/report/:trackId` page now
+  opens the server's certificate for that track (or says it isn't issued yet).
+- **Verify page** (`/verify/:id`, no login): the primary logo; "This certificate is valid ✓" with the name,
+  the course, the date, "Issued by Oyelabs" and the preview picture; "This certificate was revoked" (date
+  only, no name, no picture); "Certificate not found" with the code tried. `VerifyView` is pure and its
+  states are unit tested with `renderToStaticMarkup`.
+- **Admin** is a Certificates section at the end of Reports (`/admin/reports#certificates`), so no shell or
+  nav change: find by name/course/code, Open PDF, Draw again, Revoke (with a confirm step) / Make valid
+  again, "Download list (PDF)", and "Signature on certificates" (name and job title, with a live
+  "Prints as" line). With no name set the block prints "Oyelabs" over "Issued by"; nothing invents a
+  person.
+- **Report PDFs (5.6).** The app had no PDF reports (Reports exports CSV). `reportPdf.ts` adds the branded
+  frame every PDF report uses (the kit logo from the template, the title and a subtitle top right, a Mist
+  rule; the footer "Oyelearn, the learning platform of Oyelabs" and "Page N of M"; Outfit embedded) and the
+  first report on it: the certificates list (A4 landscape, paged).
+- **Left for later.** `@react-pdf/renderer`, the Sora/IBM Plex TTFs in `src/assets/fonts` and vite's
+  `chunkSizeWarningLimit` comment about the PDF chunk are no longer used by certificates: remove in
+  Phase 7. `/design`'s `CertificatePreview` demo (Showcase) is a stand-in drawing; Phase 4/7 may swap it
+  for the kit picture.
+- **Tests.** `server/src/v5/certificates/brand.test.ts` (template parse and byte check, fitting long names
+  and titles, PDF fonts/size/link/text, PNG sizes, the QR read back from the PNG module by module against
+  the verify URL, the report, and the routes: downloads, idempotent files, name correction, verify
+  valid/revoked/unknown, admin signature/regenerate/report); `src/v5/learner/certificate/certificate.test.ts`
+  (codes, LinkedIn, file URLs, the verify page's states). `scripts/e2e/brand-certificate.ts` (port 8967)
+  passes, as do v5-assessment (its certificate part updated to the server files), v45-oyelabs-flow and
+  v5-motivation on snapshot `brand5`.

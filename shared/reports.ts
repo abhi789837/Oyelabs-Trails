@@ -6,6 +6,8 @@
  * Copy is admin copy: plain words only (docs/v4.4/COPY_GUIDE.md).
  */
 
+import { emailButton, emailList, emailP, escapeHtml, type EmailBody } from "./emailParts";
+
 const DAY_MS = 86_400_000;
 
 // ---------------------------------------------------------------------------
@@ -292,12 +294,11 @@ export function weeklyReportDue(on: boolean, lastQueuedAt: number | null, now: n
   return lastQueuedAt === null || now - lastQueuedAt >= 7 * DAY_MS;
 }
 
-function escapeHtml(text: string): string {
-  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
-
-/** The email body: the week in five lines, plain text and a matching simple HTML version. */
-export function weeklyReportEmail(report: ReportsResponse, name: string): { subject: string; text: string; html: string } {
+/**
+ * The email body: the week in five lines, plain text and the matching HTML body (the server wraps
+ * it in the Oyelearn frame). `reportsUrl` is the Reports page, absolute, when the caller knows it.
+ */
+export function weeklyReportEmail(report: ReportsResponse, name: string, reportsUrl?: string): EmailBody {
   const lines = [
     `${report.time.activeLearners} people learned this week, for ${report.time.hours} hours in total.`,
     `${report.completion.lessonsDone} lessons finished. Plans are ${report.completion.averagePlanDone}% done on average.`,
@@ -306,7 +307,13 @@ export function weeklyReportEmail(report: ReportsResponse, name: string): { subj
     `AI cost: $${report.ai.dollars.toFixed(2)}.`,
   ];
   const greeting = `Hi ${name.trim().split(/\s+/)[0] || "there"},`;
-  const text = [greeting, "", "Here's last week on Oyelearn.", "", ...lines.map((l) => `- ${l}`), "", "Open Reports in Oyelearn for the details."].join("\n");
-  const html = `<p>${escapeHtml(greeting)}</p><p>Here's last week on Oyelearn.</p><ul>${lines.map((l) => `<li>${escapeHtml(l)}</li>`).join("")}</ul><p>Open Reports in Oyelearn for the details.</p>`;
-  return { subject: "Your weekly Oyelearn report", text, html };
+  const closing = "Open Reports in Oyelearn for the details.";
+  const text = [greeting, "", "Here's last week on Oyelearn.", "", ...lines.map((l) => `- ${l}`), "", reportsUrl ? `${closing} ${reportsUrl}` : closing].join("\n");
+  const bodyHtml = [
+    emailP(escapeHtml(greeting)),
+    emailP("Here's last week on Oyelearn."),
+    emailList(lines.map((l) => escapeHtml(l))),
+    reportsUrl ? emailButton(reportsUrl, "Open Reports") : emailP(escapeHtml(closing)),
+  ].join("");
+  return { subject: "Your weekly Oyelearn report", preheader: lines[0], text, bodyHtml };
 }

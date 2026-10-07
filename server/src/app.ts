@@ -64,7 +64,8 @@ import { registerV5AssessmentRoutes } from "./v5/assessment/routes";
 import { registerOyelabsRoutes } from "./oyelabs/routes";
 import type { CodeSandbox } from "./sandbox";
 import { PistonClient } from "./sandbox/polyglot";
-import { BRAND_ICON_CACHE, BRAND_ICON_PATH } from "./lib/brandIcons";
+import { BRAND_ICON_CACHE, BRAND_ICON_PATH, SHARED_IMAGE_PATH } from "./lib/brandIcons";
+import { registerOgPages } from "./lib/ogPages";
 
 export interface RouteRecord {
   method: string;
@@ -190,6 +191,8 @@ export async function buildApp({
       // revalidate) rather than the static default of max-age=0. index.html links them with `?v=2`
       // so a browser still holding the previous logo fetches the new one at once.
       reply.header("cache-control", BRAND_ICON_CACHE);
+      // Rebrand P6: email images and OG images are loaded by mail apps and crawlers, off our origin.
+      if (SHARED_IMAGE_PATH.test(pathname)) reply.header("cross-origin-resource-policy", "cross-origin");
     }
     return payload;
   });
@@ -300,6 +303,8 @@ async function registerSpa(app: FastifyInstance, env: Env, indexHtml: string, ha
     // (vite.config.ts `precompressAssets`), sent when the browser accepts them, so the app is fast
     // without a compressing proxy too. Only static files; API responses and the SSE feed are untouched.
     await app.register(fastifyStatic, { root: env.clientDist, prefix: "/", index: false, wildcard: false, preCompressed: true });
+    // Rebrand P6: /verify/:id gets the certificate's link preview in its head (lib/ogPages.ts).
+    await registerOgPages(app, indexHtml);
   } else if (!env.isTest) {
     app.log.warn({ dir: env.clientDist }, "no SPA build found; serving the API only");
   }

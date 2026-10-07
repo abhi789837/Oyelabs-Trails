@@ -188,7 +188,7 @@ describe("CSV", () => {
       ai: { dollars: 1.5 },
     } as unknown as ReportsResponse;
     const mail = weeklyReportEmail(report, "<Ana> Lee");
-    expect(mail.html).toContain("Hi &lt;Ana&gt;,");
+    expect(mail.bodyHtml).toContain("Hi &lt;Ana&gt;,");
     expect(mail.text).toContain("9 lessons finished");
   });
 });

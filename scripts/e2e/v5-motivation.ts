@@ -476,6 +476,19 @@ async function main(): Promise<void> {
         ok(/multipart\/alternative/i.test(mail.raw) && /text\/html/i.test(mail.raw) && /text\/plain/i.test(mail.raw), "it has an HTML and a text part");
         ok(mail.from === "learning@oyelabs.test", `from ${mail.from}`);
         ok(/Open Today/.test(mail.raw), "it links to Today");
+        // Rebrand P6: the shared layout. Decode the HTML part (quoted-printable or base64) before looking.
+        const htmlPart = /Content-Type: text\/html[^]*?\r?\n\r?\n([^]*?)\r?\n--/i.exec(mail.raw);
+        const base64 = htmlPart ? /Content-Type: text\/html[^]*?Content-Transfer-Encoding: base64/i.test(mail.raw.slice(htmlPart.index, htmlPart.index + 300)) : false;
+        const body = htmlPart?.[1] ?? mail.raw;
+        const utf8 = base64
+          ? Buffer.from(body.replace(/\s+/g, ""), "base64").toString("utf8")
+          : Buffer.from(body.replace(/=\r?\n/g, "").replace(/=([0-9A-F]{2})/g, (_m, hex: string) => String.fromCharCode(parseInt(hex, 16))), "latin1").toString("utf8");
+        ok(utf8.includes(`${BASE}/brand/email/email-header-light@600w.png`), "the HTML has the brand header image, absolute on the public origin");
+        ok(utf8.includes(`${BASE}/brand/email/email-header-dark@600w.png`) && /prefers-color-scheme:\s*dark/.test(utf8), "and its dark variant for dark-mode clients");
+        ok(utf8.includes(`${BASE}/brand/email/oyelearn-mark-light@64w.png`) && utf8.includes("Oyelearn · by Oyelabs"), "the footer has the mark and 'Oyelearn · by Oyelabs'");
+        ok(/<html lang="en"/.test(utf8) && (utf8.match(/<img\b[^>]*\balt="/g) ?? []).length === (utf8.match(/<img\b/g) ?? []).length, "lang set and every image has alt text");
+        const header = await fetch(`${BASE}/brand/email/email-header-light@600w.png`);
+        ok(header.status === 200 && header.headers.get("content-type") === "image/png" && header.headers.get("cross-origin-resource-policy") === "cross-origin", `the header image is served (${header.status}, ${header.headers.get("content-type")}, CORP ${header.headers.get("cross-origin-resource-policy")})`);
       }
       const again = await sendJson<{ recaps: number }>(admin, "post", "/api/admin/motivation/run", { recaps: true });
       ok(again.recaps === 0, `a second run the same week queues none (${again.recaps})`);

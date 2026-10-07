@@ -1,3 +1,4 @@
+import { brandEmail, publicOriginFromEnv } from "../email/layout";
 import { emailConfigFromEnv } from "../email/sender";
 import { eq } from "drizzle-orm";
 
@@ -30,9 +31,16 @@ export function setWeeklyEmail(db: Db, on: boolean, actorId: string, at = Date.n
  * Queues the weekly report into `email_outbox` when it is due. There is no separate timer: this
  * runs whenever staff open the inbox or Reports, which an admin who wants a weekly email does at
  * least weekly, and it is idempotent (the last-queued time is checked and written together). The
- * sender (Phase 6) delivers whatever is queued.
+ * sender (Phase 6) delivers whatever is queued, in the Oyelearn frame (email/layout.ts). `origin` is
+ * PUBLIC_ORIGIN, for the header image and the Reports link.
  */
-export function maybeQueueWeeklyReport(db: Db, content: ContentStore, now = Date.now(), emailOn = emailConfigFromEnv().ok): boolean {
+export function maybeQueueWeeklyReport(
+  db: Db,
+  content: ContentStore,
+  now = Date.now(),
+  emailOn = emailConfigFromEnv().ok,
+  origin = publicOriginFromEnv(),
+): boolean {
   if (!emailOn) return false;
   const state = weeklyEmailState(db);
   if (!weeklyReportDue(state.on, state.lastQueuedAt, now)) return false;
@@ -40,7 +48,7 @@ export function maybeQueueWeeklyReport(db: Db, content: ContentStore, now = Date
   const to = toId ? db.select().from(schema.users).where(eq(schema.users.id, toId)).get() : undefined;
   if (!to || to.status !== "active") return false;
   const report = buildReport(db, content, rangeForDays(7, now));
-  const mail = weeklyReportEmail(report, to.displayName);
+  const mail = brandEmail(origin, weeklyReportEmail(report, to.displayName, `${origin.replace(/\/+$/, "")}/admin/reports`));
   db.transaction((tx) => {
     tx.insert(schema.emailOutbox)
       .values({ id: newId(), toUserId: to.id, toAddress: to.username, kind: WEEKLY_REPORT_KIND, subject: mail.subject, html: mail.html, text: mail.text, status: "queued", createdAt: now })

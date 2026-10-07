@@ -2,13 +2,16 @@ import { and, desc, eq, isNull } from "drizzle-orm";
 
 import { isStaff } from "../../../shared/enums";
 import { schema, type Db } from "../db";
+import { emailCopyOfNotification } from "../v5/email/certificateEmail";
 import { newId, now } from "./ids";
 
 /**
  * In-app notifications (brief §1, non-goals).
  *
  * Email and SMS are explicitly out of scope for v3, but the shape stays behind this one function
- * so adding a notifier later means changing here and nowhere else.
+ * so adding a notifier later means changing here and nowhere else. Rebrand Phase 6 added the first:
+ * `certificate.issued` also queues the certificate email (v5/email/certificateEmail.ts), which does
+ * nothing unless email is set up and never throws.
  */
 export interface NotificationInput {
   recipientId: string;
@@ -33,6 +36,7 @@ export function notify(db: Db, input: NotificationInput): string {
       createdAt: input.at ?? now(),
     })
     .run();
+  emailCopyOfNotification(db, input);
   return id;
 }
 

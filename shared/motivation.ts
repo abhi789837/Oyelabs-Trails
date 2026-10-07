@@ -11,7 +11,7 @@
  *   department, first name and weekly XP, no rank numbers.
  */
 
-const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+import { emailButton, emailLink, emailList, emailP, escapeHtml, type EmailBody } from "./emailParts";
 
 // ---------------------------------------------------------------------------
 // Celebrations
@@ -209,19 +209,20 @@ export function reminderText(firstName: string, nextTitle: string | null): { tit
   };
 }
 
-/** The email copy of a reminder: the same two lines, a button, and how to turn it off. */
-export function reminderEmail(text: { title: string; body: string }, url: string, appUrl: string): { text: string; html: string } {
+/**
+ * The email copy of a reminder: the same two lines, a button, and how to turn it off. The body only;
+ * the server wraps it in the Oyelearn frame (server/src/v5/email/layout.ts).
+ */
+export function reminderEmail(text: { title: string; body: string }, url: string, appUrl: string): EmailBody {
   const settings = `${appUrl.replace(/\/+$/, "")}/learn/me?tab=settings`;
   return {
+    subject: text.title,
+    preheader: text.body,
     text: [text.body, "", `Open it: ${url}`, "", `Change or turn off reminders in Me, Settings: ${settings}`].join("\n"),
-    html: [
-      `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${escapeHtml(text.title)}</title></head>`,
-      `<body style="margin:0;padding:24px;background:#F5F6F2;color:#1B1F27;font-family:Inter,Arial,sans-serif;font-size:16px;line-height:1.5">`,
-      `<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:24px">`,
-      `<p style="margin:0 0 16px">${escapeHtml(text.body)}</p>`,
-      `<p style="margin:0 0 20px"><a href="${escapeHtml(url)}" style="display:inline-block;background:#1F5FBF;color:#ffffff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600">Open the lesson</a></p>`,
-      `<p style="margin:0;font-size:13px;color:#4B5563"><a href="${escapeHtml(settings)}" style="color:#4B5563">Change or turn off reminders in Me, Settings</a>.</p>`,
-      `</div></body></html>`,
+    bodyHtml: [
+      emailP(escapeHtml(text.body), { spaceAfter: 8 }),
+      emailButton(url, "Open the lesson"),
+      emailP(`${emailLink(settings, "Change or turn off reminders in Me, Settings", { muted: true })}.`, { muted: true, small: true, spaceAfter: 0 }),
     ].join(""),
   };
 }
@@ -276,11 +277,8 @@ export interface RecapInput {
   appUrl: string;
 }
 
-export interface RecapEmail {
-  subject: string;
-  text: string;
-  html: string;
-}
+/** The recap body; the server wraps it in the Oyelearn frame. */
+export type RecapEmail = EmailBody;
 
 function hoursLabel(minutes: number): string {
   const h = Math.round((minutes / 60) * 10) / 10;
@@ -333,29 +331,22 @@ export function buildWeeklyRecap(input: RecapInput): RecapEmail {
     `You get this email because weekly emails are on. Turn them off in Me, Settings: ${base}/learn/me?tab=settings`,
   ].join("\n");
 
-  const p = (s: string, style = "") => `<p style="margin:0 0 12px;${style}">${s}</p>`;
-  const html = [
-    `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${escapeHtml(subject)}</title></head>`,
-    `<body style="margin:0;padding:24px;background:#F5F6F2;color:#1B1F27;font-family:Inter,Arial,sans-serif;font-size:16px;line-height:1.5">`,
-    `<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:24px">`,
-    p(`Hi ${escapeHtml(input.firstName)},`),
-    p(`Here's how ${escapeHtml(input.weekLabel)} went.`),
-    `<ul style="margin:0 0 16px;padding-left:20px">${progress.map((l) => `<li>${escapeHtml(l)}</li>`).join("")}</ul>`,
+  const bodyHtml = [
+    emailP(`Hi ${escapeHtml(input.firstName)},`),
+    emailP(`Here's how ${escapeHtml(input.weekLabel)} went.`),
+    emailList(progress.map((l) => escapeHtml(l))),
     next.length
-      ? `${p("<strong>What's next</strong>", "margin-bottom:4px")}<ul style="margin:0 0 16px;padding-left:20px">${next
-          .map((n) => `<li><a href="${escapeHtml(n.url)}" style="color:#1F5FBF">${escapeHtml(n.title)}</a></li>`)
-          .join("")}</ul>`
-      : p("Your next lessons show on Today."),
-    p(escapeHtml(kind)),
-    `<p style="margin:20px 0"><a href="${escapeHtml(`${base}/learn`)}" style="display:inline-block;background:#1F5FBF;color:#ffffff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600">Open Today</a></p>`,
-    p(
-      `You get this email because weekly emails are on. <a href="${escapeHtml(`${base}/learn/me?tab=settings`)}" style="color:#4B5563">Turn them off in Me, Settings</a>.`,
-      "font-size:13px;color:#4B5563",
+      ? `${emailP("What's next", { strong: true, spaceAfter: 4 })}${emailList(next.map((n) => emailLink(n.url, n.title)))}`
+      : emailP("Your next lessons show on Today."),
+    emailP(escapeHtml(kind)),
+    emailButton(`${base}/learn`, "Open Today"),
+    emailP(
+      `You get this email because weekly emails are on. ${emailLink(`${base}/learn/me?tab=settings`, "Turn them off in Me, Settings", { muted: true })}.`,
+      { muted: true, small: true, spaceAfter: 0 },
     ),
-    `</div></body></html>`,
   ].join("");
 
-  return { subject, text, html };
+  return { subject, preheader: goalLine, text, bodyHtml };
 }
 
 // ---------------------------------------------------------------------------

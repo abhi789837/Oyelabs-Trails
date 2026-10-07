@@ -1,6 +1,6 @@
 import * as Popover from "@radix-ui/react-popover";
-import { Bell, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Award, Bell, ChevronRight, TrendingUp } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 import { cn } from "@/v5/design/cn";
@@ -10,8 +10,20 @@ import { motivationApi } from "./api";
 import { timeAgo } from "./logic";
 
 /**
+ * What a notification wins: certificates and level-ups wear amber (rebrand Phase 6, "Amber
+ * celebrates"); everything else is a quiet blue bell. Kinds are free-form (shared/notifications.ts),
+ * so anything unknown falls back to the bell.
+ */
+function kindBadge(kind: string): { icon: ReactNode; win: boolean } {
+  if (kind.startsWith("certificate.")) return { icon: <Award />, win: true };
+  if (/level[_-]?up/i.test(kind)) return { icon: <TrendingUp />, win: true };
+  return { icon: <Bell />, win: false };
+}
+
+/**
  * The bell in the learner top bar: the existing notifications (`/api/me/notifications`), newest
- * first. Opening it marks them read. Reminders and admin nudges land here too.
+ * first. Opening it marks them read. Reminders and admin nudges land here too. Brand tokens: the new
+ * count and unread dots are Oyelabs Blue (an unread count isn't an error), wins are amber.
  */
 export function NotificationBell({ unread, onRead }: { unread: number; onRead: () => void }) {
   const [open, setOpen] = useState(false);
@@ -46,7 +58,7 @@ export function NotificationBell({ unread, onRead }: { unread: number; onRead: (
         >
           <Bell className="size-5" aria-hidden="true" />
           {unread > 0 ? (
-            <span className="absolute right-1 top-1 grid min-w-4.5 place-items-center rounded-full bg-danger px-1 text-[11px] font-semibold leading-4.5 text-on-danger" aria-hidden="true">
+            <span className="absolute right-1 top-1 grid min-w-4.5 place-items-center rounded-full bg-brand px-1 text-[11px] font-semibold leading-4.5 text-on-brand ring-2 ring-surface-1" aria-hidden="true">
               {unread > 9 ? "9+" : unread}
             </span>
           ) : null}
@@ -71,25 +83,46 @@ export function NotificationBell({ unread, onRead }: { unread: number; onRead: (
             ) : (
               <ul className="divide-y divide-line-1" data-testid="v5-notification-list">
                 {items.map((n) => {
+                  const badge = kindBadge(n.kind);
+                  const unreadItem = n.readAt === null;
                   const body = (
                     <>
                       <span className="flex items-start justify-between gap-3">
-                        <span className={cn("text-small text-fg-1", n.readAt === null && "font-semibold")}>{n.title}</span>
+                        <span className={cn("text-small text-fg-1", unreadItem && "font-semibold")}>
+                          {unreadItem ? <span className="mr-1.5 inline-block size-2 rounded-full bg-brand align-middle" aria-hidden="true" /> : null}
+                          {n.title}
+                        </span>
                         <span className="shrink-0 text-caption text-fg-2">{timeAgo(n.createdAt)}</span>
                       </span>
                       <span className="mt-0.5 block text-small text-fg-2">{n.body}</span>
                     </>
                   );
+                  const icon = (
+                    <span
+                      className={cn(
+                        "mt-0.5 grid size-8 shrink-0 place-items-center rounded-full [&_svg]:size-4",
+                        badge.win ? "bg-progress-soft text-progress-fg" : "bg-brand-soft text-brand-fg",
+                      )}
+                      aria-hidden="true"
+                      data-win={badge.win || undefined}
+                    >
+                      {badge.icon}
+                    </span>
+                  );
                   return (
-                    <li key={n.id}>
+                    <li key={n.id} className={cn(badge.win && "border-l-2 border-l-progress")}>
                       {n.link ? (
                         // A chevron marks the ones that go somewhere (UX review B1).
-                        <Link to={n.link} onClick={() => setOpen(false)} className="flex items-center gap-2 px-4 py-3 hover:bg-sunken">
+                        <Link to={n.link} onClick={() => setOpen(false)} className="flex items-start gap-3 px-4 py-3 hover:bg-sunken">
+                          {icon}
                           <span className="block min-w-0 flex-1">{body}</span>
-                          <ChevronRight className="size-4 shrink-0 text-fg-2" aria-hidden="true" />
+                          <ChevronRight className="mt-1 size-4 shrink-0 text-fg-2" aria-hidden="true" />
                         </Link>
                       ) : (
-                        <div className="px-4 py-3">{body}</div>
+                        <div className="flex items-start gap-3 px-4 py-3">
+                          {icon}
+                          <span className="block min-w-0 flex-1">{body}</span>
+                        </div>
                       )}
                     </li>
                   );

@@ -1,3 +1,4 @@
+import { brandEmail } from "../email/layout";
 import { emailConfigFromEnv } from "../email/sender";
 import { and, desc, eq, gte } from "drizzle-orm";
 
@@ -124,9 +125,9 @@ export function sendDueReminders(db: Db, content: ContentStore, appUrl: string, 
       const link = next?.href ?? "/learn";
       notify(db, { recipientId: learner.id, kind: REMINDER_KIND, title: text.title, body: text.body, link, at: nowMs });
       if (emailOn) {
-        const mail = reminderEmail(text, `${appUrl.replace(/\/+$/, "")}${link}`, appUrl);
+        const mail = brandEmail(appUrl, reminderEmail(text, `${appUrl.replace(/\/+$/, "")}${link}`, appUrl));
         db.insert(schema.emailOutbox)
-          .values({ id: newId(), toUserId: learner.id, toAddress: learner.username, kind: REMINDER_EMAIL_KIND, subject: text.title, html: mail.html, text: mail.text, status: "queued", createdAt: nowMs })
+          .values({ id: newId(), toUserId: learner.id, toAddress: learner.username, kind: REMINDER_EMAIL_KIND, subject: mail.subject, html: mail.html, text: mail.text, status: "queued", createdAt: nowMs })
           .run();
       }
       return result;
@@ -152,7 +153,7 @@ function hasRecentRecap(db: Db, userId: string, nowMs: number): boolean {
     .get();
 }
 
-/** Builds one learner's recap of the ISO week before `nowMs`. Exported for tests. */
+/** Builds one learner's recap of the ISO week before `nowMs`, in the Oyelearn frame. Exported for tests. */
 export function recapFor(db: Db, content: ContentStore, learner: Learner, appUrl: string, nowMs: number) {
   const lastMonday = mondayOf(nowMs) - WEEK_MS;
   const lastWeekKey = isoWeekKey(lastMonday);
@@ -178,7 +179,7 @@ export function recapFor(db: Db, content: ContentStore, learner: Learner, appUrl
       // keep the single next lesson
     }
   }
-  return buildWeeklyRecap({
+  return brandEmail(appUrl, buildWeeklyRecap({
     firstName: firstNameOf(learner.displayName),
     weekLabel: `week ${Number(lastWeekKey.slice(-2))}`,
     xpLastWeek: events.reduce((sum, e) => sum + e.xp, 0),
@@ -189,7 +190,7 @@ export function recapFor(db: Db, content: ContentStore, learner: Learner, appUrl
     streak: { current: streak.state.current, freezesLeft: streak.state.freezesLeft },
     next: upNext,
     appUrl,
-  });
+  }));
 }
 
 /**

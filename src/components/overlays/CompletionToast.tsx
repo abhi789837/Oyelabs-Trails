@@ -7,8 +7,9 @@ import type { CompletionToastPayload } from "@/store/toastStore";
 
 /**
  * Finishing a camp or a whole trail is the app's one moment of celebration, and it is deliberately
- * a quiet one: the same card it has always been, now rendered by sonner instead of a bespoke stack.
- * Summit wears `trailmark` (the gold of a finished trail), a camp wears `summit` green.
+ * a quiet one: the toast card (brand tokens, as AppToaster) with an amber edge, because a win is
+ * what amber is for. Summit wears the amber fill (`trailmark`, the brand amber), a camp the soft
+ * `summit` green.
  */
 export function CompletionToast({
   toast: payload,
@@ -22,7 +23,7 @@ export function CompletionToast({
   return (
     <div
       role="status"
-      className="flex w-full items-start gap-3 rounded-md border border-transparent bg-popover px-4 py-3 font-sans text-popover-foreground shadow-lg"
+      className="flex w-full items-start gap-3 rounded-md border border-border border-l-4 border-l-trailmark bg-surface px-4 py-3 font-sans text-foreground shadow-lg"
     >
       <span
         className={cn(
@@ -38,12 +39,12 @@ export function CompletionToast({
 
       <div className="min-w-0 flex-1">
         <p className="font-display text-sm font-semibold">{payload.title}</p>
-        <p className="mt-0.5 text-sm opacity-80">{payload.body}</p>
+        <p className="mt-0.5 text-sm text-muted-foreground">{payload.body}</p>
         {payload.action && (
           <Link
             to={payload.action.to}
             onClick={() => toast.dismiss(id)}
-            className="mt-2 inline-block text-sm font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+            className="mt-2 inline-block text-sm font-medium text-primary-strong underline decoration-trailmark decoration-2 underline-offset-4"
           >
             {payload.action.label}
           </Link>
@@ -53,7 +54,7 @@ export function CompletionToast({
       <button
         type="button"
         onClick={() => toast.dismiss(id)}
-        className="rounded-sm p-1 opacity-70 hover:opacity-100"
+        className="rounded-sm p-1 text-muted-foreground hover:bg-surface-sunken hover:text-foreground"
         aria-label="Dismiss notification"
       >
         <X className="h-4 w-4" aria-hidden="true" />

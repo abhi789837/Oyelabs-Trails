@@ -15,6 +15,7 @@ import { requireActiveUser } from "../../auth/guards";
 import { schema, type Db } from "../../db";
 import { newId } from "../../lib/ids";
 import { badRequest, parseOrThrow } from "../../lib/errors";
+import { brandEmail } from "../email/layout";
 import { drainOutbox, emailConfigFromEnv, resolveAddress } from "../email/sender";
 import { lessonTopic } from "./routes";
 
@@ -83,7 +84,7 @@ export async function registerSendToEmailRoute(app: FastifyInstance): Promise<vo
       const last = recentSend(app.db, user.id, linkPath, now);
       if (last !== null) return { status: "already_sent", link, retryInMinutes: minutesUntilNext(last, now) };
 
-      const mail = continueOnLaptopEmail({ firstName: firstNameOf(user.displayName, user.username), lessonTitle: topic.title, link, code: input.code });
+      const mail = brandEmail(app.env.publicOrigin, continueOnLaptopEmail({ firstName: firstNameOf(user.displayName, user.username), lessonTitle: topic.title, link, code: input.code }));
       app.db
         .insert(schema.emailOutbox)
         .values({ id: newId(), toUserId: user.id, toAddress: user.username, kind: SEND_TO_EMAIL_KIND, subject: mail.subject, html: mail.html, text: mail.text, status: "queued", createdAt: now })
