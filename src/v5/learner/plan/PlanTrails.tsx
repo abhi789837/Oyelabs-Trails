@@ -16,6 +16,7 @@ import { formatMinutes } from "../me/page";
 import { PART_TONE, currentMilestone, milestoneDone, planOrder, sortMilestones } from "./planLogic";
 import { plainTitle } from "@shared/plainTitle";
 import { laterGroupLabel, laterLabel, needsLine, splitPath } from "@shared/pathView";
+import { OYELABS_BADGE_TEXT as OYELABS_BADGE } from "@shared/oyelabsCore";
 
 /**
  * The v5 trails, drawn from the v4.3 pure geometry (`features/plan/trailGeometry`). Same rule as
@@ -283,7 +284,10 @@ function Milestone({ item, waypoint, current, weekNumber }: { item: PathItemView
         {done ? <Check className="size-3.5" strokeWidth={3} /> : <span className={cn("size-2.5 rounded-full", LANE_CLASSES[tone].dot)} />}
       </span>
       <span className={cn("absolute -translate-y-1/2", waypoint.label.side === "left" ? "text-right" : "text-left")} style={{ left: waypoint.label.left, top: waypoint.point.y, width: waypoint.label.width }}>
-        <span className="block font-display text-small font-semibold leading-snug text-fg-1">{item.courseTitle}</span>
+        <span className="block font-display text-small font-semibold leading-snug text-fg-1">
+          {item.courseTitle}
+          {item.oyelabs ? <span className="ml-1.5 inline-block rounded-full border border-line-2 px-1.5 align-middle font-sans text-caption font-medium text-fg-2">{OYELABS_BADGE}</span> : null}
+        </span>
         <span className="block text-caption text-fg-2">
           {item.completedCount}/{item.topicCount} lessons{done ? ", done" : ""}
           {current && weekNumber !== null ? <span className="font-semibold text-brand-fg">{` · Week ${weekNumber} is here`}</span> : null}

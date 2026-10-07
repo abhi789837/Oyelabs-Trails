@@ -13,6 +13,7 @@ import { courseKey, libraryCourseFor } from "../builder/autoCourse";
 import { getCatalog } from "../catalog/repo";
 import type { ContentStore } from "../content/store";
 import type { Db } from "../db";
+import { oyelabsCoursesFor, oyelabsCoversSkillSync, suggestOyelabsCoursesSync } from "../oyelabs/assign/match";
 
 /**
  * v4.4 Phase 6: the onboarding preview. Everything here is the real planning code, run on a setup
@@ -52,13 +53,16 @@ export function previewSetup(catalog: Catalog, input: SetupInput): LearnerSetup 
  * published in the library (Phase 5's duplicate check, `libraryCourseFor`, so the card names exactly
  * the courses the path builder would ask for).
  */
-export function uncoveredSkills(db: Db, content: ContentStore | null, catalog: Catalog, skillIds: readonly string[]): string[] {
+export function uncoveredSkills(db: Db, content: ContentStore | null, catalog: Catalog, skillIds: readonly string[], departmentId?: string | null): string[] {
   const skills = new Map(catalog.skills.map((s) => [s.id, s]));
   const available = new Set(content ? content.manifest.flatMap((t) => t.modules.filter((m) => m.available).map((m) => m.id)) : []);
+  // v4.5 Phase 4: an Oyelabs course covering the skill is used first, so nothing is made for it.
+  const own = departmentId === undefined ? [] : oyelabsCoursesFor(db, departmentId);
   return [...new Set(skillIds)].filter((id) => {
     const skill = skills.get(id);
     if (!skill) return false;
     if (skill.contentModules.some((m) => available.has(m))) return false;
+    if (oyelabsCoversSkillSync(db, own, { skillId: id, name: skill.name, aliases: skill.aliases })) return false;
     return libraryCourseFor(db, courseKey({ skillId: id, skill: skill.name }), skill.name)?.state !== "published";
   });
 }
@@ -114,7 +118,13 @@ export function onboardPreview(db: Db, content: ContentStore | null, input: Setu
     const plan = planGoalPath(ctx, { gaps: [], refreshSkill: null, assessmentFoundGaps: false });
     const pathSkillIds = plan.items.map((i) => i.skillId).filter((id): id is string => id != null);
     out.firstSteps = firstStepsFrom({ pathSkillIds, skills, intents: setup.intents, coreSkillIds: core, trackId: setup.trackId, trackName });
-    out.newCourses = uncoveredSkills(db, content, catalog, pathSkillIds).map((id) => skills.get(id)!.name);
+    out.newCourses = uncoveredSkills(db, content, catalog, pathSkillIds, setup.departmentId).map((id) => skills.get(id)!.name);
+    out.oyelabsCourses = suggestOyelabsCoursesSync(db, { description: setup.description, departmentId: setup.departmentId, skillIds: pathSkillIds }).map((m) => ({
+      courseId: m.courseId,
+      title: m.title,
+      reason: m.reason,
+      score: m.score,
+    }));
   }
   return out;
 }

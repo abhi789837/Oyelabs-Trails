@@ -11,6 +11,7 @@ import { EmptyState, ErrorState } from "@/v5/design/components/States";
 import { cn } from "@/v5/design/cn";
 import { transitions } from "@/v5/design/motion";
 import type { LengthBucket, LibraryItem, LibraryLevel, LibraryResponse } from "@shared/me";
+import { OYELABS_BADGE_TEXT } from "@shared/oyelabsCore";
 
 import { LibrarySkeleton } from "../skeletons";
 import { PageFrame, V5Screen, formatMinutes, useApiData, useDelayed } from "../me/page";
@@ -171,6 +172,15 @@ export function FormatChip({ format }: { format: LibraryItem["format"] }) {
   );
 }
 
+/** v4.5: the company's own course. */
+export function OyelabsBadge(): ReactNode {
+  return (
+    <Badge tone="brand" data-testid="oyelabs-badge">
+      {OYELABS_BADGE_TEXT}
+    </Badge>
+  );
+}
+
 export function RecommendedBadge({ why }: { why: string | null }): ReactNode {
   return (
     <Badge tone="brand" title={why ?? undefined}>
@@ -191,6 +201,7 @@ function CourseCard({ item }: { item: LibraryItem }) {
       data-testid="library-card"
     >
       <div className="flex flex-wrap items-center gap-1.5">
+        {item.oyelabs ? <OyelabsBadge /> : null}
         {item.recommended ? <RecommendedBadge why={item.recommendedWhy} /> : null}
         {finished ? <Badge tone="success">Finished</Badge> : started ? <Badge tone="info">In progress</Badge> : null}
         <Badge tone="outline">{item.kind === "module" ? "Module" : "Course"}</Badge>

@@ -10,7 +10,8 @@ import { CodexCliProvider } from "./adapters/codexCli";
 import { MockProvider } from "./adapters/mock";
 import { OpenAiApiProvider } from "./adapters/openaiApi";
 import { redact } from "./adapters/spawnJson";
-import { getSettings, revealSecret, type StoredCredential } from "./credentials";
+import { getSettings, listCredentials, revealSecret, type StoredCredential } from "./credentials";
+import { openAiEmbedder } from "../oyelabs/assign/embed";
 import { AiBudgetPausedError, budgetStatus, isRoutable, routeFor, storeAvailableModels, warnOnBudget } from "./router";
 import { costMicros, taskForPurpose, type AiTask } from "../../../shared/aiRouting";
 import { AiOutputError, AiProviderError, type AiProvider, type GenerateJsonRequest, type GenerateJsonResult } from "./types";
@@ -110,6 +111,21 @@ export class AiService {
         if (this.env.isProduction) throw new AiNotConfiguredError("The mock provider is not available in production.");
         return new MockProvider();
     }
+  }
+
+  /**
+   * v4.5 Phase 4: text embeddings (catalog matching) through a stored OpenAI credential, which
+   * need not be the active one. Lives here because this is the one place allowed to decrypt a
+   * credential. Null with the mock provider or when no usable OpenAI credential is stored; callers
+   * then use the local embedder.
+   */
+  async embedTexts(texts: readonly string[]): Promise<{ model: string; vectors: Float32Array[] } | null> {
+    if (this.options.mock) return null;
+    const credential = listCredentials(this.db).find((c) => c.provider === "openai-api" && c.status !== "failed");
+    const secret = credential ? revealSecret(this.db, this.env, credential.id) : null;
+    if (!secret) return null;
+    const embedder = openAiEmbedder(secret);
+    return { model: embedder.model, vectors: await embedder.embed(texts) };
   }
 
   /**

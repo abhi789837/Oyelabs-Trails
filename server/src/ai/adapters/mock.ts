@@ -4,6 +4,7 @@ import { AiOutputError, type AiProvider, type GenerateJsonRequest, type Generate
 import { fixtureBlueprint, fixtureCritic, fixtureExplainItems, fixtureItems } from "./mockFixtures";
 import { fixtureGeneratedItems, fixtureMcqCheck, fixturePlan } from "./mockPersonalise";
 import { fixtureGoalInterpret, fixtureOnboardSuggest } from "./mockGoals";
+import { fixtureModuleTests } from "./mockModuleTests";
 import { fixtureRoleplayReply, fixtureRoleplayScore } from "./mockRoleplay";
 import { fixtureSpeakGrade } from "./mockSpeak";
 import { fixtureRubricGrade } from "./mockScoring";
@@ -117,6 +118,7 @@ export class MockProvider implements AiProvider {
       seed: this.calls++,
     };
 
+    if (request.schemaName?.startsWith("module_test_")) return fixtureModuleTests(request); // v4.5 module tests
     switch (request.schemaName) {
       case "blueprint":
         return fixtureBlueprint(context);

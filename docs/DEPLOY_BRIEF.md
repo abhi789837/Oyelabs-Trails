@@ -142,6 +142,15 @@ location /api/admin/live/stream {
     proxy_buffering off;        # nginx buffers SSE by default; without this the admin
     proxy_read_timeout 24h;     # live view arrives in batches, minutes late
 }
+location /api/admin/oyelabs/uploads {
+    client_max_body_size 1100m; # v4.5 uploads: nginx defaults to 1 MB, so every upload over it fails with 413
+    proxy_request_buffering off;
+    proxy_read_timeout 600s;
+    proxy_pass http://127.0.0.1:8787;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
 location / {
     proxy_pass http://127.0.0.1:8787;
     proxy_set_header Host $host;
@@ -239,6 +248,15 @@ will return `password_change_required` rather than data.
   the newest 14. **They are on the same volume as the database** — copy them off the host
   separately, e.g. `docker compose cp oyelearn:/data/backups ./backups` on a schedule. Nothing in
   the repo does this.
+- **Uploads (v4.5 Oyelabs courses):** docs and videos admins upload live in `/data/uploads/` on
+  the same volume, unencrypted (access is checked by the app). **The nightly backup covers only the
+  database: copy `/data/uploads` off the host too**, e.g. `docker compose cp oyelearn:/data/uploads ./uploads`
+  on the same schedule. Limits: docs 50 MB, videos 1 GB; converting a 1 GB video can need another
+  1 GB of disk while it runs. Uploads that no course, draft or saved version uses are deleted after
+  7 days. The proxy must allow the body size: `Caddyfile.example` has a 1100 MB cap on
+  `/api/admin/oyelabs/uploads`; **nginx needs `client_max_body_size 1100m`** on that location (its
+  default is 1 MB), shown in §5.2. The image includes `ffmpeg` for converting videos; at boot the
+  server log says "Video conversion isn't available" if it is missing.
 - **Logs:** `docker compose logs oyelearn`. Structured JSON via pino; cookies, authorization
   headers, and password and secret body fields are redacted.
 - **Snapshots:** proctoring images under `/data/snapshots/`, deleted after

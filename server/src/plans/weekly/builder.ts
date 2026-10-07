@@ -12,6 +12,7 @@ import {
   type WeeklyPlanItem,
   type WeeklyPlanLanes,
 } from "../../../../shared/weeklyPlan";
+import { assignedFirst, assignedRest, type WeekRulesApi } from "../../oyelabs/assign/weekRules";
 import { isSkipped, matchesFor, skillsRelated } from "./matching";
 import type { BuildWeekInput, Candidate } from "./types";
 
@@ -174,6 +175,24 @@ export function buildWeek(input: BuildWeekInput): WeeklyPlanDraft {
     });
   }
 
+  // --- 2a. Courses an admin added (v4.5) -------------------------------------
+  /* "Required for everyone in this department" goes to Do it now in the first weeks, in module
+     order, with any unmet prerequisite first; then Most important courses. Important and Nice to
+     have wait until after the path (2c). See oyelabs/assign/weekRules.ts. */
+  const rules: WeekRulesApi = {
+    weekNumber: input.weekNumber,
+    doNowCap,
+    mustKnowCap,
+    take: (candidate, lane, reason, source, options) => take(candidate, lane, reason, source, options),
+    used: (key) => used.has(key),
+    laneItems: (lane) => selections.filter((s) => s.lane === lane).length,
+    dependOn: (dependentKey, prereqKey) => {
+      const owner = selections.find((s) => s.candidate.key === dependentKey);
+      if (owner && !owner.dependsOn.includes(prereqKey)) owner.dependsOn.push(prereqKey);
+    },
+  };
+  assignedFirst(pool, rules);
+
   // --- 2b. The learning path, in its order (v4.3) ---------------------------
   /* The path is already the decision about what comes first (goals, the skill graph and the
      evaluation, see shared/pathOrder.ts), so the week takes the next path lessons in that order until
@@ -187,6 +206,9 @@ export function buildWeek(input: BuildWeekInput): WeeklyPlanDraft {
 
      What does not fit this week is next week's start. */
   pathWeek(pool, take, selections, { spent: () => spent, ceiling, doNowCap, mustKnowCap });
+
+  // --- 2c. Important and Nice-to-have courses an admin added (v4.5) ----------
+  assignedRest(pool, rules);
 
   // --- 3. The admin's list, then the assessment's findings ------------------
   /* `gaps` arrives ordered by `sortGaps`: admin-listed before AI-detected, then by score. That

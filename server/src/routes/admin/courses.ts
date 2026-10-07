@@ -303,14 +303,29 @@ export async function registerAdminCourseRoutes(app: FastifyInstance): Promise<v
     const unknown = userIds.filter((id) => !learners.has(id));
     if (unknown.length > 0) throw badRequest(`${unknown.length} of those are not learners.`);
 
-    app.db.delete(schema.courseAssignments).where(eq(schema.courseAssignments.courseId, courseId)).run();
-    const timestamp = now();
-    for (const userId of userIds) {
+    // v4.5: replace the set, but keep the rows that stay (their priority, source and date), so
+    // re-saving the list here never wipes a priority picked on the People sheet.
+    const wanted = new Set(userIds);
+    const existing = new Set(
       app.db
-        .insert(schema.courseAssignments)
-        .values({ courseId, userId, assignedBy: actor.id, assignedAt: timestamp })
-        .run();
-    }
+        .select({ userId: schema.courseAssignments.userId })
+        .from(schema.courseAssignments)
+        .where(eq(schema.courseAssignments.courseId, courseId))
+        .all()
+        .map((row) => row.userId),
+    );
+    const timestamp = now();
+    app.db.transaction((tx) => {
+      for (const userId of existing) {
+        if (!wanted.has(userId)) {
+          tx.delete(schema.courseAssignments).where(and(eq(schema.courseAssignments.courseId, courseId), eq(schema.courseAssignments.userId, userId))).run();
+        }
+      }
+      for (const userId of wanted) {
+        if (existing.has(userId)) continue;
+        tx.insert(schema.courseAssignments).values({ courseId, userId, assignedBy: actor.id, assignedAt: timestamp }).run();
+      }
+    });
     touch(app, courseId);
     return { assigned: userIds.length };
   });

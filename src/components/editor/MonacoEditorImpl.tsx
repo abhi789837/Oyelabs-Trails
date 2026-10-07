@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
 // The editor's own font (below), declared here so it loads in either design: since Phase 9 the
 // old UI's fonts are no longer global (src/fonts/legacyFonts.ts).
-import "@fontsource/ibm-plex-mono/400.css";
-import "@fontsource/ibm-plex-mono/500.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
 
 import { editorScopeProps, registerCopySource } from "@/features/proctor/editorScope";
 import { useUiStore } from "@/store/uiStore";
@@ -67,7 +66,7 @@ export default function MonacoEditorImpl({
       automaticLayout: true,
       minimap: { enabled: false },
       scrollBeyondLastLine: false,
-      fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+      fontFamily: "'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace",
       fontSize: 14,
       lineHeight: 21,
       tabSize: language === "python" || language === "java" || language === "php" ? 4 : 2,

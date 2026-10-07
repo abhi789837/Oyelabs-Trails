@@ -39,6 +39,11 @@ export interface OnboardPreview {
   firstSteps: string[];
   /** Names of skills on the path that no course covers yet; Oyelearn will create them. */
   newCourses: string[];
+  /**
+   * v4.5 Phase 4: Oyelabs courses that fit the description (from the `path` step), best first,
+   * each with a plain reason ("Added because it's Oyelabs' own process for white-label projects.").
+   */
+  oyelabsCourses?: { courseId: string; title: string; reason: string; score: number }[];
   /** For "Show details": questions per skill, in asking order (from the `test` step on). */
   questions?: { skillId: string; skillName: string; count: number; spoken: number }[];
 }

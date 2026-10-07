@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { GATE_LIMITS, type GateCheck, type TestItemGates, type TestItemPayload, type TopicGroundingContent } from "../../../shared/topicTests";
 import { sizeProblems } from "../../../shared/timing";
+import type { AiTask } from "../../../shared/aiRouting";
+import type { AiPurpose } from "../../../shared/enums";
 import type { AiService } from "../ai/service";
+import type { GenerateJsonRequest } from "../ai/types";
 import { citationProblem, normaliseWs, sha } from "./grounding";
 
 /**
@@ -287,10 +290,28 @@ export interface GateDeps {
 }
 
 /**
+ * v4.5 (module tests): optional overrides for the three AI calls (task, purpose, schema names, cost
+ * attribution). Every field defaults to the v4.3 topic-test value.
+ */
+export interface GateOverrides {
+  purpose?: AiPurpose;
+  relevanceTask?: AiTask;
+  answerTask?: AiTask;
+  relevanceSchemaName?: string;
+  answerSchemaName?: string;
+  meta?: GenerateJsonRequest<unknown>["meta"];
+}
+
+/**
  * Runs every gate over a batch of one topic's candidates. Returns one outcome per candidate key.
  * Throws when the AI layer is not configured or a call fails; the caller decides what that means.
  */
-export async function runGates(deps: GateDeps, grounding: TopicGroundingContent, candidates: GateCandidate[]): Promise<Map<string, GateOutcome>> {
+export async function runGates(
+  deps: GateDeps,
+  grounding: TopicGroundingContent,
+  candidates: GateCandidate[],
+  overrides: GateOverrides = {},
+): Promise<Map<string, GateOutcome>> {
   const outcomes = new Map<string, GateOutcome>();
   const live: GateCandidate[] = [];
   for (const candidate of candidates) {
@@ -307,7 +328,12 @@ export async function runGates(deps: GateDeps, grounding: TopicGroundingContent,
   }
   if (live.length === 0) return outcomes;
 
-  const meta = {};
+  const meta = overrides.meta ?? {};
+  const purpose = overrides.purpose ?? "topic_test_check";
+  const relevanceTask = overrides.relevanceTask ?? "topic_test_relevance";
+  const answerTask = overrides.answerTask ?? "topic_test_answer";
+  const relevanceSchemaName = overrides.relevanceSchemaName ?? "topic_test_relevance";
+  const answerSchemaName = overrides.answerSchemaName ?? "topic_test_answer";
   const passages = passagesBlock(grounding);
 
   // 1. Relevance: does the cited passage support the key?
@@ -320,12 +346,12 @@ export async function runGates(deps: GateDeps, grounding: TopicGroundingContent,
     ...live.map((c, i) => itemBlock(i + 1, c.payload, c.payload.options.map((_, k) => k), true)),
   ].join("\n");
   const relevance = await deps.ai.generateJson({
-    purpose: "topic_test_check",
-    task: "topic_test_relevance",
+    purpose,
+    task: relevanceTask,
     system: RELEVANCE_SYSTEM,
     user: relevanceUser,
     schema: relevanceSchema,
-    schemaName: "topic_test_relevance",
+    schemaName: relevanceSchemaName,
     meta,
   });
 
@@ -333,21 +359,21 @@ export async function runGates(deps: GateDeps, grounding: TopicGroundingContent,
   const withOrders = live.map((c) => shuffledOrder(c.payload.options.length, `${c.key}:with`));
   const withoutOrders = live.map((c) => shuffledOrder(c.payload.options.length, `${c.key}:without`));
   const withContent = await deps.ai.generateJson({
-    purpose: "topic_test_check",
-    task: "topic_test_answer",
+    purpose,
+    task: answerTask,
     system: ANSWER_WITH_SYSTEM,
     user: [`Topic: ${grounding.title}`, "Passages:", passages, "", "Items:", ...live.map((c, i) => itemBlock(i + 1, c.payload, withOrders[i], false))].join("\n"),
     schema: answerSchema,
-    schemaName: "topic_test_answer",
+    schemaName: answerSchemaName,
     meta,
   });
   const withoutContent = await deps.ai.generateJson({
-    purpose: "topic_test_check",
-    task: "topic_test_answer",
+    purpose,
+    task: answerTask,
     system: ANSWER_WITHOUT_SYSTEM,
     user: ["Items:", ...live.map((c, i) => itemBlock(i + 1, c.payload, withoutOrders[i], false))].join("\n"),
     schema: answerSchema,
-    schemaName: "topic_test_answer",
+    schemaName: answerSchemaName,
     meta,
   });
 

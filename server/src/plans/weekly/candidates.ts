@@ -4,6 +4,9 @@ import type { EvaluationResult } from "../../../../shared/assessment";
 import { isMarkerModuleId, type PartType } from "../../../../shared/builder";
 import type { ContentStore } from "../../content/store";
 import { schema, type Db } from "../../db";
+import type { AssignmentPriority } from "../../../../shared/oyelabsCourses";
+import { higherPriority } from "../../oyelabs/assign/repo";
+import { isCourseVisible, learnerVisibilityFacts } from "../../oyelabs/visibility";
 import { latestPublishedPlan } from "../repo";
 import type { Candidate } from "./types";
 
@@ -136,6 +139,8 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
       title: schema.courses.title,
       audience: schema.courses.audience,
       position: schema.courses.position,
+      published: schema.courses.published,
+      departmentId: schema.courses.departmentId,
     })
     .from(schema.courses)
     .where(eq(schema.courses.published, true))
@@ -143,15 +148,11 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
     .all();
 
   if (published.length > 0) {
-    const assigned = new Set(
-      db
-        .select({ courseId: schema.courseAssignments.courseId })
-        .from(schema.courseAssignments)
-        .where(eq(schema.courseAssignments.userId, userId))
-        .all()
-        .map((row) => row.courseId),
-    );
-    const visible = published.filter((course) => course.audience === "everyone" || assigned.has(course.id));
+    /* v4.5: the one visibility rule (assignment, department rule, or an everyone-course in the
+       learner's department), so a week never schedules a course the library would hide. */
+    const facts = learnerVisibilityFacts(db, userId);
+    const visible = published.filter((course) => isCourseVisible(course, facts));
+    const assignment = assignmentFacts(db, userId, facts.departmentId);
 
     if (visible.length > 0) {
       const courseIds = visible.map((course) => course.id);
@@ -207,10 +208,12 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
         return a.position - b.position;
       });
 
+      const courseStart = candidates.length;
       ordered.forEach((lesson, index) => {
         const course = courseById.get(lesson.courseId);
         const sectionTitle = sectionById.get(lesson.sectionId)?.title ?? "";
         const part = partByCourse.get(lesson.courseId);
+        const priority = assignment.priority.get(lesson.courseId);
         candidates.push({
           key: lesson.id,
           topicId: null,
@@ -226,8 +229,12 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
           done: doneLessons.has(lesson.id),
           href: `/courses/${lesson.courseId}`,
           ...pathFields(part),
+          ...(priority ? { assignedPriority: priority } : {}),
+          ...(assignment.required.has(lesson.courseId) ? { required: true } : {}),
         });
       });
+      // v4.5: prerequisites from the skill graph for the courses an admin added (weekRules.ts).
+      attachPrerequisites(db, candidates, candidates.slice(courseStart), [...assignment.priority.keys(), ...assignment.required]);
     }
   }
 
@@ -260,4 +267,75 @@ export function strengthsFor(db: Db, userId: string): string[] {
     .filter((area) => area.level >= 4)
     .map((area) => area.area)
     .slice(0, 3);
+}
+
+/**
+ * v4.5: each course's priority for this learner (their assignment, or a rule for their department,
+ * whichever is more important) and which courses are required for everyone in their department.
+ */
+function assignmentFacts(db: Db, userId: string, departmentId: string) {
+  const priority = new Map<string, AssignmentPriority>();
+  const required = new Set<string>();
+  for (const rule of db.select().from(schema.courseDepartmentRules).where(eq(schema.courseDepartmentRules.departmentId, departmentId)).all()) {
+    priority.set(rule.courseId, rule.priority);
+    if (rule.required) required.add(rule.courseId);
+  }
+  for (const row of db.select().from(schema.courseAssignments).where(eq(schema.courseAssignments.userId, userId)).all()) {
+    const p = higherPriority(row.priority, priority.get(row.courseId));
+    if (p) priority.set(row.courseId, p);
+  }
+  return { priority, required };
+}
+
+/** How many unfinished lessons one prerequisite skill may put in front of a course. */
+const PREREQ_LESSONS_PER_SKILL = 2;
+
+/**
+ * v4.5: for each course an admin added, the unfinished lessons that teach a prerequisite of one of
+ * its skills (`skill_edges`, type `prerequisite`): lessons of other courses tagged with that skill,
+ * and curriculum topics in the skill's content modules. A prerequisite counts as unmet while any of
+ * those lessons is unfinished; the first few are stored on the course's lessons as `prereqKeys`.
+ */
+function attachPrerequisites(db: Db, all: Candidate[], courseLessons: Candidate[], courseIds: readonly string[]): void {
+  const ids = [...new Set(courseIds)];
+  if (ids.length === 0) return;
+  const courseSkills = db.select().from(schema.courseSkills).where(inArray(schema.courseSkills.courseId, ids)).all();
+  if (courseSkills.length === 0) return;
+  const edges = db
+    .select({ from: schema.skillEdges.fromSkill, to: schema.skillEdges.toSkill })
+    .from(schema.skillEdges)
+    .where(and(eq(schema.skillEdges.type, "prerequisite"), inArray(schema.skillEdges.toSkill, [...new Set(courseSkills.map((r) => r.skillId))])))
+    .all();
+  if (edges.length === 0) return;
+  const prereqSkills = [...new Set(edges.map((e) => e.from))];
+
+  // Who teaches each prerequisite skill: courses tagged with it, curriculum modules listed on it.
+  const teachingCourses = new Map<string, Set<string>>();
+  for (const row of db.select().from(schema.courseSkills).where(inArray(schema.courseSkills.skillId, prereqSkills)).all()) {
+    teachingCourses.set(row.skillId, (teachingCourses.get(row.skillId) ?? new Set()).add(row.courseId));
+  }
+  const modules = new Map(
+    db
+      .select({ id: schema.skills.id, modules: schema.skills.contentModules })
+      .from(schema.skills)
+      .where(inArray(schema.skills.id, prereqSkills))
+      .all()
+      .map((r) => [r.id, new Set(r.modules)] as const),
+  );
+  const lessonsFor = (skillId: string, notCourse: string) =>
+    all
+      .filter((c) => (c.courseId ? c.courseId !== notCourse && teachingCourses.get(skillId)?.has(c.courseId) : modules.get(skillId)?.has(c.groupId)))
+      .sort((a, b) => a.order - b.order);
+
+  for (const courseId of ids) {
+    const skills = new Set(courseSkills.filter((r) => r.courseId === courseId).map((r) => r.skillId));
+    const keys: string[] = [];
+    for (const edge of edges.filter((e) => skills.has(e.to))) {
+      const lessons = lessonsFor(edge.from, courseId);
+      if (lessons.length === 0 || lessons.every((c) => c.done)) continue;
+      for (const c of lessons.filter((l) => !l.done).slice(0, PREREQ_LESSONS_PER_SKILL)) if (!keys.includes(c.key)) keys.push(c.key);
+    }
+    if (keys.length === 0) continue;
+    for (const lesson of courseLessons) if (lesson.courseId === courseId) lesson.prereqKeys = keys;
+  }
 }

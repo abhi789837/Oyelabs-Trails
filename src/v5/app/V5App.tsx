@@ -66,6 +66,10 @@ const OnboardPage = lazy(() => import("@/v5/admin/onboard/OnboardPage"));
 const CourseEditPage = lazy(
   () => import("@/v5/admin/library/editor/CourseEditPage"),
 );
+// v4.5: the one-page Oyelabs course editor (new, and editing a saved one).
+const OyelabsEditorPage = lazy(
+  () => import("@/v5/admin/library/oyelabs/OyelabsEditorPage"),
+);
 const AnnouncementsPage = lazy(
   () => import("@/v5/admin/feedback/AnnouncementsPage"),
 );
@@ -230,6 +234,8 @@ export default function V5App() {
           <Route path="people" element={<B><PeoplePage /></B>} />
           <Route path="library" element={<B><LibraryAdminPage /></B>} />
           <Route path="library/:courseId/edit" element={<B><CourseEditPage /></B>} />
+          <Route path="library/oyelabs/new" element={<B><OyelabsEditorPage /></B>} />
+          <Route path="library/:courseId/oyelabs" element={<B><OyelabsEditorPage /></B>} />
           <Route path="reports" element={<B><ReportsPage /></B>} />
           <Route path="onboard" element={<B><OnboardPage /></B>} />
           <Route path="announcements" element={<B><AnnouncementsPage /></B>} />

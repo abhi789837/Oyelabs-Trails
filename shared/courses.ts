@@ -36,6 +36,12 @@ export const courseTopicSchema = z.object({
   links: z.array(courseLinkSchema),
   estMinutes: z.number(),
   position: z.number(),
+  /**
+   * v4.5: present only as "module" — the managed lesson of an Oyelabs module (playlist from
+   * `course_videos`, docs, notes, finished by passing the module test). Absent = an ordinary lesson,
+   * so version snapshots of existing courses are unchanged.
+   */
+  kind: z.literal("module").optional(),
 });
 export type CourseTopic = z.infer<typeof courseTopicSchema>;
 
@@ -63,6 +69,8 @@ export const courseSchema = z.object({
   level: z.enum(["beginner", "intermediate", "advanced", "expert"]).nullable().default(null),
   /** v4. Null = shown to every department. */
   departmentId: z.string().nullable().default(null),
+  /** v4.5: present (true) only on an Oyelabs course; drives the badge. Absent = false. */
+  oyelabs: z.literal(true).optional(),
   sections: z.array(courseSectionSchema),
 });
 export type Course = z.infer<typeof courseSchema>;

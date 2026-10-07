@@ -38,6 +38,10 @@ export const AI_TASKS = [
   "topic_test_answer",
   "tutor_answer",
   "tutor_solution",
+  "module_test_write",
+  "module_test_relevance",
+  "module_test_answer",
+  "course_skill_suggest",
 ] as const;
 export const aiTaskSchema = z.enum(AI_TASKS);
 export type AiTask = z.infer<typeof aiTaskSchema>;
@@ -84,6 +88,10 @@ export const TASK_DEFAULTS: Record<AiTask, TaskDefault> = {
   topic_test_answer: { label: "Topic tests: answering items blind (with and without the content)", model: HAIKU, maxTokens: 800, urgent: false, batch: false, note: "Two calls per topic checked" },
   tutor_answer: { label: "Ask Oye: answering a learner's question in a lesson", model: HAIKU, maxTokens: 700, urgent: true, batch: false, note: "One call per question; the lesson text is cached; daily limit per learner" },
   tutor_solution: { label: "Ask Oye: writing a worked solution for a coding practice", model: HAIKU, maxTokens: 1500, urgent: true, batch: false, note: "Once per challenge, checked against every test, then cached" },
+  module_test_write: { label: "Oyelabs courses: writing a module test from its docs and videos", model: SONNET, maxTokens: 6000, urgent: false, batch: false, note: "One call per changed module; the module text is the cached prefix; about $0.05 a module" },
+  module_test_relevance: { label: "Oyelabs courses: does the cited passage support the key", model: HAIKU, maxTokens: 2000, urgent: false, batch: false, note: "One call per module checked" },
+  module_test_answer: { label: "Oyelabs courses: answering module items blind (with and without the material)", model: HAIKU, maxTokens: 800, urgent: false, batch: false, note: "Two calls per module checked" },
+  course_skill_suggest: { label: "Oyelabs courses: suggesting skills in the editor", model: HAIKU, maxTokens: 600, urgent: true, batch: false, note: "One small call per Suggest; the catalog prompt is cached" },
 };
 
 /** Calls that predate task types are routed by their purpose. */
@@ -132,6 +140,12 @@ export function taskForPurpose(purpose: AiPurpose): AiTask {
       return "topic_test_relevance";
     case "tutor":
       return "tutor_answer";
+    case "module_test_write":
+      return "module_test_write";
+    case "module_test_check":
+      return "module_test_relevance";
+    case "course_skill_suggest":
+      return "course_skill_suggest";
   }
 }
 

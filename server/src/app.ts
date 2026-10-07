@@ -61,6 +61,7 @@ import { registerV5LessonRoutes } from "./v5/lesson/register";
 import { registerV5MotivationRoutes } from "./v5/notify/routes";
 import { registerV5CertificateRoutes } from "./v5/certificates/routes";
 import { registerV5AssessmentRoutes } from "./v5/assessment/routes";
+import { registerOyelabsRoutes } from "./oyelabs/routes";
 import type { CodeSandbox } from "./sandbox";
 import { PistonClient } from "./sandbox/polyglot";
 
@@ -274,6 +275,8 @@ export async function buildApp({
   await app.register(registerAdminBulkOnboardRoutes);
   // v5 Admin (P7): /api/admin/v5/{inbox,people,overview,reports,library,courses/:id/versions}.
   await app.register(registerV5AdminRoutes);
+  // v4.5 Oyelabs courses: editor, media, module tests, assignments (server/src/oyelabs/routes.ts).
+  await registerOyelabsRoutes(app);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

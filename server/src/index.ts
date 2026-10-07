@@ -21,7 +21,8 @@ import { batchPollHandler } from "./ai/batches";
 import { ensurePistonPackages } from "./sandbox/pistonSetup";
 import { enqueue } from "./jobs/queue";
 import { buildPathHandler } from "./jobs/handlers/buildPath";
-import { courseGenerateHandler, wakeIfReady } from "./builder/autoCourse";
+import { courseGenerateHandler } from "./builder/autoCourse";
+import { recheckBlocked } from "./builder/connection";
 import { refineWeekHandler } from "./jobs/handlers/refineWeek";
 import { checkLinksHandler } from "./jobs/handlers/checkLinks";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
@@ -31,6 +32,7 @@ import { transcribeHandler } from "./speech/transcribeJob";
 import { ensureBootRescore, rescoreHandler } from "./assessment/rescoreJob";
 import { publishGenerationLine } from "./routes/admin/live";
 import { createSandbox } from "./sandbox";
+import { oyelabsJobHandlers, startOyelabsSchedulers } from "./oyelabs/jobs";
 
 async function main(): Promise<void> {
   const env = loadEnv();
@@ -94,6 +96,8 @@ async function main(): Promise<void> {
       "topic_tests.fill": topicTestFillHandler({ db, ai, content, sandbox, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "speech.transcribe": transcribeHandler({ db, env, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "scoring.rescore": rescoreHandler({ db, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      // v4.5 Oyelabs courses (server/src/oyelabs/jobs.ts).
+      ...oyelabsJobHandlers({ db, env, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },
     log: (message, detail) => console.log(`[oyelearn] ${message}`, detail ?? ""),
   });
@@ -127,18 +131,19 @@ async function main(): Promise<void> {
   }, WEEK_MS);
   linkCheck.unref?.();
 
-  /* v4.4: new courses waiting for the AI or web search wake when the settings are saved; this also
-     catches setup that arrives another way (an env key, a restored database). */
+  /* v4.5 P0: new courses blocked on the AI or web search are re-checked every 10 minutes (and once
+     at boot), reading the settings fresh; saving the settings or a passing Test wakes them at once.
+     A blocked course clears on its own: setup that arrives another way (an env key, a restored
+     database, a quota that reset) is noticed here. */
   const wakeCourses = () => {
-    try {
-      const woken = wakeIfReady({ db, env, ai });
-      if (woken > 0) console.log(`[oyelearn] ${woken} new course(s) can be made now`);
-    } catch (error) {
-      console.error("[oyelearn] could not wake waiting courses:", error instanceof Error ? error.message : error);
-    }
+    void recheckBlocked({ db, env, ai })
+      .then((woken) => {
+        if (woken > 0) console.log(`[oyelearn] ${woken} new course(s) can be made now`);
+      })
+      .catch((error: unknown) => console.error("[oyelearn] could not re-check waiting courses:", error instanceof Error ? error.message : error));
   };
   wakeCourses();
-  const courseWake = setInterval(wakeCourses, 5 * 60 * 1000);
+  const courseWake = setInterval(wakeCourses, 10 * 60 * 1000);
   courseWake.unref?.();
 
   // v5: weekly streaks and milestone XP, recomputed nightly (reads recompute too).
@@ -147,6 +152,9 @@ async function main(): Promise<void> {
   const stopMotivation = startMotivationScheduler({ db, content, appUrl: env.publicOrigin, log: (m) => console.log(`[oyelearn] ${m}`) });
 
   // Snapshot retention and the nightly backup (brief §10.6, §15).
+  // v4.5: the daily re-check of Oyelabs course video and doc links.
+  const stopOyelabs = startOyelabsSchedulers({ db, env, ai, log: (m) => console.log(`[oyelearn] ${m}`) });
+
   const stopMaintenance = startDailyMaintenance({
     db,
     sqlite,
@@ -161,6 +169,7 @@ async function main(): Promise<void> {
       clearInterval(linkCheck);
       clearInterval(courseWake);
       stopMaintenance();
+      stopOyelabs();
       stopStreaks();
       stopMotivation();
       await worker.stop();

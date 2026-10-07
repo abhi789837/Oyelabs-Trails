@@ -16,7 +16,7 @@ import { currentPath } from "../builder/repo";
 import { libraryResources } from "../builder/autoCourse";
 import { completedTopicIds, coursesFor, getCourse, mayOpenCourse } from "../courses/repo";
 import { schema } from "../db";
-import { badRequest, notFound, parseOrThrow } from "../lib/errors";
+import { badRequest, conflict, notFound, parseOrThrow } from "../lib/errors";
 import { now } from "../lib/ids";
 import { listNotifications, markAllRead, unreadCount } from "../lib/notify";
 import { allowedTopicIdsFor, latestPublishedPlan } from "../plans/repo";
@@ -101,6 +101,8 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
     const topic = app.db.select().from(schema.courseTopics).where(eq(schema.courseTopics.id, topicId)).get();
     if (!topic) throw notFound("No such lesson.");
     if (!mayOpenCourse(app.db, user.id, topic.courseId)) throw notFound("No such lesson.");
+    // v4.5: an Oyelabs module is finished only by passing its module test (oyelabs/moduleTests).
+    if (topic.kind === "module") throw conflict("Pass the module test to finish this module.");
 
     if (done) {
       app.db

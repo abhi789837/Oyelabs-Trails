@@ -22,6 +22,15 @@ import fs from "node:fs";
  *   content quality gate already checks.
  * - `script-src https://www.youtube.com` — v4.3: the YouTube IFrame Player API (`/iframe_api`, which
  *   loads its widget script from the same host), so the topic playlist can track watching.
+ * - v4.5 Oyelabs module videos (server/src/oyelabs/media):
+ *   - `script-src https://player.vimeo.com`: the Vimeo Player SDK, so Vimeo entries track exactly.
+ *   - `img-src`: the thumbnail hosts the resolver stores (Vimeo, Loom, Drive and its
+ *     googleusercontent redirect, Box). Thumbnails are images only; no script runs from them.
+ *   - `media-src https:`: the HTML5 player plays direct files and Dropbox raw links from any
+ *     CDN/bucket an admin pastes (S3, R2, CloudFront, …); uploads are `'self'`.
+ *   - `connect-src https:`: hls.js (lazy, only for `.m3u8`) fetches the playlist and segments with
+ *     XHR from the same unknown CDNs. It is a connect permission, not a script one.
+ *   - Drive, OneDrive/SharePoint, Box and Loom embeds are iframes: `frame-src https:` (above).
  * - The `index.html` theme bootstrap stays inline (it must run before first paint to avoid a
  *   light/dark flash), so it is allowed by its SHA-256 hash rather than by `'unsafe-inline'`.
  */
@@ -54,13 +63,24 @@ export function buildCsp({ indexHtmlPath }: CspOptions = {}): Record<string, str
 
   return {
     "default-src": ["'self'"],
-    "script-src": ["'self'", "'wasm-unsafe-eval'", "https://www.youtube.com", ...scriptHashes],
+    "script-src": ["'self'", "'wasm-unsafe-eval'", "https://www.youtube.com", "https://player.vimeo.com", ...scriptHashes],
     "style-src": ["'self'", "'unsafe-inline'"],
     "font-src": ["'self'", "data:"],
     // YouTube thumbnails, canvas snapshots (blob:) and inlined SVGs (data:).
-    "img-src": ["'self'", "data:", "blob:", "https://i.ytimg.com", "https://img.youtube.com"],
-    "media-src": ["'self'", "blob:"],
-    "connect-src": ["'self'"],
+    "img-src": [
+      "'self'",
+      "data:",
+      "blob:",
+      "https://i.ytimg.com",
+      "https://img.youtube.com",
+      "https://i.vimeocdn.com",
+      "https://cdn.loom.com",
+      "https://drive.google.com",
+      "https://*.googleusercontent.com",
+      "https://*.boxcdn.net",
+    ],
+    "media-src": ["'self'", "blob:", "https:"],
+    "connect-src": ["'self'", "https:"],
     "worker-src": ["'self'", "blob:"],
     "child-src": ["'self'", "blob:"],
     "frame-src": ["'self'", "https:"],

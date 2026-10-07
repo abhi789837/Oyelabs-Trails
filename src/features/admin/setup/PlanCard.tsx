@@ -4,6 +4,10 @@ import { HelpCircle } from "lucide-react";
 import type { Catalog } from "@shared/catalog";
 import { choiceForSlider, PRIORITY_CHOICE_LABELS, PRIORITY_CHOICES, type OnboardPreview, type PriorityChoice } from "@shared/onboardPreview";
 import type { UnsureOption } from "@shared/intents";
+import { ASSIGNMENT_PRIORITIES, ASSIGNMENT_PRIORITY_LABELS, OYELABS_BADGE, type AssignmentPriority, type PickedCourse } from "@shared/oyelabsCourses";
+
+import { ClassicAddCourse } from "@/v5/admin/people/AddCourse";
+import { withPicked } from "@/v5/admin/people/courseAssign";
 
 import { Button } from "@/components/ui/button";
 import { PlainError } from "@/components/form/PlainError";
@@ -40,6 +44,12 @@ export interface PlanCardProps {
   changing?: boolean;
   sendLabel?: string;
   compact?: boolean;
+  /**
+   * v4.5 Phase 4: courses they get once the test is sent (picked here, or our Oyelabs
+   * suggestions accepted). Absent = the section is not shown (bulk onboarding).
+   */
+  courses?: PickedCourse[];
+  onCourses?: (courses: PickedCourse[]) => void;
 }
 
 export function PlanCard({
@@ -59,6 +69,8 @@ export function PlanCard({
   changing,
   sendLabel,
   compact,
+  courses,
+  onCourses,
 }: PlanCardProps) {
   const uid = useId();
   const now = currentRoleLine(state, catalog);
@@ -134,6 +146,18 @@ export function PlanCard({
               <p className="mt-0.5">{preview.firstSteps.join(" → ")}</p>
               <p className="text-xs text-muted-foreground">(We&rsquo;ll fine-tune this after the test.)</p>
             </div>
+          )}
+          {courses && onCourses && (
+            <CoursesSection
+              heading={heading}
+              name={displayName.trim().split(/\s+/)[0] || "They"}
+              departmentId={state.departmentId}
+              departmentName={catalog.departments.find((d) => d.id === state.departmentId)?.name}
+              suggested={preview?.oyelabsCourses ?? []}
+              courses={courses}
+              disabled={disabled}
+              onCourses={onCourses}
+            />
           )}
           {preview && preview.newCourses.length > 0 && (
             <p>
@@ -225,5 +249,105 @@ export function PlanCard({
         </div>
       </details>
     </section>
+  );
+}
+
+/**
+ * v4.5 Phase 4: "Courses they'll get". Oyelabs courses that fit the description are suggested with
+ * a plain reason; the admin adds them (or any other course) and picks how important each is.
+ */
+function CoursesSection({
+  heading,
+  name,
+  departmentId,
+  departmentName,
+  suggested,
+  courses,
+  disabled,
+  onCourses,
+}: {
+  heading: string;
+  name: string;
+  departmentId: string;
+  departmentName?: string;
+  suggested: NonNullable<OnboardPreview["oyelabsCourses"]>;
+  courses: PickedCourse[];
+  disabled?: boolean;
+  onCourses: (courses: PickedCourse[]) => void;
+}) {
+  const uid = useId();
+  const picked = new Set(courses.map((c) => c.courseId));
+  const open = suggested.filter((s) => !picked.has(s.courseId));
+  const setPriority = (courseId: string, priority: AssignmentPriority) => onCourses(courses.map((c) => (c.courseId === courseId ? { ...c, priority } : c)));
+  return (
+    <div>
+      <p className={heading} id={`${uid}-courses`}>
+        Courses they&rsquo;ll get
+      </p>
+      {courses.length === 0 && open.length === 0 && <p className="mt-0.5 text-muted-foreground">None added. The path picks courses after the test.</p>}
+      {courses.length > 0 && (
+        <ul className="mt-1 space-y-1.5" aria-labelledby={`${uid}-courses`}>
+          {courses.map((c) => (
+            <li key={c.courseId} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+              <span className="min-w-0">
+                {c.title}
+                {c.oyelabs && <span className="ml-1.5 rounded-full border px-1.5 text-[11px] font-medium">{OYELABS_BADGE}</span>}
+                {c.reason && <span className="block text-xs text-muted-foreground">{c.reason}</span>}
+              </span>
+              <span className="flex items-center gap-2">
+                <select
+                  aria-label={`How important: ${c.title}`}
+                  value={c.priority}
+                  disabled={disabled}
+                  onChange={(e) => setPriority(c.courseId, e.target.value as AssignmentPriority)}
+                  className="h-8 rounded-md border border-input bg-surface px-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong disabled:opacity-60"
+                >
+                  {ASSIGNMENT_PRIORITIES.map((p) => (
+                    <option key={p} value={p}>
+                      {ASSIGNMENT_PRIORITY_LABELS[p]}
+                    </option>
+                  ))}
+                </select>
+                <Button type="button" size="sm" variant="ghost" disabled={disabled} onClick={() => onCourses(courses.filter((x) => x.courseId !== c.courseId))} aria-label={`Remove ${c.title}`}>
+                  Remove
+                </Button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {open.length > 0 && (
+        <ul className="mt-2 space-y-1.5" aria-label="Suggested Oyelabs courses">
+          {open.map((s) => (
+            <li key={s.courseId} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-md border border-dashed px-3 py-2">
+              <span className="min-w-0">
+                <span className="font-medium">{s.title}</span>
+                <span className="ml-1.5 rounded-full border px-1.5 text-[11px] font-medium">{OYELABS_BADGE}</span>
+                <span className="block text-xs text-muted-foreground">{s.reason}</span>
+              </span>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={disabled}
+                onClick={() => onCourses(withPicked(courses, { courseId: s.courseId, title: s.title, oyelabs: true, priority: "important", reason: s.reason }))}
+              >
+                Add it
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="mt-2">
+        <ClassicAddCourse
+          name={name}
+          departmentId={departmentId}
+          departmentName={departmentName}
+          picked={courses.map((c) => c.courseId)}
+          onPick={(pick) => onCourses(withPicked(courses, pick))}
+          label="Add another course"
+        />
+      </div>
+    </div>
   );
 }

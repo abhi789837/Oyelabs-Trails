@@ -26,6 +26,14 @@ oyelearn.example.com {
 	# it keeps the stream unbuffered if the content type ever changes, and it says out loud that
 	# buffering this route would defeat the point of a live view. Other proxies are less kind;
 	# nginx needs proxy_buffering off here.
+	# v4.5 Oyelabs course uploads: docs up to 50 MB, videos up to 1 GB (streamed to /data/uploads).
+	# Caddy has no body limit by default, so this cap is a deliberate allowance, not a fix; the app
+	# enforces the real per-kind limits. Every other route keeps the app's own small JSON limits.
+	@uploads path /api/admin/oyelabs/uploads
+	request_body @uploads {
+		max_size 1100MB
+	}
+
 	handle /api/admin/live/stream {
 		reverse_proxy 127.0.0.1:8787 {
 			flush_interval -1

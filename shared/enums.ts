@@ -96,6 +96,12 @@ export const aiPurposeSchema = z.enum([
   "topic_test_check",
   /** v5: the in-lesson tutor "Ask Oye" (answers and checked solutions). */
   "tutor",
+  /** v4.5: writing an Oyelabs module test from the module's own material. */
+  "module_test_write",
+  /** v4.5: the module-test quality gates (relevance, blind answering). */
+  "module_test_check",
+  /** v4.5: suggesting catalog skills for an Oyelabs course in the editor. */
+  "course_skill_suggest",
 ]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 
@@ -180,6 +186,20 @@ export const jobTypeSchema = z.enum([
   "course.generate",
   /** v4.4: the daily deletion of audio files older than `audio.retention_days`. */
   "audio.retention",
+  /** v4.5 (B): resolve one Oyelabs video/doc link and run its no-credentials sharing check. */
+  "oyelabs.link.check",
+  /** v4.5 (B): the daily sweep that queues `oyelabs.link.check` for every link; breaks go to the inbox. */
+  "oyelabs.links.recheck",
+  /** v4.5 (B): probe an uploaded video and transcode it to MP4 when browsers cannot play it. */
+  "oyelabs.upload.transcode",
+  /** v4.5 (C): read one module source (doc, doc link, notes, description) into citable passages. */
+  "oyelabs.text.extract",
+  /** v4.5 (C): one video's transcript (YouTube captions, else Whisper for reachable files). */
+  "oyelabs.transcribe",
+  /** v4.5 (C): gather a module's text and write its test with the v4.3 pipeline (one module only). */
+  "oyelabs.module_test.generate",
+  /** v4.5 (D): (re)compute one course's catalog embedding. */
+  "oyelabs.course.embed",
 ]);
 export type JobType = z.infer<typeof jobTypeSchema>;
 

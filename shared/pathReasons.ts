@@ -76,3 +76,10 @@ export function naturalReason(reason: string): string {
   if (m) return goalLevelReason(m[1], m[2], m[3], Number(m[4]));
   return reason;
 }
+
+/**
+ * v4.5 Phase 4: why an Oyelabs course is on the path, from its own description:
+ * "Added because it's Oyelabs' own process for white-label projects." (`oyelabsCourseReason`).
+ * `naturalReason` leaves it as it is.
+ */
+export { oyelabsCourseReason as oyelabsReason } from "./oyelabsCore";

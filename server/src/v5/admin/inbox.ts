@@ -20,6 +20,7 @@ import { schema, type Db } from "../../db";
 import type { Env } from "../../env";
 import { learnerSignals } from "./activity";
 import { emailSetupIssue } from "../email/setup";
+import { brokenLinkInboxItems } from "../../oyelabs/media/inboxItems";
 
 const DAY_MS = 86_400_000;
 /** Test warnings older than this have been dealt with one way or another. */
@@ -194,6 +195,8 @@ export function buildInbox(deps: InboxDeps, actor: { role: string }, now = Date.
       action: { kind: "retry-course", label: "Retry", jobId: job.id },
     });
   }
+
+  items.push(...brokenLinkInboxItems(db, dismissed, now)); // v4.5 P2 (B): Oyelabs links that stopped working
 
   // "Report a problem" from the lesson player.
   for (const p of db

@@ -41,6 +41,8 @@ import { getSetup } from "../setup/repo";
 import { assertSpine, buildSpine, campsFor, type PriorityPath } from "./priorityPath";
 import { normaliseSkill, scoreGaps } from "./scoring";
 import { getFocus } from "../targets/repo";
+import { oyelabsCourseForPath } from "../oyelabs/assign/match";
+import { oyelabsReason } from "../../../shared/pathReasons";
 import { LEARNER_TRACK_LABELS } from "../../../shared/targets";
 
 /**
@@ -428,6 +430,16 @@ export async function runBuilder(
 
     setPathStatus(db, pathId, { status: "researching" });
     progress(`Looking for a course on ${gap.skill}`);
+
+    // v4.5 Phase 4: the company's own (Oyelabs) course first. When one fits, nothing generic is
+    // looked for and nothing is generated.
+    const own = await oyelabsCourseForPath(db, deps.ai, { skillId: part.skillId, skill: gap.skill, departmentId: setup.departmentId, userId: input.userId });
+    if (own) {
+      addPathItem(db, { pathId, courseId: own.courseId, skillId: part.skillId, gapId, position: position++, source: "unlock", reason: oyelabsReason(own), partNumber: part.partNumber, partType: part.partType, targetSkill: part.targetSkill, startLevel: part.startLevel });
+      auditStep(db, { pathId, step: "match", detail: { skill: gap.skill, oyelabs: own.courseId, via: own.via, score: own.score } });
+      outcome.unlocked += 1;
+      continue;
+    }
 
     // v4 (D7): the skill's own curriculum modules, then a course saved to the library for this skill.
     const skill = part.skillId ? skillsById.get(part.skillId) : undefined;

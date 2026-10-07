@@ -30,6 +30,7 @@ import { PlanTab } from "./learner/PlanTab";
 import { WeekTab } from "./learner/WeekTab";
 import { ProgressTab } from "./learner/ProgressTab";
 import { SetupTab } from "./learner/SetupTab";
+import { ClassicAddCourse } from "@/v5/admin/people/AddCourse";
 
 const TABS = [
   { id: "setup", label: "Setup" },
@@ -265,7 +266,9 @@ export default function AdminLearnerPage() {
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* v4.5 Phase 4 (D): Add a course, Oyelabs courses included, with a priority. */}
+          {detail.user.role === "learner" && <ClassicAddCourse userId={userId} name={detail.user.displayName} />}
           {detail.user.status === "disabled" && <StatusBadge kind="user" status="disabled" />}
           {detail.user.mustChangePassword && <Badge variant="progress">Awaiting first sign-in</Badge>}
           {detail.user.hardWarnings > 0 && (

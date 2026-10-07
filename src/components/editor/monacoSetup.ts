@@ -23,15 +23,17 @@ for (const defaults of [monaco.typescript.typescriptDefaults, monaco.typescript.
   defaults.setCompilerOptions({ target: monaco.typescript.ScriptTarget.ES2020, allowNonTsExtensions: true, strict: false });
 }
 
+// Monaco takes hex, not CSS variables: these are the brand kit's colours (src/index.css tokens):
+// Slate #5B6B82, Night Navy #0B2347, Cloud #F4F7FB; dark: Night #0A1428 and the --editor surface.
 monaco.editor.defineTheme("oyelearn-light", {
   base: "vs",
   inherit: true,
   rules: [],
   colors: {
     "editor.background": "#FFFFFF",
-    "editorLineNumber.foreground": "#6B7280",
-    "editorLineNumber.activeForeground": "#1B1F27",
-    "editor.lineHighlightBackground": "#F2F4F8",
+    "editorLineNumber.foreground": "#5B6B82",
+    "editorLineNumber.activeForeground": "#0B2347",
+    "editor.lineHighlightBackground": "#F4F7FB",
   },
 });
 
@@ -40,10 +42,10 @@ monaco.editor.defineTheme("oyelearn-dark", {
   inherit: true,
   rules: [],
   colors: {
-    "editor.background": "#0C0F15",
-    "editorLineNumber.foreground": "#7B8496",
-    "editorLineNumber.activeForeground": "#EDEFF3",
-    "editor.lineHighlightBackground": "#151921",
+    "editor.background": "#060D1C",
+    "editorLineNumber.foreground": "#8F9DB4",
+    "editorLineNumber.activeForeground": "#ECF1F8",
+    "editor.lineHighlightBackground": "#0A1428",
   },
 });
 

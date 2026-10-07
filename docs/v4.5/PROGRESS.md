@@ -15,26 +15,26 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md`; contracts 
 - [x] 0.f Tests; gates (commit `feat(v4.5-p0)` by the main session). tsc -b, eslint, build green; npm test green except the known notify clock test (fixed separately by the main session); v44-reference-case (UI_V5_DEFAULT=off) passes; v5-admin passes except "the lesson kept its video" (course editor, Phase 1 area, not touched by P0)
 
 ## Phase 1: "Add an Oyelabs course" page
-- [ ] 1.1 Schema and API (departments, level, skills, modules with videos/docs/notes, versions, Oyelabs badge, drafts)
-- [ ] 1.2 One-page editor with autosave (v5 admin), skill suggestions, publish/draft
-- [ ] 1.3 Gates + commit `feat(v4.5-p1)`
+- [x] 1.1 Schema and API (departments, level, skills, modules with videos/docs/notes, versions, Oyelabs badge, drafts)
+- [x] 1.2 One-page editor with autosave (v5 admin), skill suggestions, publish/draft
+- [x] 1.3 Gates + commit `feat(v4.5-p1)`
 
 ## Phase 2: Videos from any drive
-- [ ] 2.1 Link resolver (YouTube, Vimeo, Loom, Drive, OneDrive/SharePoint, Dropbox, Box, direct files, generic embed) + sharing check with plain fixes + daily re-check to the inbox
-- [ ] 2.2 Uploads (limits, ffmpeg transcode if needed)
-- [ ] 2.3 Players: HTML5 for direct/Dropbox/uploads (exact), embeds with estimated tracking (80% active time + "I've watched this"), playlist/countdown/lock
-- [ ] 2.4 Gates + commit `feat(v4.5-p2)`
+- [x] 2.1 Link resolver (YouTube, Vimeo, Loom, Drive, OneDrive/SharePoint, Dropbox, Box, direct files, generic embed) + sharing check with plain fixes + daily re-check to the inbox
+- [x] 2.2 Uploads (limits, ffmpeg transcode if needed)
+- [x] 2.3 Players: HTML5 for direct/Dropbox/uploads (exact), embeds with estimated tracking (80% active time + "I've watched this"), playlist/countdown/lock
+- [x] 2.4 Gates + commit `feat(v4.5-p2)`
 
 ## Phase 3: AI questions from module content
-- [ ] 3.1 Content gathering: PDF/DOCX/PPTX/XLSX/TXT/MD (+ OCR), Google export, readable text, notes; transcripts (YouTube captions, Whisper for reachable files)
-- [ ] 3.2 Module test generation with citations, gates, auto-save "Ready", summary, preview/edit/remove/add/regenerate; per-module regeneration on change; cost logged
-- [ ] 3.3 Gates + commit `feat(v4.5-p3)`
+- [x] 3.1 Content gathering: PDF/DOCX/PPTX/XLSX/TXT/MD (+ OCR), Google export, readable text, notes; transcripts (YouTube captions, Whisper for reachable files)
+- [x] 3.2 Module test generation with citations, gates, auto-save "Ready", summary, preview/edit/remove/add/regenerate; per-module regeneration on change; cost logged
+- [x] 3.3 Gates + commit `feat(v4.5-p3)`
 
 ## Phase 4: Oyelabs courses in paths
-- [ ] 4.1 Manual add (learner, department, everyone-in-department incl. new learners) with priority
-- [ ] 4.2 Catalog skills + embedding; path builder prefers Oyelabs courses; onboarding suggestions; plain reasons
-- [ ] 4.3 "Required for everyone in this department" → Do it now in first weeks, respecting progression
-- [ ] 4.4 Gates + commit `feat(v4.5-p4)`
+- [x] 4.1 Manual add (learner, department, everyone-in-department incl. new learners) with priority
+- [x] 4.2 Catalog skills + embedding; path builder prefers Oyelabs courses; onboarding suggestions; plain reasons
+- [x] 4.3 "Required for everyone in this department" → Do it now in first weeks, respecting progression
+- [x] 4.4 Gates + commit `feat(v4.5-p4)`
 
 ## Phase 5: Tests, deploy and report
 - [ ] 5.1 Unit/integration tests per the brief
@@ -58,3 +58,8 @@ Run from the repo folder on the server, after `git pull` (the script is read fro
    ```
 3. After deploying v4.5 P0: Admin → AI connection → Research → **Test**. It should say "Connected ✓ — test search returned 5 results…". Priyanka's waiting course starts at once (or within 10 minutes). No YouTube key is needed any more; add one only if lessons should get videos.
 
+### Phase 2 (B): video uploads and the proxy
+- **Image size:** the runtime image now installs Debian's `ffmpeg` (`--no-install-recommends`), about +150–250 MB on today's ~286 MB. Rebuild with `docker compose up -d --build`. Check the boot log does **not** say "Video conversion isn't available".
+- **Storage:** uploads live in `/data/uploads` on the `oyelearn-data` volume. Docs up to 50 MB, videos up to 1 GB; converting a 1 GB video needs about another 1 GB of free disk while it runs. Leave room accordingly (`df -h` on the host).
+- **Backups:** the nightly backup copies only the database. Add `/data/uploads` to whatever copies backups off the host (e.g. `docker compose cp oyelearn:/data/uploads ./uploads`). DEPLOY_BRIEF §8 says so.
+- **Proxy:** Caddy needs nothing beyond the new `request_body` block in `Caddyfile.example` (copy it into the live Caddyfile, then `caddy validate` before reload). **If the server uses nginx, add the `location /api/admin/oyelabs/uploads { client_max_body_size 1100m; proxy_request_buffering off; proxy_read_timeout 600s; … }` block from DEPLOY_BRIEF §5.2**; nginx's default 1 MB limit would make every upload fail with 413.

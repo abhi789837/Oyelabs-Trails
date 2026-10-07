@@ -19,7 +19,7 @@ import type { CourseDetail } from "@shared/me";
 import { CourseSkeleton } from "../skeletons";
 import { PageFrame, V5Screen, formatMinutes, useApiData, useDelayed } from "../me/page";
 import { previewCourseDetail } from "./coursePreview";
-import { FormatChip, RecommendedBadge } from "./LibraryPage";
+import { FormatChip, OyelabsBadge, RecommendedBadge } from "./LibraryPage";
 import { LEVEL_LABELS } from "./libraryLogic";
 
 /**
@@ -86,10 +86,16 @@ function CourseScreen() {
         <div role="status" className="flex flex-wrap items-center gap-2 rounded-card border border-info/30 bg-info-soft px-4 py-2 text-small text-fg-1" data-testid="preview-banner">
           <Eye className="size-4 shrink-0" aria-hidden="true" />
           <span className="font-semibold">Preview.</span> This is what learners see. Nothing you do here is saved.
-          <Link to={`/admin/library/${encodeURIComponent(c.id)}/edit`} className="ml-auto font-medium text-brand-fg underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
+          <Link to={`/admin/library/${encodeURIComponent(c.id)}/${c.oyelabs ? "oyelabs" : "edit"}`} className="ml-auto font-medium text-brand-fg underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
             Back to the editor
           </Link>
         </div>
+      ) : null}
+      {c.oyelabs ? (
+        <p className="flex flex-wrap items-center gap-2 text-small text-fg-2">
+          <OyelabsBadge />
+          Made by Oyelabs for your team.
+        </p>
       ) : null}
       <m.div className="grid gap-(--v5-gap) lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={transitions.calm}>
         <div className="flex min-w-0 flex-col gap-(--v5-gap) lg:gap-6">

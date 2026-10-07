@@ -132,3 +132,18 @@ describe("served headers", () => {
     }
   });
 });
+
+describe("v4.5 module videos", () => {
+  test("Vimeo SDK, thumbnails, direct/Dropbox media and hls.js are allowed; still no eval", () => {
+    const csp = buildCsp();
+    expect(csp["script-src"]).toContain("https://player.vimeo.com");
+    expect(csp["script-src"]).not.toContain("'unsafe-eval'");
+    expect(csp["script-src"]).not.toContain("'unsafe-inline'");
+    expect(csp["script-src"]).not.toContain("https:");
+    for (const host of ["https://i.vimeocdn.com", "https://cdn.loom.com", "https://drive.google.com", "https://*.googleusercontent.com"]) expect(csp["img-src"]).toContain(host);
+    expect(csp["media-src"]).toEqual(["'self'", "blob:", "https:"]);
+    expect(csp["connect-src"]).toEqual(["'self'", "https:"]);
+    expect(csp["frame-src"]).toContain("https:");
+    expect(csp["object-src"]).toEqual(["'none'"]);
+  });
+});

@@ -19,6 +19,10 @@ export interface LibraryCourse {
   lessons: number;
   level: string | null;
   departmentId: string | null;
+  /** v4.5: an Oyelabs course (badge; edited in the one-page Oyelabs editor). */
+  oyelabs: boolean;
+  /** v4.5: the departments whose library shows it (`course_departments`); empty = all departments. */
+  departmentIds: string[];
   updatedAt: number;
   sources: { total: number; broken: number; lastVerifiedAt: number | null };
   versions: number;
@@ -61,6 +65,8 @@ export function buildLibrary(db: Db): LibraryResponse {
       .all()
       .map((r) => [r.id, r.n ?? 0]),
   );
+  const courseDepartments = new Map<string, string[]>();
+  for (const row of db.select().from(schema.courseDepartments).all()) courseDepartments.set(row.courseId, [...(courseDepartments.get(row.courseId) ?? []), row.departmentId]);
   const creating = db
     .select({ n: count() })
     .from(schema.jobs)
@@ -84,6 +90,8 @@ export function buildLibrary(db: Db): LibraryResponse {
           lessons: lessons.get(c.id) ?? 0,
           level: c.level ?? null,
           departmentId: c.departmentId ?? null,
+          oyelabs: c.oyelabs,
+          departmentIds: (courseDepartments.get(c.id) ?? []).sort(),
           updatedAt: c.updatedAt,
           sources: sources.get(c.id) ?? { total: 0, broken: 0, lastVerifiedAt: null },
           versions: versionCounts.get(c.id) ?? 0,

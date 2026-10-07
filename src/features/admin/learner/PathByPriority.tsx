@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import { PART_LABELS, type LearningPathView, type PathItemView, type SkillGapView } from "@shared/builder";
 import { failedLine } from "@shared/connection";
+import { OYELABS_BADGE } from "@shared/oyelabsCourses";
 import { coverageView, laterGroupLabel, laterLabel, needsLine, splitPath, type PathCoverage } from "@shared/pathView";
 import { SLIDER_LABELS, type Slider } from "@shared/setup";
 
@@ -297,6 +298,11 @@ function CourseLine({ item, busy, compact, onRetry }: { item: PathItemView; busy
         ) : (
           <span className={cn("font-medium", compact && "text-sm")}>{item.courseTitle}</span>
         )}
+        {item.oyelabs && (
+          <Badge variant="outline" className="text-[11px]">
+            {OYELABS_BADGE}
+          </Badge>
+        )}
         <Badge variant={STATE_VARIANT[state]} className="text-[11px]">
           {COURSE_STATE_LABELS[state]}
         </Badge>
@@ -417,6 +423,11 @@ export function PathInOrder({ path }: { path: LearningPathView | null }) {
               <div className="min-w-0 flex-1">
                 <p className="flex flex-wrap items-center gap-2 text-sm">
                   <span className="font-medium">{item.courseTitle}</span>
+                  {item.oyelabs && (
+                    <Badge variant="outline" className="text-[10px]">
+                      {OYELABS_BADGE}
+                    </Badge>
+                  )}
                   <span className="font-mono text-[10px] text-muted-foreground">
                     Part {item.partNumber ?? 1}
                     {item.partType ? ` · ${PART_LABELS[item.partType]}` : ""}

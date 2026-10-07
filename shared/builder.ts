@@ -420,6 +420,8 @@ export interface PathItemView {
    * once; a second mention becomes "Needs: React Fundamentals (earlier in your path)" here.
    */
   needs?: { title: string; itemId: string }[];
+  /** v4.5 Phase 4: an Oyelabs course (the company's own material). Drives the "Oyelabs" badge. */
+  oyelabs?: true;
 }
 
 export interface LearningPathView {

@@ -13,6 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Segmented } from "@/components/ui/segmented";
 import { cn } from "@/lib/utils";
 import { unsureMessage } from "@shared/intents";
+import type { PickedCourse } from "@shared/oyelabsCourses";
+import { notify } from "@/lib/toast";
+import { assignPicked } from "@/v5/admin/people/courseAssign";
+
+import { adminApi } from "../api";
 
 import { GoalBox } from "./GoalBox";
 import { goalsApi } from "./goalsApi";
@@ -66,6 +71,8 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
   const [previewError, setPreviewError] = useState<unknown>(null);
   const [previewing, setPreviewing] = useState(false);
   const [changing, setChanging] = useState(false);
+  /** v4.5 Phase 4: courses added on the card; given to the learner once the account is saved. */
+  const [courses, setCourses] = useState<PickedCourse[]>([]);
   /** The setup the shown preview was worked out for; a different one re-runs it. */
   const previewFor = useRef<string | null>(null);
 
@@ -103,7 +110,7 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
         const test = (await goalsApi.preview({ ...body, step: "test" })).preview;
         setProgress((p) => (p ? { ...p, current: 3 } : p));
         const path = (await goalsApi.preview({ ...body, step: "path" })).preview;
-        setPreview({ ...test, firstSteps: path.firstSteps, newCourses: path.newCourses });
+        setPreview({ ...test, firstSteps: path.firstSteps, newCourses: path.newCourses, oyelabsCourses: path.oyelabsCourses });
         previewFor.current = previewKey(next);
       } catch (err) {
         setPreviewError(err);
@@ -172,6 +179,7 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
     setFields({});
     try {
       await onSave(toSaveRequest(current, true));
+      if (courses.length > 0) void giveCourses(courses);
     } catch (err) {
       setError(err ?? "That didn't save. Try again.");
       const errFields = (err as { fields?: Record<string, string> }).fields;
@@ -179,6 +187,22 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
     } finally {
       setSaving(false);
     }
+  };
+
+  /** v4.5 Phase 4: the account exists now, so the courses picked on the card can be given. */
+  const giveCourses = async (picked: readonly PickedCourse[]) => {
+    const name = username.trim().toLowerCase();
+    try {
+      const { users } = await adminApi.listUsers();
+      const user = users.find((u) => u.username.toLowerCase() === name);
+      if (!user) throw new Error("not found");
+      const { added, failed } = await assignPicked(user.id, picked);
+      if (added > 0) notify.success(`Added ${added} ${added === 1 ? "course" : "courses"} for ${user.displayName}.`);
+      if (failed.length > 0) notify.error(`We couldn't add ${failed.join(", ")}. Add it from their page with Add a course.`);
+    } catch {
+      notify.error("We couldn't add the courses you picked. Add them from their page with Add a course.");
+    }
+    setCourses([]);
   };
 
   const editDetails = () => {
@@ -196,6 +220,7 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
     setSource(null);
     setPreview(null);
     setPreviewError(null);
+    setCourses([]);
     previewFor.current = null;
   };
 
@@ -288,6 +313,8 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
           sendDisabled={!canSubmit}
           changing={changing}
           onChange={() => setChanging((c) => !c)}
+          courses={courses}
+          onCourses={setCourses}
         />
       )}
 

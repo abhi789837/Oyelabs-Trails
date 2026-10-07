@@ -2,6 +2,8 @@ import { BookOpen, ExternalLink, Link2Off, Loader2, Pencil, Plus, Sparkles, Wand
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
+import { OYELABS_BADGE } from "@shared/oyelabsCourses";
+
 import { coursesApi } from "@/features/admin/courses/api";
 import { Badge, Button, Card, Dialog, EmptyState, ErrorState, Field, Input, StatusLine, v5Toast } from "@/v5/design";
 
@@ -18,6 +20,14 @@ const STATUS: Record<LibraryStatus, { label: string; tone: "success" | "info" | 
 };
 
 type Filter = "all" | "needs-look" | "live" | "draft";
+
+/** v4.5: the server marks Oyelabs courses (`oyelabs`); `src/v5/admin/api.ts` is another phase's file. */
+type Course = LibraryCourse & { oyelabs?: boolean };
+
+/** Where Edit goes: Oyelabs courses have their own one-page editor. */
+export function editHref(c: Course): string {
+  return c.oyelabs ? `/admin/library/${c.id}/oyelabs` : `/admin/library/${c.id}/edit`;
+}
 
 /** One line about the links a course cites. */
 export function sourceLine(s: LibraryCourse["sources"]): { text: string; broken: boolean } | null {
@@ -89,10 +99,18 @@ export default function LibraryAdminPage() {
         title="Library"
         description="Every course people can learn from: written here, or made by our course writer."
         actions={
-          <Button variant="primary" size="sm" onClick={() => setCreating(true)}>
-            <Plus aria-hidden="true" />
-            Create course
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" size="sm" asChild>
+              <Link to="/admin/library/oyelabs/new">
+                <Plus aria-hidden="true" />
+                Add Oyelabs course
+              </Link>
+            </Button>
+            <Button variant="primary" size="sm" onClick={() => setCreating(true)}>
+              <Plus aria-hidden="true" />
+              Create course
+            </Button>
+          </div>
         }
       />
 
@@ -134,7 +152,7 @@ export default function LibraryAdminPage() {
         />
       ) : (
         <ul className="grid grid-cols-1 gap-(--v5-gap) md:grid-cols-2 xl:grid-cols-3">
-          {courses.map((c) => {
+          {courses.map((c: Course) => {
             const status = STATUS[c.status];
             const src = sourceLine(c.sources);
             return (
@@ -142,6 +160,7 @@ export default function LibraryAdminPage() {
                 <Card className="flex h-full flex-col gap-2">
                   <div className="flex items-start gap-2">
                     <h2 className="min-w-0 flex-1 font-display text-h4 font-semibold">{c.title}</h2>
+                    {c.oyelabs ? <Badge tone="brand">{OYELABS_BADGE}</Badge> : null}
                     <Badge tone={status.tone}>{status.label}</Badge>
                   </div>
                   {c.reason ? <p className="text-small text-warning-fg">{c.reason}</p> : c.summary ? <p className="line-clamp-2 text-small text-fg-2">{c.summary}</p> : null}
@@ -169,7 +188,7 @@ export default function LibraryAdminPage() {
                       </Button>
                     ) : null}
                     <Button variant={c.status === "needs-look" ? "secondary" : "primary"} size="sm" asChild>
-                      <Link to={`/admin/library/${c.id}/edit`} aria-label={`Edit ${c.title}`}>
+                      <Link to={editHref(c)} aria-label={`Edit ${c.title}`}>
                         <Pencil aria-hidden="true" />
                         Edit
                       </Link>

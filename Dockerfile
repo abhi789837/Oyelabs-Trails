@@ -48,8 +48,12 @@ FROM node:24-bookworm-slim AS runtime
 ARG INSTALL_CLAUDE_CLI=0
 ARG INSTALL_CODEX_CLI=0
 
+# v4.5: ffmpeg/ffprobe read uploaded videos' length and convert MOV/MKV/AVI (or non-H.264 MP4) to
+# MP4 so every browser plays them. Debian's package, run as a separate process (no linking).
+# Adds roughly 150-250 MB to the image. Without it, MP4/WebM uploads still play as they are and
+# other formats show "Video conversion isn't available".
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends ca-certificates curl \
+  && apt-get install -y --no-install-recommends ca-certificates curl ffmpeg \
   && rm -rf /var/lib/apt/lists/*
 
 RUN if [ "$INSTALL_CLAUDE_CLI" = "1" ]; then npm install -g @anthropic-ai/claude-code; fi \

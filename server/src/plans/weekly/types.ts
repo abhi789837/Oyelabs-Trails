@@ -2,6 +2,7 @@ import type { ScoredGap } from "../../../../shared/builder";
 import type { LearnerPriorities, PartType } from "../../../../shared/builder";
 import type { PlanLane, PlanItemSource } from "../../../../shared/weeklyPlan";
 import type { TopicLevelValue } from "../../../../shared/enums";
+import type { AssignmentPriority } from "../../../../shared/oyelabsCourses";
 
 /**
  * What the weekly builder works from.
@@ -54,6 +55,15 @@ export interface Candidate {
    */
   pathPosition?: number;
   pathTarget?: string | null;
+  /**
+   * v4.5: the admin's priority for this lesson's course, from its assignment or an "everyone in
+   * this department" rule (the more important of the two). Lanes: see `oyelabs/assign/weekRules.ts`.
+   */
+  assignedPriority?: AssignmentPriority;
+  /** v4.5: "Required for everyone in this department": Do it now in the learner's first weeks. */
+  required?: boolean;
+  /** v4.5: unfinished lessons teaching a prerequisite skill of this course (skill graph), in order. */
+  prereqKeys?: string[];
 }
 
 /** An item the previous week did not finish. */

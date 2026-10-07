@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
 import { ArrowLeft, CheckCircle2, ChevronLeft, ChevronRight, Eye, ExternalLink, Undo2 } from "lucide-react";
 import { m } from "motion/react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -18,6 +18,9 @@ import { useApiData } from "../me/page";
 import { blockTree } from "./article";
 import { BlocksView } from "./LessonRich";
 import { courseLessonHref, courseLessonNav, coursePageHref } from "./lessonLinks";
+
+/** v4.5: an Oyelabs module (playlist from any drive, docs, notes, module test). Its own chunk. */
+const ModuleLesson = lazy(() => import("./oyelabs/ModuleLesson"));
 
 /**
  * A library course lesson in the lesson player: `/learn/lesson/:topicId?course=<courseId>`.
@@ -73,6 +76,7 @@ export default function CourseLesson({ courseId, topicId }: { courseId: string; 
       done={done.has(topicId)}
       preview={preview}
       onDoneChange={(ids) => setData({ ...data, completedTopicIds: ids })}
+    onModulePassed={() => void reload()}
     />
   );
 }
@@ -91,14 +95,17 @@ function CourseLessonView({
   done,
   preview,
   onDoneChange,
+  onModulePassed,
 }: {
   course: Course;
   nav: NonNullable<ReturnType<typeof courseLessonNav<CourseTopic>>>;
   done: boolean;
   preview: boolean;
   onDoneChange: (completedTopicIds: string[]) => void;
+  onModulePassed: () => void;
 }) {
   const lesson = nav.lesson;
+  const isModule = lesson.kind === "module";
   const blocks = useMemo(() => blockTree(lesson.body, [], new Set()), [lesson.body]);
   const [saving, setSaving] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
@@ -125,7 +132,7 @@ function CourseLessonView({
           <span className="font-semibold">Preview.</span> This is what learners see. Nothing you do here is saved.
         </div>
       ) : null}
-      <m.article className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 py-6 md:py-10" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={transitions.calm}>
+      <m.article className={`mx-auto flex w-full ${isModule ? "max-w-6xl" : "max-w-3xl"} flex-col gap-5 px-4 py-6 md:py-10`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={transitions.calm}>
         <Link
           to={coursePageHref(course.id, preview)}
           className="inline-flex min-h-6 items-center gap-1 self-start rounded-sm text-small font-medium text-brand-fg hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
@@ -140,11 +147,17 @@ function CourseLessonView({
           <h1 className="mt-1 font-display text-h1 font-semibold text-fg-1">{lesson.title}</h1>
         </header>
 
-        {lesson.videoId ? (
+        {isModule ? (
+          <Suspense fallback={<div className="aspect-video animate-pulse rounded-card bg-sunken" aria-busy="true" aria-label="Loading the module" />}>
+            <ModuleLesson topicId={lesson.id} courseId={course.id} preview={preview} onPassed={onModulePassed} />
+          </Suspense>
+        ) : null}
+
+        {!isModule && lesson.videoId ? (
           <CourseVideo key={lesson.videoId} videoId={lesson.videoId} title={lesson.videoTitle ?? lesson.title} />
         ) : null}
 
-        {blocks.length ? <BlocksView blocks={blocks} className="v5-article text-body leading-relaxed text-fg-1" /> : null}
+        {!isModule && blocks.length ? <BlocksView blocks={blocks} className="v5-article text-body leading-relaxed text-fg-1" /> : null}
 
         {lesson.links.length ? (
           <section aria-labelledby="lesson-links" className="flex flex-col gap-2">
@@ -172,7 +185,11 @@ function CourseLessonView({
         <div className="flex flex-col gap-3 border-t border-line-1 pt-4">
           {preview ? (
             <StatusLine tone="info" icon={<Eye />}>
-              Learners finish a lesson with "Mark as done". It isn't saved in a preview.
+              {isModule ? "Learners finish a module by passing its test. Nothing is saved in a preview." : `Learners finish a lesson with "Mark as done". It isn't saved in a preview.`}
+            </StatusLine>
+          ) : done && isModule ? (
+            <StatusLine tone="success" icon={<CheckCircle2 />}>
+              You've passed this module's test.
             </StatusLine>
           ) : done ? (
             <StatusLine
@@ -203,7 +220,7 @@ function CourseLessonView({
               <span />
             )}
             <div className="flex flex-wrap items-center gap-2">
-              {!preview && !done ? (
+              {!preview && !done && !isModule ? (
                 <Button variant={nav.next ? "secondary" : "primary"} onClick={() => void setDone(true)} disabled={saving}>
                   <CheckCircle2 aria-hidden="true" /> Mark as done
                 </Button>

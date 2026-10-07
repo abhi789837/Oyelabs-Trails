@@ -10,11 +10,14 @@
  *   `$type` is a compile-time assertion, not a runtime guarantee.
  */
 import { sql } from "drizzle-orm";
-import { index, integer, primaryKey, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { blob, index, integer, primaryKey, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 import type { AiPurpose, AssessmentStatus, CredentialStatus, ItemKind, ItemStatus, JobStatus, JobType, PlanSource, ProviderId, Role, Severity, TopicStatus, UserStatus, AttemptKind } from "../../../shared/enums";
 import type { GenerationLevel, GenerationStage } from "../../../shared/assessment";
 import type { ClaimedSkill } from "../../../shared/profile";
+import type { ModulePassage, ModuleSourceKind, ModuleTestSourceSummary, ModuleTestStatus, ExtractionMethod, SourceTextStatus } from "../../../shared/moduleTests";
+import type { AssignmentPriority, AssignmentSource, CourseTopicKind, NotesDoc, TranscodeStatus, UploadKind } from "../../../shared/oyelabsCourses";
+import type { DocLinkKind, DurationSource, LinkProblem, LinkStatus, PlayerKind, TrackingMode, VideoSourceKind } from "../../../shared/videoSources";
 
 // ---------------------------------------------------------------------------
 // Accounts
@@ -438,6 +441,11 @@ export const topicAttempts = sqliteTable(
     /** Code: the submitted source, so the admin can read what they wrote. */
     code: text("code"),
     createdAt: integer("created_at").notNull(),
+    /**
+     * v4.5: set when the attempt is an Oyelabs module test (`topic_id` is then the module's managed
+     * `course_topics.id`), so curriculum reports can leave those out with one predicate.
+     */
+    courseId: text("course_id"),
   },
   (t) => [index("topic_attempts_user_topic_idx").on(t.userId, t.topicId)],
 );
@@ -600,6 +608,14 @@ export const courses = sqliteTable(
     departmentId: text("department_id"),
     position: integer("position").notNull().default(0),
     createdBy: text("created_by"),
+    /**
+     * v4.5: an "Oyelabs course" (Admin → Library → Add an Oyelabs course). Same row, same renderer;
+     * the flag drives the badge, the one-page editor, departments via `course_departments`, and
+     * the path builder's preference for the company's own material.
+     */
+    oyelabs: integer("oyelabs", { mode: "boolean" }).notNull().default(false),
+    /** v4.5: the `content_versions` version learners currently see. Null until first published. */
+    publishedVersion: integer("published_version"),
     createdAt: integer("created_at").notNull(),
     updatedAt: integer("updated_at").notNull(),
   },
@@ -617,6 +633,10 @@ export const courseSections = sqliteTable(
     title: text("title").notNull(),
     summary: text("summary").notNull().default(""),
     position: integer("position").notNull().default(0),
+    /** v4.5: an Oyelabs module's notes (Tiptap JSON). Null on ordinary sections. */
+    notes: text("notes", { mode: "json" }).$type<NotesDoc>(),
+    /** v4.5: the notes as plain text, for the module test's sources and search. */
+    notesText: text("notes_text").notNull().default(""),
   },
   (t) => [index("course_sections_course_idx").on(t.courseId, t.position)],
 );
@@ -662,6 +682,12 @@ export const courseTopics = sqliteTable(
     test: text("test", { mode: "json" }).$type<unknown>(),
     estMinutes: integer("est_minutes").notNull().default(10),
     position: integer("position").notNull().default(0),
+    /**
+     * v4.5: `module` = the single managed lesson of an Oyelabs module. It carries the module's
+     * playlist (`course_videos`), docs, notes and module test, and is finished by passing that test.
+     * Its id never changes across edits, so progress and results survive new versions.
+     */
+    kind: text("kind").$type<CourseTopicKind>().notNull().default("lesson"),
   },
   (t) => [index("course_topics_section_idx").on(t.sectionId, t.position), index("course_topics_course_idx").on(t.courseId)],
 );
@@ -684,6 +710,10 @@ export const courseAssignments = sqliteTable(
       .references(() => users.id, { onDelete: "cascade" }),
     assignedBy: text("assigned_by"),
     assignedAt: integer("assigned_at").notNull(),
+    /** v4.5: Most important / Important / Nice to have. Null on rows that predate priorities. */
+    priority: text("priority").$type<AssignmentPriority>(),
+    /** v4.5: who put it there. `department` rows were expanded from "assign to this department". */
+    source: text("source").$type<AssignmentSource>().notNull().default("admin"),
   },
   (t) => [primaryKey({ columns: [t.courseId, t.userId] })],
 );
@@ -1603,6 +1633,14 @@ export const videoProgress = sqliteTable(
     durationSeconds: real("duration_seconds"),
     completedAt: integer("completed_at"),
     updatedAt: integer("updated_at").notNull(),
+    /**
+     * v4.5: `estimated` rows (Drive/OneDrive/Box/Loom/embeds) have no ranges; `active_seconds` is
+     * visible+focused+not-idle time, and `confirmed_at` is the "I've watched this" click. For those
+     * rows `video_id` is a `course_videos.id` and `topic_id` the module's managed lesson.
+     */
+    tracking: text("tracking").$type<TrackingMode>().notNull().default("exact"),
+    activeSeconds: real("active_seconds").notNull().default(0),
+    confirmedAt: integer("confirmed_at"),
   },
   (t) => [primaryKey({ columns: [t.userId, t.topicId, t.videoId] }), index("video_progress_user_topic_idx").on(t.userId, t.topicId)],
 );
@@ -2009,3 +2047,255 @@ export const emailOutbox = sqliteTable(
   },
   (t) => [index("email_outbox_status_idx").on(t.status, t.createdAt), index("email_outbox_user_idx").on(t.toUserId)],
 );
+
+// ---------------------------------------------------------------------------
+// v4.5: Oyelabs courses (docs/v4.5/PLAN.md, migration 0026)
+// ---------------------------------------------------------------------------
+
+/**
+ * Which departments' library shows a course. No rows = every department (the "All" choice).
+ * Oyelabs courses use this instead of the single legacy `courses.department_id`, which they leave null.
+ */
+export const courseDepartments = sqliteTable(
+  "course_departments",
+  {
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    departmentId: text("department_id").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.courseId, t.departmentId] }), index("course_departments_department_idx").on(t.departmentId)],
+);
+
+/**
+ * "Everyone in this department", as a standing rule: read lazily (like an `everyone` course), so a
+ * learner who joins the department later has it without a backfill. `required` = "Required for
+ * everyone in this department": Do it now in the first weeks, respecting progression.
+ */
+export const courseDepartmentRules = sqliteTable(
+  "course_department_rules",
+  {
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    departmentId: text("department_id").notNull(),
+    priority: text("priority").$type<AssignmentPriority>().notNull(),
+    required: integer("required", { mode: "boolean" }).notNull().default(false),
+    createdBy: text("created_by"),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.courseId, t.departmentId] }), index("course_department_rules_department_idx").on(t.departmentId)],
+);
+
+/**
+ * The editor's autosave. One row per open edit; the live course is untouched until Save. `courseId`
+ * is null for a course that has never been saved.
+ */
+export const courseDrafts = sqliteTable(
+  "course_drafts",
+  {
+    id: text("id").primaryKey(),
+    courseId: text("course_id").references(() => courses.id, { onDelete: "cascade" }),
+    data: text("data", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    createdBy: text("created_by"),
+    updatedBy: text("updated_by"),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [index("course_drafts_course_idx").on(t.courseId), index("course_drafts_author_idx").on(t.createdBy, t.updatedAt)],
+);
+
+/**
+ * A file uploaded to Oyelearn: a module doc or a video. Stored unencrypted under
+ * `DATA_DIR/uploads/<yyyy>/<mm>/<id>.<ext>` (`rel_path`, relative to `DATA_DIR/uploads`), streamed
+ * to disk. A video that browsers cannot play is transcoded to `playback_rel_path` (MP4).
+ */
+export const mediaUploads = sqliteTable(
+  "media_uploads",
+  {
+    id: text("id").primaryKey(),
+    kind: text("kind").$type<UploadKind>().notNull(),
+    relPath: text("rel_path").notNull(),
+    originalName: text("original_name").notNull(),
+    mime: text("mime").notNull(),
+    bytes: integer("bytes").notNull(),
+    sha256: text("sha256").notNull(),
+    transcodeStatus: text("transcode_status").$type<TranscodeStatus>().notNull().default("none"),
+    playbackRelPath: text("playback_rel_path"),
+    playbackMime: text("playback_mime"),
+    durationSeconds: real("duration_seconds"),
+    error: text("error"),
+    createdBy: text("created_by"),
+    createdAt: integer("created_at").notNull(),
+    /** Set when nothing references it any more and the file was removed. */
+    deletedAt: integer("deleted_at"),
+  },
+  (t) => [index("media_uploads_sha_idx").on(t.sha256), index("media_uploads_transcode_idx").on(t.transcodeStatus)],
+);
+
+/**
+ * One video of one module, in playlist order. `topic_id` is the module's managed lesson;
+ * `video_progress.video_id` = this row's id. Status fields are the sharing check (on save, then daily).
+ */
+export const courseVideos = sqliteTable(
+  "course_videos",
+  {
+    id: text("id").primaryKey(),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    sectionId: text("section_id")
+      .notNull()
+      .references(() => courseSections.id, { onDelete: "cascade" }),
+    topicId: text("topic_id")
+      .notNull()
+      .references(() => courseTopics.id, { onDelete: "cascade" }),
+    position: integer("position").notNull().default(0),
+    /** As pasted. Null for an upload. */
+    inputUrl: text("input_url"),
+    uploadId: text("upload_id").references(() => mediaUploads.id, { onDelete: "set null" }),
+    kind: text("kind").$type<VideoSourceKind>().notNull(),
+    providerId: text("provider_id"),
+    playerKind: text("player_kind").$type<PlayerKind>().notNull(),
+    embedUrl: text("embed_url"),
+    playbackUrl: text("playback_url"),
+    tracking: text("tracking").$type<TrackingMode>().notNull(),
+    title: text("title").notNull().default(""),
+    /** True when the admin typed the title (the resolver then leaves it alone). */
+    titleLocked: integer("title_locked", { mode: "boolean" }).notNull().default(false),
+    thumbnailUrl: text("thumbnail_url"),
+    durationSeconds: real("duration_seconds"),
+    durationSource: text("duration_source").$type<DurationSource>(),
+    status: text("status").$type<LinkStatus>().notNull().default("pending"),
+    problem: text("problem", { mode: "json" }).$type<LinkProblem>(),
+    lastCheckedAt: integer("last_checked_at"),
+    /** First failed check of the current break; cleared when it plays again. Drives the admin inbox. */
+    brokenSince: integer("broken_since"),
+    /** Transcript gathered for the module test (`course_module_texts` holds the passages). */
+    transcriptStatus: text("transcript_status").$type<SourceTextStatus>().notNull().default("pending"),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [
+    index("course_videos_topic_idx").on(t.topicId, t.position),
+    index("course_videos_course_idx").on(t.courseId),
+    index("course_videos_broken_idx").on(t.brokenSince),
+  ],
+);
+
+/** One document of one module: an upload or a link. */
+export const courseDocs = sqliteTable(
+  "course_docs",
+  {
+    id: text("id").primaryKey(),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    sectionId: text("section_id")
+      .notNull()
+      .references(() => courseSections.id, { onDelete: "cascade" }),
+    position: integer("position").notNull().default(0),
+    source: text("source").$type<"upload" | "link">().notNull(),
+    uploadId: text("upload_id").references(() => mediaUploads.id, { onDelete: "set null" }),
+    url: text("url"),
+    linkKind: text("link_kind").$type<DocLinkKind>(),
+    /** Where text is fetched from for a link (Google export URL, Dropbox raw URL, the page). */
+    fetchUrl: text("fetch_url"),
+    title: text("title").notNull().default(""),
+    titleLocked: integer("title_locked", { mode: "boolean" }).notNull().default(false),
+    status: text("status").$type<LinkStatus>().notNull().default("pending"),
+    problem: text("problem", { mode: "json" }).$type<LinkProblem>(),
+    lastCheckedAt: integer("last_checked_at"),
+    brokenSince: integer("broken_since"),
+    textStatus: text("text_status").$type<SourceTextStatus>().notNull().default("pending"),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [
+    index("course_docs_section_idx").on(t.sectionId, t.position),
+    index("course_docs_course_idx").on(t.courseId),
+    index("course_docs_broken_idx").on(t.brokenSince),
+  ],
+);
+
+/**
+ * The text read from one source of one module, as citable passages. `content_hash` is the hash of
+ * the *input* (file sha256, notes text, the fetched body, the transcript), so an unchanged source is
+ * never re-read and the module's combined hash only moves when something really changed.
+ */
+export const courseModuleTexts = sqliteTable(
+  "course_module_texts",
+  {
+    id: text("id").primaryKey(),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    sectionId: text("section_id")
+      .notNull()
+      .references(() => courseSections.id, { onDelete: "cascade" }),
+    sourceKind: text("source_kind").$type<ModuleSourceKind>().notNull(),
+    /** `course_docs.id`, `course_videos.id`, or the section id for notes/description. */
+    sourceId: text("source_id").notNull(),
+    title: text("title").notNull().default(""),
+    status: text("status").$type<SourceTextStatus>().notNull().default("pending"),
+    method: text("method").$type<ExtractionMethod>(),
+    passages: text("passages", { mode: "json" }).$type<ModulePassage[]>().notNull().default([]),
+    chars: integer("chars").notNull().default(0),
+    contentHash: text("content_hash"),
+    /** Plain reason when skipped/failed ("Scanned PDF, OCR found no text"). */
+    error: text("error"),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [uniqueIndex("course_module_texts_source_idx").on(t.sectionId, t.sourceKind, t.sourceId), index("course_module_texts_course_idx").on(t.courseId)],
+);
+
+/**
+ * One module's test: its status and summary. The items themselves are `topic_test_items` with
+ * `topic_id = topic_id` here (the v4.3 pipeline), and the grounding is `topic_grounding` with the
+ * same id. `content_hash` = hash of the module's current sources; `generated_hash` = the hash the
+ * items were written from. They differ: stale, so only this module is regenerated.
+ */
+export const courseModuleTests = sqliteTable(
+  "course_module_tests",
+  {
+    sectionId: text("section_id")
+      .primaryKey()
+      .references(() => courseSections.id, { onDelete: "cascade" }),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    topicId: text("topic_id")
+      .notNull()
+      .references(() => courseTopics.id, { onDelete: "cascade" }),
+    status: text("status").$type<ModuleTestStatus>().notNull().default("empty"),
+    summary: text("summary").notNull().default(""),
+    sourceSummary: text("source_summary", { mode: "json" }).$type<ModuleTestSourceSummary>(),
+    contentHash: text("content_hash"),
+    generatedHash: text("generated_hash"),
+    itemCount: integer("item_count").notNull().default(0),
+    /** How many times it was (re)generated. Past attempts keep pointing at retired items. */
+    generation: integer("generation").notNull().default(0),
+    costMicros: integer("cost_micros").notNull().default(0),
+    model: text("model"),
+    error: text("error"),
+    generatedAt: integer("generated_at"),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [index("course_module_tests_course_idx").on(t.courseId), index("course_module_tests_status_idx").on(t.status)],
+);
+
+/**
+ * A course's embedding for catalog matching (Phase 4): title, description, skills and module
+ * titles. `vector` is little-endian Float32. `model` says which embedder wrote it; vectors from
+ * different models are never compared.
+ */
+export const courseEmbeddings = sqliteTable("course_embeddings", {
+  courseId: text("course_id")
+    .primaryKey()
+    .references(() => courses.id, { onDelete: "cascade" }),
+  model: text("model").notNull(),
+  dims: integer("dims").notNull(),
+  vector: blob("vector", { mode: "buffer" }).notNull(),
+  textHash: text("text_hash").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});

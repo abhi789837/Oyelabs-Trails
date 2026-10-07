@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 import { BAND_MIX, testItemBandSchema, type TestItemBand, type TestItemPayload, type TopicGroundingContent } from "../../../shared/topicTests";
+import type { AiTask } from "../../../shared/aiRouting";
+import type { AiPurpose } from "../../../shared/enums";
 import type { AiService } from "../ai/service";
+import type { GenerateJsonRequest } from "../ai/types";
 
 /**
  * The grounded item writer (v4.3 Phase 5), Sonnet 5.5 via task `topic_test_write`.
@@ -103,21 +106,35 @@ export interface WriteResult {
   malformed: number;
 }
 
+/**
+ * v4.5 (module tests): optional overrides so another caller can reuse the writer with its own task,
+ * prompt and cost attribution. Every field defaults to the v4.3 topic-test value.
+ */
+export interface WriteItemsOverrides {
+  purpose?: AiPurpose;
+  task?: AiTask;
+  system?: string;
+  user?: string;
+  schemaName?: string;
+  meta?: GenerateJsonRequest<unknown>["meta"];
+}
+
 export async function writeItems(
   ai: AiService,
   grounding: TopicGroundingContent,
   options: { count: number; round: number; avoid: string[] },
+  overrides: WriteItemsOverrides = {},
 ): Promise<WriteResult> {
   if (grounding.passages.length === 0) return { payloads: [], malformed: 0 };
   const result = await ai.generateJson({
-    purpose: "topic_test_write",
-    task: "topic_test_write",
-    system: WRITE_SYSTEM,
-    user: writePrompt(grounding, options.count, options.round, options.avoid),
+    purpose: overrides.purpose ?? "topic_test_write",
+    task: overrides.task ?? "topic_test_write",
+    system: overrides.system ?? WRITE_SYSTEM,
+    user: overrides.user ?? writePrompt(grounding, options.count, options.round, options.avoid),
     schema: writeLenientSchema,
     contractSchema: writeContractSchema,
-    schemaName: "topic_test_items",
-    meta: {},
+    schemaName: overrides.schemaName ?? "topic_test_items",
+    meta: overrides.meta ?? {},
   });
   const payloads: TestItemPayload[] = [];
   let malformed = 0;

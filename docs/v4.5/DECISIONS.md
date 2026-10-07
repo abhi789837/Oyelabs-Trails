@@ -239,3 +239,249 @@ Updated expectations:
 - `server/src/builder/run.goals.test.ts`
 - `src/v5/assessment/assessment.test.ts`
 - `scripts/e2e/v44-reference-case.ts`, which now accepts "isn't set up".
+
+## Phase 3 (C)
+
+- **Fetching links uses B's `safeFetch`** (`oyelabs/media/safeFetch.ts`) through a thin adapter, `oyelabs/extract/fetch.ts`. The adapter adds the PLAN §4.3 document caps: 50 MB (a bigger file is refused, not half-read) and 20 s. It also inherits B's `OYELABS_FETCH_STUB`, so e2e can run offline. ffmpeg fetches direct and Dropbox files by itself, so each of those URLs is checked first with `assertPublicUrl`.
+- **Extraction libraries are loaded at run time** (`extract/runtime.ts`, an `import()` whose specifier esbuild can't see). Without this, esbuild would try to bundle the native `@napi-rs/canvas` and tesseract's worker scripts. `node_modules` is already copied into the runtime image. `scripts/build-server.mjs` is unchanged.
+- **officeparser v8, not v6:** `OfficeParser.parseOffice(buffer, { fileType: "pptx", ocr: false })` returns an AST. Each `slide` node has `metadata.slideNumber` and paragraph children. Speaker notes are appended as "Speaker notes: …".
+- **Passage ids:** `<doc|vid|note|desc><4 hex of sha256(kind:sourceId)>.<n>`, for example `doc3fa2.4`. The id uses a hash of the source, not its position, so reordering docs in the editor never renumbers citations. Ids stay stable while the text is unchanged.
+- **Per-source hashes:**
+  - Uploaded docs use the upload's sha256.
+  - Linked docs use the sha256 of the fetched body. They are read again when the doc row changes and on Regenerate, which re-fetches every link.
+  - Videos use the hash of their input: the upload sha, the file URL, or the YouTube id. B's daily link checks therefore never cause a new Whisper run.
+  - Notes and the description use the hash of their text.
+  - The module hash is the sha256 over the sorted hashes of the sources that gave text, plus a generator version.
+- **Generation** (`moduleTests/generate.ts`) reuses `writeItems` and `runGates`. Each now takes an optional last `overrides` argument (task, purpose, schema name, system/user prompt, `meta.courseId`). The defaults are unchanged.
+  - The module material goes in the **system prompt**, so it is the cached prefix for rounds 2–3 and for regenerations.
+  - The material is capped at 20,000 characters, taken round-robin across sources so one long PDF can't crowd out the notes or a video. The description is capped at 1,200 characters.
+  - The writer is asked for target + 1 items (9). Up to 2 regeneration rounds then cover what the gates drop.
+  - Item kinds come from the objective ids: `scn` = scenario, `rec` = recall, `hands` = hands-on. Hands-on is offered only when the material looks like code: at least 25% of passages are code fences or code-like lines.
+- **Items** are `topic_test_items` keyed by the managed lesson. The payload adds `moduleKind`, `moduleOrigin`, `moduleCitation` and `generation`.
+  - Admin-added items are stored with origin `static` and `moduleOrigin: "admin"`.
+  - Admin-added and admin-edited items are the admin's: Regenerate never retires them.
+  - Regeneration retires the earlier generations' other items; it never deletes them. If a round produces nothing, only items whose quote is gone are retired, so learners keep a test.
+  - Fewer than 6 live items → `needs_content` with a plain line ("Only N questions passed our checks…"). The items stay live.
+  - No live items → the attempt route answers 409 "This module's test isn't ready yet."
+- **Learner side:**
+  - Access and the video lock are B's: `moduleLessonFor` and `assertModuleVideosWatched`, the latter returning 409 `videos_unwatched`.
+  - Grading is per item, full or not yet. A pass needs ≥ 80% (`QUIZ_PASS_THRESHOLD`).
+  - Each attempt goes into `topic_attempts` with `course_id` set.
+  - Calibration counts first exposures only and never staff. It is given a pseudo-topic with `challengeType: "code"`, so a retirement never queues a v4.3 `topic_tests.fill` for a non-curriculum lesson.
+  - A pass inserts `course_progress`, then `syncCertificates` issues the course certificate after the last module.
+  - `POST /api/me/courses/topics/:topicId/complete` answers 409 for module lessons, for both tick and un-tick.
+- **Jobs:**
+  - `module_test.generate` syncs notes and the description inline and drops text rows of removed sources.
+  - It queues `text.extract` / `transcribe` for stale sources and defers itself (20 s, `JobDeferredError`) until they settle. Every read records `done`, `failed` or `skipped`, so the deferral always ends.
+  - When a source's text changes, a `generate` is queued for that module only, unless one is already waiting.
+  - Whisper runs one 600 s chunk per job (ffmpeg → mono 16 kHz Opus → `STT_BASE_URL`). The partial transcript is kept as `pending` passages, and the job re-enqueues itself with `{ videoId, startSec }`, an additive payload field.
+  - Drive, OneDrive, Box, Loom, Vimeo and embedded videos are `skipped` with "Questions use the docs and notes for this video." A YouTube video without readable captions gets the same note.
+  - `text.extract` may also carry `force: true`, which Regenerate sets for links.
+- **Cost per module:** `estimateModuleCostUsd`, at default prices, for one write round plus 3 Haiku checks:
+
+  | Material | Estimated cost |
+  | --- | --- |
+  | 3,000 characters | $0.036 |
+  | 6,000 characters | $0.039 |
+  | 12,000 characters | $0.045 |
+  | 20,000 characters (the cap) | $0.053 |
+
+  - A second round adds about $0.01–0.02. Its material is a cache read, but the gates run again.
+  - The measured spend per run is in `course_module_tests.cost_micros`, summed from `ai_calls` rows with `course_id` and the `module_test_*` tasks. It is not measured against a live key yet, because tests use the mock.
+  - With the 20,000-character cap, a typical module lands at about $0.04–0.06.
+- **Not done here:**
+  - `server/src/oyelabs/stub.ts` no longer has callers in C's files. It belongs to the architect and should be deleted.
+  - Known gate failures outside C's files at hand-off:
+    - `ai.test.ts` "revealSecret has exactly one caller" fails because of D's `oyelabs/assign/embed.ts`.
+    - `npm run size` is 23.8 KB over on "/learn/plan". C's code isn't in that chunk.
+    - `tsc -b` errors are in A's `editor.test.ts` and in B's `learner/lesson/oyelabs/{api,ModuleLesson,players}`.
+
+## Phase 1 (A)
+
+Builder A: the "Add an Oyelabs course" page and its course API.
+
+- **Routes are built** in `server/src/oyelabs/editor/` (drafts, save, read model, skill suggest). The files are `repo.ts` (save), `drafts.ts`, `payload.ts` (read model and version payload), `skills.ts`, `minutes.ts` and `provisional.ts`.
+  - **Additive route:** `GET /api/admin/oyelabs/drafts` lists this admin's unsaved *new* courses. "Add Oyelabs course" uses it to offer "Continue it / Start a new one". Without it, a new course's draft could be reached only through its `?draft=` URL.
+  - Editor JSON routes have a 1 MB `bodyLimit`. Draft PUT is limited to 120/min, save to 30/min and suggest to 30/min.
+- **Save** follows PLAN §4.1. Two choices go beyond it:
+  - **Ids:** an id the editor sends is reused when the course owns it. It is recreated when it no longer exists anywhere (a restored version), and replaced when another course owns it.
+  - **Removed content:** videos, docs and modules the editor no longer sends are deleted. Module lessons are deleted with their module (cascade), which takes that module's progress with them; the confirm dialog says so.
+- **"Save as draft" sets `published = false`, also on a live course.** The live rows are the only copy, so a draft that left the course visible would publish half-finished edits. On a live course the footer says that saving as a draft hides it until the next publish, and that progress stays.
+- **Publish compares against the published version** (`published_version`'s stored payload), not the current rows. So changes made through draft saves still queue `text.extract` / `transcribe`, and still count in `regenerating`.
+  - `link.check` is queued against the current rows, on draft and publish, only for new or changed links.
+  - `module_test.generate` is queued for every module, as PLAN says.
+- **Provisional video and doc fields before the link check:** the editor uses B's pure `parseVideoLink` / `parseDocLink` (`media/parse.ts`, no network) for kind, player, embed URL, link kind and fetch URL, with status `pending`. B's `link.check` fills in the rest.
+  - Uploads start as `upload` / `html5` / `ok`, with `/api/v5/oyelabs/media/:id` as the playback URL.
+- **`moduleMinutes(db, topicId)`** (`editor/minutes.ts`, for B) recomputes and stores `est_minutes`, and returns the new value. The estimate is:
+  - each video's length when known, else 5 min;
+  - plus 5 min per doc;
+  - plus 10 min for the test.
+- **Versions** (`v5/admin/versions.ts`):
+  - An Oyelabs version also stores `oyelabs: OyelabsCourseInput` with every id.
+  - It compares on that payload plus `published`, not on lesson minutes. A length found later by the link check therefore doesn't make the next unchanged Save a new version.
+  - `restoreVersion` on an Oyelabs course writes no rows. It creates a draft and returns `draftId`, an additive field on the existing restore response. The editor's Versions dialog opens that draft.
+- **Additive contract changes in `shared/oyelabsCourses.ts`:**
+  - Plain zod messages on the course and module input.
+  - `oyelabsSaveProblems`, `draftToCourseInput` and `draftFromCourseView`, shared by the page and the server.
+  - Optional `titleLocked` (video/doc views) and `durationSource` (video view). Without them, re-saving would lock titles and lengths that the resolver had filled in.
+- **Zod and learner bundles:** importing `shared/oyelabsCourses.ts` from a learner page pulls zod into its first load (about 24 KB gzipped; that was the "/learn/plan" overrun).
+  - D's `shared/oyelabsCore.ts` (zod-free, D's file) holds `OYELABS_BADGE_TEXT`. The learner library card imports the badge text from there.
+  - `oyelabsCourses.ts` keeps `OYELABS_BADGE`, the levels and the labels for admin code.
+- **Visibility:** `coursesFor` and `mayOpenCourse` use `isCourseVisible` / `learnerVisibilityFacts`, so `mayOpenCourse` now respects departments.
+- **Library:**
+  - `LibraryCourse` has `oyelabs` and `departmentIds`. The admin card shows the badge, and Edit goes to `/admin/library/:id/oyelabs`. `src/v5/admin/api.ts` belongs to another phase, so the page widens the type locally.
+  - `LibraryItem` has optional `oyelabs` and `departments`. A multi-department course files under the learner's own department.
+  - The learner card and course page show the badge. Syllabus `hasVideo` counts `course_videos`.
+- **Skill suggest** (`course_skill_suggest`):
+  - The answer schema's `skillId` is a `z.enum` of the candidate ids: active skills of the chosen departments, plus skill areas. So a real model can only name real skills, and the mock's schema synthesiser picks real ids. That makes the enum the mock fixture, with no dispatch line in C's `mock.ts`.
+  - With no AI, an AI error or an empty answer, it falls back to name/alias word matching.
+- **Editor UI** (`src/v5/admin/library/oyelabs/`), on one page:
+  - Department chips with "All departments".
+  - Level as native radios.
+  - The existing `SkillPicker`, plus "Suggest skills".
+  - Module cards: B's `VideoLinksField` / `DocsField`, Tiptap notes with `lessonStarterKit`, and C's `ModuleTestPanel`. They reorder by `@dnd-kit/react` drag or by Move up / Move down buttons.
+  - A sticky footer with the autosave line. It sits above the mobile tab bar.
+  - Autosave is debounced 1.5 s. It creates the draft on the first change, writes `?draft=` for new courses, and retries after 5 s on failure.
+- **Frozen file touched:** `server/src/oyelabs/contracts.test.ts`. Its "stub routes … 501" check used A's `GET /courses/x`, which is now a real 404. The assertion was changed to 404, and the test was renamed to "the Oyelabs routes are guarded".
+- **Not done here:**
+  - The lesson-header badge: `src/v5/learner/lesson/**` is B's (`ModuleLesson`). B can use `OYELABS_BADGE_TEXT` from `@shared/oyelabsCore` for it.
+  - axe reports one *moderate* `landmark-unique` on C's `ModuleTestPanel` (every module's `aria-label="Module test"` is the same). Adding the module name to the label would fix it.
+
+## Phase 2 (B)
+
+Videos from any drive: the link resolver, the sharing check, uploads, the players and watch tracking.
+
+### Resolver (`server/src/oyelabs/media/`)
+- **Two halves.** `parse.ts` is pure (`parseVideoLink`, `parseDocLink`): it matches host + path on the parsed URL, never substrings, so `evil.example/?u=drive.google.com/…` is a generic page. `resolve.ts` adds the no-credentials check, title, thumbnail and length. A's `provisional.ts` could call `parseVideoLink` instead of its own guess (it's offline and free); not changed, A's file.
+- **Per source:** YouTube/Vimeo/Loom by oEmbed (401/403 → private, 404 → not found; Vimeo/Loom give the length); Drive by an anonymous GET of `/file/d/<id>/view` (a sign-in redirect → private); OneDrive/SharePoint by GET (login.microsoftonline/login.live → private; `1drv.ms` is expanded by following its redirect, then re-parsed to the `onedrive.live.com/embed?…` form); SharePoint share links embed with `action=embedview` (best effort; couldn't be verified offline); Dropbox `dl=0/1` → `raw=1`, HEAD (Range GET fallback) must be `video/*`; Box `app.box.com/s/<x>` → `/embed/s/<x>` (Box's own `/file/<id>` page needs sign-in → "unsupported" with the fix); direct `.mp4/.m4v/.webm/.mov` → HTML5, `.m3u8` → hls; presigned S3/R2/GCS/CloudFront expiry is read from the query and an expired link is caught without a request; any other page → iframe, `X-Frame-Options`/CSP `frame-ancestors` → `not_embeddable`.
+- **Fix texts** are fixed strings in `fixes.ts` (kind × status), e.g. "This Drive video is private." + "In Google Drive: Share → General access → 'Anyone with the link' (or 'Oyelabs' if every learner is signed into their Oyelabs Google account) → Viewer. Then press Check again."
+- **Loom stays estimated.** Its embed SDK gives no reliable playhead events, so `TRACKING_FOR_KIND.loom` is unchanged.
+- **"Private" Drive/OneDrive/Box can be on purpose** ("shared with Oyelabs only" looks private to an anonymous check). Such entries still play for learners (the iframe works when they are signed in) and still count towards the lock; other broken links become `unavailable` and don't block. The inbox line has "Mark as checked" for exactly this case.
+- **Network blips:** `unreachable` only sets `broken_since` on the second failed check in a row, so one bad minute doesn't reach the inbox. A link that works again clears it.
+
+### `safeFetch` (shared with C)
+- Every hop: http(s) only, no userinfo, the host resolved with `dns.lookup(all)` and refused when **any** address is private/loopback/link-local/CGNAT/multicast/reserved (IPv4, IPv6, v4-mapped and NAT64 forms); `localhost`/`.local`/`.internal` names refused; redirects by hand (max 5); one time budget for the chain (8 s); body capped (1 MB default). `credentials: "omit"`, no cookies.
+- **Residual risk accepted:** the check runs before `fetch` connects, so a host whose DNS changes in between could slip through (no undici dispatcher without a new package). Only staff paste links and the result is a status and a title. ffprobe on a remote URL (`probeDuration`) is not wired by default for the same reason; lengths of Dropbox/direct files come from the player's first sample.
+- **Offline e2e/dev stub:** `OYELABS_FETCH_STUB=http://127.0.0.1:<port>` (never in production; loopback origins only) sends every request to `<stub>/__stub/<host><path>?<query>`. Names aren't resolved then, but literal private addresses are still refused. This is the "dev-only env flag" PLAN §8 asks B to provide for the Phase 5 Playwright run. Read from `process.env` in `safeFetch.ts` (env.ts isn't B's file).
+
+### Uploads and transcoding
+- `POST /api/admin/oyelabs/uploads?kind=doc|video` (or a `kind` field before the file), `bodyLimit` 1 GB + 1 MB, rate 30/min. Streamed through sha256 into `uploads/tmp/<id>.part`, then renamed to `uploads/<yyyy>/<mm>/<id>.<ext>`. Extension **and** first bytes must agree (`%PDF`, `PK\x03\x04`, the `ftyp` box for MP4/MOV/M4V, EBML for WebM/MKV, `RIFF…AVI `, UTF-8 without NULs for TXT/MD) → else 415; over the kind's limit → 413 with plain copy; an identical file (sha256 + kind) is reused (200 instead of 201). The display name is cleaned (`../../x.md` → `x.md`); stored paths never come from it.
+- MP4/WebM play at once (`transcode_status = none`) and are still probed; MOV/MKV/AVI start `pending`. The `oyelabs.upload.transcode` job (fake runner in tests) probes the length (spread to every `course_videos` row using the upload, then A's `moduleMinutes`), and converts anything browsers can't play (non-H.264/AV1 MP4, non-VP8/VP9/AV1 WebM, other containers) with `libx264 veryfast crf 23 + aac + faststart` to `<id>.play.mp4`, timeboxed at 1 h. Without ffmpeg: MP4/WebM stay playable, others fail with "Video conversion isn't available on this server." The boot log says so (from `startLinkRecheck`, since index.ts is frozen).
+- Streaming `GET /api/v5/oyelabs/media/:uploadId`: Range → 206/416, `Accept-Ranges`, `Cache-Control: private`, `nosniff`. Staff always; a learner only when a module video of a course they may open uses the upload; anything else 404.
+- **Orphans:** the daily sweep deletes uploads older than 7 days that no video/doc row uses **and that no autosave draft or saved course version mentions** (so restoring a version never finds its file gone). The row stays with `deleted_at`.
+
+### Tracking, lock and the playlist (`tracking.ts`)
+- **Access** (`mayOpenOyelabsCourse`): staff always; learners need `mayOpenCourse` **and** `isCourseVisible` (so the department rule holds even before/independently of A's wiring).
+- **Exact** (YouTube, Vimeo, HTML5): v4.3 `addPlayedInterval` ranges, watched at 90% (`WATCHED_RATIO`); the first real length a player reports fills an unknown `course_videos.duration_seconds` (`player`) and refreshes the module's minutes.
+- **Estimated:** the server credits `min(sample, wall clock since the previous sample + 2 s, 30 s)`; hidden or unfocused samples count 0; every sample restarts the clock (time away is never banked); the first sample is capped at one interval. `I've watched this` → 409 under 80% ("Keep watching: … about N more minutes") or with no length ("Ask your admin to add the video's length"). Watched = 80% **and** the click.
+- **Client active time** (`useActiveTime`): counts while the tab is visible, the iframe is ≥ 50% on screen (IntersectionObserver), `document.hasFocus()` (stays true while the learner uses the player inside the iframe), and not idle (page input within 120 s, **or focus inside this embed**, since clicks inside a cross-origin iframe never reach the page). A 0-second sample on start sets the server's clock.
+- **Lock for C:** `assertModuleVideosWatched(db, user, topicId)` throws the v4.3 409 `videos_unwatched` ("Watch the 2 remaining videos of this module first (0 of 2 watched)."). `warn` mode, staff and completed modules are exempt; `unavailable` entries (broken links, uploads not playable yet) don't block. C's attempt path already calls it (`moduleTests/repo.ts`).
+- `GET …/playlist` returns `ModuleLessonResponse` (additive, `shared/videoSourcesCore.ts`): the playlist + `docs` (uploads via the download route, links as is) + `notes` (Tiptap JSON), so the lesson loads with one request. `ModulePlaylistResponse` gained optional `lockMode`; `ModulePlaylistEntry` optional `unavailableReason`.
+
+### Contract changes (additive)
+- `shared/videoSources.ts` is now split: the names, types, constants and pure rules moved to the zod-free **`shared/videoSourcesCore.ts`** (re-exported, so every `shared/videoSources` import still works); the schemas stay. Added: `isBrokenStatus`, `activeIncrement`, `creditedActiveSeconds`, `estimatedProgress`, `ESTIMATED_SAMPLE_TOLERANCE_SEC`, `LINK_RECHECK_AFTER_MS`, `ModuleDocEntry`, `ModuleLessonResponse`.
+- **`CONFIDENTIALITY_NOTE` is now the brief's wording:** "For internal-only videos, upload them here or use Drive shared with 'Oyelabs' only." (The 0.1 placeholder was longer.)
+
+### Players (`src/v5/learner/lesson/oyelabs/`)
+- `CourseLesson.tsx` lazily imports `ModuleLesson` for `kind === "module"` (its own chunk; the course lesson's initial JS is unchanged), widens the column for the sidebar, hides "Mark as done" for modules ("You've passed this module's test." once done).
+- Everything heavy waits for Play: YouTube keeps the Phase 9 facade (`useYouTubePlayer({ enabled })`); Vimeo has a facade, then loads `player.vimeo.com/api/player.js`; embeds have a facade; `hls.js` is a dynamic import only for `.m3u8` where the browser has no native HLS. HTML5 caps the rate at 2× (faster wouldn't count).
+- Playlist sidebar, the 5-second "Up next" countdown (v4.3 `upNextReducer`, the learner's autoplay preference) for players we can read, and a "Next video" button for embeds. Notes render read-only from the Tiptap JSON without loading Tiptap. `ModuleTestStep` (C) sits under the playlist with `locked`.
+- Staff previews (`?preview=1`) never send samples.
+
+### Editor fields (`src/v5/admin/library/oyelabs/media/`)
+- `VideoLinksField`: the confidentiality line, a paste box (one link per line; pasting into the empty box adds at once), "Upload a video" (XHR for progress), one card per video (thumbnail, provider, title box, "Plays ✓" or "Can't play: reason" + fix, "Check again", a "Length in minutes" box for estimated embeds), drag (dnd-kit) **or** Move up/down. Unsaved links are resolved for the preview (cached per page); saved ones use A's `saved` views and "Check again" re-checks the row. Uploads follow their conversion state. `DocsField` is the same for documents.
+
+### CSP (`server/src/lib/csp.ts`)
+- `script-src` + `https://player.vimeo.com`; `img-src` + `i.vimeocdn.com`, `cdn.loom.com`, `drive.google.com`, `*.googleusercontent.com`, `*.boxcdn.net`; `media-src` + `https:` (direct/Dropbox/R2); `connect-src` + `https:` (hls.js segments). `frame-src https:` already covered every embed. Still no `'unsafe-eval'`; `csp.test.ts` pins it.
+
+### Inbox
+- Phase 0 is committed (32058f0), so the one line is in `server/src/v5/admin/inbox.ts`: `items.push(...brokenLinkInboxItems(db, dismissed, now))`. One line per course in "courses": `1 link in "White-label delivery" stopped working` / the first reason / "Fix the link" → `/admin/library/<id>/oyelabs`; secondary "Mark as checked" (its key carries the newest break, so a new break shows again).
+
+### Tests
+- `parse.test.ts` (36: every source of PLAN §8 incl. YouTube watch/short/shorts/embed/live, Vimeo unlisted, Loom, Drive view/open, 1drv.ms, SharePoint `:v:`, Dropbox dl=0/dl=1/scl/folder, Box, mp4/webm/m3u8, S3/R2 presigned, a generic page, garbage), `resolve.test.ts` (14: private Drive + exact fix, 404, XFO DENY, SSRF 127.0.0.1/169.254.169.254/::1/10.x, DNS to private, redirect to private, too many redirects, oEmbed, Dropbox, expiry, 1drv.ms expansion, SharePoint sign-in), `media.test.ts` (18: uploads 201/dedupe/413/415/403/traversal, Range 206/416, learner outside the department 404, doc download, transcode with a fake runner, estimated wall-clock cap / hidden / unfocused / confirm under 80% / unknown length / watched needs both, exact ranges, the lock incl. warn/staff/unavailable/completed, recheck → broken_since + inbox → cleared, blip rule, sweep + orphans, Check again), `shared/videoSourcesCore.test.ts`, `fieldLogic.test.ts`, `csp.test.ts`.
+- e2e `scripts/e2e/v45-video-sources.ts` (port 8871; local stub + Playwright routes, no external network; fixture `scripts/e2e/fixtures/v45-sample.webm`, 4 s VP8, 20 KB, made with Playwright's own ffmpeg): resolver, editor cards, upload + 206, learner module lesson (Drive estimated → "I've watched this" → watched; Dropbox and the upload play to the end → watched; lock lifts), axe at 1440/390.
+- Gates: `tsc -b`, `eslint .`, `npm run build`, `npm run size` green (lesson 198 KB: `ModuleLesson` and `CourseLesson` are their own chunks). `npm test`: everything of mine passes; two unrelated failures at the time of the full run (`ai.test.ts` "revealSecret has exactly one caller" now sees D's `oyelabs/assign/embed.ts`; `intents.test.ts` timed out under load and passes alone). On snapshot `p45b` (removed): v45-video-sources, v5-lesson, v5-pwa and v43-video (`UI_V5_DEFAULT=off`, run from the snapshot's copy since it has no `E2E_APP_DIR`) pass.
+
+## Phase 4 (D)
+
+### What was built
+- **Assignments** (`server/src/oyelabs/assign/repo.ts`, `routes.ts`):
+  - learner → one `course_assignments` row (`source = admin`) with the priority; adding again changes the priority, never duplicates;
+  - department now → one row per learner in it (`source = department`; an `admin` or `path` row keeps its source);
+  - everyone in the department → a `course_department_rules` row (optional `required`), read lazily, so people who join later have it with no backfill;
+  - "Most important" or "Required" rebuilds the current week (rules only, pins kept) of up to 50 people it reaches, so it shows this week;
+  - removing a department removes the rule and the `department` rows of the people in it; rows added for one person by name stay.
+- **Additive routes and contract** (Phase 4 section of `shared/oyelabsCourses.ts`):
+  - `GET /api/admin/oyelabs/learners/:userId` → `LearnerCoursesView` (their department and what they have), for the dialog's targets;
+  - `GET …/search` returns `{ courses: CourseSearchHit[] }` (an object, like the other list routes), with an optional `userId` that marks `assigned`, plus `published`;
+  - `AssignCourseResponse` (counts and a plain toast line), `PickedCourse`, `PRIORITY_FOR_CHOICE`;
+  - generated courses are left out of search, because they belong to paths.
+- **Legacy `PUT /api/admin/courses/:courseId/assignees`** now diffs the set. Kept rows keep their `priority`, `source` and date.
+- **"Add a course" UI** (`src/v5/admin/people/AddCourse.tsx`): one picker, two looks.
+  - `AddCourse` is the v5 People sheet version. `ClassicAddCourse` is used in the old learner page header and the onboarding card.
+  - It has priority radios, the three targets, the "Required for everyone in this department" box, Oyelabs courses first with the badge, and "Has it: Important" / Update.
+  - The old learner page (`AdminLearnerPage.tsx`, Phase 0's file) got **one line** rendering `ClassicAddCourse`.
+- **Onboarding**:
+  - The preview's `path` step adds `oyelabsCourses`: description phrases and shared skills, matched against Oyelabs courses in the department; top 3, with plain reasons.
+  - The plan card shows "Courses they'll get". It lists suggested Oyelabs courses ("Add it") and any course found through search, each with a priority.
+  - The courses are given after the account and setup save: `QuickOnboard` looks the new user up by username. A failure shows as a toast and never undoes the save.
+  - Bulk onboarding doesn't show the section.
+  - `uncoveredSkills` no longer lists a skill that an Oyelabs course covers under "New courses we'll add".
+- **Embeddings** (`assign/embed.ts`, job `oyelabs.course.embed`):
+  - The embedded text is the title, description, skill names and aliases, module titles and the start of the notes.
+  - Skipped when the text hash and model are unchanged.
+  - **The OpenAI key is decrypted only in `AiService.embedTexts`** (new, additive, in `ai/service.ts`). `ai.test.ts` allows exactly one decrypting file (`ai/service.ts`), and a first version that decrypted in `embed.ts` broke it.
+  - With the mock provider or no OpenAI credential, the local embedder is used. A failing remote call also falls back to local.
+  - Vectors are compared only within one model (`cosine` throws when the lengths differ).
+  - When the stored vector comes from another model, the course is compared locally on the fly (`local-hash-v1` takes microseconds). So synchronous callers (the preview, the weekly plan) never wait on the network.
+- **Thresholds differ from PLAN §4.4** (which had 0.80 for skills and 0.75 for descriptions).
+  - Calibrated on our own course texts: a matching phrase scores 0.41–0.61 locally, an unrelated one under 0.1.
+  - Now `MATCH_THRESHOLDS`: local 0.45 for a skill / 0.40 for a phrase; OpenAI 0.60 / 0.50.
+  - The course's own skills (`course_skills`) are the main signal and always count.
+  - Descriptions are split into phrases (at commas, "and", "who", "that", …), because one long sentence dilutes every phrase in it.
+- **Path builder** (`builder/run.ts`, after `feat(v4.5-p0)`):
+  - **Placement:** one call to `oyelabsCourseForPath`, **before the curriculum modules**, not just before `libraryCourseFor` as PLAN said. The brief asks that the company's own course be preferred over generic ones, and curriculum modules are generic too.
+  - **When a course fits:**
+    - the path item gets `source = unlock`;
+    - its reason is `oyelabsReason(course)`, e.g. "Added because it's Oyelabs' own process for white-label projects.";
+    - a `course_assignments` row is added with `source = path`;
+    - nothing is generated.
+  - **Eligible courses:** published, Oyelabs, and in the learner's department. That means no `course_departments` rows, one of them, or a rule for the department.
+  - **Badge:** `PathItemView.oyelabs?: true` (shared/builder.ts) is set by **one line** in `currentPath` (Phase 0's `builder/repo.ts`). The badge shows in `PathByPriority.tsx` (both lists) and in v5 `PlanTrails.tsx` (the milestone label).
+  - `shared/pathReasons.ts` re-exports `oyelabsReason`, and `naturalReason` leaves it unchanged.
+- **Zod-free core:** `shared/oyelabsCore.ts` holds `OYELABS_BADGE_TEXT` and `oyelabsCourseReason`, re-exported by `oyelabsCourses.ts` and `pathReasons.ts`. Importing `oyelabsCourses.ts` into `PlanTrails` had put zod in `/learn/plan` (223.8 KB, over the 200 KB budget); it is now 195.4 KB.
+- **Weekly plan** (`plans/weekly/candidates.ts`, `builder.ts`, `types.ts`; the rules are in `oyelabs/assign/weekRules.ts`):
+  - **Visibility:** candidates use `isCourseVisible`. This fixes the old gap where departments were ignored.
+  - **What each course lesson carries:**
+    - `assignedPriority`: the more important of the assignment and the department rule;
+    - `required`;
+    - `prereqKeys`: unfinished lessons that teach a `prerequisite` skill of the course, from courses tagged with that skill or curriculum topics in its content modules, up to 2 per skill.
+  - **Before the path:**
+    - Required courses in weeks 1–2 (`REQUIRED_WEEKS`) go to Do it now in module order, within the half-week cap.
+    - Then Most important: up to 2 lessons per course, with at most 4 items in the red lane.
+  - **After the path:**
+    - Important goes to **Medium**. PLAN said Must know, but Must know is the checklist of prerequisites of 45 minutes or less, and `enforce` moves anything longer out of it.
+    - Nice to have goes to Low.
+  - **Progression:**
+    - Lessons are taken strictly in course order: one that doesn't fit holds back the rest.
+    - Unmet prerequisites come first, in Must know (or in the same lane when over 45 minutes), and the module lists them in `dependsOn`.
+    - A prerequisite that fits nowhere holds the course back.
+  - **"Unmet"** means some lesson teaching the prerequisite skill is unfinished. The learner's measured skill level is not consulted yet; that is a later refinement.
+
+### Files touched outside D's folders (one line, or additive)
+- `server/src/ai/service.ts`: `embedTexts` (additive).
+- `server/src/builder/repo.ts`: one spread line in `currentPath` (the `oyelabs` flag).
+- `src/features/admin/AdminLearnerPage.tsx`: one import and one JSX line.
+- `src/features/admin/setup/PlanCard.tsx`: the courses section sits **above** "New courses we'll add to the library", because `v44-reference-case.ts` reads the card's text up to the next known heading.
+- `shared/oyelabsCore.ts`: D created it while A was also moving the badge there. D's version is the one on disk. A's `OYELABS_BADGE_TEXT` import resolves against it and `tsc -b` is clean, but A should check that nothing else of theirs was meant to live there.
+
+### Tests
+- `server/src/oyelabs/assign/assign.test.ts` (17 tests):
+  - **assignments:** learner with priority, re-prioritise, 400/403; department now vs everyone, where a learner who joins later sees it with no row, another department doesn't, and removal works; the legacy PUT keeps priority;
+  - **search:** Oyelabs first, the badge, `assigned`, generated courses left out;
+  - **weekly plan:** a required course goes to Do it now in weeks 1–2 in module order, with the prerequisite first in Must know and in `dependsOn`, and to Medium in week 3; the progression hold-back; the priority lanes;
+  - **embeddings:** the local embedder is deterministic and ranks correctly; other models are never compared; the OpenAI embedder works with an injected fetch; the embed job writes, skips and falls back;
+  - **reasons and onboarding:** plain reasons; the onboarding suggestion through both the endpoint and the preview;
+  - **path builder:** it picks the Oyelabs course with the reason, queues no `course.generate`, assigns the course, and the view has `oyelabs: true`.
+- `src/v5/admin/people/courseAssign.test.ts` (the pure helpers).
+- **Gates:** `tsc -b`, `eslint .`, `npm test` (201 files), `npm run build` and `npm run size` are green. On snapshot `p45d` (removed afterwards), `v5-admin.ts` and `v44-reference-case.ts` (`UI_V5_DEFAULT=off`) pass.

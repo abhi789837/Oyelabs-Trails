@@ -157,6 +157,10 @@ export interface LibraryItem {
   doneCount: number;
   /** Where Start / Continue goes: the first unfinished lesson. */
   nextLessonHref: string | null;
+  /** v4.5: an Oyelabs course (the company's own material): shows the "Oyelabs" badge. */
+  oyelabs?: true;
+  /** v4.5: every department the course is for, when it names several (`course_departments`). */
+  departments?: { id: string; name: string }[];
 }
 
 export interface LibraryResponse {

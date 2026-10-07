@@ -174,6 +174,7 @@ function moduleItems(db: Db, content: ContentStore, user: User, cat: Catalogue, 
 }
 
 function courseItems(db: Db, userId: string, cat: Catalogue, courseIds?: string[]): LibraryItem[] {
+  const learnerDept = learnerDepartment(db, userId) ?? "engineering";
   let cards = coursesFor(db, userId);
   if (courseIds) cards = cards.filter((c) => courseIds.includes(c.id));
   if (cards.length === 0) return [];
@@ -184,6 +185,10 @@ function courseItems(db: Db, userId: string, cat: Catalogue, courseIds?: string[
     db.select().from(schema.generatedCourses).where(inArray(schema.generatedCourses.courseId, ids)).all().map((g) => [g.courseId, g]),
   );
   const courseSkills = db.select().from(schema.courseSkills).where(inArray(schema.courseSkills.courseId, ids)).all();
+  const courseDepts = new Map<string, string[]>();
+  for (const row of db.select().from(schema.courseDepartments).where(inArray(schema.courseDepartments.courseId, ids)).all()) {
+    courseDepts.set(row.courseId, [...(courseDepts.get(row.courseId) ?? []), row.departmentId]);
+  }
   const sections = db.select().from(schema.courseSections).where(inArray(schema.courseSections.courseId, ids)).all();
   const topics = db
     .select({ id: schema.courseTopics.id, courseId: schema.courseTopics.courseId, sectionId: schema.courseTopics.sectionId, title: schema.courseTopics.title, body: schema.courseTopics.body, videoId: schema.courseTopics.videoId, position: schema.courseTopics.position })
@@ -211,7 +216,9 @@ function courseItems(db: Db, userId: string, cat: Catalogue, courseIds?: string[
       .filter((t) => t.courseId === card.id)
       .sort((a, b) => (secOrder.get(a.sectionId) ?? 0) - (secOrder.get(b.sectionId) ?? 0) || a.position - b.position);
     const words = lessons.reduce((n, t) => n + t.body.split(/\s+/).filter(Boolean).length, 0);
-    const deptId = gen?.departmentId ?? row.departmentId ?? null;
+    // v4.5: a course for several departments files under the learner's own when it is one of them.
+    const depts = courseDepts.get(card.id) ?? [];
+    const deptId = depts.length ? (depts.includes(learnerDept) ? learnerDept : depts[0]!) : (gen?.departmentId ?? row.departmentId ?? null);
     const sectionTitles = sections
       .filter((s) => s.courseId === card.id)
       .sort((a, b) => a.position - b.position)
@@ -233,6 +240,8 @@ function courseItems(db: Db, userId: string, cat: Catalogue, courseIds?: string[
       recommendedWhy: null,
       doneCount: card.completedCount,
       nextLessonHref: next ? courseLessonHref(card.id, next.id) : null,
+      ...(row.oyelabs ? { oyelabs: true as const } : {}),
+      ...(depts.length > 1 ? { departments: depts.map((d) => ({ id: d, name: cat.departments.get(d) ?? d })) } : {}),
     };
   });
 }
@@ -308,6 +317,8 @@ export function courseDetailFor(db: Db, content: ContentStore, user: User, id: s
       .map((r) => r.topicId),
   );
   const sources = db.select({ verifiedAt: schema.courseSources.verifiedAt }).from(schema.courseSources).where(eq(schema.courseSources.courseId, id)).all();
+  // v4.5: an Oyelabs module lesson's videos are course_videos rows, not the lesson's own video.
+  const withPlaylist = new Set(db.select({ t: schema.courseVideos.topicId }).from(schema.courseVideos).where(eq(schema.courseVideos.courseId, id)).all().map((r) => r.t));
   const verified = sources.map((s) => s.verifiedAt).filter((v): v is number => typeof v === "number");
   return {
     ...withRec(item),
@@ -317,7 +328,7 @@ export function courseDetailFor(db: Db, content: ContentStore, user: User, id: s
       title: s.title,
       lessons: lessons
         .filter((l) => l.sectionId === s.id)
-        .map((l) => ({ id: l.id, title: l.title, minutes: l.estMinutes, done: done.has(l.id), href: courseLessonHref(id, l.id), hasVideo: Boolean(l.videoId) })),
+        .map((l) => ({ id: l.id, title: l.title, minutes: l.estMinutes, done: done.has(l.id), href: courseLessonHref(id, l.id), hasVideo: Boolean(l.videoId) || withPlaylist.has(l.id) })),
     })),
     sourcesVerifiedAt: verified.length ? Math.max(...verified) : null,
     sourceCount: sources.length,

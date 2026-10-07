@@ -385,6 +385,8 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
       moduleId: null,
       skillId: item.skillId,
       href: item.courseId ? `/courses/${item.courseId}` : null,
+      // v4.5 Phase 4 (D): the "Oyelabs" badge on the path.
+      ...(course?.oyelabs ? { oyelabs: true as const } : {}),
     };
   });
 

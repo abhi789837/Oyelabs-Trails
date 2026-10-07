@@ -3,6 +3,7 @@ import { and, asc, eq, inArray } from "drizzle-orm";
 import type { Course, CourseCard, CourseSection, CourseTopic } from "../../../shared/courses";
 import type { AccentTokenValue } from "../../../shared/content";
 import { schema, type Db } from "../db";
+import { isCourseVisible, learnerVisibilityFacts } from "../oyelabs/visibility";
 
 /**
  * Reading and writing admin-authored courses.
@@ -24,6 +25,7 @@ function toTopic(row: typeof schema.courseTopics.$inferSelect): CourseTopic {
     links: row.links ?? [],
     estMinutes: row.estMinutes,
     position: row.position,
+    ...(row.kind === "module" ? { kind: "module" as const } : {}),
   };
 }
 
@@ -65,6 +67,7 @@ export function getCourse(db: Db, courseId: string): Course | null {
     updatedAt: row.updatedAt,
     level: row.level ?? null,
     departmentId: row.departmentId ?? null,
+    ...(row.oyelabs ? { oyelabs: true as const } : {}),
     sections: sections.map<CourseSection>((section) => ({
       id: section.id,
       courseId: section.courseId,
@@ -103,27 +106,10 @@ export function coursesFor(db: Db, userId: string): CourseCard[] {
     .all();
   if (published.length === 0) return [];
 
-  const assignedIds = new Set(
-    db
-      .select({ courseId: schema.courseAssignments.courseId })
-      .from(schema.courseAssignments)
-      .where(eq(schema.courseAssignments.userId, userId))
-      .all()
-      .map((row) => row.courseId),
-  );
-
-  /* An `everyone` course tagged with a department is everyone *in that department*; an explicit
-     assignment always wins, so an admin can still hand a BD course to an engineer. */
-  const department = db
-    .select({ departmentId: schema.learnerProfiles.departmentId })
-    .from(schema.learnerProfiles)
-    .where(eq(schema.learnerProfiles.userId, userId))
-    .get()?.departmentId ?? "engineering";
-  const visible = published.filter(
-    (course) =>
-      assignedIds.has(course.id) ||
-      (course.audience === "everyone" && (course.departmentId == null || course.departmentId === department)),
-  );
+  // v4.5: one rule for every reader (oyelabs/visibility.ts): an assignment or a department rule
+  // wins; an `everyone` course follows its departments (course_departments, else department_id).
+  const facts = learnerVisibilityFacts(db, userId);
+  const visible = published.filter((course) => isCourseVisible(course, facts));
   if (visible.length === 0) return [];
 
   const courseIds = visible.map((c) => c.id);
@@ -161,18 +147,14 @@ export function coursesFor(db: Db, userId: string): CourseCard[] {
   }));
 }
 
-/** Whether this learner may open this course. The same rule `coursesFor` filters by. */
+/**
+ * Whether this learner may open this course. The same rule `coursesFor` filters by (v4.5: which now
+ * includes departments; before, an `everyone` course opened for every department).
+ */
 export function mayOpenCourse(db: Db, userId: string, courseId: string): boolean {
   const course = db.select().from(schema.courses).where(eq(schema.courses.id, courseId)).get();
   if (!course || !course.published) return false;
-  if (course.audience === "everyone") return true;
-  return (
-    db
-      .select({ courseId: schema.courseAssignments.courseId })
-      .from(schema.courseAssignments)
-      .where(and(eq(schema.courseAssignments.courseId, courseId), eq(schema.courseAssignments.userId, userId)))
-      .get() !== undefined
-  );
+  return isCourseVisible(course, learnerVisibilityFacts(db, userId));
 }
 
 /** Which of a course's lessons this learner has ticked off. */

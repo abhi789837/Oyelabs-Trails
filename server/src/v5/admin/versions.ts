@@ -1,9 +1,12 @@
 import { and, desc, eq } from "drizzle-orm";
 
 import type { Course } from "../../../../shared/courses";
+import type { OyelabsCourseInput } from "../../../../shared/oyelabsCourses";
 import { getCourse } from "../../courses/repo";
 import { schema, type Db } from "../../db";
 import { newId, now } from "../../lib/ids";
+import { createDraft, inputToDraftData } from "../../oyelabs/editor/drafts";
+import { oyelabsPayload } from "../../oyelabs/editor/payload";
 
 /**
  * v5 Phase 7: course version history (`content_versions`, entity_type "course").
@@ -29,10 +32,20 @@ export interface VersionMeta {
 interface StoredVersion {
   course: Course;
   note?: string | null;
+  /**
+   * v4.5: an Oyelabs course also stores its editor input with every id (videos, docs, notes,
+   * departments, skills). Restoring one opens this as a draft in the Oyelabs editor.
+   */
+  oyelabs?: OyelabsCourseInput;
 }
 
-/** The parts of a course a version compares on (not timestamps, which change on every save). */
-function comparable(course: Course): string {
+/**
+ * The parts of a course a version compares on (not timestamps, which change on every save).
+ * An Oyelabs course compares on what the admin wrote, not on values the link checker fills in
+ * later (a video's length moves the lesson's minutes), so an unchanged Save adds no version.
+ */
+function comparable(course: Course, oyelabs?: OyelabsCourseInput | null): string {
+  if (oyelabs) return JSON.stringify({ oyelabs, published: course.published });
   const { updatedAt: _u, createdAt: _c, ...rest } = course;
   return JSON.stringify(rest);
 }
@@ -54,14 +67,16 @@ function lessonCount(course: Course): number {
 export function snapshotCourse(db: Db, courseId: string, actorId: string | null, note: string | null = null): { version: number; created: boolean } | null {
   const course = getCourse(db, courseId);
   if (!course) return null;
+  const oyelabs = course.oyelabs ? oyelabsPayload(db, courseId) : null;
   const latest = latestRow(db, courseId);
   if (latest) {
     const stored = latest.data as unknown as StoredVersion;
-    if (stored?.course && comparable(stored.course) === comparable(course)) return { version: latest.version, created: false };
+    if (stored?.course && comparable(stored.course, stored.oyelabs) === comparable(course, oyelabs)) return { version: latest.version, created: false };
   }
   const version = (latest?.version ?? 0) + 1;
+  const data: StoredVersion = oyelabs ? { course, note, oyelabs } : { course, note };
   db.insert(schema.contentVersions)
-    .values({ id: newId(), entityType: "course", entityId: courseId, version, data: { course, note } as unknown as Record<string, unknown>, createdBy: actorId, createdAt: now() })
+    .values({ id: newId(), entityType: "course", entityId: courseId, version, data: data as unknown as Record<string, unknown>, createdBy: actorId, createdAt: now() })
     .run();
   return { version, created: true };
 }
@@ -88,13 +103,23 @@ export function listVersions(db: Db, courseId: string): VersionMeta[] {
   });
 }
 
-export function getVersion(db: Db, courseId: string, version: number): Course | null {
-  const row = db
+function versionRow(db: Db, courseId: string, version: number) {
+  return db
     .select()
     .from(schema.contentVersions)
     .where(and(eq(schema.contentVersions.entityType, "course"), eq(schema.contentVersions.entityId, courseId), eq(schema.contentVersions.version, version)))
     .get();
+}
+
+export function getVersion(db: Db, courseId: string, version: number): Course | null {
+  const row = versionRow(db, courseId, version);
   return row ? ((row.data as unknown as StoredVersion).course ?? null) : null;
+}
+
+/** v4.5: the Oyelabs editor input stored with a version (null for ordinary courses and old versions). */
+export function getOyelabsVersion(db: Db, courseId: string, version: number): OyelabsCourseInput | null {
+  const row = versionRow(db, courseId, version);
+  return row ? ((row.data as unknown as StoredVersion).oyelabs ?? null) : null;
 }
 
 /**
@@ -103,9 +128,20 @@ export function getVersion(db: Db, courseId: string, version: number): Course | 
  * and ones added since are removed. Practice tasks and tests on a lesson are not part of a version
  * and are left as they are.
  */
-export function restoreVersion(db: Db, courseId: string, version: number, actorId: string): { version: number; removedLessons: number } | null {
+export function restoreVersion(db: Db, courseId: string, version: number, actorId: string): { version: number; removedLessons: number; draftId?: string } | null {
   const target = getVersion(db, courseId, version);
-  if (!target || !getCourse(db, courseId)) return null;
+  const current = getCourse(db, courseId);
+  if (!target || !current) return null;
+
+  // v4.5: an Oyelabs version is not written back into the rows. It opens as a draft in the
+  // Oyelabs editor, and the admin saves it from there (videos, docs and tests follow the save).
+  if (current.oyelabs) {
+    const payload = getOyelabsVersion(db, courseId, version);
+    if (!payload) return null;
+    const draft = createDraft(db, courseId, inputToDraftData(payload), actorId);
+    return { version: latestRow(db, courseId)?.version ?? version, removedLessons: 0, draftId: draft.id };
+  }
+
   snapshotCourse(db, courseId, actorId, "Before restoring");
 
   let removedLessons = 0;
